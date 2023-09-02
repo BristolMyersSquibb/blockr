@@ -1,0 +1,19 @@
+Package: blockr
+Title: A block-based framework for data manipulation and visualization
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Nicolas",
+             family = "Bennett",
+             role = c("aut", "cre"),
+             email = "nicolas@cynkra.com"),
+      person(given = "Voltron Data",
+             role = "fnd")
+    )
+Description: A framework for data manipulation and visualization using a
+    web-based point and click user interface.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    shiny
