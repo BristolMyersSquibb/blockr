@@ -9,7 +9,7 @@
 #'
 #' @export
 new_field <- function(value, ..., class = character()) {
-  structure(value, class = c(class, "field"))
+  structure(value, ..., class = c(class, "field"))
 }
 
 #' @param x An object inheriting form `"field"`
