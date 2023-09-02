@@ -4,15 +4,11 @@
 \alias{new_field}
 \alias{validate_field}
 \alias{validate_field.field}
-\alias{ui_input}
-\alias{ui_input.field}
 \alias{is_field}
 \alias{validate_field.string_field}
 \alias{string_field}
-\alias{ui_input.string_field}
 \alias{validate_field.select_field}
 \alias{select_field}
-\alias{ui_input.select_field}
 \title{Fields}
 \usage{
 new_field(value, ..., class = character())
@@ -21,23 +17,15 @@ validate_field(x)
 
 \method{validate_field}{field}(x)
 
-ui_input(x, id, name)
-
-\method{ui_input}{field}(x, id, name)
-
 is_field(x)
 
 \method{validate_field}{string_field}(x)
 
 string_field(value)
 
-\method{ui_input}{string_field}(x, id, name)
-
 \method{validate_field}{select_field}(x)
 
 select_field(value, choices)
-
-\method{ui_input}{select_field}(x, id, name)
 }
 \arguments{
 \item{value}{Field value}
@@ -47,8 +35,6 @@ select_field(value, choices)
 \item{class}{Field subclass}
 
 \item{x}{An object inheriting form \code{"field"}}
-
-\item{id, name}{Field ID and name}
 
 \item{choices}{Set of permissible values}
 }

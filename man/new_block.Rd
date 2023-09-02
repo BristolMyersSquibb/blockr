@@ -2,16 +2,17 @@
 % Please edit documentation in R/block.R
 \name{new_block}
 \alias{new_block}
+\alias{is_block}
 \alias{generate_code}
 \alias{generate_code.block}
 \alias{evalute_block}
 \alias{evalute_block.block}
-\alias{generate_ui}
-\alias{generate_ui.block}
 \alias{new_data_block}
 \title{Blocks}
 \usage{
-new_block(name, fields, expr, ..., class = character())
+new_block(fields, expr, name, ..., class = character())
+
+is_block(x)
 
 generate_code(x)
 
@@ -21,20 +22,16 @@ evalute_block(x)
 
 \method{evalute_block}{block}(x)
 
-generate_ui(x)
-
-\method{generate_ui}{block}(x)
-
 new_data_block()
 }
 \arguments{
-\item{name}{Block name}
-
-\item{fields}{A list of field, each entry inheriting from \code{"fields"}}
+\item{fields}{A list of field, each entry inheriting from \code{"field"}}
 
 \item{expr}{A quoted expression (compatible with partial substitution as
 implemented in \code{\link[base:bquote]{base::bquote()}} and intended for evaluation in the context
 of the fields)}
+
+\item{name}{Block name}
 
 \item{...}{Further (metadata) attributes}
 
