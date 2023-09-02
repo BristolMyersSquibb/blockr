@@ -39,14 +39,26 @@ generate_code.block <- function(x) {
 
 #' @rdname new_block
 #' @export
-evaulte_block <- function(x) {
-  UseMethod("evaulte_block")
+evalute_block <- function(x) {
+  UseMethod("evalute_block")
 }
 
 #' @rdname new_block
 #' @export
-evaulte_block.block <- function(x) {
+evalute_block.block <- function(x) {
   eval(generate_code(x), new.env())
+}
+
+#' @rdname new_block
+#' @export
+generate_ui <- function(x) {
+  UseMethod("generate_ui")
+}
+
+#' @rdname new_block
+#' @export
+generate_ui.block <- function(x) {
+  lapply(x, ui_input, paste0(attr(x, "name"), names(x)), names(x))
 }
 
 #' @rdname new_block

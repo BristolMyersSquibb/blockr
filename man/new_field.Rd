@@ -21,9 +21,9 @@ validate_field(x)
 
 \method{validate_field}{field}(x)
 
-ui_input(id, name, x)
+ui_input(x, id, name)
 
-\method{ui_input}{field}(id, name, x)
+\method{ui_input}{field}(x, id, name)
 
 is_field(x)
 
@@ -31,13 +31,13 @@ is_field(x)
 
 string_field(value)
 
-\method{ui_input}{string_field}(id, name, x)
+\method{ui_input}{string_field}(x, id, name)
 
 \method{validate_field}{select_field}(x)
 
 select_field(value, choices)
 
-\method{ui_input}{select_field}(id, name, x)
+\method{ui_input}{select_field}(x, id, name)
 }
 \arguments{
 \item{value}{Field value}

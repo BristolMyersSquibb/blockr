@@ -4,8 +4,10 @@
 \alias{new_block}
 \alias{generate_code}
 \alias{generate_code.block}
-\alias{evaulte_block}
-\alias{evaulte_block.block}
+\alias{evalute_block}
+\alias{evalute_block.block}
+\alias{generate_ui}
+\alias{generate_ui.block}
 \alias{new_data_block}
 \title{Blocks}
 \usage{
@@ -15,9 +17,13 @@ generate_code(x)
 
 \method{generate_code}{block}(x)
 
-evaulte_block(x)
+evalute_block(x)
 
-\method{evaulte_block}{block}(x)
+\method{evalute_block}{block}(x)
+
+generate_ui(x)
+
+\method{generate_ui}{block}(x)
 
 new_data_block()
 }

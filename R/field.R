@@ -28,13 +28,13 @@ validate_field.field <- function(x) {
 #' @param id,name Field ID and name
 #' @rdname new_field
 #' @export
-ui_input <- function(id, name, x) {
+ui_input <- function(x, id, name) {
   UseMethod("ui_input", x)
 }
 
 #' @rdname new_field
 #' @export
-ui_input.field <- function(id, name, x) {
+ui_input.field <- function(x, id, name) {
   stop("no base-class UI input for fields available")
 }
 
@@ -59,7 +59,7 @@ string_field <- function(value) {
 
 #' @rdname new_field
 #' @export
-ui_input.string_field <- function(id, name, x) {
+ui_input.string_field <- function(x, id, name) {
   shiny::textInput(id, name, x)
 }
 
@@ -81,6 +81,6 @@ select_field <- function(value, choices) {
 
 #' @rdname new_field
 #' @export
-ui_input.select_field <- function(id, name, x) {
+ui_input.select_field <- function(x, id, name) {
   shiny::selectInput(id, name, attr(x, "choices"), x)
 }
