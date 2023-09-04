@@ -40,19 +40,39 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  do.call(bquote, list(attr(x, "expr"), where = x))
+  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
 }
 
 #' @rdname new_block
 #' @export
-evalute_block <- function(x) {
+evalute_block <- function(x, ...) {
   UseMethod("evalute_block")
 }
 
 #' @rdname new_block
 #' @export
-evalute_block.block <- function(x) {
+evalute_block.block <- function(x, ...) {
+  stop("no base-class evaulator for blocks available")
+}
+
+#' @rdname new_block
+#' @export
+evalute_block.data_block <- function(x, ...) {
+  stopifnot(...length() == 0L)
   eval(generate_code(x), new.env())
+}
+
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evalute_block.transform_block <- function(x, data, ...) {
+
+  stopifnot(...length() == 0L)
+
+  eval(
+    substitute(data %>% expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
 }
 
 #' @rdname new_block
@@ -78,6 +98,44 @@ new_data_block <- function() {
     fields = fields,
     expr = expr,
     name = rand_names(),
-    class = "data_block"
+    class = c("dataset_block", "data_block")
+  )
+}
+
+#' @param dat Tabular data to filter (rows)
+#' @param col,val Definition of the equality filter
+#' @rdname new_block
+#' @export
+new_filter_block <- function(dat, col = colnames(dat)[1L],
+                             val = NA_character_) {
+
+  cols <- colnames(dat)
+
+  fields <- list(
+    column = select_field(col, cols, type = "name"),
+    value = string_field(val)
+  )
+
+  if (is.na(val)) {
+    expr <- quote(identity())
+  } else {
+    expr <- quote(
+      dplyr::filter(.(column) == .(value))
+    )
+  }
+
+  new_block(
+    fields = fields,
+    expr = expr,
+    name = rand_names(),
+    class = c("filter_block", "transform_block")
+  )
+}
+
+type_trans <- function(x) {
+  switch(
+    attr(x, "type"),
+    literal = c(x),
+    name = as.name(x)
   )
 }

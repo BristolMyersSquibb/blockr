@@ -11,7 +11,7 @@
 \alias{select_field}
 \title{Fields}
 \usage{
-new_field(value, ..., class = character())
+new_field(value, ..., type = c("literal", "name"), class = character())
 
 validate_field(x)
 
@@ -21,16 +21,18 @@ is_field(x)
 
 \method{validate_field}{string_field}(x)
 
-string_field(value)
+string_field(value, ...)
 
 \method{validate_field}{select_field}(x)
 
-select_field(value, choices)
+select_field(value, choices, ...)
 }
 \arguments{
 \item{value}{Field value}
 
 \item{...}{Further (metadata) attributes}
+
+\item{type}{Field type (allowed values are \code{"literal"} and \code{"name"})}
 
 \item{class}{Field subclass}
 

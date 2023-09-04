@@ -17,3 +17,17 @@ test_that("data blocks", {
     expect_s3_class(field, "shiny.tag")
   }
 })
+
+test_that("filter blocks", {
+
+  block <- new_filter_block(datasets::iris)
+
+  expect_s3_class(block, "filter_block")
+  expect_type(block, "list")
+
+  block <- new_filter_block(datasets::iris, "Species", "setosa")
+
+  res <- evalute_block(block, datasets::iris)
+
+  expect_identical(nrow(res), 50L)
+})

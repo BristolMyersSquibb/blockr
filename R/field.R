@@ -5,11 +5,14 @@
 #'
 #' @param value Field value
 #' @param ... Further (metadata) attributes
+#' @param type Field type (allowed values are `"literal"` and `"name"`)
 #' @param class Field subclass
 #'
 #' @export
-new_field <- function(value, ..., class = character()) {
-  structure(value, ..., class = c(class, "field"))
+new_field <- function(value, ..., type = c("literal", "name"),
+                      class = character()) {
+
+  structure(value, ..., type = match.arg(type), class = c(class, "field"))
 }
 
 #' @param x An object inheriting form `"field"`
@@ -38,9 +41,9 @@ validate_field.string_field <- function(x) {
 
 #' @rdname new_field
 #' @export
-string_field <- function(value) {
+string_field <- function(value, ...) {
   validate_field(
-    new_field(value, class = "string_field")
+    new_field(value, ..., class = "string_field")
   )
 }
 
@@ -54,8 +57,8 @@ validate_field.select_field <- function(x) {
 #' @param choices Set of permissible values
 #' @rdname new_field
 #' @export
-select_field <- function(value, choices) {
+select_field <- function(value, choices, ...) {
   validate_field(
-    new_field(value, choices = choices, class = "select_field")
+    new_field(value, choices = choices, ..., class = "select_field")
   )
 }
