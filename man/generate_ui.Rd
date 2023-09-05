@@ -10,11 +10,11 @@
 \alias{ui_input.select_field}
 \title{UI}
 \usage{
-generate_ui(x)
+generate_ui(x, ...)
 
-\method{generate_ui}{block}(x)
+\method{generate_ui}{block}(x, id, ...)
 
-\method{generate_ui}{stack}(x)
+\method{generate_ui}{stack}(x, ...)
 
 ui_input(x, id, name)
 
@@ -27,7 +27,11 @@ ui_input(x, id, name)
 \arguments{
 \item{x}{Object for which to generate UI components}
 
-\item{id, name}{Field ID and name}
+\item{...}{Generic consistency}
+
+\item{id}{UI IDs}
+
+\item{name}{Field name}
 }
 \description{
 Generic for UI generation

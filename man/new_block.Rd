@@ -13,7 +13,7 @@
 \alias{new_filter_block}
 \title{Blocks}
 \usage{
-new_block(fields, expr, name, ..., class = character())
+new_block(fields, expr, name = rand_names(), ..., class = character())
 
 is_block(x)
 
@@ -29,9 +29,9 @@ evalute_block(x, ...)
 
 \method{evalute_block}{transform_block}(x, data, ...)
 
-new_data_block()
+new_data_block(...)
 
-new_filter_block(dat, col = colnames(dat)[1L], val = NA_character_)
+new_filter_block(dat, col = colnames(dat)[1L], val = NA_character_, ...)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}

@@ -9,13 +9,10 @@ test_that("data blocks", {
 
   expect_s3_class(dat, "data.frame")
 
-  ui <- generate_ui(block)
+  ui <- generate_ui(block, "foo")
 
   expect_type(ui, "list")
-
-  for (field in ui) {
-    expect_s3_class(field, "shiny.tag")
-  }
+  expect_s3_class(ui, "shiny.tag")
 })
 
 test_that("filter blocks", {

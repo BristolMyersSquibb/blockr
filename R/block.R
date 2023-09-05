@@ -13,7 +13,8 @@
 #' @param class Block subclass
 #'
 #' @export
-new_block <- function(fields, expr, name, ..., class = character()) {
+new_block <- function(fields, expr, name = rand_names(), ...,
+                      class = character()) {
 
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
@@ -77,7 +78,7 @@ evalute_block.transform_block <- function(x, data, ...) {
 
 #' @rdname new_block
 #' @export
-new_data_block <- function() {
+new_data_block <- function(...) {
 
   datasets <- ls(envir = as.environment("package:datasets"))
 
@@ -97,7 +98,7 @@ new_data_block <- function() {
   new_block(
     fields = fields,
     expr = expr,
-    name = rand_names(),
+    ...,
     class = c("dataset_block", "data_block")
   )
 }
@@ -107,7 +108,7 @@ new_data_block <- function() {
 #' @rdname new_block
 #' @export
 new_filter_block <- function(dat, col = colnames(dat)[1L],
-                             val = NA_character_) {
+                             val = NA_character_, ...) {
 
   cols <- colnames(dat)
 
@@ -127,7 +128,7 @@ new_filter_block <- function(dat, col = colnames(dat)[1L],
   new_block(
     fields = fields,
     expr = expr,
-    name = rand_names(),
+    ...,
     class = c("filter_block", "transform_block")
   )
 }

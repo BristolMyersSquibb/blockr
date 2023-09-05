@@ -6,7 +6,7 @@
 \alias{serve_stack}
 \title{Stacks}
 \usage{
-new_stack(...)
+new_stack(..., name = rand_names())
 
 stack_server_generator(stack)
 
@@ -15,6 +15,8 @@ serve_stack(stack)
 \arguments{
 \item{...}{An ordered set of blocks (each argument is required to inherit
 from \code{"block"})}
+
+\item{name}{Stack name}
 
 \item{stack}{An object inheriting form \code{"stack"}}
 }

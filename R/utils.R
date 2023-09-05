@@ -105,3 +105,5 @@ is_count <- function(x, include_zero = TRUE) {
     x > 0 && !is.na(x)
   }
 }
+
+paste_ <- function(...) paste(..., sep = "_")

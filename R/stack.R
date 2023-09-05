@@ -4,11 +4,14 @@
 #'
 #' @param ... An ordered set of blocks (each argument is required to inherit
 #' from `"block"`)
+#' @param name Stack name
 #'
 #' @export
-new_stack <- function(...) {
+new_stack <- function(..., name = rand_names()) {
 
   ctors <- c(...)
+  names <- names(ctors)
+
   blocks <- vector("list", length(ctors))
 
   blocks[[1L]] <- do.call(ctors[[1L]], list())
