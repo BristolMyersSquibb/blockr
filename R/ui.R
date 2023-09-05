@@ -12,7 +12,13 @@ generate_ui <- function(x) {
 #' @rdname generate_ui
 #' @export
 generate_ui.block <- function(x) {
-  lapply(x, ui_input, paste0(attr(x, "name"), names(x)), names(x))
+
+  Map(
+    ui_input,
+    x,
+    id = paste(attr(x, "name"), names(x), sep = "_"),
+    name = names(x)
+  )
 }
 
 #' @rdname generate_ui

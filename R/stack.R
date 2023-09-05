@@ -8,7 +8,18 @@
 #' @export
 new_stack <- function(...) {
 
-  blocks <- list(...)
+  ctors <- c(...)
+  blocks <- vector("list", length(ctors))
+
+  blocks[[1L]] <- do.call(ctors[[1L]], list())
+  temp <- evalute_block(blocks[[1L]])
+
+  for (i in seq_along(ctors)[-1L]) {
+    temp <- evalute_block(
+      blocks[[i]] <- do.call(ctors[[i]], list(temp)),
+      data = list(temp)
+    )
+  }
 
   stopifnot(
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
