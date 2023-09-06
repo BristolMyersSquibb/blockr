@@ -15,12 +15,28 @@ generate_server <- function(x, ...) {
 #' @export
 generate_server.block <- function(x, id, ...) {
 
-  stopifnot(...length() == 0L)
+  fields <- get_field_names(x)
 
   shiny::moduleServer(
     id,
     function(input, output, session) {
-      browser()
+
+      blk <- shiny::reactive(
+        set_field_values(x, fields, input[fields])
+      )
+
+      dat <- shiny::reactive(
+        evalute_block(blk(), ...)
+      )
+
+      cod <- shiny::reactive(
+        generate_code(blk())
+      )
+
+      output$data <- shiny::renderPrint(dat())
+      output$code <- shiny::renderPrint(cat(cod()))
+
+      dat
     }
   )
 }
@@ -34,7 +50,24 @@ generate_server.stack <- function(x, id, ...) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
-      eapply(x, generate_server, id = attr(x, "name"))
+
+      res <- vector("list", length(x))
+
+      res[[1L]] <- generate_server(
+        x[[1L]],
+        id = names(x)[1L]
+      )
+
+      for (i in seq_along(x)[-1L]) {
+
+        res[[i]] <- generate_server(
+          x[[i]],
+          id = names(x)[i],
+          data = res[[i - 1L]]()
+        )
+      }
+
+      res
     }
   )
 }

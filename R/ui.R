@@ -19,24 +19,16 @@ generate_ui.block <- function(x, id, ...) {
 
   ns <- shiny::NS(id)
 
-  fields <- ls(envir = x)
-
-  inputs <- set_names(
-    vector("list", length(fields)),
-    fields
+  fields <- Map(
+    ui_input,
+    get_field_values(x),
+    id = chr_ply(names(x), ns),
+    name = names(x)
   )
-
-  for (field in fields) {
-    inputs[[field]] <- ui_input(
-      get(field, envir = x, inherits = FALSE),
-      id = ns(field),
-      name = field
-    )
-  }
 
   div_card(
     title = shiny::h4(attr(x, "name")),
-    do.call(shiny::div, unname(inputs)),
+    do.call(shiny::div, unname(fields)),
     shiny::verbatimTextOutput(ns("code")),
     shiny::verbatimTextOutput(ns("data"))
   )
@@ -44,12 +36,14 @@ generate_ui.block <- function(x, id, ...) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, ...) {
+generate_ui.stack <- function(x, id, ...) {
 
   stopifnot(...length() == 0L)
 
+  ns <- shiny::NS(id)
+
   shiny::fluidPage(
-    lapply(x, generate_ui, id = attr(x, "name"))
+    lapply(x, generate_ui, id = ns(attr(x, "name")))
   )
 }
 

@@ -143,3 +143,41 @@ type_trans <- function(x) {
     name = as.name(x)
   )
 }
+
+get_field_names <- function(x) {
+
+  stopifnot(inherits(x, "block"))
+
+  ls(envir = x)
+}
+
+get_field_values <- function(x, fields = NULL) {
+
+  stopifnot(inherits(x, "block"))
+
+  if (is.null(fields)) {
+    fields <- get_field_names(x)
+  }
+
+  set_names(
+    lapply(fields, function(f) x[[f]]),
+    fields
+  )
+}
+
+set_field_value <- function(x, field, value) {
+
+  old <- get_field_values(x, field)
+  new <- value
+
+  attributes(new) <- attributes(old)
+
+  assign(field, validate_field(new), envir = x)
+
+  invisible(x)
+}
+
+set_field_values <- function(x, fields, values) {
+  Map(set_field_value, list(x), fields, values)
+  invisible(x)
+}

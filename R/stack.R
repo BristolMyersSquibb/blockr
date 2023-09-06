@@ -28,7 +28,7 @@ new_stack <- function(..., name = rand_names()) {
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
   )
 
-	structure(blocks, class = "stack")
+	structure(blocks, name = name, class = "stack")
 }
 
 #' @param stack An object inheriting form `"stack"`
@@ -36,9 +36,9 @@ new_stack <- function(..., name = rand_names()) {
 #' @export
 serve_stack <- function(stack) {
   shiny::shinyApp(
-    ui = generate_ui(stack),
+    ui = generate_ui(stack, id = attr(stack, "name")),
     server = function(input, output, session) {
-      generate_server(stack)
+      generate_server(stack, id = attr(stack, "name"))
     }
   )
 }
