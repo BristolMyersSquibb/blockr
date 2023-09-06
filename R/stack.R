@@ -34,17 +34,11 @@ new_stack <- function(..., name = rand_names()) {
 #' @param stack An object inheriting form `"stack"`
 #' @rdname new_stack
 #' @export
-stack_server_generator <- function(stack) {
-  function(input, output, session) {
-    NULL
-  }
-}
-
-#' @rdname new_stack
-#' @export
 serve_stack <- function(stack) {
   shiny::shinyApp(
     ui = generate_ui(stack),
-    server = stack_server_generator(stack)
+    server = function(input, output, session) {
+      generate_server(stack)
+    }
   )
 }

@@ -2,13 +2,10 @@
 % Please edit documentation in R/stack.R
 \name{new_stack}
 \alias{new_stack}
-\alias{stack_server_generator}
 \alias{serve_stack}
 \title{Stacks}
 \usage{
 new_stack(..., name = rand_names())
-
-stack_server_generator(stack)
 
 serve_stack(stack)
 }

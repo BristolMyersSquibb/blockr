@@ -22,7 +22,10 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
-	structure(fields, name = name, expr = expr, ..., class = c(class, "block"))
+  env <- list2env(fields, parent = pkg_env())
+
+	structure(env, name = name, expr = expr, result = NULL, ...,
+            class = c(class, "block"))
 }
 
 #' @param x An object inheriting form `"block"`
@@ -41,7 +44,7 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
+  do.call(bquote, list(attr(x, "expr"), where = eapply(x, type_trans)))
 }
 
 #' @rdname new_block

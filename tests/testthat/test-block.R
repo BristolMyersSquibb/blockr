@@ -3,7 +3,7 @@ test_that("data blocks", {
   block <- new_data_block()
 
   expect_s3_class(block, "data_block")
-  expect_type(block, "list")
+  expect_type(block, "environment")
 
   dat <- evalute_block(block)
 
@@ -20,7 +20,7 @@ test_that("filter blocks", {
   block <- new_filter_block(datasets::iris)
 
   expect_s3_class(block, "filter_block")
-  expect_type(block, "list")
+  expect_type(block, "environment")
 
   block <- new_filter_block(datasets::iris, "Species", "setosa")
 

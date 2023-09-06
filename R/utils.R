@@ -106,4 +106,7 @@ is_count <- function(x, include_zero = TRUE) {
   }
 }
 
-paste_ <- function(...) paste(..., sep = "_")
+set_names <- function(object = nm, nm) {
+  names(object) <- nm
+  object
+}

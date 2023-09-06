@@ -17,18 +17,28 @@ generate_ui.block <- function(x, id, ...) {
 
   stopifnot(...length() == 0L)
 
-  fields <- Map(
-    ui_input,
-    x,
-    id = paste_(id, names(x)),
-    name = names(x)
+  ns <- shiny::NS(id)
+
+  fields <- ls(envir = x)
+
+  inputs <- set_names(
+    vector("list", length(fields)),
+    fields
   )
+
+  for (field in fields) {
+    inputs[[field]] <- ui_input(
+      get(field, envir = x, inherits = FALSE),
+      id = ns(field),
+      name = field
+    )
+  }
 
   div_card(
     title = shiny::h4(attr(x, "name")),
-    do.call(shiny::div, unname(fields)),
-    shiny::verbatimTextOutput(paste_(id, "code")),
-    shiny::verbatimTextOutput(paste_(id, "data"))
+    do.call(shiny::div, unname(inputs)),
+    shiny::verbatimTextOutput(ns("code")),
+    shiny::verbatimTextOutput(ns("data"))
   )
 }
 
