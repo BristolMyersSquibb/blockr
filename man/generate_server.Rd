@@ -8,16 +8,16 @@
 \usage{
 generate_server(x, ...)
 
-\method{generate_server}{block}(x, id, ...)
+\method{generate_server}{block}(x, in_dat = NULL, ...)
 
-\method{generate_server}{stack}(x, id, ...)
+\method{generate_server}{stack}(x, ...)
 }
 \arguments{
-\item{x}{Object for which to generate UI components}
+\item{x}{Object for which to generate a \code{\link[shiny:moduleServer]{shiny::moduleServer()}}}
 
 \item{...}{Generic consistency}
 
-\item{id}{UI IDs}
+\item{in_dat}{Forwarded to \code{evalute_block()}}
 }
 \description{
 Generic for UI generation

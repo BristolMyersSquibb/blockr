@@ -165,9 +165,13 @@ get_field_values <- function(x, fields = NULL) {
   )
 }
 
+get_field_value <- function(x, field) {
+  get_field_values(x, field)[[field]]
+}
+
 set_field_value <- function(x, field, value) {
 
-  old <- get_field_values(x, field)
+  old <- get_field_value(x, field)
   new <- value
 
   attributes(new) <- attributes(old)
@@ -177,7 +181,12 @@ set_field_value <- function(x, field, value) {
   invisible(x)
 }
 
-set_field_values <- function(x, fields, values) {
+set_field_values <- function(x, ...) {
+
+  values <- list(...)
+  fields <- names(values)
+
   Map(set_field_value, list(x), fields, values)
+
   invisible(x)
 }

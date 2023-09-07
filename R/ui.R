@@ -17,7 +17,9 @@ generate_ui.block <- function(x, id, ...) {
 
   stopifnot(...length() == 0L)
 
-  ns <- shiny::NS(id)
+  ns <- shiny::NS(
+    shiny::NS(id)(attr(x, "name"))
+  )
 
   fields <- Map(
     ui_input,
@@ -36,14 +38,16 @@ generate_ui.block <- function(x, id, ...) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, id, ...) {
+generate_ui.stack <- function(x, ...) {
 
   stopifnot(...length() == 0L)
 
-  ns <- shiny::NS(id)
-
-  shiny::fluidPage(
-    lapply(x, generate_ui, id = ns(attr(x, "name")))
+  do.call(
+    shiny::fluidPage,
+    c(
+      lapply(x, generate_ui, id = attr(x, "name")),
+      title = attr(x, "name")
+    )
   )
 }
 

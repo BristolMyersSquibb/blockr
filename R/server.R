@@ -2,69 +2,76 @@
 #'
 #' Generic for UI generation
 #'
-#' @param x Object for which to generate UI components
+#' @param x Object for which to generate a [shiny::moduleServer()]
 #' @param ... Generic consistency
 #'
 #' @export
 generate_server <- function(x, ...) {
-  UseMethod("generate_ui")
+  UseMethod("generate_server")
 }
 
-#' @param id UI IDs
+#' @param in_dat Forwarded to `evalute_block()`
 #' @rdname generate_server
 #' @export
-generate_server.block <- function(x, id, ...) {
+generate_server.block <- function(x, in_dat = NULL, ...) {
 
   fields <- get_field_names(x)
 
+  inp_expr <- set_names(
+    lapply(fields, function(x) bquote(input[[.(val)]], list(val = x))),
+    fields
+  )
+
+  set_expr <- bquote(
+    set_field_values(x, ..(args)),
+    list(args = do.call(expression, inp_expr)),
+    splice = TRUE
+  )
+
   shiny::moduleServer(
-    id,
+    attr(x, "name"),
     function(input, output, session) {
 
-      blk <- shiny::reactive(
-        set_field_values(x, fields, input[fields])
-      )
+      blk <- shiny::reactive(set_expr, quoted = TRUE)
 
-      dat <- shiny::reactive(
-        evalute_block(blk(), ...)
-      )
+      if (is.null(in_dat)) {
+        out_dat <- shiny::reactive(
+          evalute_block(blk())
+        )
+      } else {
+        out_dat <- shiny::reactive(
+          evalute_block(blk(), data = in_dat())
+        )
+      }
 
       cod <- shiny::reactive(
         generate_code(blk())
       )
 
-      output$data <- shiny::renderPrint(dat())
+      output$data <- shiny::renderPrint(out_dat())
       output$code <- shiny::renderPrint(cat(cod()))
 
-      dat
+      out_dat
     }
   )
 }
 
 #' @rdname generate_server
 #' @export
-generate_server.stack <- function(x, id, ...) {
+generate_server.stack <- function(x, ...) {
 
   stopifnot(...length() == 0L)
 
   shiny::moduleServer(
-    id,
+    attr(x, "name"),
     function(input, output, session) {
 
       res <- vector("list", length(x))
 
-      res[[1L]] <- generate_server(
-        x[[1L]],
-        id = names(x)[1L]
-      )
+      res[[1L]] <- generate_server(x[[1L]])
 
       for (i in seq_along(x)[-1L]) {
-
-        res[[i]] <- generate_server(
-          x[[i]],
-          id = names(x)[i],
-          data = res[[i - 1L]]()
-        )
+        res[[i]] <- generate_server(x[[i]], in_dat = res[[i - 1L]])
       }
 
       res

@@ -35,10 +35,12 @@ new_stack <- function(..., name = rand_names()) {
 #' @rdname new_stack
 #' @export
 serve_stack <- function(stack) {
-  shiny::shinyApp(
-    ui = generate_ui(stack, id = attr(stack, "name")),
-    server = function(input, output, session) {
-      generate_server(stack, id = attr(stack, "name"))
-    }
-  )
+
+  ui <- generate_ui(stack)
+
+  server <- function(input, output, session) {
+    generate_server(stack)
+  }
+
+  shiny::shinyApp(ui, server)
 }
