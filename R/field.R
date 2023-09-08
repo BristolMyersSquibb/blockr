@@ -62,3 +62,21 @@ select_field <- function(value, choices, ...) {
     new_field(value, choices = choices, ..., class = "select_field")
   )
 }
+
+`value<-` <- function(x, value) {
+
+  stopifnot(inherits(x, "field"))
+
+  attributes(value) <- attributes(x)
+
+  validate_field(value)
+}
+
+`meta<-` <- function(x, which, value) {
+
+  stopifnot(inherits(x, "field"))
+
+  attr(x, which) <- value
+
+  validate_field(x)
+}

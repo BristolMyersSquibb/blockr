@@ -22,9 +22,7 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
-  env <- list2env(fields, parent = pkg_env())
-
-	structure(env, name = name, expr = expr, result = NULL, ...,
+	structure(fields, name = name, expr = expr, result = NULL, ...,
             class = c(class, "block"))
 }
 
@@ -44,7 +42,7 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  do.call(bquote, list(attr(x, "expr"), where = eapply(x, type_trans)))
+  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
 }
 
 #' @rdname new_block
@@ -152,41 +150,13 @@ type_trans <- function(x) {
   )
 }
 
-get_field_names <- function(x) {
-
-  stopifnot(inherits(x, "block"))
-
-  ls(envir = x)
-}
-
-get_field_values <- function(x, fields = NULL) {
-
-  stopifnot(inherits(x, "block"))
-
-  if (is.null(fields)) {
-    fields <- get_field_names(x)
-  }
-
-  set_names(
-    lapply(fields, function(f) x[[f]]),
-    fields
-  )
-}
-
-get_field_value <- function(x, field) {
-  get_field_values(x, field)[[field]]
-}
-
 set_field_value <- function(x, field, value) {
 
-  old <- get_field_value(x, field)
-  new <- value
+  stopifnot(inherits(x, "block"))
 
-  attributes(new) <- attributes(old)
+  value(x[[field]]) <- value
 
-  assign(field, validate_field(new), envir = x)
-
-  invisible(x)
+  x
 }
 
 set_field_values <- function(x, ...) {
@@ -196,7 +166,7 @@ set_field_values <- function(x, ...) {
 
   Map(set_field_value, list(x), fields, values)
 
-  invisible(x)
+  x
 }
 
 #' @rdname new_block
@@ -216,24 +186,19 @@ update_fields.block <- function(x, ...) {
 #' @export
 update_fields.transform_block <- function(x, data, session, ...) {
 
-  col_field <- get_field_value(x, "column")
+  col_field <- x[["column"]]
   col_choices <- colnames(data)
 
   if (!identical(col_choices, attr(col_field, "choices"))) {
 
     if (!col_field %in% col_choices) {
-      new <- col_choices[1L]
-      attributes(new) <- attributes(col_field)
-      set_field_value(x, "value", NA_character_)
+      attr(x[["column"]], "choices") <- col_choices
+      value(x[["column"]]) <- col_choices[1L]
+      value(x[["value"]]) <- NA_character_
     } else {
-      new <- col_field
+      meta(x[["column"]], "choices") <- col_choices
     }
-
-    attr(new, "choices") <- col_choices
-    tryCatch(validate_field(new), error = function(e) browser())
-    assign("column", validate_field(new), envir = x)
-    ui_update(new, session, "column", "column")
   }
 
-  invisible(x)
+  x
 }

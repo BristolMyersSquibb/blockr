@@ -15,55 +15,46 @@ generate_server <- function(x, ...) {
 #' @export
 generate_server.block <- function(x, in_dat = NULL, ...) {
 
-  fields <- get_field_names(x)
+  fields <- names(x)
 
   inp_expr <- set_names(
     lapply(fields, function(x) bquote(input[[.(val)]], list(val = x))),
     fields
   )
 
-  if (is.null(in_dat)) {
-
-    set_expr <- bquote(
-      set_field_values(x, ..(args)),
-      list(args = do.call(expression, inp_expr)),
-      splice = TRUE
-    )
-
-  } else {
-
-    set_expr <- bquote(
-      set_field_values(new_blk(), ..(args)),
-      list(args = do.call(expression, inp_expr)),
-      splice = TRUE
-    )
-  }
+  set_expr <- bquote(
+    set_field_values(prv(), ..(args)),
+    list(args = do.call(expression, inp_expr)),
+    splice = TRUE
+  )
 
   shiny::moduleServer(
     attr(x, "name"),
     function(input, output, session) {
 
       if (not_null(in_dat)) {
-        new_blk <- shiny::reactive(
+        prv <- shiny::reactive(
           update_fields(x, data = in_dat(), session = session)
         )
+      } else {
+        prv <- shiny::reactiveVal(x)
       }
 
-      blk <- shiny::reactive(set_expr, quoted = TRUE)
+      cur <- shiny::reactive(set_expr, quoted = TRUE)
 
       if (is.null(in_dat)) {
         out_dat <- shiny::reactive(
-          evalute_block(blk())
+          evalute_block(cur())
         )
       } else {
         out_dat <- shiny::reactive(
-          evalute_block(blk(), data = in_dat())
+          evalute_block(cur(), data = in_dat())
         )
       }
 
       output$data <- shiny::renderPrint(out_dat())
       output$code <- shiny::renderPrint(
-        cat(deparse(generate_code(blk())), sep = "\n")
+        cat(deparse(generate_code(cur())), sep = "\n")
       )
 
       out_dat

@@ -23,9 +23,9 @@ generate_ui.block <- function(x, id, ...) {
 
   fields <- Map(
     ui_input,
-    get_field_values(x),
-    id = chr_ply(get_field_names(x), ns),
-    name = get_field_names(x)
+    x,
+    id = chr_ply(names(x), ns),
+    name = names(x)
   )
 
   div_card(
