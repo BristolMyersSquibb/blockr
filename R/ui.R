@@ -24,8 +24,8 @@ generate_ui.block <- function(x, id, ...) {
   fields <- Map(
     ui_input,
     get_field_values(x),
-    id = chr_ply(names(x), ns),
-    name = names(x)
+    id = chr_ply(get_field_names(x), ns),
+    name = get_field_names(x)
   )
 
   div_card(
@@ -74,6 +74,31 @@ ui_input.string_field <- function(x, id, name) {
 #' @export
 ui_input.select_field <- function(x, id, name) {
   shiny::selectInput(id, name, attr(x, "choices"), x)
+}
+
+#' @param session Shiny session
+#' @rdname generate_ui
+#' @export
+ui_update <- function(x, session, id, name) {
+  UseMethod("ui_update", x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.field <- function(x, session, id, name) {
+  stop("no base-class UI update for fields available")
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.string_field <- function(x, session, id, name) {
+  shiny::updateTextInput(session, id, name, x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.select_field <- function(x, session, id, name) {
+  shiny::updateSelectInput(session, id, name, attr(x, "choices"), x)
 }
 
 div_card <- function(..., title = NULL, footer = NULL) {

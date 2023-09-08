@@ -11,6 +11,9 @@
 \alias{evalute_block.transform_block}
 \alias{new_data_block}
 \alias{new_filter_block}
+\alias{update_fields}
+\alias{update_fields.block}
+\alias{update_fields.transform_block}
 \title{Blocks}
 \usage{
 new_block(fields, expr, name = rand_names(), ..., class = character())
@@ -32,6 +35,12 @@ evalute_block(x, ...)
 new_data_block(...)
 
 new_filter_block(dat, col = colnames(dat)[1L], val = NA_character_, ...)
+
+update_fields(x, ...)
+
+\method{update_fields}{block}(x, ...)
+
+\method{update_fields}{transform_block}(x, data, session, ...)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}
@@ -53,6 +62,8 @@ of the fields)}
 \item{dat}{Tabular data to filter (rows)}
 
 \item{col, val}{Definition of the equality filter}
+
+\item{session}{Shiny session}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block

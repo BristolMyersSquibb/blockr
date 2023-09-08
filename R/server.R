@@ -22,17 +22,36 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
     fields
   )
 
-  set_expr <- bquote(
-    set_field_values(x, ..(args)),
-    list(args = do.call(expression, inp_expr)),
-    splice = TRUE
-  )
+  if (is.null(in_dat)) {
+
+    set_expr <- bquote(
+      set_field_values(x, ..(args)),
+      list(args = do.call(expression, inp_expr)),
+      splice = TRUE
+    )
+
+  } else {
+
+    set_expr <- bquote(
+      set_field_values(new_blk(), ..(args)),
+      list(args = do.call(expression, inp_expr)),
+      splice = TRUE
+    )
+  }
 
   shiny::moduleServer(
     attr(x, "name"),
     function(input, output, session) {
 
+      if (not_null(in_dat)) {
+        new_blk <- shiny::reactive(
+          update_fields(x, data = in_dat(), session = session)
+        )
+      }
+
       blk <- shiny::reactive(set_expr, quoted = TRUE)
+
+      browser()
 
       if (is.null(in_dat)) {
         out_dat <- shiny::reactive(
@@ -44,12 +63,10 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
         )
       }
 
-      cod <- shiny::reactive(
-        generate_code(blk())
-      )
-
       output$data <- shiny::renderPrint(out_dat())
-      output$code <- shiny::renderPrint(cat(cod()))
+      output$code <- shiny::renderPrint(
+        cat(deparse(generate_code(blk())), sep = "\n")
+      )
 
       out_dat
     }

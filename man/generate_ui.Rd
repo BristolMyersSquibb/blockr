@@ -8,6 +8,10 @@
 \alias{ui_input.field}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
+\alias{ui_update}
+\alias{ui_update.field}
+\alias{ui_update.string_field}
+\alias{ui_update.select_field}
 \title{UI}
 \usage{
 generate_ui(x, ...)
@@ -23,6 +27,14 @@ ui_input(x, id, name)
 \method{ui_input}{string_field}(x, id, name)
 
 \method{ui_input}{select_field}(x, id, name)
+
+ui_update(x, session, id, name)
+
+\method{ui_update}{field}(x, session, id, name)
+
+\method{ui_update}{string_field}(x, session, id, name)
+
+\method{ui_update}{select_field}(x, session, id, name)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
@@ -32,6 +44,8 @@ ui_input(x, id, name)
 \item{id}{UI IDs}
 
 \item{name}{Field name}
+
+\item{session}{Shiny session}
 }
 \description{
 Generic for UI generation

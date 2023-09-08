@@ -83,7 +83,15 @@ evalute_block.transform_block <- function(x, data, ...) {
 #' @export
 new_data_block <- function(...) {
 
+  is_dataset_eligible <- function(x) {
+    inherits(
+      get(x, envir = as.environment("package:datasets"), inherits = FALSE),
+      "data.frame"
+    )
+  }
+
   datasets <- ls(envir = as.environment("package:datasets"))
+  datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
   fields <- list(
     dataset = select_field("iris", datasets)
@@ -187,6 +195,45 @@ set_field_values <- function(x, ...) {
   fields <- names(values)
 
   Map(set_field_value, list(x), fields, values)
+
+  invisible(x)
+}
+
+#' @rdname new_block
+#' @export
+update_fields <- function(x, ...) {
+  UseMethod("update_fields")
+}
+
+#' @rdname new_block
+#' @export
+update_fields.block <- function(x, ...) {
+  invisible(x)
+}
+
+#' @param session Shiny session
+#' @rdname new_block
+#' @export
+update_fields.transform_block <- function(x, data, session, ...) {
+
+  col_field <- get_field_value(x, "column")
+  col_choices <- colnames(data)
+
+  if (!identical(col_choices, attr(col_field, "choices"))) {
+
+    if (!col_field %in% col_choices) {
+      new <- col_choices[1L]
+      attributes(new) <- attributes(col_field)
+      set_field_value(x, "value", NA_character_)
+    } else {
+      new <- col_field
+    }
+
+    attr(new, "choices") <- col_choices
+    tryCatch(validate_field(new), error = function(e) browser())
+    assign("column", validate_field(new), envir = x)
+    ui_update(new, session, "column", "column")
+  }
 
   invisible(x)
 }
