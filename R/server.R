@@ -51,8 +51,6 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
 
       blk <- shiny::reactive(set_expr, quoted = TRUE)
 
-      browser()
-
       if (is.null(in_dat)) {
         out_dat <- shiny::reactive(
           evalute_block(blk())
