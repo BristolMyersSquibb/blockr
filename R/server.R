@@ -23,7 +23,7 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
   )
 
   set_expr <- bquote(
-    set_field_values(prv(), ..(args)),
+    blk(set_field_values(blk(), ..(args))),
     list(args = do.call(expression, inp_expr)),
     splice = TRUE
   )
@@ -32,29 +32,29 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
     attr(x, "name"),
     function(input, output, session) {
 
+      blk <- shiny::reactiveVal(x)
+
       if (not_null(in_dat)) {
-        prv <- shiny::reactive(
-          update_fields(x, data = in_dat(), session = session)
+        shiny::observe(
+          blk(update_fields(blk(), data = in_dat(), session = session))
         )
-      } else {
-        prv <- shiny::reactiveVal(x)
       }
 
-      cur <- shiny::reactive(set_expr, quoted = TRUE)
+      shiny::observe(set_expr, quoted = TRUE)
 
       if (is.null(in_dat)) {
         out_dat <- shiny::reactive(
-          evalute_block(cur())
+          evalute_block(blk())
         )
       } else {
         out_dat <- shiny::reactive(
-          evalute_block(cur(), data = in_dat())
+          evalute_block(blk(), data = in_dat())
         )
       }
 
       output$data <- shiny::renderPrint(out_dat())
       output$code <- shiny::renderPrint(
-        cat(deparse(generate_code(cur())), sep = "\n")
+        cat(deparse(generate_code(blk())), sep = "\n")
       )
 
       out_dat

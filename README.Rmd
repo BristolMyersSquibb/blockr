@@ -24,7 +24,7 @@ Building blocks for data manipulation and visualization operations.
 
 You can install the development version of blockr from [GitHub](https://github.com/) with:
 
-``` r
+```r
 # install.packages("devtools")
 devtools::install_github("nbenn/blockr")
 ```
@@ -33,7 +33,7 @@ devtools::install_github("nbenn/blockr")
 
 A simple stack of blocks providing a dataset selector and a filter operation.
 
-```{r example, eval = FALSE}
+```r
 library(blockr)
 
 stack <- new_stack(
