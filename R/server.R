@@ -50,13 +50,23 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
 
       blk <- shiny::reactiveVal(x)
 
+      data_upd_completed <- reactiveVal(0)
+      # 1. update block by data
       if (not_null(in_dat)) {
-        shiny::observe(
-          blk(update_fields(blk(), data = in_dat(), session = session))
-        )
+        shiny::observe({
+          blk_upd <- update_fields(blk(), data = in_dat(), session = session)
+          blk(blk_upd)
+          data_upd_completed(Sys.time())
+        })
       }
 
+      # 2. update block by input fields
       shiny::observe({
+        # (this must run after data update (1) is complete; there must be a
+        # better way to do this; David?)
+        if(Sys.time() < data_upd_completed() + 0.1) {
+          return(NULL)
+        }
         blk_upd <- set_field_values_from_input(blk(), input)
         blk(blk_upd)
       })
