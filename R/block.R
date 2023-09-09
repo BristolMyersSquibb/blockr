@@ -186,7 +186,7 @@ update_fields.block <- function(x, ...) {
 #' @param session Shiny session
 #' @rdname new_block
 #' @export
-update_fields.fliter_block <- function(x, data, session, ...) {
+update_fields.filter_block <- function(x, data, session, ...) {
 
   col_field <- x[["column"]]
   col_choices <- colnames(data)
