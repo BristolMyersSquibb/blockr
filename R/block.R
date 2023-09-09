@@ -164,7 +164,9 @@ set_field_values <- function(x, ...) {
   values <- list(...)
   fields <- names(values)
 
-  Map(set_field_value, list(x), fields, values)
+  for (field in fields) {
+    value(x[[field]]) <- values[[field]]
+  }
 
   x
 }
@@ -184,7 +186,7 @@ update_fields.block <- function(x, ...) {
 #' @param session Shiny session
 #' @rdname new_block
 #' @export
-update_fields.transform_block <- function(x, data, session, ...) {
+update_fields.fliter_block <- function(x, data, session, ...) {
 
   col_field <- x[["column"]]
   col_choices <- colnames(data)
@@ -195,9 +197,12 @@ update_fields.transform_block <- function(x, data, session, ...) {
       attr(x[["column"]], "choices") <- col_choices
       value(x[["column"]]) <- col_choices[1L]
       value(x[["value"]]) <- NA_character_
+      ui_update(x[["value"]], session, "value", "value")
     } else {
       meta(x[["column"]], "choices") <- col_choices
     }
+
+    ui_update(x[["column"]], session, "column", "column")
   }
 
   x

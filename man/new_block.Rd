@@ -13,7 +13,7 @@
 \alias{new_filter_block}
 \alias{update_fields}
 \alias{update_fields.block}
-\alias{update_fields.transform_block}
+\alias{update_fields.fliter_block}
 \title{Blocks}
 \usage{
 new_block(fields, expr, name = rand_names(), ..., class = character())
@@ -40,7 +40,7 @@ update_fields(x, ...)
 
 \method{update_fields}{block}(x, ...)
 
-\method{update_fields}{transform_block}(x, data, session, ...)
+\method{update_fields}{fliter_block}(x, data, session, ...)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}
