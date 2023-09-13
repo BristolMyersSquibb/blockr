@@ -50,7 +50,12 @@ string_field <- function(value, ...) {
 #' @rdname new_field
 #' @export
 validate_field.select_field <- function(x) {
-  stopifnot(is_string(x), x %in% attr(x, "choices"))
+  cond <- if (is.null(attr(x, "multiple"))) {
+    is_string(x)
+  } else {
+    length(x) > 0 && is.atomic(x)
+  }
+  stopifnot(cond, x %in% attr(x, "choices"))
   x
 }
 

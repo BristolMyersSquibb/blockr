@@ -48,27 +48,51 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
     attr(x, "name"),
     function(input, output, session) {
 
+      module_name <- sprintf("module %s %s", class(x)[[1]], attr(x, "name"))
+
       blk <- shiny::reactiveVal(x)
 
-      data_upd_completed <- reactiveVal(0)
+      data_upd_completed <- reactiveVal(FALSE)
       # 1. update block by data
+      # This will never happen in the first block
+      # because no data are passed ...
       if (not_null(in_dat)) {
-        shiny::observe({
+        shiny::observeEvent(in_dat(), {
+          message(sprintf("Update data in %s", module_name))
+          inputs_updated(FALSE)
           blk_upd <- update_fields(blk(), data = in_dat(), session = session)
           blk(blk_upd)
-          data_upd_completed(Sys.time())
+          data_upd_completed(TRUE)
         })
       }
 
+      old_hash <- reactiveVal(isolate(hash_input(input)))
+      inputs_updated <- reactiveVal(FALSE)
+
       # 2. update block by input fields
-      shiny::observe({
-        # (this must run after data update (1) is complete; there must be a
-        # better way to do this; David?)
-        if(Sys.time() < data_upd_completed() + 0.1) {
-          return(NULL)
+      shiny::observeEvent({
+        new_hash <- hash_input(input)
+        input_changed <- old_hash() != new_hash
+        if (input_changed) {
+          old_hash(new_hash)
+          message("Allowed to update inputs")
         }
+        if (not_null(in_dat)) {
+          # So that it runs once after update data
+          # or whenever input is changed.
+          # This will never run in the data module
+          # since no data are passed.
+          input_changed || req(data_upd_completed())
+        } else {
+          req(input_changed)
+        }
+      }, {
+        #if ("filter_block" %in% class(x)) browser()
+        message(sprintf("Update inputs in %s", module_name))
         blk_upd <- set_field_values_from_input(blk(), input)
         blk(blk_upd)
+        data_upd_completed(FALSE)
+        inputs_updated(TRUE)
       })
 
       if (is.null(in_dat)) {
@@ -76,9 +100,9 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
           evalute_block(blk())
         )
       } else {
-        out_dat <- shiny::reactive(
+        out_dat <- shiny::reactive({
           evalute_block(blk(), data = in_dat())
-        )
+        })
       }
 
       output$data <- shiny::renderPrint(out_dat())
@@ -90,6 +114,10 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
     }
   )
 }
+
+#generate_server.data_block <- function(x, ...) {
+#  browser()
+#}
 
 #' @rdname generate_server
 #' @export

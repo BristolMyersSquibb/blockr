@@ -32,7 +32,7 @@ generate_ui.block <- function(x, id, ...) {
     title = shiny::h4(attr(x, "name")),
     do.call(shiny::div, unname(fields)),
     shiny::verbatimTextOutput(ns("code")),
-    shiny::verbatimTextOutput(ns("data"))
+    custom_verbatim_output(ns("data"))
   )
 }
 
@@ -73,7 +73,17 @@ ui_input.string_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.select_field <- function(x, id, name) {
-  shiny::selectInput(id, name, attr(x, "choices"), x)
+  shiny::selectInput(
+    id,
+    name,
+    attr(x, "choices"),
+    x,
+    multiple = if (!is.null(attr(x, "multiple"))) {
+      attr(x, "multiple")
+    } else {
+      FALSE
+    }
+  )
 }
 
 #' @param session Shiny session
@@ -101,10 +111,12 @@ ui_update.select_field <- function(x, session, id, name) {
   shiny::updateSelectInput(session, id, name, attr(x, "choices"), x)
 }
 
+#' Custom card container
+#' @keywords internal
 div_card <- function(..., title = NULL, footer = NULL) {
   shiny::div(
     class = "panel panel-default",
-    style = "margin: 10px",
+    style = "margin: 10px;",
     if (not_null(title)) {
       shiny::div(title, class = "panel-heading")
     },
@@ -116,4 +128,12 @@ div_card <- function(..., title = NULL, footer = NULL) {
       shiny::div(footer, class = "panel-footer")
     }
   )
+}
+
+#' Custom code container
+#' @keywords internal
+custom_verbatim_output <- function(id) {
+  tmp <- shiny::verbatimTextOutput(id)
+  tmp$attribs$style <- "max-height: 400px; overflow-y: scroll"
+  tmp
 }

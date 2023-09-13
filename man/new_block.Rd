@@ -11,6 +11,7 @@
 \alias{evalute_block.transform_block}
 \alias{new_data_block}
 \alias{new_filter_block}
+\alias{new_select_block}
 \alias{update_fields}
 \alias{update_fields.block}
 \alias{update_fields.filter_block}
@@ -36,6 +37,8 @@ new_data_block(...)
 
 new_filter_block(dat, col = colnames(dat)[1L], val = NA_character_, ...)
 
+new_select_block(dat, cols = colnames(dat)[1L], ...)
+
 update_fields(x, ...)
 
 \method{update_fields}{block}(x, ...)
@@ -59,9 +62,11 @@ of the fields)}
 
 \item{data}{Result from previous block}
 
-\item{dat}{Tabular data to filter (rows)}
+\item{dat}{Tabular data in which to select some columns.}
 
 \item{col, val}{Definition of the equality filter}
+
+\item{cols}{Column(s) to select.}
 
 \item{session}{Shiny session}
 }

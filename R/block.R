@@ -42,7 +42,16 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
+  tmp_expr <- if (inherits(x, "filter_block")) {
+     if (is.na(x[["value"]]) || nchar(x[["value"]]) == 0) {
+      attr(x, "default_expr")
+    } else {
+      attr(x, "expr")
+    }
+  } else {
+    attr(x, "expr")
+  }
+  do.call(bquote, list(tmp_expr, where = lapply(x, type_trans)))
 }
 
 #' @rdname new_block
@@ -126,11 +135,34 @@ new_filter_block <- function(dat, col = colnames(dat)[1L],
     value = string_field(val)
   )
 
-  if (is.na(val)) {
+  new_block(
+    fields = fields,
+    default_expr = quote(identity()),
+    expr = quote(
+      dplyr::filter(.(column) == .(value))
+    ),
+    ...,
+    class = c("filter_block", "transform_block")
+  )
+}
+
+#' @param dat Tabular data in which to select some columns.
+#' @param cols Column(s) to select.
+#' @rdname new_block
+#' @export
+new_select_block <- function(dat, cols = colnames(dat)[1L], ...) {
+  all_cols <- colnames(dat)
+
+  # Select_field only allow one value, not multi select
+  fields <- list(
+    column = select_field(cols, all_cols, multiple = TRUE, type = "name")
+  )
+
+  if (length(cols) == 0) {
     expr <- quote(identity())
   } else {
     expr <- quote(
-      dplyr::filter(.(column) == .(value))
+      dplyr::select(.(column))
     )
   }
 
@@ -138,7 +170,7 @@ new_filter_block <- function(dat, col = colnames(dat)[1L],
     fields = fields,
     expr = expr,
     ...,
-    class = c("filter_block", "transform_block")
+    class = c("select_block", "transform_block")
   )
 }
 
@@ -187,7 +219,6 @@ update_fields.block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 update_fields.filter_block <- function(x, data, session, ...) {
-
   col_field <- x[["column"]]
   col_choices <- colnames(data)
 
@@ -206,4 +237,8 @@ update_fields.filter_block <- function(x, data, session, ...) {
   }
 
   x
+}
+
+update_fields.select_block <- function(x, data, session, ...) {
+  #browser()
 }

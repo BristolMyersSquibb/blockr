@@ -110,3 +110,8 @@ set_names <- function(object = nm, nm) {
   names(object) <- nm
   object
 }
+
+hash_input <- function(input) {
+  l <- names(input)
+  rlang::hash(lapply(l, \(x) input[[x]]))
+}
