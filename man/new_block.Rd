@@ -76,6 +76,8 @@ of the fields)}
 
 \item{y}{Y axis variable.}
 
+\item{plot_opts}{List containing options for ggplot (color, ...).}
+
 \item{session}{Shiny session}
 }
 \description{

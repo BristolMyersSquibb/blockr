@@ -29,9 +29,7 @@ generate_ui.block <- function(x, id, ...) {
   )
 
   plots <- if (inherits(x, "plot_block")) {
-    # TO DO: why calling ui_output fails?
-    shiny::plotOutput(ns("plot"))
-    #ui_output(x, id = ns("plot"))
+    ui_output(x, id = ns("plot"))
   }
 
   div_card(
@@ -102,7 +100,7 @@ ui_output <- function(x, id) {
 
 #' @rdname generate_ui
 #' @export
-ui_output.plot_block <- function(id) {
+ui_output.plot_block <- function(x, id) {
   shiny::plotOutput(id)
 }
 

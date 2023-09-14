@@ -32,7 +32,7 @@ ui_input(x, id, name)
 
 ui_output(x, id)
 
-\method{ui_output}{plot_block}(id)
+\method{ui_output}{plot_block}(x, id)
 
 ui_update(x, session, id, name)
 
