@@ -42,8 +42,15 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
+  # TO DO: find a better way to handle this ...
   tmp_expr <- if (inherits(x, "filter_block")) {
      if (is.na(x[["value"]]) || nchar(x[["value"]]) == 0) {
+      attr(x, "default_expr")
+    } else {
+      attr(x, "expr")
+    }
+  } else if (inherits(x, "select_block")) {
+    if (length(x[["column"]]) == 0) {
       attr(x, "default_expr")
     } else {
       attr(x, "expr")
@@ -79,9 +86,23 @@ evalute_block.data_block <- function(x, ...) {
 evalute_block.transform_block <- function(x, data, ...) {
 
   stopifnot(...length() == 0L)
-
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
+}
+
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evalute_block.plot_block <- function(x, data, ...) {
+  stopifnot(...length() == 0L)
+  tmp_expr <- strsplit(deparse1(generate_code(x)), "\\+")[[1]]
+  gg_init <- str2lang(tmp_expr[[1]])
+  gg_geom <- str2lang(tmp_expr[[2]])
+
+  eval(
+    substitute(data %>% expr + expr2, list(expr = gg_init, expr2 = gg_geom)),
     list(data = data)
   )
 }
@@ -158,19 +179,49 @@ new_select_block <- function(dat, cols = colnames(dat)[1L], ...) {
     column = select_field(cols, all_cols, multiple = TRUE, type = "name")
   )
 
-  if (length(cols) == 0) {
-    expr <- quote(identity())
-  } else {
-    expr <- quote(
+  new_block(
+    fields = fields,
+    default_expr = quote(identity()),
+    expr = quote(
       dplyr::select(.(column))
-    )
-  }
+    ),
+    ...,
+    class = c("select_block", "transform_block")
+  )
+}
+
+#' @param dat Tabular data in which to select some columns.
+#' @param x X axis variable.
+#' @param y Y axis variable.
+#' @param plot_opts List containing options for ggplot (color, ...).
+#' @param ... Any other params. TO DO
+#' @rdname new_block
+#' @import ggplot2
+#' @export
+new_plot_block <- function(dat, x, y, plot_opts = list(color = "blue"), ...) {
+
+  # For plot blocks, fields will create input to style the plot ...
+  fields <- list(
+    x = string_field(colnames(dat)[[1]]),
+    y = string_field(colnames(dat)[[2]]),
+    color = string_field(plot_opts$color)
+  )
 
   new_block(
     fields = fields,
-    expr = expr,
+    expr = quote(
+      ggplot() +
+        geom_point(
+          # We have to use aes_string over aes
+          mapping = aes_string(
+            x = .(x),
+            y = .(y)
+          ),
+          color = .(color)
+        )
+    ),
     ...,
-    class = c("select_block", "transform_block")
+    class = c("plot_block", "plot_block")
   )
 }
 

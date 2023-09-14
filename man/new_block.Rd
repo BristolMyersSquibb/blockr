@@ -9,9 +9,11 @@
 \alias{evalute_block.block}
 \alias{evalute_block.data_block}
 \alias{evalute_block.transform_block}
+\alias{evalute_block.plot_block}
 \alias{new_data_block}
 \alias{new_filter_block}
 \alias{new_select_block}
+\alias{new_plot_block}
 \alias{update_fields}
 \alias{update_fields.block}
 \alias{update_fields.filter_block}
@@ -33,11 +35,15 @@ evalute_block(x, ...)
 
 \method{evalute_block}{transform_block}(x, data, ...)
 
+\method{evalute_block}{plot_block}(x, data, ...)
+
 new_data_block(...)
 
 new_filter_block(dat, col = colnames(dat)[1L], val = NA_character_, ...)
 
 new_select_block(dat, cols = colnames(dat)[1L], ...)
+
+new_plot_block(dat, x, y, plot_opts = list(color = "blue"), ...)
 
 update_fields(x, ...)
 
@@ -54,11 +60,11 @@ of the fields)}
 
 \item{name}{Block name}
 
-\item{...}{Further (metadata) attributes}
+\item{...}{Any other params. TO DO}
 
 \item{class}{Block subclass}
 
-\item{x}{An object inheriting form \code{"block"}}
+\item{x}{X axis variable.}
 
 \item{data}{Result from previous block}
 
@@ -67,6 +73,8 @@ of the fields)}
 \item{col, val}{Definition of the equality filter}
 
 \item{cols}{Column(s) to select.}
+
+\item{y}{Y axis variable.}
 
 \item{session}{Shiny session}
 }

@@ -8,6 +8,8 @@
 \alias{ui_input.field}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
+\alias{ui_output}
+\alias{ui_output.plot_block}
 \alias{ui_update}
 \alias{ui_update.field}
 \alias{ui_update.string_field}
@@ -27,6 +29,10 @@ ui_input(x, id, name)
 \method{ui_input}{string_field}(x, id, name)
 
 \method{ui_input}{select_field}(x, id, name)
+
+ui_output(x, id)
+
+\method{ui_output}{plot_block}(id)
 
 ui_update(x, session, id, name)
 

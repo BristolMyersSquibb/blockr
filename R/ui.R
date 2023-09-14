@@ -28,11 +28,18 @@ generate_ui.block <- function(x, id, ...) {
     name = names(x)
   )
 
+  plots <- if (inherits(x, "plot_block")) {
+    # TO DO: why calling ui_output fails?
+    shiny::plotOutput(ns("plot"))
+    #ui_output(x, id = ns("plot"))
+  }
+
   div_card(
     title = shiny::h4(attr(x, "name")),
     do.call(shiny::div, unname(fields)),
     shiny::verbatimTextOutput(ns("code")),
-    custom_verbatim_output(ns("data"))
+    custom_verbatim_output(ns("data")),
+    plots
   )
 }
 
@@ -78,12 +85,25 @@ ui_input.select_field <- function(x, id, name) {
     name,
     attr(x, "choices"),
     x,
+    # Support multi select
     multiple = if (!is.null(attr(x, "multiple"))) {
       attr(x, "multiple")
     } else {
       FALSE
     }
   )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_output <- function(x, id) {
+  UseMethod("ui_output", x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_output.plot_block <- function(id) {
+  shiny::plotOutput(id)
 }
 
 #' @param session Shiny session

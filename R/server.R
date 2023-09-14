@@ -95,17 +95,26 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
         inputs_updated(TRUE)
       })
 
+      out_dat <- NULL
       if (is.null(in_dat)) {
         out_dat <- shiny::reactive(
           evalute_block(blk())
         )
       } else {
-        out_dat <- shiny::reactive({
+        # For plot block, we don't need to show
+        # data but the output ...
+        if (!inherits(x, "plot_block")) {
+          out_dat <- shiny::reactive({
           evalute_block(blk(), data = in_dat())
-        })
+          })
+          output$data <- shiny::renderPrint(out_dat())
+        } else {
+          output$plot <- renderPlot({
+            evalute_block(blk(), data = in_dat())
+          })
+        }
       }
 
-      output$data <- shiny::renderPrint(out_dat())
       output$code <- shiny::renderPrint(
         cat(deparse(generate_code(blk())), sep = "\n")
       )
@@ -114,10 +123,6 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
     }
   )
 }
-
-#generate_server.data_block <- function(x, ...) {
-#  browser()
-#}
 
 #' @rdname generate_server
 #' @export
