@@ -32,12 +32,36 @@ generate_ui.block <- function(x, id, ...) {
     ui_output(x, id = ns("plot"))
   }
 
+  data_switch <- NULL
+  if (!inherits(x, "plot_block")) {
+    data_switch <- bslib::input_switch(
+      ns("data_switch"),
+      "Show data?"
+    )
+    data_switch <- shiny::tagAppendAttributes(
+      data_switch,
+      `data-bs-toggle` = "collapse",
+      href = sprintf("#%s", ns("collapse_data")),
+      `aria-expanded` = FALSE,
+      `aria-controls` = ns("collapse_data")
+    )
+  }
+
   div_card(
     title = shiny::h4(attr(x, "name")),
-    do.call(shiny::div, unname(fields)),
-    shiny::verbatimTextOutput(ns("code")),
-    custom_verbatim_output(ns("data")),
-    plots
+    bslib::layout_sidebar(
+      sidebar = shiny::tagList(
+        data_switch,
+        do.call(shiny::div, unname(fields))
+      ),
+      shiny::verbatimTextOutput(ns("code")),
+      shiny::tags$div(
+        class = "collapse",
+        id = ns("collapse_data"),
+        custom_verbatim_output(ns("data"))
+      ),
+      plots
+    )
   )
 }
 
@@ -47,12 +71,18 @@ generate_ui.stack <- function(x, ...) {
 
   stopifnot(...length() == 0L)
 
-  do.call(
-    shiny::fluidPage,
+  bslib::page_fluid(
+    theme = bslib::bs_theme(
+      primary = "#6c757d",
+    ),
+    do.call(
+    bslib::accordion,
     c(
       lapply(x, generate_ui, id = attr(x, "name")),
-      title = attr(x, "name")
+      title = attr(x, "name"),
+      open = TRUE
     )
+  )
   )
 }
 
@@ -132,19 +162,15 @@ ui_update.select_field <- function(x, session, id, name) {
 #' Custom card container
 #' @keywords internal
 div_card <- function(..., title = NULL, footer = NULL) {
-  shiny::div(
-    class = "panel panel-default",
-    style = "margin: 10px;",
-    if (not_null(title)) {
-      shiny::div(title, class = "panel-heading")
-    },
-    shiny::div(
-      class = "panel-body",
-      ...
-    ),
-    if (not_null(footer)) {
-      shiny::div(footer, class = "panel-footer")
-    }
+  bslib::accordion_panel(
+    #class = "panel panel-default",
+    #style = "margin: 10px;",
+    title = if (not_null(title)) title,
+    value = "plop",
+    ...#,
+    #if (not_null(footer)) {
+    #  shiny::div(footer, class = "panel-footer")
+    #}
   )
 }
 
