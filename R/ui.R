@@ -72,9 +72,6 @@ generate_ui.stack <- function(x, ...) {
   stopifnot(...length() == 0L)
 
   bslib::page_fluid(
-    theme = bslib::bs_theme(
-      primary = "#6c757d",
-    ),
     do.call(
     bslib::accordion,
     c(
