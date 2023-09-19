@@ -110,3 +110,18 @@ set_names <- function(object = nm, nm) {
   names(object) <- nm
   object
 }
+
+quoted_input_entry <- function(x) {
+  bquote(input[[.(val)]], list(val = x))
+}
+
+quoted_input_expression <- function(inputs, names) {
+  do.call(expression, set_names(inputs, names))
+}
+
+splice_args <- function(expr, ...) {
+  do.call(
+    bquote,
+    list(expr = substitute(expr), where = list(...), splice = TRUE)
+  )
+}
