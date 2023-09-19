@@ -35,6 +35,12 @@ is_block <- function(x) {
 
 #' @rdname new_block
 #' @export
+is_initialized <- function(x) {
+  all(lengths(x) > 0L)
+}
+
+#' @rdname new_block
+#' @export
 generate_code <- function(x) {
   UseMethod("generate_code")
 }
@@ -43,6 +49,17 @@ generate_code <- function(x) {
 #' @export
 generate_code.block <- function(x) {
   do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
+}
+
+#' @rdname new_block
+#' @export
+generate_code.transform_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(identity()))
+  }
+
+  NextMethod()
 }
 
 #' @rdname new_block
@@ -117,7 +134,7 @@ new_data_block <- function(...) {
 #' @rdname new_block
 #' @export
 new_filter_block <- function(dat, col = colnames(dat)[1L],
-                             val = NA_character_, ...) {
+                             val = character(), ...) {
 
   cols <- colnames(dat)
 
@@ -126,13 +143,9 @@ new_filter_block <- function(dat, col = colnames(dat)[1L],
     value = string_field(val)
   )
 
-  if (is.na(val)) {
-    expr <- quote(identity())
-  } else {
-    expr <- quote(
-      dplyr::filter(.(column) == .(value))
-    )
-  }
+  expr <- quote(
+    dplyr::filter(.(column) == .(value))
+  )
 
   new_block(
     fields = fields,
@@ -180,7 +193,7 @@ update_fields <- function(x, ...) {
 #' @rdname new_block
 #' @export
 update_fields.block <- function(x, ...) {
-  invisible(x)
+  x
 }
 
 #' @param session Shiny session
@@ -191,19 +204,26 @@ update_fields.filter_block <- function(x, data, session, ...) {
   col_field <- x[["column"]]
   col_choices <- colnames(data)
 
-  if (!identical(col_choices, attr(col_field, "choices"))) {
-
-    if (!col_field %in% col_choices) {
-      attr(x[["column"]], "choices") <- col_choices
-      value(x[["column"]]) <- col_choices[1L]
-      value(x[["value"]]) <- NA_character_
-      ui_update(x[["value"]], session, "value", "value")
-    } else {
-      meta(x[["column"]], "choices") <- col_choices
-    }
-
-    ui_update(x[["column"]], session, "column", "column")
+  if (identical(col_choices, attr(col_field, "choices"))) {
+    return(x)
   }
+
+  if (!col_field %in% col_choices) {
+
+    value(x[["column"]]) <- character()
+    meta(x[["column"]], "choices") <- col_choices
+    value(x[["column"]]) <- col_choices[1L]
+
+    value(x[["value"]]) <- character()
+
+    ui_update(x[["value"]], session, "value", "value")
+
+  } else {
+
+    meta(x[["column"]], "choices") <- col_choices
+  }
+
+  ui_update(x[["column"]], session, "column", "column")
 
   x
 }

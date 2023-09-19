@@ -3,8 +3,10 @@
 \name{new_block}
 \alias{new_block}
 \alias{is_block}
+\alias{is_initialized}
 \alias{generate_code}
 \alias{generate_code.block}
+\alias{generate_code.transform_block}
 \alias{evalute_block}
 \alias{evalute_block.block}
 \alias{evalute_block.data_block}
@@ -20,9 +22,13 @@ new_block(fields, expr, name = rand_names(), ..., class = character())
 
 is_block(x)
 
+is_initialized(x)
+
 generate_code(x)
 
 \method{generate_code}{block}(x)
+
+\method{generate_code}{transform_block}(x)
 
 evalute_block(x, ...)
 
@@ -34,7 +40,7 @@ evalute_block(x, ...)
 
 new_data_block(...)
 
-new_filter_block(dat, col = colnames(dat)[1L], val = NA_character_, ...)
+new_filter_block(dat, col = colnames(dat)[1L], val = character(), ...)
 
 update_fields(x, ...)
 
