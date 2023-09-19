@@ -21,11 +21,11 @@ is_field(x)
 
 \method{validate_field}{string_field}(x)
 
-string_field(value, ...)
+string_field(value = character(), ...)
 
 \method{validate_field}{select_field}(x)
 
-select_field(value, choices, ...)
+select_field(value = character(), choices = character(), ...)
 }
 \arguments{
 \item{value}{Field value}

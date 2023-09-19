@@ -19,7 +19,12 @@ new_field <- function(value, ..., type = c("literal", "name"),
 #' @rdname new_field
 #' @export
 validate_field <- function(x) {
-  UseMethod("validate_field")
+
+  if (length(x)) {
+    UseMethod("validate_field", x)
+  }
+
+  x
 }
 
 #' @rdname new_field
@@ -41,7 +46,7 @@ validate_field.string_field <- function(x) {
 
 #' @rdname new_field
 #' @export
-string_field <- function(value, ...) {
+string_field <- function(value = character(), ...) {
   validate_field(
     new_field(value, ..., class = "string_field")
   )
@@ -57,7 +62,7 @@ validate_field.select_field <- function(x) {
 #' @param choices Set of permissible values
 #' @rdname new_field
 #' @export
-select_field <- function(value, choices, ...) {
+select_field <- function(value = character(), choices = character(), ...) {
   validate_field(
     new_field(value, choices = choices, ..., class = "select_field")
   )
@@ -72,6 +77,11 @@ select_field <- function(value, choices, ...) {
   validate_field(value)
 }
 
+value <- function(x) {
+  stopifnot(inherits(x, "field"))
+  c(x)
+}
+
 `meta<-` <- function(x, which, value) {
 
   stopifnot(inherits(x, "field"))
@@ -79,4 +89,9 @@ select_field <- function(value, choices, ...) {
   attr(x, which) <- value
 
   validate_field(x)
+}
+
+meta <- function(x, which) {
+  stopifnot(inherits(x, "field"))
+  attr(x, which)
 }
