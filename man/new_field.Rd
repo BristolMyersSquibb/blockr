@@ -6,9 +6,13 @@
 \alias{validate_field.field}
 \alias{is_field}
 \alias{validate_field.string_field}
+\alias{new_string_field}
 \alias{string_field}
 \alias{validate_field.select_field}
+\alias{new_select_field}
 \alias{select_field}
+\alias{new_field_list}
+\alias{is_field_list}
 \title{Fields}
 \usage{
 new_field(value, ..., type = c("literal", "name"), class = character())
@@ -21,11 +25,19 @@ is_field(x)
 
 \method{validate_field}{string_field}(x)
 
-string_field(value = character(), ...)
+new_string_field(value = character(), ...)
+
+string_field(...)
 
 \method{validate_field}{select_field}(x)
 
-select_field(value = character(), choices = character(), ...)
+new_select_field(value = character(), choices = character(), ...)
+
+select_field(...)
+
+new_field_list(...)
+
+is_field_list(x)
 }
 \arguments{
 \item{value}{Field value}

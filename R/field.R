@@ -46,11 +46,13 @@ validate_field.string_field <- function(x) {
 
 #' @rdname new_field
 #' @export
-string_field <- function(value = character(), ...) {
-  validate_field(
-    new_field(value, ..., class = "string_field")
-  )
+new_string_field <- function(value = character(), ...) {
+  new_field(value, ..., class = "string_field")
 }
+
+#' @rdname new_field
+#' @export
+string_field <- function(...) validate_field(new_string_field(...))
 
 #' @rdname new_field
 #' @export
@@ -62,15 +64,17 @@ validate_field.select_field <- function(x) {
 #' @param choices Set of permissible values
 #' @rdname new_field
 #' @export
-select_field <- function(value = character(), choices = character(), ...) {
-  validate_field(
-    new_field(value, choices = choices, ..., class = "select_field")
-  )
+new_select_field <- function(value = character(), choices = character(), ...) {
+  new_field(value, choices = choices, ..., class = "select_field")
 }
+
+#' @rdname new_field
+#' @export
+select_field <- function(...) validate_field(new_select_field(...))
 
 `value<-` <- function(x, value) {
 
-  stopifnot(inherits(x, "field"))
+  stopifnot(is_field(x))
 
   attributes(value) <- attributes(x)
 
@@ -78,13 +82,13 @@ select_field <- function(value = character(), choices = character(), ...) {
 }
 
 value <- function(x) {
-  stopifnot(inherits(x, "field"))
+  stopifnot(is_field(x))
   c(x)
 }
 
 `meta<-` <- function(x, which, value) {
 
-  stopifnot(inherits(x, "field"))
+  stopifnot(is_field(x))
 
   attr(x, which) <- value
 
@@ -92,6 +96,23 @@ value <- function(x) {
 }
 
 meta <- function(x, which) {
-  stopifnot(inherits(x, "field"))
+  stopifnot(is_field(x))
   attr(x, which)
+}
+
+#' @rdname new_field
+#' @export
+new_field_list <- function(...) {
+
+  fields <- list(...)
+
+  stopifnot(all(lgl_ply(fields, is_field)))
+
+  structure(fields, class = "field_list")
+}
+
+#' @rdname new_field
+#' @export
+is_field_list <- function(x) {
+  inherits(x, "field_list")
 }

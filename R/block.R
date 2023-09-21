@@ -113,12 +113,7 @@ new_data_block <- function(...) {
   )
 
   expr <- quote(
-    get(
-      .(dataset),
-      envir = as.environment("package:datasets"),
-      mode = "list",
-      inherits = FALSE
-    )
+    get(.(dataset), envir = as.environment("package:datasets"))
   )
 
   new_block(
@@ -130,17 +125,15 @@ new_data_block <- function(...) {
 }
 
 #' @param dat Tabular data to filter (rows)
-#' @param col,val Definition of the equality filter
+#' @param column,value Definition of the equality filter
 #' @rdname new_block
 #' @export
-new_filter_block <- function(dat, col = colnames(dat)[1L],
-                             val = character(), ...) {
-
-  cols <- colnames(dat)
+new_filter_block <- function(dat, column = character(),
+                             value = character(), ...) {
 
   fields <- list(
-    column = select_field(col, cols, type = "name"),
-    value = string_field(val)
+    column = select_field(column, colnames(dat), type = "name"),
+    value = string_field(value)
   )
 
   expr <- quote(
@@ -150,6 +143,7 @@ new_filter_block <- function(dat, col = colnames(dat)[1L],
   new_block(
     fields = fields,
     expr = expr,
+    ptype = dat[0L, ],
     ...,
     class = c("filter_block", "transform_block")
   )
@@ -226,4 +220,29 @@ update_fields.filter_block <- function(x, data, session, ...) {
   ui_update(x[["column"]], session, "column", "column")
 
   x
+}
+
+#' @rdname new_block
+#' @export
+update_ptype <- function(x, value) {
+  UseMethod("update_ptype")
+}
+
+#' @rdname new_block
+#' @export
+update_ptype.block <- function(x, value) {
+  attr(x, "ptype") <- value
+  x
+}
+
+#' @rdname new_block
+#' @export
+ptype <- function(x) {
+  attr(x, "ptype")
+}
+
+#' @rdname new_block
+#' @export
+`ptype<-` <- function(x, value) {
+  update_ptype(x, value)
 }
