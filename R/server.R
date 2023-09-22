@@ -52,10 +52,8 @@ generate_server.data_block <- function(x, ...) {
         evalute_block(blk())
       )
 
-      output$data <- shiny::renderPrint(out_dat())
-      output$code <- shiny::renderPrint(
-        cat(deparse(generate_code(blk())), sep = "\n")
-      )
+      output <- server_output(x, out_dat, output)
+      output <- server_code(x, blk, output)
 
       out_dat
     }
