@@ -22,7 +22,7 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
-	structure(fields, name = name, expr = expr, result = NULL, ...,
+  structure(fields, name = name, expr = expr, result = NULL, ...,
             class = c(class, "block"))
 }
 

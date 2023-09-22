@@ -28,7 +28,7 @@ new_stack <- function(..., name = rand_names()) {
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
   )
 
-	structure(blocks, name = name, class = "stack")
+  structure(blocks, name = name, class = "stack")
 }
 
 #' @param stack An object inheriting form `"stack"`

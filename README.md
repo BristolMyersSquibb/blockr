@@ -8,6 +8,7 @@
 [![check](https://github.com/nbenn/blockr/actions/workflows/check.yml/badge.svg)](https://github.com/nbenn/blockr/actions/workflows/check.yml)
 [![coverage](https://github.com/cynkra/blockr/actions/workflows/coverage.yml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/coverage.yml)
 [![pkgdown](https://github.com/cynkra/blockr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/pkgdown.yaml)
+[![lint](https://github.com/cynkra/blockr/actions/workflows/lint.yaml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
 Building blocks for data manipulation and visualization operations.
