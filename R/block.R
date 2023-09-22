@@ -36,7 +36,13 @@ is_block <- function(x) {
 #' @rdname new_block
 #' @export
 is_initialized <- function(x) {
-  all(lengths(x) > 0L)
+  UseMethod("is_initialized")
+}
+
+#' @rdname new_block
+#' @export
+is_initialized.block <- function(x) {
+  all(lgl_ply(x, is_initialized))
 }
 
 #' @rdname new_block
@@ -124,15 +130,17 @@ new_data_block <- function(...) {
   )
 }
 
-#' @param dat Tabular data to filter (rows)
+#' @param data Tabular data to filter (rows)
 #' @param column,value Definition of the equality filter
 #' @rdname new_block
 #' @export
-new_filter_block <- function(dat, column = character(),
+new_filter_block <- function(data, column = character(),
                              value = character(), ...) {
 
+  cols <- quote(colnames(.(data)))
+
   fields <- list(
-    column = select_field(column, colnames(dat), type = "name"),
+    column = select_field(column, cols, type = "name"),
     value = string_field(value)
   )
 
@@ -143,39 +151,9 @@ new_filter_block <- function(dat, column = character(),
   new_block(
     fields = fields,
     expr = expr,
-    ptype = dat[0L, ],
     ...,
     class = c("filter_block", "transform_block")
   )
-}
-
-type_trans <- function(x) {
-  switch(
-    attr(x, "type"),
-    literal = c(x),
-    name = as.name(x)
-  )
-}
-
-set_field_value <- function(x, field, value) {
-
-  stopifnot(inherits(x, "block"))
-
-  value(x[[field]]) <- value
-
-  x
-}
-
-set_field_values <- function(x, ...) {
-
-  values <- list(...)
-  fields <- names(values)
-
-  for (field in fields) {
-    value(x[[field]]) <- values[[field]]
-  }
-
-  x
 }
 
 #' @rdname new_block
@@ -187,62 +165,48 @@ update_fields <- function(x, ...) {
 #' @rdname new_block
 #' @export
 update_fields.block <- function(x, ...) {
-  x
+  stop("no base-class update fields for blocks available")
 }
 
 #' @param session Shiny session
 #' @rdname new_block
 #' @export
-update_fields.filter_block <- function(x, data, session, ...) {
+update_fields.data_block <- function(x, session, ...) {
 
-  col_field <- x[["column"]]
-  col_choices <- colnames(data)
+  args <- list(...)
 
-  if (identical(col_choices, attr(col_field, "choices"))) {
-    return(x)
+  stopifnot(setequal(names(args), names(x)))
+
+  for (field in names(x)) {
+
+    env <- args[-which(names(args) == field)]
+
+    x[[field]] <- update_field(x[[field]], args[[field]], env)
+    ui_update(x[[field]], session, field, field)
   }
-
-  if (!col_field %in% col_choices) {
-
-    value(x[["column"]]) <- character()
-    meta(x[["column"]], "choices") <- col_choices
-    value(x[["column"]]) <- col_choices[1L]
-
-    value(x[["value"]]) <- character()
-
-    ui_update(x[["value"]], session, "value", "value")
-
-  } else {
-
-    meta(x[["column"]], "choices") <- col_choices
-  }
-
-  ui_update(x[["column"]], session, "column", "column")
 
   x
 }
 
+#' @param data Block input data
 #' @rdname new_block
 #' @export
-update_ptype <- function(x, value) {
-  UseMethod("update_ptype")
-}
+update_fields.transform_block <- function(x, session, data, ...) {
 
-#' @rdname new_block
-#' @export
-update_ptype.block <- function(x, value) {
-  attr(x, "ptype") <- value
+  args <- list(...)
+
+  stopifnot(setequal(names(args), names(x)))
+
+  for (field in names(x)) {
+
+    env <- c(
+      list(data = data),
+      args[-which(names(args) == field)]
+    )
+
+    x[[field]] <- update_field(x[[field]], args[[field]], env)
+    ui_update(x[[field]], session, field, field)
+  }
+
   x
-}
-
-#' @rdname new_block
-#' @export
-ptype <- function(x) {
-  attr(x, "ptype")
-}
-
-#' @rdname new_block
-#' @export
-`ptype<-` <- function(x, value) {
-  update_ptype(x, value)
 }

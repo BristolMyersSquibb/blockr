@@ -67,13 +67,13 @@ ui_input.field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.string_field <- function(x, id, name) {
-  shiny::textInput(id, name, x)
+  shiny::textInput(id, name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_input.select_field <- function(x, id, name) {
-  shiny::selectInput(id, name, attr(x, "choices"), x)
+  shiny::selectInput(id, name, value(x, "choices"), value(x))
 }
 
 #' @param session Shiny session
@@ -92,13 +92,13 @@ ui_update.field <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
-  shiny::updateTextInput(session, id, name, x)
+  shiny::updateTextInput(session, id, name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
-  shiny::updateSelectInput(session, id, name, attr(x, "choices"), x)
+  shiny::updateSelectInput(session, id, name, value(x, "choices"), value(x))
 }
 
 div_card <- function(..., title = NULL, footer = NULL) {

@@ -125,3 +125,14 @@ splice_args <- function(expr, ...) {
     list(expr = substitute(expr), where = list(...), splice = TRUE)
   )
 }
+
+type_trans <- function(x) {
+
+  res <- value(x)
+
+  switch(
+    attr(x, "type"),
+    literal = res,
+    name = as.name(res)
+  )
+}

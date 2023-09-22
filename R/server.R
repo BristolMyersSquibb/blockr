@@ -10,10 +10,15 @@ generate_server <- function(x, ...) {
   UseMethod("generate_server")
 }
 
-#' @param in_dat Forwarded to `evalute_block()`
 #' @rdname generate_server
 #' @export
-generate_server.block <- function(x, in_dat = NULL, ...) {
+generate_server.block <- function(x, ...) {
+  stop("no base-class server for blocks available")
+}
+
+#' @rdname generate_server
+#' @export
+generate_server.data_block <- function(x, ...) {
 
   fields <- names(x)
 
@@ -25,7 +30,7 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
   )
 
   set_expr <- splice_args(
-    blk(set_field_values(blk(), ..(args))),
+    blk(update_fields(blk(), session, ..(args))),
     args = quoted_input_expression(quot_inp, fields)
   )
 
@@ -35,15 +40,52 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
 
       blk <- shiny::reactiveVal(x)
 
-      if (not_null(in_dat)) {
-        shiny::observeEvent(
-          in_dat(),
-          blk(
-            update_fields(blk(), data = in_dat(), session = session)
-          ),
-          ignoreInit = TRUE
-        )
-      }
+      shiny::observeEvent(
+        obs_expr,
+        set_expr,
+        event.quoted = TRUE,
+        handler.quoted = TRUE,
+        ignoreInit = TRUE
+      )
+
+      out_dat <- shiny::reactive(
+        evalute_block(blk())
+      )
+
+      output$data <- shiny::renderPrint(out_dat())
+      output$code <- shiny::renderPrint(
+        cat(deparse(generate_code(blk())), sep = "\n")
+      )
+
+      out_dat
+    }
+  )
+}
+
+#' @param in_dat Reactive input data
+#' @rdname generate_server
+#' @export
+generate_server.transform_block <- function(x, in_dat, ...) {
+
+  fields <- names(x)
+
+  quot_inp <- lapply(fields, quoted_input_entry)
+
+  obs_expr <- splice_args(
+    list(in_dat(), ..(args)),
+    args = quot_inp
+  )
+
+  set_expr <- splice_args(
+    blk(update_fields(blk(), session, in_dat(), ..(args))),
+    args = quoted_input_expression(quot_inp, fields)
+  )
+
+  shiny::moduleServer(
+    attr(x, "name"),
+    function(input, output, session) {
+
+      blk <- shiny::reactiveVal(x)
 
       shiny::observeEvent(
         obs_expr,
@@ -53,15 +95,9 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
         ignoreInit = TRUE
       )
 
-      if (is.null(in_dat)) {
-        out_dat <- shiny::reactive(
-          evalute_block(blk())
-        )
-      } else {
-        out_dat <- shiny::reactive(
-          evalute_block(blk(), data = in_dat())
-        )
-      }
+      out_dat <- shiny::reactive(
+        evalute_block(blk(), data = in_dat())
+      )
 
       output$data <- shiny::renderPrint(out_dat())
       output$code <- shiny::renderPrint(

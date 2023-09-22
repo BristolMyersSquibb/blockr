@@ -4,7 +4,7 @@
 #' the field holds and can be used to customize how the UI is generated.
 #'
 #' @param value Field value
-#' @param ... Further (metadata) attributes
+#' @param ... Further field components
 #' @param type Field type (allowed values are `"literal"` and `"name"`)
 #' @param class Field subclass
 #'
@@ -12,7 +12,17 @@
 new_field <- function(value, ..., type = c("literal", "name"),
                       class = character()) {
 
-  structure(value, ..., type = match.arg(type), class = c(class, "field"))
+  x <- list(value = value, ...)
+
+  stopifnot(is.list(x), length(unique(names(x))) == length(x))
+
+  structure(x, type = match.arg(type), class = c(class, "field"))
+}
+
+#' @rdname new_block
+#' @export
+is_initialized.field <- function(x) {
+  all(lengths(values(x)) > 0)
 }
 
 #' @param x An object inheriting form `"field"`
@@ -20,7 +30,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
 #' @export
 validate_field <- function(x) {
 
-  if (length(x)) {
+  if (is_initialized(x)) {
     UseMethod("validate_field", x)
   }
 
@@ -33,6 +43,29 @@ validate_field.field <- function(x) {
   stop("no base-class validator for fields available")
 }
 
+#' @param new Value to set
+#' @param env Environment with data and other field values
+#'
+#' @rdname new_field
+#' @export
+update_field <- function(x, new, env = list()) {
+  UseMethod("update_field", x)
+}
+
+#' @rdname new_field
+#' @export
+update_field.field <- function(x, new, env = list()) {
+
+  for (cmp in names(x)[lgl_ply(x, is.language)]) {
+    expr <- do.call(bquote, list(expr = x[[cmp]], where = env))
+    value(x, cmp) <- eval(expr)
+  }
+
+  value(x) <- new
+
+  validate_field(x)
+}
+
 #' @rdname new_field
 #' @export
 is_field <- function(x) inherits(x, "field")
@@ -40,7 +73,11 @@ is_field <- function(x) inherits(x, "field")
 #' @rdname new_field
 #' @export
 validate_field.string_field <- function(x) {
-  stopifnot(is_string(x))
+
+  val <- value(x)
+
+  stopifnot(is.character(val), length(val) <= 1L)
+
   x
 }
 
@@ -57,7 +94,15 @@ string_field <- function(...) validate_field(new_string_field(...))
 #' @rdname new_field
 #' @export
 validate_field.select_field <- function(x) {
-  stopifnot(is_string(x), x %in% attr(x, "choices"))
+
+  val <- value(x)
+
+  stopifnot(is.character(val), length(val) <= 1L)
+
+  if (length(val) && !val %in% value(x, "choices")) {
+    value(x) <- character()
+  }
+
   x
 }
 
@@ -72,47 +117,40 @@ new_select_field <- function(value = character(), choices = character(), ...) {
 #' @export
 select_field <- function(...) validate_field(new_select_field(...))
 
-`value<-` <- function(x, value) {
+#' @param name Field component name
+#' @rdname new_field
+#' @export
+value <- function(x, name = "value") {
 
   stopifnot(is_field(x))
 
-  attributes(value) <- attributes(x)
+  res <- x[[name]]
 
-  validate_field(value)
-}
+  if (is.language(res)) {
+    return(attr(res, "result"))
+  }
 
-value <- function(x) {
-  stopifnot(is_field(x))
-  c(x)
-}
-
-`meta<-` <- function(x, which, value) {
-
-  stopifnot(is_field(x))
-
-  attr(x, which) <- value
-
-  validate_field(x)
-}
-
-meta <- function(x, which) {
-  stopifnot(is_field(x))
-  attr(x, which)
+  res
 }
 
 #' @rdname new_field
 #' @export
-new_field_list <- function(...) {
-
-  fields <- list(...)
-
-  stopifnot(all(lgl_ply(fields, is_field)))
-
-  structure(fields, class = "field_list")
+values <- function(x, name = names(x)) {
+  set_names(lapply(name, function(n) value(x, n)), name)
 }
 
+#' @param value Field value
 #' @rdname new_field
 #' @export
-is_field_list <- function(x) {
-  inherits(x, "field_list")
+`value<-` <- function(x, name = "value", value) {
+
+  stopifnot(is_field(x))
+
+  if (is.language(x[[name]])) {
+    attr(x[[name]], "result") <- value
+  } else {
+    x[[name]] <- value
+  }
+
+  x
 }

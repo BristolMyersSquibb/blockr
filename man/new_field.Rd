@@ -4,6 +4,8 @@
 \alias{new_field}
 \alias{validate_field}
 \alias{validate_field.field}
+\alias{update_field}
+\alias{update_field.field}
 \alias{is_field}
 \alias{validate_field.string_field}
 \alias{new_string_field}
@@ -11,8 +13,9 @@
 \alias{validate_field.select_field}
 \alias{new_select_field}
 \alias{select_field}
-\alias{new_field_list}
-\alias{is_field_list}
+\alias{value}
+\alias{values}
+\alias{value<-}
 \title{Fields}
 \usage{
 new_field(value, ..., type = c("literal", "name"), class = character())
@@ -20,6 +23,10 @@ new_field(value, ..., type = c("literal", "name"), class = character())
 validate_field(x)
 
 \method{validate_field}{field}(x)
+
+update_field(x, new, env = list())
+
+\method{update_field}{field}(x, new, env = list())
 
 is_field(x)
 
@@ -35,14 +42,16 @@ new_select_field(value = character(), choices = character(), ...)
 
 select_field(...)
 
-new_field_list(...)
+value(x, name = "value")
 
-is_field_list(x)
+values(x, name = names(x))
+
+value(x, name = "value") <- value
 }
 \arguments{
 \item{value}{Field value}
 
-\item{...}{Further (metadata) attributes}
+\item{...}{Further field components}
 
 \item{type}{Field type (allowed values are \code{"literal"} and \code{"name"})}
 
@@ -50,7 +59,13 @@ is_field_list(x)
 
 \item{x}{An object inheriting form \code{"field"}}
 
+\item{new}{Value to set}
+
+\item{env}{Environment with data and other field values}
+
 \item{choices}{Set of permissible values}
+
+\item{name}{Field component name}
 }
 \description{
 Each block consists of a set of fields, which define the type of value
