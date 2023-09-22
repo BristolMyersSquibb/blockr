@@ -14,8 +14,7 @@
 NULL
 
 rand_names <- function(old_names = character(0L), n = 1L, length = 15L,
-                       chars = c(letters, LETTERS, 0L:9L), prefix = "",
-                       suffix = "") {
+                       chars = letters, prefix = "", suffix = "") {
 
   stopifnot(
     is.null(old_names) || is.character(old_names),
