@@ -31,8 +31,8 @@ generate_ui.block <- function(x, id, ...) {
   div_card(
     title = shiny::h4(attr(x, "name")),
     do.call(shiny::div, unname(fields)),
-    shiny::verbatimTextOutput(ns("code")),
-    shiny::verbatimTextOutput(ns("data"))
+    ui_output(x, ns),
+    ui_code(x, ns)
   )
 }
 
@@ -116,4 +116,29 @@ div_card <- function(..., title = NULL, footer = NULL) {
       shiny::div(footer, class = "panel-footer")
     }
   )
+}
+
+#' @param ns Output namespace
+#' @rdname generate_ui
+#' @export
+ui_output <- function(x, ns) {
+  UseMethod("ui_output", x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_output.block <- function(x, ns) {
+  shiny::verbatimTextOutput(ns("output"))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_code <- function(x, ns) {
+  UseMethod("ui_code", x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_code.block <- function(x, ns) {
+  shiny::verbatimTextOutput(ns("code"))
 }

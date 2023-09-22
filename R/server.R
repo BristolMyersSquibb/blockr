@@ -99,10 +99,8 @@ generate_server.transform_block <- function(x, in_dat, ...) {
         evalute_block(blk(), data = in_dat())
       )
 
-      output$data <- shiny::renderPrint(out_dat())
-      output$code <- shiny::renderPrint(
-        cat(deparse(generate_code(blk())), sep = "\n")
-      )
+      output <- server_output(x, out_dat, output)
+      output <- server_code(x, blk, output)
 
       out_dat
     }
@@ -130,4 +128,37 @@ generate_server.stack <- function(x, ...) {
       res
     }
   )
+}
+
+#' @param output Shiny output
+#' @param result Block result
+#' @rdname generate_ui
+#' @export
+server_output <- function(x, result, output) {
+  UseMethod("server_output", x)
+}
+
+#' @rdname generate_ui
+#' @export
+server_output.block <- function(x, result, output) {
+  output$output <- shiny::renderPrint(result())
+  output
+}
+
+#' @param state Block state
+#' @rdname generate_ui
+#' @export
+server_code <- function(x, state, output) {
+  UseMethod("server_code", x)
+}
+
+#' @rdname generate_ui
+#' @export
+server_code.block <- function(x, state, output) {
+
+  output$code <- shiny::renderPrint(
+    cat(deparse(generate_code(state())), sep = "\n")
+  )
+
+  output
 }
