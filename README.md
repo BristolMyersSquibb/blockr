@@ -4,6 +4,8 @@
 # blockr
 
 <!-- badges: start -->
+
+[![check](https://github.com/nbenn/blockr/actions/workflows/check.yml/badge.svg)](https://github.com/nbenn/blockr/actions/workflows/check.yml)
 <!-- badges: end -->
 
 Building blocks for data manipulation and visualization operations.
