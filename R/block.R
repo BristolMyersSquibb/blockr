@@ -47,6 +47,23 @@ is_initialized.block <- function(x) {
 
 #' @rdname new_block
 #' @export
+initialize_block <- function(x, ...) {
+
+  if (is_initialized(x)) {
+    return(x)
+  }
+
+  UseMethod("initialize_block")
+}
+
+#' @rdname new_block
+#' @export
+initialize_block.block <- function(x, ...) {
+  stop("no base-class block initializor")
+}
+
+#' @rdname new_block
+#' @export
 generate_code <- function(x) {
   UseMethod("generate_code")
 }
@@ -130,6 +147,26 @@ new_data_block <- function(...) {
   )
 }
 
+#' @rdname new_block
+#' @export
+data_block <- function(...) {
+  initialize_block(new_data_block(...))
+}
+
+#' @rdname new_block
+#' @export
+initialize_block.data_block <- function(x, ...) {
+
+  env <- list()
+
+  for (field in names(x)) {
+    x[[field]] <- initialize_field(x[[field]], env)
+    env <- c(env, set_names(list(value(x[[field]])), field))
+  }
+
+  x
+}
+
 #' @param data Tabular data to filter (rows)
 #' @param column,value Definition of the equality filter
 #' @rdname new_block
@@ -154,6 +191,26 @@ new_filter_block <- function(data, column = character(),
     ...,
     class = c("filter_block", "transform_block")
   )
+}
+
+#' @rdname new_block
+#' @export
+filter_block <- function(data, ...) {
+  initialize_block(new_filter_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+initialize_block.transform_block <- function(x, data, ...) {
+
+  env <- list(data = data)
+
+  for (field in names(x)) {
+    x[[field]] <- initialize_field(x[[field]], env)
+    env <- c(env, set_names(list(value(x[[field]])), field))
+  }
+
+  x
 }
 
 #' @rdname new_block

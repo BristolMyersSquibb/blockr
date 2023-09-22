@@ -56,14 +56,34 @@ update_field <- function(x, new, env = list()) {
 #' @export
 update_field.field <- function(x, new, env = list()) {
 
+  x <- eval_set_field_value(x, env)
+  value(x) <- new
+
+  validate_field(x)
+}
+
+#' @rdname new_field
+#' @export
+initialize_field <- function(x, env = list()) {
+  UseMethod("initialize_field", x)
+}
+
+#' @rdname new_field
+#' @export
+initialize_field.field <- function(x, env = list()) {
+  validate_field(
+    eval_set_field_value(x, env)
+  )
+}
+
+eval_set_field_value <- function(x, env) {
+
   for (cmp in names(x)[lgl_ply(x, is.language)]) {
     expr <- do.call(bquote, list(expr = x[[cmp]], where = env))
     value(x, cmp) <- eval(expr)
   }
 
-  value(x) <- new
-
-  validate_field(x)
+  x
 }
 
 #' @rdname new_field

@@ -6,6 +6,8 @@
 \alias{validate_field.field}
 \alias{update_field}
 \alias{update_field.field}
+\alias{initialize_field}
+\alias{initialize_field.field}
 \alias{is_field}
 \alias{validate_field.string_field}
 \alias{new_string_field}
@@ -27,6 +29,10 @@ validate_field(x)
 update_field(x, new, env = list())
 
 \method{update_field}{field}(x, new, env = list())
+
+initialize_field(x, env = list())
+
+\method{initialize_field}{field}(x, env = list())
 
 is_field(x)
 

@@ -27,8 +27,8 @@ operation.
 library(blockr)
 
 stack <- new_stack(
-  new_data_block,
-  new_filter_block
+  data_block,
+  filter_block
 )
 
 serve_stack(stack)
