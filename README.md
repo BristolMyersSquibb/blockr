@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![check](https://github.com/nbenn/blockr/actions/workflows/check.yml/badge.svg)](https://github.com/nbenn/blockr/actions/workflows/check.yml)
+[![check](https://github.com/cynkra/blockr/actions/workflows/check.yml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/check.yml)
 [![coverage](https://github.com/cynkra/blockr/actions/workflows/coverage.yml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/coverage.yml)
 [![pkgdown](https://github.com/cynkra/blockr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/pkgdown.yaml)
 [![lint](https://github.com/cynkra/blockr/actions/workflows/lint.yaml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/lint.yaml)
@@ -20,7 +20,7 @@ You can install the development version of blockr from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("nbenn/blockr")
+devtools::install_github("cynkra/blockr")
 ```
 
 ## Example
