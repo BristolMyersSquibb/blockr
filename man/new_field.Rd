@@ -18,6 +18,9 @@
 \alias{value}
 \alias{values}
 \alias{value<-}
+\alias{new_variable_field}
+\alias{variable_field}
+\alias{validate_field.variable_field}
 \title{Fields}
 \usage{
 new_field(value, ..., type = c("literal", "name"), class = character())
@@ -53,6 +56,17 @@ value(x, name = "value")
 values(x, name = names(x))
 
 value(x, name = "value") <- value
+
+new_variable_field(
+  value = character(),
+  field = character(),
+  components = list(),
+  ...
+)
+
+variable_field(...)
+
+\method{validate_field}{variable_field}(x)
 }
 \arguments{
 \item{value}{Field value}
@@ -72,6 +86,10 @@ value(x, name = "value") <- value
 \item{choices}{Set of permissible values}
 
 \item{name}{Field component name}
+
+\item{field}{Field type}
+
+\item{components}{Variable list of field components}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

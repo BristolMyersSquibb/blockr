@@ -176,9 +176,25 @@ new_filter_block <- function(data, column = character(),
 
   cols <- quote(colnames(.(data)))
 
+  field_type <- quote(
+    switch(
+      if (length(.(column))) class(.(data)[[.(column)]]) else "character",
+      factor = "select_field",
+      "string_field"
+    )
+  )
+
+  field_args <- quote(
+    switch(
+      if (length(.(column))) class(.(data)[[.(column)]]) else "character",
+      factor = list(choices = levels(.(data)[[.(column)]])),
+      list()
+    )
+  )
+
   fields <- list(
     column = select_field(column, cols, type = "name"),
-    value = string_field(value)
+    value = variable_field(value, field_type, field_args)
   )
 
   expr <- quote(

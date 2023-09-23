@@ -12,10 +12,12 @@
 \alias{ui_input.field}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
+\alias{ui_input.variable_field}
 \alias{ui_update}
 \alias{ui_update.field}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
+\alias{ui_update.variable_field}
 \alias{ui_output}
 \alias{ui_output.block}
 \alias{ui_code}
@@ -44,6 +46,8 @@ ui_input(x, id, name)
 
 \method{ui_input}{select_field}(x, id, name)
 
+\method{ui_input}{variable_field}(x, id, name)
+
 ui_update(x, session, id, name)
 
 \method{ui_update}{field}(x, session, id, name)
@@ -51,6 +55,8 @@ ui_update(x, session, id, name)
 \method{ui_update}{string_field}(x, session, id, name)
 
 \method{ui_update}{select_field}(x, session, id, name)
+
+\method{ui_update}{variable_field}(x, session, id, name)
 
 ui_output(x, ns)
 

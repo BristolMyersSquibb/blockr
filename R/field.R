@@ -57,7 +57,10 @@ update_field <- function(x, new, env = list()) {
 update_field.field <- function(x, new, env = list()) {
 
   x <- eval_set_field_value(x, env)
-  value(x) <- new
+
+  if (is_truthy(new)) {
+    value(x) <- new
+  }
 
   validate_field(x)
 }
@@ -173,4 +176,38 @@ values <- function(x, name = names(x)) {
   }
 
   x
+}
+
+#' @param field Field type
+#' @param components Variable list of field components
+#' @rdname new_field
+#' @export
+new_variable_field <- function(value = character(), field = character(),
+                               components = list(), ...) {
+
+  new_field(value, field = field, components = components, ...,
+            class = "variable_field")
+}
+
+#' @rdname new_field
+#' @export
+variable_field <- function(...) validate_field(new_variable_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.variable_field <- function(x) {
+
+  if (!value(x, "field") %in% c("string_field", "select_field")) {
+    value(x, "field") <- "string_field"
+  }
+
+  value(x, "components") <- c(
+    validate_field(materialize_variable_field(x))
+  )
+
+  x
+}
+
+materialize_variable_field <- function(x) {
+  do.call(value(x, "field"), value(x, "components"))
 }

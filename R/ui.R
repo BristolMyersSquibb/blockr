@@ -31,8 +31,8 @@ generate_ui.block <- function(x, id, ...) {
   div_card(
     title = shiny::h4(attr(x, "name")),
     do.call(shiny::div, unname(fields)),
-    ui_output(x, ns),
-    ui_code(x, ns)
+    ui_code(x, ns),
+    ui_output(x, ns)
   )
 }
 
@@ -76,6 +76,15 @@ ui_input.select_field <- function(x, id, name) {
   shiny::selectInput(id, name, value(x, "choices"), value(x))
 }
 
+#' @rdname generate_ui
+#' @export
+ui_input.variable_field <- function(x, id, name) {
+  shiny::div(
+    id = paste0(id, "_cont"),
+    ui_input(materialize_variable_field(x), id, name)
+  )
+}
+
 #' @param session Shiny session
 #' @rdname generate_ui
 #' @export
@@ -99,6 +108,25 @@ ui_update.string_field <- function(x, session, id, name) {
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
   shiny::updateSelectInput(session, id, name, value(x, "choices"), value(x))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.variable_field <- function(x, session, id, name) {
+
+  ns <- session$ns
+  ns_id <- ns(id)
+
+  shiny::removeUI(
+    selector = paste0("#", ns_id, "_cont", " > div"),
+    session = session
+  )
+
+  shiny::insertUI(
+    selector = paste0("#", ns_id, "_cont"),
+    ui = ui_input(materialize_variable_field(x), ns_id, name),
+    session = session
+  )
 }
 
 div_card <- function(..., title = NULL, footer = NULL) {
