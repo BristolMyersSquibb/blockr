@@ -82,8 +82,14 @@ initialize_field.field <- function(x, env = list()) {
 eval_set_field_value <- function(x, env) {
 
   for (cmp in names(x)[lgl_ply(x, is.language)]) {
-    expr <- do.call(bquote, list(expr = x[[cmp]], where = env))
-    value(x, cmp) <- eval(expr)
+
+    res <- try(
+      eval(do.call(bquote, list(expr = x[[cmp]], where = env)))
+    )
+
+    if (!inherits(res, "try-error")) {
+      value(x, cmp) <- res
+    }
   }
 
   x
