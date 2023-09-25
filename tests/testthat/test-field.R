@@ -20,7 +20,7 @@ test_that("select fields", {
 
   expect_s3_class(field, "select_field")
   expect_type(field, "list")
-  expect_identical(value(field), character())
+  expect_identical(value(field), "a")
 
   expect_error(select_field(1, letters))
 })

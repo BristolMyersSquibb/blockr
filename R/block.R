@@ -171,10 +171,8 @@ initialize_block.data_block <- function(x, ...) {
 #' @param column,value Definition of the equality filter
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, column = character(),
+new_filter_block <- function(data, column = colnames(data)[1L],
                              value = character(), ...) {
-
-  cols <- quote(colnames(.(data)))
 
   field_type <- quote(
     switch(
@@ -193,7 +191,7 @@ new_filter_block <- function(data, column = character(),
   )
 
   fields <- list(
-    column = select_field(column, cols, type = "name"),
+    column = select_field(column, quote(colnames(.(data))), type = "name"),
     value = variable_field(value, field_type, field_args)
   )
 

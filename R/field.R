@@ -82,14 +82,8 @@ initialize_field.field <- function(x, env = list()) {
 eval_set_field_value <- function(x, env) {
 
   for (cmp in names(x)[lgl_ply(x, is.language)]) {
-
-    res <- try(
-      eval(do.call(bquote, list(expr = x[[cmp]], where = env)))
-    )
-
-    if (!inherits(res, "try-error")) {
-      value(x, cmp) <- res
-    }
+    expr <- do.call(bquote, list(expr = x[[cmp]], where = env))
+    value(x, cmp) <- eval(expr)
   }
 
   x
@@ -129,7 +123,7 @@ validate_field.select_field <- function(x) {
   stopifnot(is.character(val), length(val) <= 1L)
 
   if (length(val) && !val %in% value(x, "choices")) {
-    value(x) <- character()
+    value(x) <- value(x, "choices")[1L]
   }
 
   x

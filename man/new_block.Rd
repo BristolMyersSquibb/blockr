@@ -59,7 +59,7 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, column = character(), value = character(), ...)
+new_filter_block(data, column = colnames(data)[1L], value = character(), ...)
 
 filter_block(data, ...)
 
