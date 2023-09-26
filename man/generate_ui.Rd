@@ -3,6 +3,7 @@
 \name{server_output}
 \alias{server_output}
 \alias{server_output.block}
+\alias{server_output.plot_block}
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
@@ -12,13 +13,13 @@
 \alias{ui_input.field}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
-\alias{ui_output}
-\alias{ui_output.plot_block}
 \alias{ui_update}
 \alias{ui_update.field}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
+\alias{ui_output}
 \alias{ui_output.block}
+\alias{ui_output.plot_block}
 \alias{ui_code}
 \alias{ui_code.block}
 \title{UI}
@@ -26,6 +27,8 @@
 server_output(x, result, output)
 
 \method{server_output}{block}(x, result, output)
+
+\method{server_output}{plot_block}(x, result, output)
 
 server_code(x, state, output)
 
@@ -45,10 +48,6 @@ ui_input(x, id, name)
 
 \method{ui_input}{select_field}(x, id, name)
 
-ui_output(x, ns)
-
-\method{ui_output}{plot_block}(x, id)
-
 ui_update(x, session, id, name)
 
 \method{ui_update}{field}(x, session, id, name)
@@ -60,6 +59,8 @@ ui_update(x, session, id, name)
 ui_output(x, ns)
 
 \method{ui_output}{block}(x, ns)
+
+\method{ui_output}{plot_block}(x, ns)
 
 ui_code(x, ns)
 
@@ -80,9 +81,9 @@ ui_code(x, ns)
 
 \item{name}{Field name}
 
-\item{ns}{Output namespace}
-
 \item{session}{Shiny session}
+
+\item{ns}{Output namespace}
 }
 \description{
 Generic for UI generation

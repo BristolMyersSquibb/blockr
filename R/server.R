@@ -139,6 +139,13 @@ server_output.block <- function(x, result, output) {
   output
 }
 
+#' @rdname generate_ui
+#' @export
+server_output.plot_block <- function(x, result, output) {
+  output$plot <- shiny::renderPlot(result())
+  output
+}
+
 #' @param state Block state
 #' @rdname generate_ui
 #' @export
