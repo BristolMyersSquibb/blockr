@@ -59,3 +59,6 @@ jobs:
     needs: check
 
     uses: ./.github/workflows/pkgdown.yml
+
+    permissions:
+      contents: write
