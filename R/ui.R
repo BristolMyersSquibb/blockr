@@ -27,10 +27,6 @@ generate_ui.block <- function(x, id, ...) {
     name = names(x)
   )
 
-  plots <- if (inherits(x, "plot_block")) {
-    ui_output(x, id = ns("plot"))
-  }
-
   data_switch <- NULL
   if (!inherits(x, "plot_block")) {
     data_switch <- bslib::input_switch(
@@ -73,8 +69,7 @@ generate_ui.block <- function(x, id, ...) {
           class = "collapse",
           id = ns("collapse_data"),
           ui_output(x, ns)
-        ),
-        plots
+        )
       )
     )
   )
@@ -131,18 +126,6 @@ ui_input.select_field <- function(x, id, name) {
       FALSE
     }
   )
-}
-
-#' @rdname generate_ui
-#' @export
-ui_output <- function(x, id) {
-  UseMethod("ui_output", x)
-}
-
-#' @rdname generate_ui
-#' @export
-ui_output.plot_block <- function(x, id) {
-  shiny::plotOutput(id)
 }
 
 #' @param session Shiny session
@@ -203,6 +186,12 @@ ui_output <- function(x, ns) {
 #' @export
 ui_output.block <- function(x, ns) {
   custom_verbatim_output(ns("output"))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_output.plot_block <- function(x, ns) {
+  shiny::plotOutput(ns("plot"))
 }
 
 #' @rdname generate_ui

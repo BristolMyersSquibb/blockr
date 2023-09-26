@@ -20,7 +20,8 @@ Imports:
     shiny,
     dplyr,
     utils,
-    ggplot2
+    ggplot2,
+    bslib
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
