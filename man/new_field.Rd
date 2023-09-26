@@ -3,7 +3,6 @@
 \name{new_field}
 \alias{new_field}
 \alias{validate_field}
-\alias{validate_field.field}
 \alias{update_field}
 \alias{update_field.field}
 \alias{initialize_field}
@@ -21,13 +20,17 @@
 \alias{new_variable_field}
 \alias{variable_field}
 \alias{validate_field.variable_field}
+\alias{new_range_field}
+\alias{range_field}
+\alias{validate_field.range_field}
+\alias{new_hidden_field}
+\alias{hidden_field}
+\alias{validate_field.hidden_field}
 \title{Fields}
 \usage{
 new_field(value, ..., type = c("literal", "name"), class = character())
 
 validate_field(x)
-
-\method{validate_field}{field}(x)
 
 update_field(x, new, env = list())
 
@@ -67,6 +70,18 @@ new_variable_field(
 variable_field(...)
 
 \method{validate_field}{variable_field}(x)
+
+new_range_field(value = numeric(), min = numeric(), max = numeric(), ...)
+
+range_field(...)
+
+\method{validate_field}{range_field}(x)
+
+new_hidden_field(value = expression(), ...)
+
+hidden_field(...)
+
+\method{validate_field}{hidden_field}(x)
 }
 \arguments{
 \item{value}{Field value}
@@ -90,6 +105,8 @@ variable_field(...)
 \item{field}{Field type}
 
 \item{components}{Variable list of field components}
+
+\item{min, max}{Slider boundaries (inclusive)}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

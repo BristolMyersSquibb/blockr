@@ -60,12 +60,6 @@ ui_input <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
-ui_input.field <- function(x, id, name) {
-  stop("no base-class UI input for fields available")
-}
-
-#' @rdname generate_ui
-#' @export
 ui_input.string_field <- function(x, id, name) {
   shiny::textInput(id, name, value(x))
 }
@@ -79,10 +73,27 @@ ui_input.select_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.variable_field <- function(x, id, name) {
+
+  field <- validate_field(
+    materialize_variable_field(x)
+  )
+
   shiny::div(
     id = paste0(id, "_cont"),
-    ui_input(materialize_variable_field(x), id, name)
+    ui_input(field, id, name)
   )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.range_field <- function(x, id, name) {
+  shiny::sliderInput(id, name, value(x, "min"), value(x, "max"), value(x))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.hidden_field <- function(x, id, name) {
+  NULL
 }
 
 #' @param session Shiny session
@@ -90,12 +101,6 @@ ui_input.variable_field <- function(x, id, name) {
 #' @export
 ui_update <- function(x, session, id, name) {
   UseMethod("ui_update", x)
-}
-
-#' @rdname generate_ui
-#' @export
-ui_update.field <- function(x, session, id, name) {
-  stop("no base-class UI update for fields available")
 }
 
 #' @rdname generate_ui
@@ -122,11 +127,29 @@ ui_update.variable_field <- function(x, session, id, name) {
     session = session
   )
 
+  field <- validate_field(
+    materialize_variable_field(x)
+  )
+
   shiny::insertUI(
     selector = paste0("#", ns_id, "_cont"),
-    ui = ui_input(materialize_variable_field(x), ns_id, name),
+    ui = ui_input(field, ns_id, name),
     session = session
   )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.range_field <- function(x, session, id, name) {
+  shiny::updateSliderInput(
+    session, id, name, value(x), value(x, "min"), value(x, "max")
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.hidden_field <- function(x, session, id, name) {
+  NULL
 }
 
 div_card <- function(..., title = NULL, footer = NULL) {

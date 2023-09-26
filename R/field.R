@@ -29,18 +29,7 @@ is_initialized.field <- function(x) {
 #' @rdname new_field
 #' @export
 validate_field <- function(x) {
-
-  if (is_initialized(x)) {
-    UseMethod("validate_field", x)
-  }
-
-  x
-}
-
-#' @rdname new_field
-#' @export
-validate_field.field <- function(x) {
-  stop("no base-class validator for fields available")
+  UseMethod("validate_field", x)
 }
 
 #' @param new Value to set
@@ -81,9 +70,9 @@ initialize_field.field <- function(x, env = list()) {
 
 eval_set_field_value <- function(x, env) {
 
-  for (cmp in names(x)[lgl_ply(x, is.language)]) {
-    expr <- do.call(bquote, list(expr = x[[cmp]], where = env))
-    value(x, cmp) <- eval(expr)
+  for (cmp in names(x)[lgl_ply(x, is.function)]) {
+    fun <- x[[cmp]]
+    value(x, cmp) <- do.call(fun, env[methods::formalArgs(fun)])
   }
 
   x
@@ -99,7 +88,9 @@ validate_field.string_field <- function(x) {
 
   val <- value(x)
 
-  stopifnot(is.character(val), length(val) <= 1L)
+  if(!is.character(val) || length(val) != 1L) {
+    value(x) <- ""
+  }
 
   x
 }
@@ -119,11 +110,10 @@ string_field <- function(...) validate_field(new_string_field(...))
 validate_field.select_field <- function(x) {
 
   val <- value(x)
+  opt <- value(x, "choices")
 
-  stopifnot(is.character(val), length(val) <= 1L)
-
-  if (length(val) && !val %in% value(x, "choices")) {
-    value(x) <- value(x, "choices")[1L]
+  if (!is.character(val) || length(val) != 1L || !val %in% opt) {
+    value(x) <- opt[1L]
   }
 
   x
@@ -149,7 +139,7 @@ value <- function(x, name = "value") {
 
   res <- x[[name]]
 
-  if (is.language(res)) {
+  if (is.function(res)) {
     return(attr(res, "result"))
   }
 
@@ -169,7 +159,7 @@ values <- function(x, name = names(x)) {
 
   stopifnot(is_field(x))
 
-  if (is.language(x[[name]])) {
+  if (is.function(x[[name]])) {
     attr(x[[name]], "result") <- value
   } else {
     x[[name]] <- value
@@ -197,7 +187,12 @@ variable_field <- function(...) validate_field(new_variable_field(...))
 #' @export
 validate_field.variable_field <- function(x) {
 
-  if (!value(x, "field") %in% c("string_field", "select_field")) {
+  val <- value(x, "field")
+  opt <- c("string_field", "select_field", "range_field")
+
+  stopifnot(is.character(val), length(val) <= 1L)
+
+  if (!length(val) || !val %in% opt) {
     value(x, "field") <- "string_field"
   }
 
@@ -205,9 +200,65 @@ validate_field.variable_field <- function(x) {
     validate_field(materialize_variable_field(x))
   )
 
+  value(x) <- value(x, "components")[["value"]]
+
   x
 }
 
 materialize_variable_field <- function(x) {
-  do.call(value(x, "field"), value(x, "components"))
+
+  cmp <- value(x, "components")
+  val <- value(x)
+
+  if (is_truthy(val)) {
+    cmp[["value"]] <- val
+  }
+
+  do.call(value(x, "field"), cmp)
+}
+
+#' @param min,max Slider boundaries (inclusive)
+#' @rdname new_field
+#' @export
+new_range_field <- function(value = numeric(), min = numeric(),
+                            max = numeric(), ...) {
+
+  new_field(value, min = min, max = max, ..., class = "range_field")
+}
+
+#' @rdname new_field
+#' @export
+range_field <- function(...) validate_field(new_range_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.range_field <- function(x) {
+
+  val <- value(x)
+
+  if (!is.numeric(val) || length(val) < 2L) {
+    value(x) <- c(value(x, "min"), value(x, "max"))
+  } else if (val[1L] < value(x, "min")) {
+    value(x) <- c(value(x, "min"), val[2L])
+  } else if (val[2L] > value(x, "max")) {
+    value(x) <- c(val[1L], value(x, "max"))
+  }
+
+  x
+}
+
+#' @rdname new_field
+#' @export
+new_hidden_field <- function(value = expression(), ...) {
+  new_field(value, ..., class = "hidden_field")
+}
+
+#' @rdname new_field
+#' @export
+hidden_field <- function(...) validate_field(new_hidden_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.hidden_field <- function(x) {
+  x
 }

@@ -48,18 +48,7 @@ is_initialized.block <- function(x) {
 #' @rdname new_block
 #' @export
 initialize_block <- function(x, ...) {
-
-  if (is_initialized(x)) {
-    return(x)
-  }
-
   UseMethod("initialize_block")
-}
-
-#' @rdname new_block
-#' @export
-initialize_block.block <- function(x, ...) {
-  stop("no base-class block initializor")
 }
 
 #' @rdname new_block
@@ -89,12 +78,6 @@ generate_code.transform_block <- function(x) {
 #' @export
 evalute_block <- function(x, ...) {
   UseMethod("evalute_block")
-}
-
-#' @rdname new_block
-#' @export
-evalute_block.block <- function(x, ...) {
-  stop("no base-class evaulator for blocks available")
 }
 
 #' @rdname new_block
@@ -132,7 +115,7 @@ new_data_block <- function(...) {
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
   fields <- list(
-    dataset = select_field("iris", datasets)
+    dataset = new_select_field("iris", datasets)
   )
 
   expr <- quote(
@@ -174,29 +157,49 @@ initialize_block.data_block <- function(x, ...) {
 new_filter_block <- function(data, column = colnames(data)[1L],
                              value = character(), ...) {
 
-  field_type <- quote(
+  field_type <- function(data, column) {
     switch(
-      class(.(data)[[.(column)]]),
+      class(data[[column]]),
       factor = "select_field",
+      numeric = "range_field",
       "string_field"
     )
-  )
+  }
 
-  field_args <- quote(
+  field_args <- function(data, column) {
+
+    col <- data[[column]]
+
     switch(
-      class(.(data)[[.(column)]]),
-      factor = list(choices = levels(.(data)[[.(column)]])),
+      class(col),
+      factor = list(choices = levels(col)),
+      numeric = list(min = min(col), max = max(col)),
       list()
     )
-  )
+  }
+
+  filter_exp <- function(data, column, value) {
+    switch(
+      class(data[[column]]),
+      numeric = bquote(
+        dplyr::between(.(col), ..(vals)),
+        list(col = as.name(column), vals = value),
+        splice = TRUE
+      ),
+      bquote(.(col) == .(val), list(col = as.name(column), val = value))
+    )
+  }
+
+  col_choices <- function(data) colnames(data)
 
   fields <- list(
-    column = select_field(column, quote(colnames(.(data))), type = "name"),
-    value = variable_field(value, field_type, field_args)
+    column = new_select_field(column, col_choices),
+    value = new_variable_field(value, field_type, field_args),
+    expression = new_hidden_field(filter_exp)
   )
 
   expr <- quote(
-    dplyr::filter(.(column) == .(value))
+    dplyr::filter(.(expression))
   )
 
   new_block(
@@ -231,12 +234,6 @@ initialize_block.transform_block <- function(x, data, ...) {
 #' @export
 update_fields <- function(x, ...) {
   UseMethod("update_fields")
-}
-
-#' @rdname new_block
-#' @export
-update_fields.block <- function(x, ...) {
-  stop("no base-class update fields for blocks available")
 }
 
 #' @param session Shiny session
