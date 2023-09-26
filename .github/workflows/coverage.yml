@@ -4,8 +4,11 @@ on:
 name: coverage
 
 jobs:
+
   coverage:
+
     runs-on: ubuntu-latest
+
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

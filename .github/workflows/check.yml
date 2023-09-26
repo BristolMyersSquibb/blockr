@@ -4,7 +4,9 @@ on:
 name: check
 
 jobs:
+
   check:
+
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
