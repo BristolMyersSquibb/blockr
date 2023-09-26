@@ -139,36 +139,22 @@ type_trans <- function(x) {
 is_truthy <- function(x) {
 
   if (inherits(x, "try-error")) {
-    return(FALSE)
+    FALSE
+  } else if (!is.atomic(x)) {
+    TRUE
+  } else if (is.null(x)) {
+    FALSE
+  } else if (length(x) == 0) {
+    FALSE
+  } else if (all(is.na(x))) {
+    FALSE
+  } else if (is.character(x) && !any(nzchar(stats::na.omit(x)))) {
+    FALSE
+  } else if (inherits(x, "shinyActionButtonValue") && x == 0) {
+    FALSE
+  } else if (is.logical(x) && !any(stats::na.omit(x))) {
+    FALSE
+  } else {
+    TRUE
   }
-
-  if (!is.atomic(x)) {
-    return(TRUE)
-  }
-
-  if (is.null(x)) {
-    return(FALSE)
-  }
-
-  if (length(x) == 0) {
-    return(FALSE)
-  }
-
-  if (all(is.na(x))) {
-    return(FALSE)
-  }
-
-  if (is.character(x) && !any(nzchar(stats::na.omit(x)))) {
-    return(FALSE)
-  }
-
-  if (inherits(x, "shinyActionButtonValue") && x == 0) {
-    return(FALSE)
-  }
-
-  if (is.logical(x) && !any(stats::na.omit(x))) {
-    return(FALSE)
-  }
-
-  TRUE
 }

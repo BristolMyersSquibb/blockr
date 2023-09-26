@@ -88,7 +88,7 @@ validate_field.string_field <- function(x) {
 
   val <- value(x)
 
-  if(!is.character(val) || length(val) != 1L) {
+  if (!is.character(val) || length(val) != 1L) {
     value(x) <- ""
   }
 
