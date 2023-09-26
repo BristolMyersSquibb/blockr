@@ -19,10 +19,10 @@
 \alias{data_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
-\alias{new_select_block}
-\alias{new_plot_block}
 \alias{filter_block}
-\alias{initialize_block.transform_block}
+\alias{new_select_block}
+\alias{select_block}
+\alias{new_plot_block}
 \alias{update_fields}
 \alias{update_fields.block}
 \alias{update_fields.data_block}
@@ -66,13 +66,13 @@ data_block(...)
 
 new_filter_block(data, column = character(), value = character(), ...)
 
-new_select_block(dat, cols = colnames(dat)[1L], ...)
-
-new_plot_block(dat, x, y, plot_opts = list(color = "blue"), ...)
-
 filter_block(data, ...)
 
-\method{initialize_block}{transform_block}(x, data, ...)
+new_select_block(dat, cols = colnames(dat)[1L], ...)
+
+select_block(data, ...)
+
+new_plot_block(dat, x, y, plot_opts = list(color = "blue"), ...)
 
 update_fields(x, ...)
 

@@ -11,7 +11,6 @@
 #' @export
 new_field <- function(value, ..., type = c("literal", "name"),
                       class = character()) {
-
   x <- list(value = value, ...)
 
   stopifnot(is.list(x), length(unique(names(x))) == length(x))
@@ -29,7 +28,6 @@ is_initialized.field <- function(x) {
 #' @rdname new_field
 #' @export
 validate_field <- function(x) {
-
   if (is_initialized(x)) {
     UseMethod("validate_field", x)
   }
@@ -55,7 +53,6 @@ update_field <- function(x, new, env = list()) {
 #' @rdname new_field
 #' @export
 update_field.field <- function(x, new, env = list()) {
-
   x <- eval_set_field_value(x, env)
   value(x) <- new
 
@@ -77,7 +74,6 @@ initialize_field.field <- function(x, env = list()) {
 }
 
 eval_set_field_value <- function(x, env) {
-
   for (cmp in names(x)[lgl_ply(x, is.language)]) {
     expr <- do.call(bquote, list(expr = x[[cmp]], where = env))
     value(x, cmp) <- eval(expr)
@@ -93,7 +89,6 @@ is_field <- function(x) inherits(x, "field")
 #' @rdname new_field
 #' @export
 validate_field.string_field <- function(x) {
-
   val <- value(x)
 
   stopifnot(is.character(val), length(val) <= 1L)
@@ -114,7 +109,6 @@ string_field <- function(...) validate_field(new_string_field(...))
 #' @rdname new_field
 #' @export
 validate_field.select_field <- function(x) {
-
   val <- value(x)
 
   stopifnot(is.character(val), length(val) <= 1L)
@@ -141,7 +135,6 @@ select_field <- function(...) validate_field(new_select_field(...))
 #' @rdname new_field
 #' @export
 value <- function(x, name = "value") {
-
   stopifnot(is_field(x))
 
   res <- x[[name]]
@@ -163,7 +156,6 @@ values <- function(x, name = names(x)) {
 #' @rdname new_field
 #' @export
 `value<-` <- function(x, name = "value", value) {
-
   stopifnot(is_field(x))
 
   if (is.language(x[[name]])) {

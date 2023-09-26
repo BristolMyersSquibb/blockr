@@ -15,15 +15,16 @@
 #' @export
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
-
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
     is.language(expr),
     is_string(name)
   )
 
-  structure(fields, name = name, expr = expr, result = NULL, ...,
-            class = c(class, "block"))
+  structure(fields,
+    name = name, expr = expr, result = NULL, ...,
+    class = c(class, "block")
+  )
 }
 
 #' @param x An object inheriting form `"block"`
@@ -48,7 +49,6 @@ is_initialized.block <- function(x) {
 #' @rdname new_block
 #' @export
 initialize_block <- function(x, ...) {
-
   if (is_initialized(x)) {
     return(x)
   }
@@ -73,7 +73,7 @@ generate_code <- function(x) {
 generate_code.block <- function(x) {
   # TO DO: find a better way to handle this ...
   tmp_expr <- if (inherits(x, "filter_block")) {
-     if (is.na(x[["value"]]) || nchar(x[["value"]]) == 0) {
+    if (is.na(x[["value"]]) || nchar(x[["value"]]) == 0) {
       attr(x, "default_expr")
     } else {
       attr(x, "expr")
@@ -93,7 +93,6 @@ generate_code.block <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.transform_block <- function(x) {
-
   if (!is_initialized(x)) {
     return(quote(identity()))
   }
@@ -124,7 +123,6 @@ evalute_block.data_block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 evalute_block.transform_block <- function(x, data, ...) {
-
   stopifnot(...length() == 0L)
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
@@ -150,7 +148,6 @@ evalute_block.plot_block <- function(x, data, ...) {
 #' @rdname new_block
 #' @export
 new_data_block <- function(...) {
-
   is_dataset_eligible <- function(x) {
     inherits(
       get(x, envir = as.environment("package:datasets"), inherits = FALSE),
@@ -186,7 +183,6 @@ data_block <- function(...) {
 #' @rdname new_block
 #' @export
 initialize_block.data_block <- function(x, ...) {
-
   env <- list()
 
   for (field in names(x)) {
@@ -203,7 +199,6 @@ initialize_block.data_block <- function(x, ...) {
 #' @export
 new_filter_block <- function(data, column = character(),
                              value = character(), ...) {
-
   cols <- quote(colnames(.(data)))
 
   fields <- list(
@@ -266,7 +261,6 @@ select_block <- function(data, ...) {
 #' @import ggplot2
 #' @export
 new_plot_block <- function(dat, x, y, plot_opts = list(color = "blue"), ...) {
-
   # For plot blocks, fields will create input to style the plot ...
   fields <- list(
     x = string_field(colnames(dat)[[1]]),
@@ -292,16 +286,15 @@ new_plot_block <- function(dat, x, y, plot_opts = list(color = "blue"), ...) {
   )
 }
 
-##' @rdname new_block
+##' @rdname new_block #nolint start
 ##' @export
-#plot_block <- function(data, ...) {
+# plot_block <- function(data, ...) {
 #  initialize_block(new_plot_block(data, ...), data)
-#}
+# } #nolint end
 
 #' @rdname new_block
 #' @export
 initialize_block.transform_block <- function(x, data, ...) {
-
   env <- list(data = data)
 
   for (field in names(x)) {
@@ -328,13 +321,11 @@ update_fields.block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 update_fields.data_block <- function(x, session, ...) {
-
   args <- list(...)
 
   stopifnot(setequal(names(args), names(x)))
 
   for (field in names(x)) {
-
     env <- args[-which(names(args) == field)]
 
     x[[field]] <- update_field(x[[field]], args[[field]], env)
@@ -348,13 +339,11 @@ update_fields.data_block <- function(x, session, ...) {
 #' @rdname new_block
 #' @export
 update_fields.transform_block <- function(x, session, data, ...) {
-
   args <- list(...)
 
   stopifnot(setequal(names(args), names(x)))
 
   for (field in names(x)) {
-
     env <- c(
       list(data = data),
       args[-which(names(args) == field)]
@@ -368,5 +357,5 @@ update_fields.transform_block <- function(x, session, data, ...) {
 }
 
 update_fields.select_block <- function(x, data, session, ...) {
-  #browser()
+  # browser() #nolint
 }

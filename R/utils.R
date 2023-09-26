@@ -15,7 +15,6 @@ NULL
 
 rand_names <- function(old_names = character(0L), n = 1L, length = 15L,
                        chars = letters, prefix = "", suffix = "") {
-
   stopifnot(
     is.null(old_names) || is.character(old_names),
     is_count(n), is_count(length),
@@ -27,8 +26,8 @@ rand_names <- function(old_names = character(0L), n = 1L, length = 15L,
   length <- length - (nchar(prefix) + nchar(suffix))
 
   repeat {
-
-    res <- replicate(n,
+    res <- replicate(
+      n,
       paste0(
         prefix,
         paste(sample(chars, length, replace = TRUE), collapse = ""),
@@ -48,6 +47,7 @@ chr_ply <- function(x, fun, ..., length = 1L, use_names = FALSE) {
   vapply(x, fun, character(length), ..., USE.NAMES = use_names)
 }
 
+#' @keywords internal
 lgl_ply <- function(x, fun, ..., length = 1L, use_names = FALSE) {
   vapply(x, fun, logical(length), ..., USE.NAMES = use_names)
 }
@@ -89,7 +89,6 @@ is_intish <- function(x) {
 }
 
 is_count <- function(x, include_zero = TRUE) {
-
   if (length(x) != 1) {
     return(FALSE)
   }
@@ -126,11 +125,9 @@ splice_args <- function(expr, ...) {
 }
 
 type_trans <- function(x) {
-
   res <- value(x)
 
-  switch(
-    attr(x, "type"),
+  switch(attr(x, "type"),
     literal = res,
     name = as.name(res)
   )

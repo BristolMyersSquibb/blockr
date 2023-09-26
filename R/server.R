@@ -19,7 +19,6 @@ generate_server.block <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.data_block <- function(x, ...) {
-
   fields <- names(x)
 
   quot_inp <- lapply(fields, quoted_input_entry)
@@ -37,7 +36,6 @@ generate_server.data_block <- function(x, ...) {
   shiny::moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-
       module_name <- sprintf("module %s %s", class(x)[[1]], attr(x, "name"))
 
       blk <- shiny::reactiveVal(x)
@@ -66,7 +64,6 @@ generate_server.data_block <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.transform_block <- function(x, in_dat, ...) {
-
   fields <- names(x)
 
   quot_inp <- lapply(fields, quoted_input_entry)
@@ -84,7 +81,6 @@ generate_server.transform_block <- function(x, in_dat, ...) {
   shiny::moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-
       blk <- shiny::reactiveVal(x)
 
       shiny::observeEvent(
@@ -110,13 +106,11 @@ generate_server.transform_block <- function(x, in_dat, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.stack <- function(x, ...) {
-
   stopifnot(...length() == 0L)
 
   shiny::moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-
       res <- vector("list", length(x))
 
       res[[1L]] <- generate_server(x[[1L]])
@@ -155,7 +149,6 @@ server_code <- function(x, state, output) {
 #' @rdname generate_ui
 #' @export
 server_code.block <- function(x, state, output) {
-
   output$code <- shiny::renderPrint(
     cat(deparse(generate_code(state())), sep = "\n")
   )

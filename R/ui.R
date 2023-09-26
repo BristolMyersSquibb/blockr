@@ -14,7 +14,6 @@ generate_ui <- function(x, ...) {
 #' @rdname generate_ui
 #' @export
 generate_ui.block <- function(x, id, ...) {
-
   stopifnot(...length() == 0L)
 
   ns <- shiny::NS(
@@ -49,18 +48,20 @@ generate_ui.block <- function(x, id, ...) {
   }
 
   shiny::tagList(
-      # Ensure collapse is visible
-      shiny::tags$head(
-        shiny::tags$script(
-          sprintf("$(function() {
+    # Ensure collapse is visible
+    shiny::tags$head(
+      shiny::tags$script(
+        sprintf(
+          "$(function() {
             const bsCollapse = new bootstrap.Collapse('#%s', {
               toggle: true
             });
           });",
           ns("collapse_data")
-        ))
-      ),
-      div_card(
+        )
+      )
+    ),
+    div_card(
       title = shiny::h4(attr(x, "name")),
       bslib::layout_sidebar(
         sidebar = shiny::tagList(
@@ -82,18 +83,17 @@ generate_ui.block <- function(x, id, ...) {
 #' @rdname generate_ui
 #' @export
 generate_ui.stack <- function(x, ...) {
-
   stopifnot(...length() == 0L)
 
   bslib::page_fluid(
     do.call(
-    bslib::accordion,
-    c(
-      lapply(x, generate_ui, id = attr(x, "name")),
-      title = attr(x, "name"),
-      open = TRUE
+      bslib::accordion,
+      c(
+        lapply(x, generate_ui, id = attr(x, "name")),
+        title = attr(x, "name"),
+        open = TRUE
+      )
     )
-  )
   )
 }
 
@@ -174,14 +174,14 @@ ui_update.select_field <- function(x, session, id, name) {
 #' @keywords internal
 div_card <- function(..., title = NULL, footer = NULL) {
   bslib::accordion_panel(
-    #class = "panel panel-default",
-    #style = "margin: 10px;",
+    # class = "panel panel-default", #nolint start
+    # style = "margin: 10px;",
     title = if (not_null(title)) title,
     value = "plop",
-    ...#,
-    #if (not_null(footer)) {
+    ... # ,
+    # if (not_null(footer)) {
     #  shiny::div(footer, class = "panel-footer")
-    #}
+    # } #nolint end
   )
 }
 

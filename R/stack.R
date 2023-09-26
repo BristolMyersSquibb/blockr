@@ -8,7 +8,6 @@
 #'
 #' @export
 new_stack <- function(..., name = rand_names()) {
-
   ctors <- c(...)
   names <- names(ctors)
 
@@ -35,7 +34,6 @@ new_stack <- function(..., name = rand_names()) {
 #' @rdname new_stack
 #' @export
 serve_stack <- function(stack) {
-
   ui <- generate_ui(stack)
 
   server <- function(input, output, session) {
