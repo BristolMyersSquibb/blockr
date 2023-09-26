@@ -1,6 +1,6 @@
 test_that("data blocks", {
 
-  block <- new_data_block()
+  block <- data_block()
 
   expect_s3_class(block, "data_block")
   expect_type(block, "list")
@@ -17,14 +17,20 @@ test_that("data blocks", {
 
 test_that("filter blocks", {
 
-  block <- new_filter_block(datasets::iris)
+  data <- datasets::iris
+
+  block <- filter_block(data)
 
   expect_s3_class(block, "filter_block")
   expect_type(block, "list")
 
-  block <- new_filter_block(datasets::iris, "Species", "setosa")
+  res <- evalute_block(block, data)
 
-  res <- evalute_block(block, datasets::iris)
+  expect_identical(nrow(res), nrow(data))
 
-  expect_identical(nrow(res), 50L)
+  block <- filter_block(data, "Species", "setosa")
+
+  res <- evalute_block(block, data)
+
+  expect_identical(nrow(res), nrow(data[data$Species == "setosa", ]))
 })

@@ -14,8 +14,7 @@
 NULL
 
 rand_names <- function(old_names = character(0L), n = 1L, length = 15L,
-                       chars = c(letters, LETTERS, 0L:9L), prefix = "",
-                       suffix = "") {
+                       chars = letters, prefix = "", suffix = "") {
 
   stopifnot(
     is.null(old_names) || is.character(old_names),
@@ -111,7 +110,28 @@ set_names <- function(object = nm, nm) {
   object
 }
 
-hash_input <- function(input) {
-  l <- names(input)
-  rlang::hash(lapply(l, \(x) input[[x]]))
+quoted_input_entry <- function(x) {
+  bquote(input[[.(val)]], list(val = x))
+}
+
+quoted_input_expression <- function(inputs, names) {
+  do.call(expression, set_names(inputs, names))
+}
+
+splice_args <- function(expr, ...) {
+  do.call(
+    bquote,
+    list(expr = substitute(expr), where = list(...), splice = TRUE)
+  )
+}
+
+type_trans <- function(x) {
+
+  res <- value(x)
+
+  switch(
+    attr(x, "type"),
+    literal = res,
+    name = as.name(res)
+  )
 }

@@ -36,31 +36,45 @@ generate_ui.block <- function(x, id, ...) {
   if (!inherits(x, "plot_block")) {
     data_switch <- bslib::input_switch(
       ns("data_switch"),
-      "Show data?"
+      "Show data?",
+      value = TRUE
     )
     data_switch <- shiny::tagAppendAttributes(
       data_switch,
       `data-bs-toggle` = "collapse",
       href = sprintf("#%s", ns("collapse_data")),
-      `aria-expanded` = FALSE,
+      `aria-expanded` = "true",
       `aria-controls` = ns("collapse_data")
     )
   }
 
-  div_card(
-    title = shiny::h4(attr(x, "name")),
-    bslib::layout_sidebar(
-      sidebar = shiny::tagList(
-        data_switch,
-        do.call(shiny::div, unname(fields))
+  shiny::tagList(
+      # Ensure collapse is visible
+      shiny::tags$head(
+        shiny::tags$script(
+          sprintf("$(function() {
+            const bsCollapse = new bootstrap.Collapse('#%s', {
+              toggle: true
+            });
+          });",
+          ns("collapse_data")
+        ))
       ),
-      shiny::verbatimTextOutput(ns("code")),
-      shiny::tags$div(
-        class = "collapse",
-        id = ns("collapse_data"),
-        custom_verbatim_output(ns("data"))
-      ),
-      plots
+      div_card(
+      title = shiny::h4(attr(x, "name")),
+      bslib::layout_sidebar(
+        sidebar = shiny::tagList(
+          data_switch,
+          do.call(shiny::div, unname(fields))
+        ),
+        ui_code(x, ns),
+        shiny::tags$div(
+          class = "collapse",
+          id = ns("collapse_data"),
+          ui_output(x, ns)
+        ),
+        plots
+      )
     )
   )
 }
@@ -99,7 +113,7 @@ ui_input.field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.string_field <- function(x, id, name) {
-  shiny::textInput(id, name, x)
+  shiny::textInput(id, name, value(x))
 }
 
 #' @rdname generate_ui
@@ -108,8 +122,8 @@ ui_input.select_field <- function(x, id, name) {
   shiny::selectInput(
     id,
     name,
-    attr(x, "choices"),
-    x,
+    value(x, "choices"),
+    value(x),
     # Support multi select
     multiple = if (!is.null(attr(x, "multiple"))) {
       attr(x, "multiple")
@@ -147,13 +161,13 @@ ui_update.field <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
-  shiny::updateTextInput(session, id, name, x)
+  shiny::updateTextInput(session, id, name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
-  shiny::updateSelectInput(session, id, name, attr(x, "choices"), x)
+  shiny::updateSelectInput(session, id, name, value(x, "choices"), value(x))
 }
 
 #' Custom card container
@@ -177,4 +191,28 @@ custom_verbatim_output <- function(id) {
   tmp <- shiny::verbatimTextOutput(id)
   tmp$attribs$style <- "max-height: 400px; overflow-y: scroll"
   tmp
+}
+#' @param ns Output namespace
+#' @rdname generate_ui
+#' @export
+ui_output <- function(x, ns) {
+  UseMethod("ui_output", x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_output.block <- function(x, ns) {
+  custom_verbatim_output(ns("output"))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_code <- function(x, ns) {
+  UseMethod("ui_code", x)
+}
+
+#' @rdname generate_ui
+#' @export
+ui_code.block <- function(x, ns) {
+  custom_verbatim_output(ns("code"))
 }

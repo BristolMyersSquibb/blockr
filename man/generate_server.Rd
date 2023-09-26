@@ -3,12 +3,18 @@
 \name{generate_server}
 \alias{generate_server}
 \alias{generate_server.block}
+\alias{generate_server.data_block}
+\alias{generate_server.transform_block}
 \alias{generate_server.stack}
 \title{UI}
 \usage{
 generate_server(x, ...)
 
-\method{generate_server}{block}(x, in_dat = NULL, ...)
+\method{generate_server}{block}(x, ...)
+
+\method{generate_server}{data_block}(x, ...)
+
+\method{generate_server}{transform_block}(x, in_dat, ...)
 
 \method{generate_server}{stack}(x, ...)
 }
@@ -17,7 +23,7 @@ generate_server(x, ...)
 
 \item{...}{Generic consistency}
 
-\item{in_dat}{Forwarded to \code{evalute_block()}}
+\item{in_dat}{Reactive input data}
 }
 \description{
 Generic for UI generation

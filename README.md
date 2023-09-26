@@ -4,6 +4,12 @@
 # blockr
 
 <!-- badges: start -->
+
+[![check](https://github.com/cynkra/blockr/actions/workflows/check.yml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/check.yml)
+[![coverage](https://github.com/cynkra/blockr/actions/workflows/coverage.yml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/coverage.yml)
+[![pkgdown](https://github.com/cynkra/blockr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/pkgdown.yaml)
+[![lint](https://github.com/cynkra/blockr/actions/workflows/lint.yaml/badge.svg)](https://github.com/cynkra/blockr/actions/workflows/lint.yaml)
+[![codecov](https://codecov.io/gh/cynkra/blockr/graph/badge.svg?token=988fQI8MPx)](https://codecov.io/gh/cynkra/blockr)
 <!-- badges: end -->
 
 Building blocks for data manipulation and visualization operations.
@@ -15,7 +21,7 @@ You can install the development version of blockr from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("nbenn/blockr")
+devtools::install_github("cynkra/blockr")
 ```
 
 ## Example
@@ -27,8 +33,8 @@ operation.
 library(blockr)
 
 stack <- new_stack(
-  new_data_block,
-  new_filter_block
+  data_block,
+  filter_block
 )
 
 serve_stack(stack)

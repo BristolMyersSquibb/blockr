@@ -10,39 +10,29 @@ generate_server <- function(x, ...) {
   UseMethod("generate_server")
 }
 
-
-
-#' Set field values of an object from a named input list
-#'
-#' This function sets the fields of an object `x` using values from a named input list `input`.
-#' It assumes that the field names in `x` and the names in the input list `input` match.
-#'
-#' @param x An object with named fields that you want to update.
-#' @param input A named list containing new values for the fields in `x`.
-#'
-#' @return An object with updated field values.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#'   x <- new_filter_block(dat = iris)
-#'   input <- list(column = "Species", value = "versicolor")
-#'   set_field_values_from_input(x, input)
-#' }
-set_field_values_from_input <- function(x, input) {
-  fields <- names(x)
-  args <- lapply(setNames(fields, fields), \(x) input[[x]])
-  args$x <- x
-  do.call(set_field_values, args)
-}
-
-
-
-
-#' @param in_dat Forwarded to `evalute_block()`
 #' @rdname generate_server
 #' @export
-generate_server.block <- function(x, in_dat = NULL, ...) {
+generate_server.block <- function(x, ...) {
+  stop("no base-class server for blocks available")
+}
+
+#' @rdname generate_server
+#' @export
+generate_server.data_block <- function(x, ...) {
+
+  fields <- names(x)
+
+  quot_inp <- lapply(fields, quoted_input_entry)
+
+  obs_expr <- splice_args(
+    list(..(args)),
+    args = quot_inp
+  )
+
+  set_expr <- splice_args(
+    blk(update_fields(blk(), session, ..(args))),
+    args = quoted_input_expression(quot_inp, fields)
+  )
 
   shiny::moduleServer(
     attr(x, "name"),
@@ -52,72 +42,65 @@ generate_server.block <- function(x, in_dat = NULL, ...) {
 
       blk <- shiny::reactiveVal(x)
 
-      data_upd_completed <- reactiveVal(FALSE)
-      # 1. update block by data
-      # This will never happen in the first block
-      # because no data are passed ...
-      if (not_null(in_dat)) {
-        shiny::observeEvent(in_dat(), {
-          message(sprintf("Update data in %s", module_name))
-          inputs_updated(FALSE)
-          blk_upd <- update_fields(blk(), data = in_dat(), session = session)
-          blk(blk_upd)
-          data_upd_completed(TRUE)
-        })
-      }
-
-      old_hash <- reactiveVal(isolate(hash_input(input)))
-      inputs_updated <- reactiveVal(FALSE)
-
-      # 2. update block by input fields
-      shiny::observeEvent({
-        new_hash <- hash_input(input)
-        input_changed <- old_hash() != new_hash
-        if (input_changed) {
-          old_hash(new_hash)
-          message("Allowed to update inputs")
-        }
-        if (not_null(in_dat)) {
-          # So that it runs once after update data
-          # or whenever input is changed.
-          # This will never run in the data module
-          # since no data are passed.
-          input_changed || req(data_upd_completed())
-        } else {
-          req(input_changed)
-        }
-      }, {
-        #if ("filter_block" %in% class(x)) browser()
-        message(sprintf("Update inputs in %s", module_name))
-        blk_upd <- set_field_values_from_input(blk(), input)
-        blk(blk_upd)
-        data_upd_completed(FALSE)
-        inputs_updated(TRUE)
-      })
-
-      out_dat <- NULL
-      if (is.null(in_dat)) {
-        out_dat <- shiny::reactive(
-          evalute_block(blk())
-        )
-      } else {
-        # For plot block, we don't need to show
-        # data but the output ...
-        if (!inherits(x, "plot_block")) {
-          out_dat <- shiny::reactive({
-          evalute_block(blk(), data = in_dat())
-          })
-          output$data <- shiny::renderPrint(out_dat())
-        } else {
-          output$plot <- renderPlot({
-            evalute_block(blk(), data = in_dat())
-          })
-        }
-      }
-
-      output$code <- shiny::renderPrint(
-        cat(deparse(generate_code(blk())), sep = "\n")
+      shiny::observeEvent(
+        obs_expr,
+        set_expr,
+        event.quoted = TRUE,
+        handler.quoted = TRUE,
+        ignoreInit = TRUE
       )
+
+      out_dat <- shiny::reactive(
+        evalute_block(blk())
+      )
+
+      output <- server_output(x, out_dat, output)
+      output <- server_code(x, blk, output)
+
+      out_dat
+    }
+  )
+}
+
+#' @param in_dat Reactive input data
+#' @rdname generate_server
+#' @export
+generate_server.transform_block <- function(x, in_dat, ...) {
+
+  fields <- names(x)
+
+  quot_inp <- lapply(fields, quoted_input_entry)
+
+  obs_expr <- splice_args(
+    list(in_dat(), ..(args)),
+    args = quot_inp
+  )
+
+  set_expr <- splice_args(
+    blk(update_fields(blk(), session, in_dat(), ..(args))),
+    args = quoted_input_expression(quot_inp, fields)
+  )
+
+  shiny::moduleServer(
+    attr(x, "name"),
+    function(input, output, session) {
+
+      blk <- shiny::reactiveVal(x)
+
+      shiny::observeEvent(
+        obs_expr,
+        set_expr,
+        event.quoted = TRUE,
+        handler.quoted = TRUE,
+        ignoreInit = TRUE
+      )
+
+      out_dat <- shiny::reactive(
+        evalute_block(blk(), data = in_dat())
+      )
+
+      output <- server_output(x, out_dat, output)
+      output <- server_code(x, blk, output)
 
       out_dat
     }
@@ -145,4 +128,37 @@ generate_server.stack <- function(x, ...) {
       res
     }
   )
+}
+
+#' @param output Shiny output
+#' @param result Block result
+#' @rdname generate_ui
+#' @export
+server_output <- function(x, result, output) {
+  UseMethod("server_output", x)
+}
+
+#' @rdname generate_ui
+#' @export
+server_output.block <- function(x, result, output) {
+  output$output <- shiny::renderPrint(result())
+  output
+}
+
+#' @param state Block state
+#' @rdname generate_ui
+#' @export
+server_code <- function(x, state, output) {
+  UseMethod("server_code", x)
+}
+
+#' @rdname generate_ui
+#' @export
+server_code.block <- function(x, state, output) {
+
+  output$code <- shiny::renderPrint(
+    cat(deparse(generate_code(state())), sep = "\n")
+  )
+
+  output
 }
