@@ -58,7 +58,14 @@ generate_ui.block <- function(x, id, ...) {
       )
     ),
     div_card(
-      title = shiny::h4(attr(x, "name")),
+      title = shiny::h4(
+        HTML(
+          sprintf(
+            "Block: %s",
+            strsplit(class(x)[[1]], "_")[[1]][1]
+          )
+        )
+      ),
       bslib::layout_sidebar(
         sidebar = shiny::tagList(
           data_switch,
