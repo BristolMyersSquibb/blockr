@@ -114,6 +114,15 @@ quoted_input_entry <- function(x) {
   bquote(input[[.(val)]], list(val = x))
 }
 
+quoted_input_entries <- function(x) {
+
+  if (length(x) == 1L && is.null(names(x))) {
+    return(quoted_input_entry(x))
+  }
+
+  splice_args(list(..(args)), args = lapply(x, quoted_input_entry))
+}
+
 quoted_input_expression <- function(inputs, names) {
   do.call(expression, set_names(inputs, names))
 }
@@ -157,4 +166,8 @@ is_truthy <- function(x) {
   } else {
     TRUE
   }
+}
+
+unlst <- function(x, recursive = FALSE, use_names = FALSE) {
+  unlist(x, recursive = recursive, use.names = use_names)
 }

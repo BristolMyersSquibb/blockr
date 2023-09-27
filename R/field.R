@@ -112,7 +112,13 @@ validate_field.select_field <- function(x) {
   val <- value(x)
   opt <- value(x, "choices")
 
-  if (!is.character(val) || length(val) != 1L || !val %in% opt) {
+  if (isTRUE(value(x, "multiple"))) {
+    len_ok <- length(val) > 0L
+  } else {
+    len_ok <- length(val) == 1L
+  }
+
+  if (!is.character(val) || !len_ok || !all(val %in% opt)) {
     value(x) <- opt[1L]
   }
 
@@ -120,10 +126,14 @@ validate_field.select_field <- function(x) {
 }
 
 #' @param choices Set of permissible values
+#' @param multiple Allow multiple selections
 #' @rdname new_field
 #' @export
-new_select_field <- function(value = character(), choices = character(), ...) {
-  new_field(value, choices = choices, ..., class = "select_field")
+new_select_field <- function(value = character(), choices = character(),
+                             multiple = FALSE, ...) {
+
+  new_field(value, choices = choices, multiple = multiple, ...,
+            class = "select_field")
 }
 
 #' @rdname new_field
@@ -156,6 +166,10 @@ values <- function(x, name = names(x)) {
 #' @rdname new_field
 #' @export
 `value<-` <- function(x, name = "value", value) {
+
+  if (is.null(x)) {
+    return(NULL)
+  }
 
   stopifnot(is_field(x))
 
@@ -261,4 +275,45 @@ hidden_field <- function(...) validate_field(new_hidden_field(...))
 #' @export
 validate_field.hidden_field <- function(x) {
   x
+}
+
+#' @param sub_fields Fields contained in `list_field`
+#' @rdname new_field
+#' @export
+new_list_field <- function(value = list(), sub_fields = list(), ...) {
+  new_field(value, sub_fields = sub_fields, ..., class = "list_field")
+}
+
+#' @rdname new_field
+#' @export
+list_field <- function(...) validate_field(new_list_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.list_field <- function(x) {
+
+  val <- value(x)
+  sub <- value(x, "sub_fields")
+
+  if (!is.list(val) || length(val) != length(sub) ||
+      !setequal(names(val), names(sub))) {
+
+    value(x) <- lst_xtr(sub, "value")
+  }
+
+  value(x, "sub_fields") <- lapply(
+    update_sub_fields(sub, val),
+    validate_field
+  )
+
+  x
+}
+
+update_sub_fields <- function(sub, val) {
+
+  for (fld in names(val)[lgl_ply(val, is_truthy)]) {
+    value(sub[[fld]]) <- val[[fld]]
+  }
+
+  sub
 }

@@ -61,13 +61,40 @@ ui_input <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.string_field <- function(x, id, name) {
-  shiny::textInput(id, name, value(x))
+  shiny::textInput(input_ids(x, id), name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_input.select_field <- function(x, id, name) {
-  shiny::selectInput(id, name, value(x, "choices"), value(x))
+  shiny::selectInput(
+    input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple")
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+input_ids <- function(x, ...) {
+  UseMethod("input_ids", x)
+}
+
+#' @rdname generate_ui
+#' @export
+input_ids.block <- function(x, ...) {
+  Map(input_ids, x, names(x))
+}
+
+#' @rdname generate_ui
+#' @export
+input_ids.field <- function(x, name, ...) {
+  name
+}
+
+#' @rdname generate_ui
+#' @export
+input_ids.list_field <- function(x, name, ...) {
+  sub_names <- names(value(x, "sub_fields"))
+  set_names(paste0(name, "_", sub_names), sub_names)
 }
 
 #' @rdname generate_ui
@@ -87,13 +114,35 @@ ui_input.variable_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.range_field <- function(x, id, name) {
-  shiny::sliderInput(id, name, value(x, "min"), value(x, "max"), value(x))
+  shiny::sliderInput(
+    input_ids(x, id), name, value(x, "min"), value(x, "max"), value(x)
+  )
 }
 
 #' @rdname generate_ui
 #' @export
 ui_input.hidden_field <- function(x, id, name) {
   NULL
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.list_field <- function(x, id, name) {
+
+  fields <- lapply(
+    update_sub_fields(value(x, "sub_fields"), value(x)),
+    validate_field
+  )
+
+  # TODO: indicate nesting of fields, nice version of
+  # `paste0(name, "_", names(fields))` instead of just `names(fields)`
+
+  args <- c(
+    list(id = paste0(id, "_cont")),
+    map(ui_input, fields, input_ids(x, id), names(fields))
+  )
+
+  do.call(shiny::div, args)
 }
 
 #' @param session Shiny session
@@ -106,13 +155,15 @@ ui_update <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
-  shiny::updateTextInput(session, id, name, value(x))
+  shiny::updateTextInput(session, input_ids(x, id), name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
-  shiny::updateSelectInput(session, id, name, value(x, "choices"), value(x))
+  shiny::updateSelectInput(
+    session, input_ids(x, id), name, value(x, "choices"), value(x)
+  )
 }
 
 #' @rdname generate_ui
@@ -142,7 +193,7 @@ ui_update.variable_field <- function(x, session, id, name) {
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
   shiny::updateSliderInput(
-    session, id, name, value(x), value(x, "min"), value(x, "max")
+    session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
   )
 }
 
@@ -150,6 +201,36 @@ ui_update.range_field <- function(x, session, id, name) {
 #' @export
 ui_update.hidden_field <- function(x, session, id, name) {
   NULL
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.list_field <- function(x, session, id, name) {
+
+  ns <- session$ns
+  ns_id <- ns(id)
+
+  shiny::removeUI(
+    selector = paste0("#", ns_id, "_cont", " > div"),
+    multiple = TRUE,
+    session = session
+  )
+
+  fields <- lapply(
+    update_sub_fields(value(x, "sub_fields"), value(x)),
+    validate_field
+  )
+
+  shiny::insertUI(
+    selector = paste0("#", ns_id, "_cont"),
+    ui = do.call(
+      shiny::tagList,
+      map(
+        ui_input, fields, input_ids(x, ns_id), paste0(name, "_", names(fields))
+      )
+    ),
+    session = session
+  )
 }
 
 div_card <- function(..., title = NULL, footer = NULL) {

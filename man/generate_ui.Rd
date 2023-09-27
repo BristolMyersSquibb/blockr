@@ -11,15 +11,21 @@
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
+\alias{input_ids}
+\alias{input_ids.block}
+\alias{input_ids.field}
+\alias{input_ids.list_field}
 \alias{ui_input.variable_field}
 \alias{ui_input.range_field}
 \alias{ui_input.hidden_field}
+\alias{ui_input.list_field}
 \alias{ui_update}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
 \alias{ui_update.variable_field}
 \alias{ui_update.range_field}
 \alias{ui_update.hidden_field}
+\alias{ui_update.list_field}
 \alias{ui_output}
 \alias{ui_output.block}
 \alias{ui_code}
@@ -46,11 +52,21 @@ ui_input(x, id, name)
 
 \method{ui_input}{select_field}(x, id, name)
 
+input_ids(x, ...)
+
+\method{input_ids}{block}(x, ...)
+
+\method{input_ids}{field}(x, name, ...)
+
+\method{input_ids}{list_field}(x, name, ...)
+
 \method{ui_input}{variable_field}(x, id, name)
 
 \method{ui_input}{range_field}(x, id, name)
 
 \method{ui_input}{hidden_field}(x, id, name)
+
+\method{ui_input}{list_field}(x, id, name)
 
 ui_update(x, session, id, name)
 
@@ -63,6 +79,8 @@ ui_update(x, session, id, name)
 \method{ui_update}{range_field}(x, session, id, name)
 
 \method{ui_update}{hidden_field}(x, session, id, name)
+
+\method{ui_update}{list_field}(x, session, id, name)
 
 ui_output(x, ns)
 

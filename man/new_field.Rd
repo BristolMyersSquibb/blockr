@@ -26,6 +26,9 @@
 \alias{new_hidden_field}
 \alias{hidden_field}
 \alias{validate_field.hidden_field}
+\alias{new_list_field}
+\alias{list_field}
+\alias{validate_field.list_field}
 \title{Fields}
 \usage{
 new_field(value, ..., type = c("literal", "name"), class = character())
@@ -50,7 +53,12 @@ string_field(...)
 
 \method{validate_field}{select_field}(x)
 
-new_select_field(value = character(), choices = character(), ...)
+new_select_field(
+  value = character(),
+  choices = character(),
+  multiple = FALSE,
+  ...
+)
 
 select_field(...)
 
@@ -82,6 +90,12 @@ new_hidden_field(value = expression(), ...)
 hidden_field(...)
 
 \method{validate_field}{hidden_field}(x)
+
+new_list_field(value = list(), sub_fields = list(), ...)
+
+list_field(...)
+
+\method{validate_field}{list_field}(x)
 }
 \arguments{
 \item{value}{Field value}
@@ -100,6 +114,8 @@ hidden_field(...)
 
 \item{choices}{Set of permissible values}
 
+\item{multiple}{Allow multiple selections}
+
 \item{name}{Field component name}
 
 \item{field}{Field type}
@@ -107,6 +123,8 @@ hidden_field(...)
 \item{components}{Variable list of field components}
 
 \item{min, max}{Slider boundaries (inclusive)}
+
+\item{sub_fields}{Fields contained in \code{list_field}}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

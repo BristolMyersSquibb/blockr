@@ -52,7 +52,7 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, column = colnames(data)[1L], value = character(), ...)
+new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
@@ -83,7 +83,7 @@ of the fields)}
 
 \item{data}{Block input data}
 
-\item{column, value}{Definition of the equality filter}
+\item{columns, values}{Definition of the equality filter}
 
 \item{session}{Shiny session}
 }

@@ -151,51 +151,70 @@ initialize_block.data_block <- function(x, ...) {
 }
 
 #' @param data Tabular data to filter (rows)
-#' @param column,value Definition of the equality filter
+#' @param columns,values Definition of the equality filter
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, column = colnames(data)[1L],
-                             value = character(), ...) {
+new_filter_block <- function(data, columns = colnames(data)[1L],
+                             values = character(), ...) {
 
-  field_type <- function(data, column) {
-    switch(
-      class(data[[column]]),
-      factor = "select_field",
-      numeric = "range_field",
-      "string_field"
-    )
+  sub_fields <- function(data, columns) {
+
+    determine_field <- function(x) {
+      switch(
+        class(x),
+        factor = select_field,
+        numeric = range_field,
+        string_field
+      )
+    }
+
+    field_args <- function(x) {
+
+      switch(
+        class(x),
+        factor = list(levels(x)[1L], choices = levels(x)),
+        numeric = list(range(x), min = min(x), max = max(x)),
+        list()
+      )
+    }
+
+    cols <- data[, columns, drop = FALSE]
+
+    ctor <- lapply(cols, determine_field)
+    args <- lapply(cols, field_args)
+
+    Map(do.call, ctor, args)
   }
 
-  field_args <- function(data, column) {
 
-    col <- data[[column]]
+  filter_exps <- function(data, values) {
 
-    switch(
-      class(col),
-      factor = list(choices = levels(col)),
-      numeric = list(min = min(col), max = max(col)),
-      list()
-    )
-  }
+    filter_exp <- function(cls, col, val) {
+      switch(
+        cls,
+        numeric = bquote(
+          dplyr::between(.(column), ..(values)),
+          list(column = as.name(col), values = val),
+          splice = TRUE
+        ),
+        bquote(.(column) == .(value), list(column = as.name(col), value = val))
+      )
+    }
 
-  filter_exp <- function(data, column, value) {
-    switch(
-      class(data[[column]]),
-      numeric = bquote(
-        dplyr::between(.(col), ..(vals)),
-        list(col = as.name(column), vals = value),
-        splice = TRUE
-      ),
-      bquote(.(col) == .(val), list(col = as.name(column), val = value))
+    cols <- names(values)
+
+    Reduce(
+      function(x, y) bquote(.(lhs) | .(rhs), list(lhs = x, rhs = y)),
+      Map(filter_exp, chr_ply(data[, cols, drop = FALSE], class), cols, values)
     )
   }
 
   col_choices <- function(data) colnames(data)
 
   fields <- list(
-    column = new_select_field(column, col_choices),
-    value = new_variable_field(value, field_type, field_args),
-    expression = new_hidden_field(filter_exp)
+    columns = new_select_field(columns, col_choices, multiple = TRUE),
+    values = new_list_field(values, sub_fields),
+    expression = new_hidden_field(filter_exps)
   )
 
   expr <- quote(
