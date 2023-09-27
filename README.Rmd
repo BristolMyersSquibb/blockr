@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![ci](https://github.com/blockr-org/blockr/actions/workflows/ci.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/blockr-org/blockr/graph/badge.svg?token=988fQI8MPx)](https://codecov.io/gh/blockr-org/blockr)
+[![codecov](https://codecov.io/github/blockr-org/blockr/graph/badge.svg?token=9AO88LK8FJ)](https://codecov.io/github/blockr-org/blockr)
 <!-- badges: end -->
 
 Building blocks for data manipulation and visualization operations.
