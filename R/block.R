@@ -71,23 +71,7 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  # TO DO: find a better way to handle this ...
-  tmp_expr <- if (inherits(x, "filter_block")) {
-    if (is.na(x[["value"]]) || nchar(x[["value"]]) == 0) {
-      attr(x, "default_expr")
-    } else {
-      attr(x, "expr")
-    }
-  } else if (inherits(x, "select_block")) {
-    if (length(x[["column"]]) == 0) {
-      attr(x, "default_expr")
-    } else {
-      attr(x, "expr")
-    }
-  } else {
-    attr(x, "expr")
-  }
-  do.call(bquote, list(tmp_expr, where = lapply(x, type_trans)))
+  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
 }
 
 #' @rdname new_block
@@ -354,8 +338,4 @@ update_fields.transform_block <- function(x, session, data, ...) {
   }
 
   x
-}
-
-update_fields.select_block <- function(x, data, session, ...) {
-  # browser() #nolint
 }
