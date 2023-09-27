@@ -20,19 +20,19 @@ generate_server.block <- function(x, ...) {
 #' @export
 generate_server.data_block <- function(x, ...) {
 
-  fields <- names(x)
+  obs_expr <- function(x) {
+    splice_args(
+      list(..(args)),
+      args = lapply(unlst(input_ids(x)), quoted_input_entry)
+    )
+  }
 
-  quot_inp <- lapply(fields, quoted_input_entry)
-
-  obs_expr <- splice_args(
-    list(..(args)),
-    args = quot_inp
-  )
-
-  set_expr <- splice_args(
-    blk(update_fields(blk(), session, ..(args))),
-    args = quoted_input_expression(quot_inp, fields)
-  )
+  set_expr <- function(x) {
+    splice_args(
+      blk(update_fields(blk(), session, ..(args))),
+      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+    )
+  }
 
   shiny::moduleServer(
     attr(x, "name"),
@@ -41,10 +41,8 @@ generate_server.data_block <- function(x, ...) {
       blk <- shiny::reactiveVal(x)
 
       shiny::observeEvent(
-        obs_expr,
-        set_expr,
-        event.quoted = TRUE,
-        handler.quoted = TRUE,
+        eval(obs_expr(blk())),
+        eval(set_expr(blk())),
         ignoreInit = TRUE
       )
 
@@ -65,19 +63,19 @@ generate_server.data_block <- function(x, ...) {
 #' @export
 generate_server.transform_block <- function(x, in_dat, ...) {
 
-  fields <- names(x)
+  obs_expr <- function(x) {
+    splice_args(
+      list(in_dat(), ..(args)),
+      args = lapply(unlst(input_ids(x)), quoted_input_entry)
+    )
+  }
 
-  quot_inp <- lapply(fields, quoted_input_entry)
-
-  obs_expr <- splice_args(
-    list(in_dat(), ..(args)),
-    args = quot_inp
-  )
-
-  set_expr <- splice_args(
-    blk(update_fields(blk(), session, in_dat(), ..(args))),
-    args = quoted_input_expression(quot_inp, fields)
-  )
+  set_expr <- function(x) {
+    splice_args(
+      blk(update_fields(blk(), session, in_dat(), ..(args))),
+      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+    )
+  }
 
   shiny::moduleServer(
     attr(x, "name"),
@@ -86,10 +84,8 @@ generate_server.transform_block <- function(x, in_dat, ...) {
       blk <- shiny::reactiveVal(x)
 
       shiny::observeEvent(
-        obs_expr,
-        set_expr,
-        event.quoted = TRUE,
-        handler.quoted = TRUE,
+        eval(obs_expr(blk())),
+        eval(set_expr(blk())),
         ignoreInit = TRUE
       )
 

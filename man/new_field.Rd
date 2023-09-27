@@ -3,7 +3,6 @@
 \name{new_field}
 \alias{new_field}
 \alias{validate_field}
-\alias{validate_field.field}
 \alias{update_field}
 \alias{update_field.field}
 \alias{initialize_field}
@@ -18,13 +17,23 @@
 \alias{value}
 \alias{values}
 \alias{value<-}
+\alias{new_variable_field}
+\alias{variable_field}
+\alias{validate_field.variable_field}
+\alias{new_range_field}
+\alias{range_field}
+\alias{validate_field.range_field}
+\alias{new_hidden_field}
+\alias{hidden_field}
+\alias{validate_field.hidden_field}
+\alias{new_list_field}
+\alias{list_field}
+\alias{validate_field.list_field}
 \title{Fields}
 \usage{
 new_field(value, ..., type = c("literal", "name"), class = character())
 
 validate_field(x)
-
-\method{validate_field}{field}(x)
 
 update_field(x, new, env = list())
 
@@ -44,7 +53,12 @@ string_field(...)
 
 \method{validate_field}{select_field}(x)
 
-new_select_field(value = character(), choices = character(), ...)
+new_select_field(
+  value = character(),
+  choices = character(),
+  multiple = FALSE,
+  ...
+)
 
 select_field(...)
 
@@ -53,6 +67,35 @@ value(x, name = "value")
 values(x, name = names(x))
 
 value(x, name = "value") <- value
+
+new_variable_field(
+  value = character(),
+  field = character(),
+  components = list(),
+  ...
+)
+
+variable_field(...)
+
+\method{validate_field}{variable_field}(x)
+
+new_range_field(value = numeric(), min = numeric(), max = numeric(), ...)
+
+range_field(...)
+
+\method{validate_field}{range_field}(x)
+
+new_hidden_field(value = expression(), ...)
+
+hidden_field(...)
+
+\method{validate_field}{hidden_field}(x)
+
+new_list_field(value = list(), sub_fields = list(), ...)
+
+list_field(...)
+
+\method{validate_field}{list_field}(x)
 }
 \arguments{
 \item{value}{Field value}
@@ -71,7 +114,17 @@ value(x, name = "value") <- value
 
 \item{choices}{Set of permissible values}
 
+\item{multiple}{Allow multiple selections}
+
 \item{name}{Field component name}
+
+\item{field}{Field type}
+
+\item{components}{Variable list of field components}
+
+\item{min, max}{Slider boundaries (inclusive)}
+
+\item{sub_fields}{Fields contained in \code{list_field}}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

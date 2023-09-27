@@ -46,7 +46,7 @@ jobs:
 
   coverage:
 
-    needs: check
+    needs: smoke
 
     uses: ./.github/workflows/coverage.yml
 
@@ -54,7 +54,7 @@ jobs:
 
   lint:
 
-    needs: check
+    needs: smoke
 
     uses: ./.github/workflows/lint.yml
 
@@ -62,7 +62,7 @@ jobs:
 
   pkgdown:
 
-    needs: check
+    needs: smoke
 
     if: github.event_name != 'pull_request'
 

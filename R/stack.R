@@ -20,7 +20,7 @@ new_stack <- function(..., name = rand_names()) {
   for (i in seq_along(ctors)[-1L]) {
     temp <- evalute_block(
       blocks[[i]] <- do.call(ctors[[i]], list(temp)),
-      data = list(temp)
+      data = temp
     )
   }
 

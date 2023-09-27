@@ -114,6 +114,15 @@ quoted_input_entry <- function(x) {
   bquote(input[[.(val)]], list(val = x))
 }
 
+quoted_input_entries <- function(x) {
+
+  if (length(x) == 1L && is.null(names(x))) {
+    return(quoted_input_entry(x))
+  }
+
+  splice_args(list(..(args)), args = lapply(x, quoted_input_entry))
+}
+
 quoted_input_expression <- function(inputs, names) {
   do.call(expression, set_names(inputs, names))
 }
@@ -134,4 +143,31 @@ type_trans <- function(x) {
     literal = res,
     name = as.name(res)
   )
+}
+
+is_truthy <- function(x) {
+
+  if (inherits(x, "try-error")) {
+    FALSE
+  } else if (!is.atomic(x)) {
+    TRUE
+  } else if (is.null(x)) {
+    FALSE
+  } else if (length(x) == 0) {
+    FALSE
+  } else if (all(is.na(x))) {
+    FALSE
+  } else if (is.character(x) && !any(nzchar(stats::na.omit(x)))) {
+    FALSE
+  } else if (inherits(x, "shinyActionButtonValue") && x == 0) {
+    FALSE
+  } else if (is.logical(x) && !any(stats::na.omit(x))) {
+    FALSE
+  } else {
+    TRUE
+  }
+}
+
+unlst <- function(x, recursive = FALSE, use_names = FALSE) {
+  unlist(x, recursive = recursive, use.names = use_names)
 }
