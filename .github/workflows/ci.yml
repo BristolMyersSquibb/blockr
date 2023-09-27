@@ -38,7 +38,11 @@ jobs:
 
     needs: smoke
 
+    if: github.event_name != 'pull_request'
+
     uses: ./.github/workflows/check.yml
+
+    secrets: inherit
 
   coverage:
 
@@ -46,17 +50,25 @@ jobs:
 
     uses: ./.github/workflows/coverage.yml
 
+    secrets: inherit
+
   lint:
 
     needs: check
 
     uses: ./.github/workflows/lint.yml
 
+    secrets: inherit
+
   pkgdown:
 
     needs: check
 
+    if: github.event_name != 'pull_request'
+
     uses: ./.github/workflows/pkgdown.yml
+
+    secrets: inherit
 
     permissions:
       contents: write

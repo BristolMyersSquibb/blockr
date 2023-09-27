@@ -5,10 +5,7 @@
 
 <!-- badges: start -->
 
-[![check](https://github.com/blockr-org/blockr/actions/workflows/check.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/check.yml)
-[![coverage](https://github.com/blockr-org/blockr/actions/workflows/coverage.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/coverage.yml)
-[![pkgdown](https://github.com/blockr-org/blockr/actions/workflows/pkgdown.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/pkgdown.yml)
-[![lint](https://github.com/blockr-org/blockr/actions/workflows/lint.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/lint.yml)
+[![ci](https://github.com/blockr-org/blockr/actions/workflows/ci.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/blockr-org/blockr/graph/badge.svg?token=988fQI8MPx)](https://codecov.io/gh/blockr-org/blockr)
 <!-- badges: end -->
 
