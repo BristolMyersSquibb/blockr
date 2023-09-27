@@ -190,6 +190,11 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
   filter_exps <- function(data, values) {
 
     filter_exp <- function(cls, col, val) {
+
+      if (is.null(val)) {
+        return(quote(TRUE))
+      }
+
       switch(
         cls,
         numeric = bquote(
