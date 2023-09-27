@@ -59,9 +59,6 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for block</span></span>
-<span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">generate_code</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for block</span></span>
@@ -70,9 +67,6 @@ plus some meta data.</p>
 <span><span class="co"># S3 method for transform_block</span></span>
 <span><span class="fu">generate_code</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">evalute_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for block</span></span>
 <span><span class="fu">evalute_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data_block</span></span>
@@ -88,16 +82,13 @@ plus some meta data.</p>
 <span><span class="co"># S3 method for data_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_filter_block</span><span class="op">(</span><span class="va">data</span>, column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">new_filter_block</span><span class="op">(</span><span class="va">data</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">filter_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for transform_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for block</span></span>
 <span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data_block</span></span>
@@ -142,7 +133,7 @@ of the fields)</p></dd>
 <dd><p>Block input data</p></dd>
 
 
-<dt>column, value</dt>
+<dt>columns, values</dt>
 <dd><p>Definition of the equality filter</p></dd>
 
 
