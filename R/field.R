@@ -118,10 +118,6 @@ validate_field.select_field <- function(x) {
     value(x) <- opt[1L]
   }
 
-  if (cond && !all(val %in% value(x, "choices"))) {
-    value(x) <- character()
-  }
-  
   x
 }
 

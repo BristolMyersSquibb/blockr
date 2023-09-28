@@ -23,6 +23,7 @@
 \alias{new_plot_block}
 \alias{plot_block}
 \alias{initialize_block.transform_block}
+\alias{initialize_block.plot_block}
 \alias{update_fields}
 \alias{update_fields.data_block}
 \alias{update_fields.transform_block}
@@ -72,6 +73,8 @@ new_plot_block(dat, x, y, plot_opts = list(color = "blue"), ...)
 plot_block(data, ...)
 
 \method{initialize_block}{transform_block}(x, data, ...)
+
+\method{initialize_block}{plot_block}(x, data, ...)
 
 update_fields(x, ...)
 
