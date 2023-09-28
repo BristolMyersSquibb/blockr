@@ -59,7 +59,7 @@ generate_ui.block <- function(x, id, ...) {
     ),
     div_card(
       title = shiny::h4(
-        HTML(
+        shiny::HTML(
           sprintf(
             "Block: %s",
             strsplit(class(x)[[1]], "_")[[1]][1]
