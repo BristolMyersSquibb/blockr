@@ -1,11 +1,12 @@
-#' UI
+#' Server
 #'
-#' Generic for UI generation
+#' Generic for server generation
 #'
-#' @param x Object for which to generate a [shiny::moduleServer()]
+#' @param x Object for which to generate a [moduleServer()]
 #' @param ... Generic consistency
 #'
 #' @export
+#' @import shiny
 generate_server <- function(x, ...) {
   UseMethod("generate_server")
 }
@@ -34,19 +35,19 @@ generate_server.data_block <- function(x, ...) {
     )
   }
 
-  shiny::moduleServer(
+  moduleServer(
     attr(x, "name"),
     function(input, output, session) {
 
-      blk <- shiny::reactiveVal(x)
+      blk <- reactiveVal(x)
 
-      shiny::observeEvent(
+      observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
       )
 
-      out_dat <- shiny::reactive(
+      out_dat <- reactive(
         evalute_block(blk())
       )
 
@@ -77,19 +78,19 @@ generate_server.transform_block <- function(x, in_dat, ...) {
     )
   }
 
-  shiny::moduleServer(
+  moduleServer(
     attr(x, "name"),
     function(input, output, session) {
 
-      blk <- shiny::reactiveVal(x)
+      blk <- reactiveVal(x)
 
-      shiny::observeEvent(
+      observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
       )
 
-      out_dat <- shiny::reactive(
+      out_dat <- reactive(
         evalute_block(blk(), data = in_dat())
       )
 
@@ -107,21 +108,74 @@ generate_server.stack <- function(x, ...) {
 
   stopifnot(...length() == 0L)
 
-  shiny::moduleServer(
+  moduleServer(
     attr(x, "name"),
     function(input, output, session) {
+      ns <- session$ns
+      vals <- reactiveValues(blocks = vector("list", length(x)))
+      init_blocks(x, vals)
 
-      res <- vector("list", length(x))
+      # Add block
+      observeEvent(input$add, {
+        showModal(
+          modalDialog(
+            selectInput(
+              ns("block_to_add"),
+              "Which block do you want to add?",
+              choices = c("filter") # TO DO: don't hardcode this
+            ),
+            title = "Add a new block",
+            footer = modalButton("Dismiss"),
+            size = "m",
+            easyClose = FALSE,
+            fade = TRUE
+          )
+        )
+      })
 
-      res[[1L]] <- generate_server(x[[1L]])
+      observeEvent(input$block_to_add, {
+        # Update stack
+        x[[length(x) + 1]] <- do.call(
+          filter_block,
+          list(vals$blocks[[length(x)]]())
+        )
+        # Call module
+        vals$blocks[[length(x)]] <- generate_server(
+          x[[length(x)]],
+          in_dat = vals$blocks[[length(x) - 1]]
+        )
 
-      for (i in seq_along(x)[-1L]) {
-        res[[i]] <- generate_server(x[[i]], in_dat = res[[i - 1L]])
-      }
+        # Insert UI after last block
+        insertUI(
+          sprintf(
+            "#%s-%s-block",
+            attr(x, "name"),
+            attr(x[[length(x) - 1]], "name")
+          ),
+          where = "afterEnd",
+          ui = generate_ui(
+            x[[length(x)]],
+            id = attr(x[[length(x)]], "name")
+          )
+        )
+      })
 
-      res
+      vals
+
     }
   )
+}
+
+init_blocks <- function(x, vals) {
+  observeEvent(TRUE, {
+    vals$blocks[[1L]] <- generate_server(x[[1L]])
+    for (i in seq_along(x)[-1L]) {
+      vals$blocks[[i]] <- generate_server(
+        x[[i]],
+        in_dat = vals$blocks[[i - 1L]]
+      )
+    }
+  })
 }
 
 #' @param output Shiny output
@@ -135,7 +189,7 @@ server_output <- function(x, result, output) {
 #' @rdname generate_ui
 #' @export
 server_output.block <- function(x, result, output) {
-  output$output <- shiny::renderPrint(result())
+  output$output <- renderPrint(result())
   output
 }
 
@@ -150,7 +204,7 @@ server_code <- function(x, state, output) {
 #' @export
 server_code.block <- function(x, state, output) {
 
-  output$code <- shiny::renderPrint(
+  output$code <- renderPrint(
     cat(deparse(generate_code(state())), sep = "\n")
   )
 

@@ -42,5 +42,5 @@ serve_stack <- function(stack) {
     generate_server(stack)
   }
 
-  shiny::shinyApp(ui, server)
+  shinyApp(ui, server)
 }
