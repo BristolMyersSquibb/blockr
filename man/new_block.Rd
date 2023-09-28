@@ -6,12 +6,10 @@
 \alias{is_initialized}
 \alias{is_initialized.block}
 \alias{initialize_block}
-\alias{initialize_block.block}
 \alias{generate_code}
 \alias{generate_code.block}
 \alias{generate_code.transform_block}
 \alias{evalute_block}
-\alias{evalute_block.block}
 \alias{evalute_block.data_block}
 \alias{evalute_block.transform_block}
 \alias{evalute_block.plot_block}
@@ -26,7 +24,6 @@
 \alias{plot_block}
 \alias{initialize_block.transform_block}
 \alias{update_fields}
-\alias{update_fields.block}
 \alias{update_fields.data_block}
 \alias{update_fields.transform_block}
 \alias{is_initialized.field}
@@ -42,8 +39,6 @@ is_initialized(x)
 
 initialize_block(x, ...)
 
-\method{initialize_block}{block}(x, ...)
-
 generate_code(x)
 
 \method{generate_code}{block}(x)
@@ -51,8 +46,6 @@ generate_code(x)
 \method{generate_code}{transform_block}(x)
 
 evalute_block(x, ...)
-
-\method{evalute_block}{block}(x, ...)
 
 \method{evalute_block}{data_block}(x, ...)
 
@@ -66,7 +59,7 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, column = character(), value = character(), ...)
+new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
@@ -81,8 +74,6 @@ plot_block(data, ...)
 \method{initialize_block}{transform_block}(x, data, ...)
 
 update_fields(x, ...)
-
-\method{update_fields}{block}(x, ...)
 
 \method{update_fields}{data_block}(x, session, ...)
 
@@ -107,7 +98,7 @@ of the fields)}
 
 \item{data}{Block input data}
 
-\item{column, value}{Definition of the equality filter}
+\item{columns, values}{Definition of the equality filter}
 
 \item{dat}{Tabular data in which to select some columns.}
 

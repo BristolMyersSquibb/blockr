@@ -49,17 +49,7 @@ is_initialized.block <- function(x) {
 #' @rdname new_block
 #' @export
 initialize_block <- function(x, ...) {
-  if (is_initialized(x)) {
-    return(x)
-  }
-
   UseMethod("initialize_block")
-}
-
-#' @rdname new_block
-#' @export
-initialize_block.block <- function(x, ...) {
-  stop("no base-class block initializor")
 }
 
 #' @rdname new_block
@@ -88,12 +78,6 @@ generate_code.transform_block <- function(x) {
 #' @export
 evalute_block <- function(x, ...) {
   UseMethod("evalute_block")
-}
-
-#' @rdname new_block
-#' @export
-evalute_block.block <- function(x, ...) {
-  stop("no base-class evaulator for blocks available")
 }
 
 #' @rdname new_block
@@ -143,7 +127,7 @@ new_data_block <- function(...) {
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
   fields <- list(
-    dataset = select_field("iris", datasets)
+    dataset = new_select_field("iris", datasets)
   )
 
   expr <- quote(
@@ -178,20 +162,79 @@ initialize_block.data_block <- function(x, ...) {
 }
 
 #' @param data Tabular data to filter (rows)
-#' @param column,value Definition of the equality filter
+#' @param columns,values Definition of the equality filter
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, column = character(),
-                             value = character(), ...) {
-  cols <- quote(colnames(.(data)))
+new_filter_block <- function(data, columns = colnames(data)[1L],
+                             values = character(), ...) {
+
+  sub_fields <- function(data, columns) {
+
+    determine_field <- function(x) {
+      switch(
+        class(x),
+        factor = select_field,
+        numeric = range_field,
+        string_field
+      )
+    }
+
+    field_args <- function(x) {
+
+      switch(
+        class(x),
+        factor = list(levels(x)[1L], choices = levels(x)),
+        numeric = list(range(x), min = min(x), max = max(x)),
+        list()
+      )
+    }
+
+    cols <- data[, columns, drop = FALSE]
+
+    ctor <- lapply(cols, determine_field)
+    args <- lapply(cols, field_args)
+
+    Map(do.call, ctor, args)
+  }
+
+
+  filter_exps <- function(data, values) {
+
+    filter_exp <- function(cls, col, val) {
+
+      if (is.null(val)) {
+        return(quote(TRUE))
+      }
+
+      switch(
+        cls,
+        numeric = bquote(
+          dplyr::between(.(column), ..(values)),
+          list(column = as.name(col), values = val),
+          splice = TRUE
+        ),
+        bquote(.(column) == .(value), list(column = as.name(col), value = val))
+      )
+    }
+
+    cols <- names(values)
+
+    Reduce(
+      function(x, y) bquote(.(lhs) | .(rhs), list(lhs = x, rhs = y)),
+      Map(filter_exp, chr_ply(data[, cols, drop = FALSE], class), cols, values)
+    )
+  }
+
+  col_choices <- function(data) colnames(data)
 
   fields <- list(
-    column = select_field(column, cols, type = "name"),
-    value = string_field(value)
+    columns = new_select_field(columns, col_choices, multiple = TRUE),
+    values = new_list_field(values, sub_fields),
+    expression = new_hidden_field(filter_exps)
   )
 
   expr <- quote(
-    dplyr::filter(.(column) == .(value))
+    dplyr::filter(.(expression))
   )
 
   new_block(
@@ -293,12 +336,6 @@ initialize_block.transform_block <- function(x, data, ...) {
 #' @export
 update_fields <- function(x, ...) {
   UseMethod("update_fields")
-}
-
-#' @rdname new_block
-#' @export
-update_fields.block <- function(x, ...) {
-  stop("no base-class update fields for blocks available")
 }
 
 #' @param session Shiny session
