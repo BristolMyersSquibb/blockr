@@ -23,6 +23,8 @@
 \alias{new_select_block}
 \alias{select_block}
 \alias{new_plot_block}
+\alias{plot_block}
+\alias{initialize_block.transform_block}
 \alias{update_fields}
 \alias{update_fields.block}
 \alias{update_fields.data_block}
@@ -73,6 +75,10 @@ new_select_block(dat, cols = colnames(dat)[1L], ...)
 select_block(data, ...)
 
 new_plot_block(dat, x, y, plot_opts = list(color = "blue"), ...)
+
+plot_block(data, ...)
+
+\method{initialize_block}{transform_block}(x, data, ...)
 
 update_fields(x, ...)
 

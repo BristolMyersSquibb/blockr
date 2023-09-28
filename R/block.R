@@ -266,15 +266,15 @@ new_plot_block <- function(dat, x, y, plot_opts = list(color = "blue"), ...) {
         )
     ),
     ...,
-    class = c("plot_block")
+    class = c("plot_block", "transform_block")
   )
 }
 
-##' @rdname new_block #nolint start
-##' @export
-# plot_block <- function(data, ...) {
-#  initialize_block(new_plot_block(data, ...), data)
-# } #nolint end
+#' @rdname new_block
+#' @export
+ plot_block <- function(data, ...) {
+  initialize_block(new_plot_block(data, ...), data)
+}
 
 #' @rdname new_block
 #' @export

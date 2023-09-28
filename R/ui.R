@@ -127,8 +127,8 @@ ui_input.select_field <- function(x, id, name) {
     value(x, "choices"),
     value(x),
     # Support multi select
-    multiple = if (!is.null(attr(x, "multiple"))) {
-      attr(x, "multiple")
+    multiple = if (!is.null(x$multiple)) {
+      x$multiple
     } else {
       FALSE
     }

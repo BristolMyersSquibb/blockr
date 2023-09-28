@@ -43,7 +43,8 @@ library(blockr)
 
 stack <- new_stack(
   data_block,
-  filter_block
+  filter_block,
+  plot_block
 )
 
 serve_stack(stack)

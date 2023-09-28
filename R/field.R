@@ -110,13 +110,24 @@ string_field <- function(...) validate_field(new_string_field(...))
 #' @export
 validate_field.select_field <- function(x) {
   val <- value(x)
+  stopifnot(
+    is.character(val),
+    (
+      is.null(x$multiple) && length(val) <= 1L) ||
+      (isTRUE(x$multiple) && length(val) >= 1L
+    )
+  )
 
-  stopifnot(is.character(val), length(val) <= 1L)
-
-  if (length(val) && !val %in% value(x, "choices")) {
-    value(x) <- character()
+  cond <- if (is.null(x$multiple)) {
+    length(val)
+  } else {
+    if (isTRUE(x$multiple)) length(val) >= 1
   }
 
+  if (cond && !all(val %in% value(x, "choices"))) {
+    value(x) <- character()
+  }
+  
   x
 }
 
