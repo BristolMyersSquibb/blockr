@@ -251,16 +251,16 @@ filter_block <- function(data, ...) {
   initialize_block(new_filter_block(data, ...), data)
 }
 
-#' @param dat Tabular data in which to select some columns.
+#' @param data Tabular data in which to select some columns.
 #' @param cols Column(s) to select.
 #' @rdname new_block
 #' @export
-new_select_block <- function(dat, cols = colnames(dat)[1L], ...) {
-  all_cols <- quote(colnames(.(data)))
+new_select_block <- function(data, col = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    column = select_field(cols, all_cols, multiple = TRUE, type = "name")
+    column = new_select_field(col, all_cols, multiple = TRUE)
   )
 
   new_block(
@@ -287,11 +287,11 @@ select_block <- function(data, ...) {
 #' @rdname new_block
 #' @import ggplot2
 #' @export
-new_plot_block <- function(dat, x, y, plot_opts = list(color = "blue"), ...) {
+new_plot_block <- function(data, x, y, plot_opts = list(color = "blue"), ...) {
   # For plot blocks, fields will create input to style the plot ...
   fields <- list(
-    x = string_field(colnames(dat)[[1]]),
-    y = string_field(colnames(dat)[[2]]),
+    x = string_field(colnames(data)[[1]]),
+    y = string_field(colnames(data)[[2]]),
     color = string_field(plot_opts$color)
   )
 
@@ -380,3 +380,8 @@ update_fields.transform_block <- function(x, session, data, ...) {
 
   x
 }
+
+#' @param data Block input data
+#' @rdname new_block
+#' @export
+update_fields.plot_block <- update_fields.transform_block

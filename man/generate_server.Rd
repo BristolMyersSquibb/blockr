@@ -5,6 +5,7 @@
 \alias{generate_server.block}
 \alias{generate_server.data_block}
 \alias{generate_server.transform_block}
+\alias{generate_server.plot_block}
 \alias{generate_server.stack}
 \title{UI}
 \usage{
@@ -15,6 +16,8 @@ generate_server(x, ...)
 \method{generate_server}{data_block}(x, ...)
 
 \method{generate_server}{transform_block}(x, in_dat, ...)
+
+\method{generate_server}{plot_block}(x, in_dat, ...)
 
 \method{generate_server}{stack}(x, ...)
 }

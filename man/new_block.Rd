@@ -27,6 +27,7 @@
 \alias{update_fields}
 \alias{update_fields.data_block}
 \alias{update_fields.transform_block}
+\alias{update_fields.plot_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -64,11 +65,11 @@ new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
-new_select_block(dat, cols = colnames(dat)[1L], ...)
+new_select_block(data, col = c(colnames(data)[1], colnames(data)[2]), ...)
 
 select_block(data, ...)
 
-new_plot_block(dat, x, y, plot_opts = list(color = "blue"), ...)
+new_plot_block(data, x, y, plot_opts = list(color = "blue"), ...)
 
 plot_block(data, ...)
 
@@ -81,6 +82,8 @@ update_fields(x, ...)
 \method{update_fields}{data_block}(x, session, ...)
 
 \method{update_fields}{transform_block}(x, session, data, ...)
+
+\method{update_fields}{plot_block}(x, session, data, ...)
 
 \method{is_initialized}{field}(x)
 }
@@ -103,15 +106,15 @@ of the fields)}
 
 \item{columns, values}{Definition of the equality filter}
 
-\item{dat}{Tabular data in which to select some columns.}
-
-\item{cols}{Column(s) to select.}
-
 \item{y}{Y axis variable.}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 
 \item{session}{Shiny session}
+
+\item{cols}{Column(s) to select.}
+
+\item{dat}{Tabular data in which to select some columns.}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block

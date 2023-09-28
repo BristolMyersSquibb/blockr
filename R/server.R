@@ -101,6 +101,48 @@ generate_server.transform_block <- function(x, in_dat, ...) {
   )
 }
 
+#' @param in_dat Reactive input data
+#' @rdname generate_server
+#' @export
+generate_server.plot_block <- function(x, in_dat, ...) {
+
+  obs_expr <- function(x) {
+    splice_args(
+      list(in_dat(), ..(args)),
+      args = lapply(unlst(input_ids(x)), quoted_input_entry)
+    )
+  }
+
+  set_expr <- function(x) {
+    splice_args(
+      blk(update_fields(blk(), session, in_dat(), ..(args))),
+      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+    )
+  }
+
+  shiny::moduleServer(
+    attr(x, "name"),
+    function(input, output, session) {
+      blk <- shiny::reactiveVal(x)
+
+      shiny::observeEvent(
+        eval(obs_expr(blk())),
+        eval(set_expr(blk())),
+        ignoreInit = TRUE
+      )
+
+      out_dat <- shiny::reactive({
+        evalute_block(blk(), data = in_dat())
+      })
+
+      output <- server_output(x, out_dat, output)
+      output <- server_code(x, blk, output)
+
+      out_dat
+    }
+  )
+}
+
 #' @rdname generate_server
 #' @export
 generate_server.stack <- function(x, ...) {
@@ -112,7 +154,6 @@ generate_server.stack <- function(x, ...) {
       res <- vector("list", length(x))
 
       res[[1L]] <- generate_server(x[[1L]])
-
       for (i in seq_along(x)[-1L]) {
         res[[i]] <- generate_server(x[[i]], in_dat = res[[i - 1L]])
       }
