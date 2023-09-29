@@ -238,11 +238,12 @@ generate_server.stack <- function(x, ...) {
 
       session$userData$is_cleaned <- reactiveVal(FALSE)
 
-      observeEvent(
+      observeEvent({
         c(
           to_remove(),
           session$userData$is_cleaned()
-        ), {
+        )
+      }, {
         # We can't remove the data block if there are downstream consumers...
         if (to_remove() == 1 && length(vals$stack) > 1) {
           showModal(
@@ -253,8 +254,8 @@ generate_server.stack <- function(x, ...) {
             )
           )
         } else {
-          message(sprintf("REMOVING BLOCK %s", to_remove()))
           if (session$userData$is_cleaned()) {
+            message(sprintf("REMOVING BLOCK %s", to_remove()))
             vals$stack[[to_remove()]] <- NULL
             session$userData$stack <- vals$stack
             session$userData$is_cleaned(FALSE)
