@@ -57,13 +57,20 @@ generate_server.data_block <- function(x, ...) {
       # Cleanup module inputs (UI and server side)
       # and observer
       observeEvent(input$remove, {
-        message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
-        removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
-        remove_shiny_inputs(id = attr(x, "name"), input)
-        o$destroy()
-      })
+        # Can only remove when it is the last stack block
+        if (length(session$userData$stack) == 1) {
+          message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
+          removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
+          remove_shiny_inputs(id = attr(x, "name"), input)
+          o$destroy()
+        }
+        # We have to set high priority so this event
+        # executes before the one in the stack which
+        # updates the stack. If we don't, this will
+        # never execute because the stack will be empty :)
+      }, priority = 500)
 
-      list(dat = out_dat, remove = reactive(input$remove))
+      out_dat
     }
   )
 }
@@ -110,12 +117,12 @@ generate_server.transform_block <- function(x, in_dat, ...) {
       # and observer
       observeEvent(input$remove, {
         message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
-        removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
+        removeUI(sprintf("#%s", ns("block")))
         remove_shiny_inputs(id = attr(x, "name"), input)
         o$destroy()
       })
 
-      list(dat = out_dat, remove = reactive(input$remove))
+      out_dat
     }
   )
 }
@@ -129,7 +136,7 @@ generate_server.stack <- function(x, ...) {
   moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-      vals <- reactiveValues(blocks = vector("list", length(x)))
+      vals <- reactiveValues(stack = x, blocks = vector("list", length(x)))
       init_blocks(x, vals)
 
       # Add block
@@ -138,7 +145,7 @@ generate_server.stack <- function(x, ...) {
           modalDialog(
             "TO DO: add a confirm button and a select input to select
             which block to add ...",
-            title = "Add a new block",
+            title = h3(icon("check"), "Add a new block"),
             footer = modalButton("Dismiss"),
             size = "m",
             easyClose = FALSE,
@@ -149,23 +156,28 @@ generate_server.stack <- function(x, ...) {
 
       observeEvent(input$add, {
         # Update stack
-        block_to_add <- if (length(x) == 0) {
+        block_to_add <- if (length(vals$stack) == 0) {
           data_block
         } else {
           filter_block
         }
-        x[[length(x) + 1]] <- do.call(
+
+        vals$stack[[length(vals$stack) + 1]] <- do.call(
           block_to_add,
-          list(vals$blocks[[length(x)]]$dat())
+          list(vals$blocks[[length(vals$stack)]]())
         )
         # Call module
-        vals$blocks[[length(x)]] <- generate_server(
-          x[[length(x)]],
-          in_dat = vals$blocks[[length(x) - 1]]$dat
+        vals$blocks[[length(vals$stack)]] <- generate_server(
+          vals$stack[[length(vals$stack)]],
+          in_dat = if (length(vals$stack) == 1) {
+            NULL
+          } else {
+            vals$blocks[[length(vals$stack) - 1]]
+          }
         )
 
         # Correct selector
-        if (length(x) == 1) {
+        if (length(vals$stack) == 1) {
           # If this is the first module inserted,
           # we target the body container.
           # TO DO: we should actually have a proper UI for the stack
@@ -175,8 +187,8 @@ generate_server.stack <- function(x, ...) {
           # Target the previous block
           selector <- sprintf(
             "#%s-%s-block",
-            attr(x, "name"),
-            attr(x[[length(x) - 1]], "name")
+            attr(vals$stack, "name"),
+            attr(vals$stack[[length(vals$stack) - 1]], "name")
           )
         }
 
@@ -185,23 +197,46 @@ generate_server.stack <- function(x, ...) {
           selector,
           where = "afterEnd",
           ui = generate_ui(
-            x[[length(x)]],
-            id = attr(x, "name")
+            vals$stack[[length(vals$stack)]],
+            id = attr(vals$stack, "name")
           )
         )
+
+        # Necessary to communicate with downstream modules
+        session$userData$stack <- vals$stack
       })
 
       # Remove block from stack (can't be done within the block)
       to_remove <- NULL
       observeEvent({
-        lapply(seq_along(vals$blocks), function(i) {
-          to_remove <<- i
-          tmp <- vals$blocks[[i]]
-          req(tmp[["remove"]]() > 0)
-        })
+        req(input$last_changed)
+        if (grepl("remove", input$last_changed$name)) {
+          req(input$last_changed$value > 0)
+        }
       }, {
-        message(sprintf("REMOVING BLOCK %s", to_remove))
-        x[[to_remove]] <- NULL
+        # Retrieve index of block to remove
+        blocks_ids <- paste(
+          attr(x, "name"),
+          vapply(vals$stack, \(x) attr(x, "name"), FUN.VALUE = character(1)),
+          sep = "-"
+        )
+        block_id <- strsplit(input$last_changed$name, "-remove")[[1]][1]
+        to_remove <- which(blocks_ids == block_id)
+
+        # We can't remove the data block if there are downstream consumers...
+        if (to_remove == 1 && length(vals$stack) > 1) {
+          showModal(
+            modalDialog(
+              title = h3(icon("xmark"), "Error"),
+              "Can't remove a datablock whenever there are 
+              downstream data block consumers."
+            )
+          )
+        } else {
+          message(sprintf("REMOVING BLOCK %s", to_remove))
+          vals$stack[[to_remove]] <- NULL
+          session$userData$stack <- vals$stack
+        }
       })
 
       vals
@@ -210,18 +245,22 @@ generate_server.stack <- function(x, ...) {
   )
 }
 
+#' Init blocks server
+#' @keywords internal
 init_blocks <- function(x, vals) {
   observeEvent(TRUE, {
     vals$blocks[[1L]] <- generate_server(x[[1L]])
     for (i in seq_along(x)[-1L]) {
       vals$blocks[[i]] <- generate_server(
         x[[i]],
-        in_dat = vals$blocks[[i - 1L]]$dat
+        in_dat = vals$blocks[[i - 1L]]
       )
     }
   })
 }
 
+#' Cleanup module inputs
+#' @keywords internal
 remove_shiny_inputs <- function(id, .input) {
   invisible(
     lapply(grep(id, names(.input), value = TRUE), function(i) {
