@@ -154,7 +154,6 @@ generate_server.stack <- function(x, ...) {
         } else {
           filter_block
         }
-        browser()
         x[[length(x) + 1]] <- do.call(
           block_to_add,
           list(vals$blocks[[length(x)]]$dat())
@@ -187,7 +186,7 @@ generate_server.stack <- function(x, ...) {
           where = "afterEnd",
           ui = generate_ui(
             x[[length(x)]],
-            id = attr(x[[length(x)]], "name")
+            id = attr(x, "name")
           )
         )
       })
