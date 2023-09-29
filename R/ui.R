@@ -51,25 +51,29 @@ generate_ui.stack <- function(x, ...) {
   ns <- NS(attr(x, "name"))
 
   tagList(
-    tags$script(HTML(
-      sprintf("$(document).on(
-        'shiny:inputchanged',
-        function(event) {
-          console.log(event.name);
-          if (event.name.match('(last_changed|clientdata)') === null) {
-            Shiny.setInputValue(
-              '%s',
-              {
-                name: event.name,
-                value: event.value,
-                type: event.inputType,
-                binding: event.binding !== null ? event.binding.name : ''
+    tags$script(
+      HTML(
+        sprintf(
+          "$(document).on(
+            'shiny:inputchanged',
+            function(event) {
+              console.log(event.name);
+              if (event.name.match('(last_changed|clientdata)') === null) {
+                Shiny.setInputValue(
+                  '%s',
+                  {
+                    name: event.name,
+                    value: event.value,
+                    type: event.inputType,
+                    binding: event.binding !== null ? event.binding.name : ''
+                  }
+                );
               }
-            );
-          }
-      });",
-      ns("last_changed")
-    ))),
+          });",
+          ns("last_changed")
+        )
+      )
+    ),
     do.call(
       fluidPage,
       c(

@@ -164,14 +164,20 @@ generate_server.stack <- function(x, ...) {
 
         vals$stack[[length(vals$stack) + 1]] <- do.call(
           block_to_add,
-          list(vals$blocks[[length(vals$stack)]]())
+          if (length(vals$stack) == 0) {
+            list()
+          } else {
+            list(vals$blocks[[length(vals$stack)]]())
+          }
         )
         # Call module
         vals$blocks[[length(vals$stack)]] <- generate_server(
           vals$stack[[length(vals$stack)]],
           in_dat = if (length(vals$stack) == 1) {
+            # No data for first block
             NULL
           } else {
+            # Data from previous block
             vals$blocks[[length(vals$stack) - 1]]
           }
         )
