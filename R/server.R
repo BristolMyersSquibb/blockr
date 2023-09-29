@@ -57,6 +57,7 @@ generate_server.data_block <- function(x, ...) {
       # Cleanup module inputs (UI and server side)
       # and observer
       observeEvent(input$remove, {
+        message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
         removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
         remove_shiny_inputs(id = attr(x, "name"), input)
         o$destroy()
@@ -89,7 +90,7 @@ generate_server.transform_block <- function(x, in_dat, ...) {
   moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-
+      ns <- session$ns
       blk <- reactiveVal(x)
 
       o <- observeEvent(
@@ -128,7 +129,6 @@ generate_server.stack <- function(x, ...) {
   moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-      ns <- session$ns
       vals <- reactiveValues(blocks = vector("list", length(x)))
       init_blocks(x, vals)
 
