@@ -38,10 +38,10 @@ generate_server.data_block <- function(x, ...) {
   moduleServer(
     attr(x, "name"),
     function(input, output, session) {
-
+      ns <- session$ns
       blk <- reactiveVal(x)
 
-      observeEvent(
+      o <- observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
@@ -54,7 +54,15 @@ generate_server.data_block <- function(x, ...) {
       output <- server_output(x, out_dat, output)
       output <- server_code(x, blk, output)
 
-      out_dat
+      # Cleanup module inputs (UI and server side)
+      # and observer
+      observeEvent(input$remove, {
+        removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
+        remove_shiny_inputs(id = attr(x, "name"), input)
+        o$destroy()
+      })
+
+      list(dat = out_dat, remove = reactive(input$remove))
     }
   )
 }
@@ -84,7 +92,7 @@ generate_server.transform_block <- function(x, in_dat, ...) {
 
       blk <- reactiveVal(x)
 
-      observeEvent(
+      o <- observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
@@ -97,7 +105,16 @@ generate_server.transform_block <- function(x, in_dat, ...) {
       output <- server_output(x, out_dat, output)
       output <- server_code(x, blk, output)
 
-      out_dat
+      # Cleanup module inputs (UI and server side)
+      # and observer
+      observeEvent(input$remove, {
+        message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
+        removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
+        remove_shiny_inputs(id = attr(x, "name"), input)
+        o$destroy()
+      })
+
+      list(dat = out_dat, remove = reactive(input$remove))
     }
   )
 }
@@ -119,11 +136,8 @@ generate_server.stack <- function(x, ...) {
       observeEvent(input$add, {
         showModal(
           modalDialog(
-            selectInput(
-              ns("block_to_add"),
-              "Which block do you want to add?",
-              choices = c("filter") # TO DO: don't hardcode this
-            ),
+            "TO DO: add a confirm button and a select input to select
+            which block to add ...",
             title = "Add a new block",
             footer = modalButton("Dismiss"),
             size = "m",
@@ -133,31 +147,62 @@ generate_server.stack <- function(x, ...) {
         )
       })
 
-      observeEvent(input$block_to_add, {
+      observeEvent(input$add, {
         # Update stack
+        block_to_add <- if (length(x) == 0) {
+          data_block
+        } else {
+          filter_block
+        }
+        browser()
         x[[length(x) + 1]] <- do.call(
-          filter_block,
-          list(vals$blocks[[length(x)]]())
+          block_to_add,
+          list(vals$blocks[[length(x)]]$dat())
         )
         # Call module
         vals$blocks[[length(x)]] <- generate_server(
           x[[length(x)]],
-          in_dat = vals$blocks[[length(x) - 1]]
+          in_dat = vals$blocks[[length(x) - 1]]$dat
         )
 
-        # Insert UI after last block
-        insertUI(
-          sprintf(
+        # Correct selector
+        if (length(x) == 1) {
+          # If this is the first module inserted,
+          # we target the body container.
+          # TO DO: we should actually have a proper UI for the stack
+          # to avoid targeting .container-fluid ...
+          selector <- ".container-fluid"
+        } else {
+          # Target the previous block
+          selector <- sprintf(
             "#%s-%s-block",
             attr(x, "name"),
             attr(x[[length(x) - 1]], "name")
-          ),
+          )
+        }
+
+        # Insert UI after last block
+        insertUI(
+          selector,
           where = "afterEnd",
           ui = generate_ui(
             x[[length(x)]],
             id = attr(x[[length(x)]], "name")
           )
         )
+      })
+
+      # Remove block from stack (can't be done within the block)
+      to_remove <- NULL
+      observeEvent({
+        lapply(seq_along(vals$blocks), function(i) {
+          to_remove <<- i
+          tmp <- vals$blocks[[i]]
+          req(tmp[["remove"]]() > 0)
+        })
+      }, {
+        message(sprintf("REMOVING BLOCK %s", to_remove))
+        x[[to_remove]] <- NULL
       })
 
       vals
@@ -172,10 +217,18 @@ init_blocks <- function(x, vals) {
     for (i in seq_along(x)[-1L]) {
       vals$blocks[[i]] <- generate_server(
         x[[i]],
-        in_dat = vals$blocks[[i - 1L]]
+        in_dat = vals$blocks[[i - 1L]]$dat
       )
     }
   })
+}
+
+remove_shiny_inputs <- function(id, .input) {
+  invisible(
+    lapply(grep(id, names(.input), value = TRUE), function(i) {
+      .subset2(.input, "impl")$.values$remove(i)
+    })
+  )
 }
 
 #' @param output Shiny output

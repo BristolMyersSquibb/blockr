@@ -28,13 +28,18 @@ generate_ui.block <- function(x, id, ...) {
     name = names(x)
   )
 
-  div_card(
-    id = ns("block"),
-    title = h4(attr(x, "name")),
+  block_ui <- div_card(
+    title = h4(
+      attr(x, "name"),
+      actionButton(ns("remove"), icon("trash"), class = "pull-right")
+    )
+    ,
     do.call(div, unname(fields)),
     ui_code(x, ns),
     ui_output(x, ns)
   )
+  block_ui$attribs$id <- ns("block")
+  block_ui
 }
 
 #' @rdname generate_ui
