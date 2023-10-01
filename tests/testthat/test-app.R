@@ -17,7 +17,7 @@ testServer(my_stack, args = list(x = stack), {
   # INIT TEST #
   #           #
   # # # # # # #
-  
+
   # Let's check we have correct init state ...
   expect_length(vals$stack, 2)
   expect_length(vals$blocks, 2)
@@ -51,5 +51,6 @@ testServer(my_stack, args = list(x = stack), {
   expect_true(inherits(filter_block, "filter_block"))
   # Test user data necessary to communicate with submodules
   expect_equal(ls(session$userData), c("is_cleaned", "stack"))
-  print(ls(session$userData))
+  expect_equal(length(session$userData$stack), length(vals$stack))
+  expect_false(session$userData$is_cleaned())
 })
