@@ -54,3 +54,21 @@ testServer(my_stack, args = list(x = stack), {
   expect_equal(length(session$userData$stack), length(vals$stack))
   expect_false(session$userData$is_cleaned())
 })
+
+# Test data block module
+# This is a bit limited since we don't know the
+# stack state. shinytest2 would be more accurate here ...
+my_data_block <- function(id, x) {
+
+}
+body(my_data_block) <- body(generate_server.data_block)
+testServer(my_data_block, args = list(x = data_block()), {
+  expect_equal(colnames(out_dat()), colnames(iris))
+  expect_equal(nrow(out_dat()), nrow(iris))
+  session$userData$is_cleaned <- reactiveVal(NULL)
+  session$userData$stack <- 1
+  expect_false(o$.destroyed)
+  expect_message(session$setInputs(remove = 1))
+  expect_true(session$userData$is_cleaned())
+  expect_true(o$.destroyed)
+})
