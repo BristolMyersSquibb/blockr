@@ -313,7 +313,7 @@ ui_output <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 ui_output.block <- function(x, ns) {
-  custom_verbatim_output(ns("output"))
+  DT::dataTableOutput(ns("res"))
 }
 
 #' @rdname generate_ui

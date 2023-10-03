@@ -280,19 +280,18 @@ select_block <- function(data, ...) {
 }
 
 #' @param dat Tabular data in which to select some columns.
-#' @param x X axis variable.
-#' @param y Y axis variable.
 #' @param plot_opts List containing options for ggplot (color, ...).
 #' @param ... Any other params. TO DO
 #' @rdname new_block
 #' @import ggplot2
 #' @export
-new_plot_block <- function(data, x, y, plot_opts = list(color = "blue"), ...) {
+new_plot_block <- function(data, plot_opts = list(colors = c("blue", "red")), ...) {
   # For plot blocks, fields will create input to style the plot ...
+  all_cols <- function(data) colnames(data)
   fields <- list(
-    x = string_field(colnames(data)[[1]]),
-    y = string_field(colnames(data)[[2]]),
-    color = string_field(plot_opts$color)
+    x_var = new_select_field(all_cols(data)[[1]], all_cols),
+    y_var = new_select_field(all_cols(data)[[2]], all_cols),
+    color = new_select_field(plot_opts$colors[[1]], plot_opts$colors)
   )
 
   new_block(
@@ -302,8 +301,8 @@ new_plot_block <- function(data, x, y, plot_opts = list(color = "blue"), ...) {
         geom_point(
           # We have to use aes_string over aes
           mapping = aes_string(
-            x = .(x),
-            y = .(y)
+            x = .(x_var),
+            y = .(y_var)
           ),
           color = .(color)
         )

@@ -65,11 +65,11 @@ new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
-new_select_block(data, col = c(colnames(data)[1], colnames(data)[2]), ...)
+new_select_block(data, col = colnames(data)[1], ...)
 
 select_block(data, ...)
 
-new_plot_block(data, x, y, plot_opts = list(color = "blue"), ...)
+new_plot_block(data, plot_opts = list(colors = c("blue", "red")), ...)
 
 plot_block(data, ...)
 
@@ -100,13 +100,11 @@ of the fields)}
 
 \item{class}{Block subclass}
 
-\item{x}{X axis variable.}
+\item{x}{An object inheriting form \code{"block"}}
 
 \item{data}{Block input data}
 
 \item{columns, values}{Definition of the equality filter}
-
-\item{y}{Y axis variable.}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 

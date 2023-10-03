@@ -51,8 +51,8 @@ generate_server.data_block <- function(x, ...) {
         evalute_block(blk())
       )
 
-      output <- server_output(x, out_dat, output)
-      output <- server_code(x, blk, output)
+      output$res <- server_output(x, out_dat, output)
+      output$code <- server_code(x, blk, output)
 
       out_dat
     }
@@ -89,12 +89,12 @@ generate_server.transform_block <- function(x, in_dat, ...) {
         ignoreInit = TRUE
       )
 
-      out_dat <- shiny::reactive(
+      out_dat <- shiny::reactive({
         evalute_block(blk(), data = in_dat())
-      )
+      })
 
-      output <- server_output(x, out_dat, output)
-      output <- server_code(x, blk, output)
+      output$res <- server_output(x, out_dat, output)
+      output$code <- server_code(x, blk, output)
 
       out_dat
     }
@@ -135,10 +135,8 @@ generate_server.plot_block <- function(x, in_dat, ...) {
         evalute_block(blk(), data = in_dat())
       })
 
-      output <- server_output(x, out_dat, output)
-      output <- server_code(x, blk, output)
-
-      out_dat
+      output$plot <- server_output(x, out_dat, output)
+      output$code <- server_code(x, blk, output)
     }
   )
 }
@@ -154,9 +152,12 @@ generate_server.stack <- function(x, ...) {
       res <- vector("list", length(x))
 
       res[[1L]] <- generate_server(x[[1L]])
-      for (i in seq_along(x)[-1L]) {
-        res[[i]] <- generate_server(x[[i]], in_dat = res[[i - 1L]])
-      }
+      res[[2L]] <- generate_server(x[[2L]], in_dat = res[[1L]])
+      res[[3L]] <- generate_server(x[[3L]], in_dat = res[[2L]])
+      #for (i in seq_along(x)[-1L]) {
+      #  res[[i]] <- generate_server(x[[i]], in_dat = res[[i - 1L]])
+      #  print(i)
+      #}
 
       res
     }
@@ -174,15 +175,13 @@ server_output <- function(x, result, output) {
 #' @rdname generate_ui
 #' @export
 server_output.block <- function(x, result, output) {
-  output$output <- shiny::renderPrint(result())
-  output
+  DT::renderDT(result())
 }
 
 #' @rdname generate_ui
 #' @export
 server_output.plot_block <- function(x, result, output) {
-  output$plot <- shiny::renderPlot(result())
-  output
+  shiny::renderPlot(result())
 }
 
 #' @param state Block state
@@ -195,9 +194,7 @@ server_code <- function(x, state, output) {
 #' @rdname generate_ui
 #' @export
 server_code.block <- function(x, state, output) {
-  output$code <- shiny::renderPrint(
+  shiny::renderPrint(
     cat(deparse(generate_code(state())), sep = "\n")
   )
-
-  output
 }
