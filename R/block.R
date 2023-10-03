@@ -287,9 +287,9 @@ select_block <- function(data, ...) {
 #' @import ggplot2
 #' @export
 new_plot_block <- function(
-    data,
-    plot_opts = list(colors = c("blue", "red")),
-    ...
+  data,
+  plot_opts = list(colors = c("blue", "red")),
+  ...
 ) {
   # For plot blocks, fields will create input to style the plot ...
   all_cols <- function(data) colnames(data)
@@ -319,7 +319,7 @@ new_plot_block <- function(
 
 #' @rdname new_block
 #' @export
- plot_block <- function(data, ...) {
+plot_block <- function(data, ...) {
   initialize_block(new_plot_block(data, ...), data)
 }
 
