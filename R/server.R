@@ -154,10 +154,10 @@ generate_server.stack <- function(x, ...) {
       res[[1L]] <- generate_server(x[[1L]])
       res[[2L]] <- generate_server(x[[2L]], in_dat = res[[1L]])
       res[[3L]] <- generate_server(x[[3L]], in_dat = res[[2L]])
-      #for (i in seq_along(x)[-1L]) {
+      #for (i in seq_along(x)[-1L]) { #nolint start
       #  res[[i]] <- generate_server(x[[i]], in_dat = res[[i - 1L]])
       #  print(i)
-      #}
+      #} #nolint end
 
       res
     }
