@@ -252,15 +252,15 @@ filter_block <- function(data, ...) {
 }
 
 #' @param data Tabular data in which to select some columns.
-#' @param cols Column(s) to select.
+#' @param columns Column(s) to select.
 #' @rdname new_block
 #' @export
-new_select_block <- function(data, col = colnames(data)[1], ...) {
+new_select_block <- function(data, columns = colnames(data)[1], ...) {
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    column = new_select_field(col, all_cols, multiple = TRUE)
+    column = new_select_field(columns, all_cols, multiple = TRUE)
   )
 
   new_block(
@@ -279,7 +279,7 @@ select_block <- function(data, ...) {
   initialize_block(new_select_block(data, ...), data)
 }
 
-#' @param dat Tabular data in which to select some columns.
+#' @param data Tabular data in which to select some columns.
 #' @param plot_opts List containing options for ggplot (color, ...).
 #' @param ... Any other params. TO DO
 #' @rdname new_block

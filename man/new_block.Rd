@@ -65,7 +65,7 @@ new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
-new_select_block(data, col = colnames(data)[1], ...)
+new_select_block(data, columns = colnames(data)[1], ...)
 
 select_block(data, ...)
 
@@ -110,9 +110,7 @@ of the fields)}
 
 \item{session}{Shiny session}
 
-\item{cols}{Column(s) to select.}
-
-\item{dat}{Tabular data in which to select some columns.}
+\item{columns}{Column(s) to select.}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block
