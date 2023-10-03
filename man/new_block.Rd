@@ -104,13 +104,13 @@ of the fields)}
 
 \item{data}{Block input data}
 
-\item{columns, values}{Definition of the equality filter}
+\item{columns}{Column(s) to select.}
+
+\item{values}{Definition of the equality filter.}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 
 \item{session}{Shiny session}
-
-\item{columns}{Column(s) to select.}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block

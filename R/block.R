@@ -162,7 +162,8 @@ initialize_block.data_block <- function(x, ...) {
 }
 
 #' @param data Tabular data to filter (rows)
-#' @param columns,values Definition of the equality filter
+#' @param columns Definition of the equality filter.
+#' @param values Definition of the equality filter.
 #' @rdname new_block
 #' @export
 new_filter_block <- function(data, columns = colnames(data)[1L],
