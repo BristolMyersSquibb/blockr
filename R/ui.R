@@ -17,8 +17,8 @@ generate_ui.block <- function(x, id, ...) {
 
   stopifnot(...length() == 0L)
 
-  ns <- shiny::NS(
-    shiny::NS(id)(attr(x, "name"))
+  ns <- NS(
+    NS(id)(attr(x, "name"))
   )
 
   fields <- Map(
@@ -28,12 +28,18 @@ generate_ui.block <- function(x, id, ...) {
     name = names(x)
   )
 
-  div_card(
-    title = shiny::h4(attr(x, "name")),
-    do.call(shiny::div, unname(fields)),
+  block_ui <- div_card(
+    title = h4(
+      attr(x, "name"),
+      actionButton(ns("remove"), icon("trash"), class = "pull-right")
+    )
+    ,
+    do.call(div, unname(fields)),
     ui_code(x, ns),
     ui_output(x, ns)
   )
+  block_ui$attribs$id <- ns("block")
+  block_ui
 }
 
 #' @rdname generate_ui
@@ -42,12 +48,40 @@ generate_ui.stack <- function(x, ...) {
 
   stopifnot(...length() == 0L)
 
-  do.call(
-    shiny::fluidPage,
-    c(
-      lapply(x, generate_ui, id = attr(x, "name")),
-      title = attr(x, "name")
-    )
+  ns <- NS(attr(x, "name"))
+
+  tagList(
+    tags$script(
+      HTML(
+        sprintf(
+          "$(document).on(
+            'shiny:inputchanged',
+            function(event) {
+              console.log(event.name);
+              if (event.name.match('(last_changed|clientdata)') === null) {
+                Shiny.setInputValue(
+                  '%s',
+                  {
+                    name: event.name,
+                    value: event.value,
+                    type: event.inputType,
+                    binding: event.binding !== null ? event.binding.name : ''
+                  }
+                );
+              }
+          });",
+          ns("last_changed")
+        )
+      )
+    ),
+    do.call(
+      fluidPage,
+      c(
+        lapply(x, generate_ui, id = attr(x, "name")),
+        title = attr(x, "name")
+      )
+    ),
+    actionButton(ns("add"), icon("plus"))
   )
 }
 
@@ -61,13 +95,13 @@ ui_input <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.string_field <- function(x, id, name) {
-  shiny::textInput(input_ids(x, id), name, value(x))
+  textInput(input_ids(x, id), name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_input.select_field <- function(x, id, name) {
-  shiny::selectInput(
+  selectInput(
     input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple")
   )
 }
@@ -105,7 +139,7 @@ ui_input.variable_field <- function(x, id, name) {
     materialize_variable_field(x)
   )
 
-  shiny::div(
+  div(
     id = paste0(id, "_cont"),
     ui_input(field, id, name)
   )
@@ -114,7 +148,7 @@ ui_input.variable_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.range_field <- function(x, id, name) {
-  shiny::sliderInput(
+  sliderInput(
     input_ids(x, id), name, value(x, "min"), value(x, "max"), value(x)
   )
 }
@@ -142,7 +176,7 @@ ui_input.list_field <- function(x, id, name) {
     map(ui_input, fields, input_ids(x, id), names(fields))
   )
 
-  do.call(shiny::div, args)
+  do.call(div, args)
 }
 
 #' @param session Shiny session
@@ -155,13 +189,13 @@ ui_update <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
-  shiny::updateTextInput(session, input_ids(x, id), name, value(x))
+  updateTextInput(session, input_ids(x, id), name, value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
-  shiny::updateSelectInput(
+  updateSelectInput(
     session, input_ids(x, id), name, value(x, "choices"), value(x)
   )
 }
@@ -173,7 +207,7 @@ ui_update.variable_field <- function(x, session, id, name) {
   ns <- session$ns
   ns_id <- ns(id)
 
-  shiny::removeUI(
+  removeUI(
     selector = paste0("#", ns_id, "_cont", " > div"),
     session = session
   )
@@ -182,7 +216,7 @@ ui_update.variable_field <- function(x, session, id, name) {
     materialize_variable_field(x)
   )
 
-  shiny::insertUI(
+  insertUI(
     selector = paste0("#", ns_id, "_cont"),
     ui = ui_input(field, ns_id, name),
     session = session
@@ -192,7 +226,7 @@ ui_update.variable_field <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
-  shiny::updateSliderInput(
+  updateSliderInput(
     session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
   )
 }
@@ -210,7 +244,7 @@ ui_update.list_field <- function(x, session, id, name) {
   ns <- session$ns
   ns_id <- ns(id)
 
-  shiny::removeUI(
+  removeUI(
     selector = paste0("#", ns_id, "_cont", " > div"),
     multiple = TRUE,
     session = session
@@ -221,10 +255,10 @@ ui_update.list_field <- function(x, session, id, name) {
     validate_field
   )
 
-  shiny::insertUI(
+  insertUI(
     selector = paste0("#", ns_id, "_cont"),
     ui = do.call(
-      shiny::tagList,
+      tagList,
       map(
         ui_input, fields, input_ids(x, ns_id), paste0(name, "_", names(fields))
       )
@@ -234,18 +268,18 @@ ui_update.list_field <- function(x, session, id, name) {
 }
 
 div_card <- function(..., title = NULL, footer = NULL) {
-  shiny::div(
+  div(
     class = "panel panel-default",
     style = "margin: 10px",
     if (not_null(title)) {
-      shiny::div(title, class = "panel-heading")
+      div(title, class = "panel-heading")
     },
-    shiny::div(
+    div(
       class = "panel-body",
       ...
     ),
     if (not_null(footer)) {
-      shiny::div(footer, class = "panel-footer")
+      div(footer, class = "panel-footer")
     }
   )
 }
@@ -260,7 +294,7 @@ ui_output <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 ui_output.block <- function(x, ns) {
-  shiny::verbatimTextOutput(ns("output"))
+  verbatimTextOutput(ns("output"))
 }
 
 #' @rdname generate_ui
@@ -272,5 +306,5 @@ ui_code <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 ui_code.block <- function(x, ns) {
-  shiny::verbatimTextOutput(ns("code"))
+  verbatimTextOutput(ns("code"))
 }
