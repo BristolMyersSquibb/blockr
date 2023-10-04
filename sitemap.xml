@@ -22,6 +22,9 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/init_blocks.html</loc>
+  </url>
+  <url>
     <loc>/reference/new_block.html</loc>
   </url>
   <url>
@@ -32,5 +35,8 @@
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/remove_shiny_inputs.html</loc>
   </url>
 </urlset>
