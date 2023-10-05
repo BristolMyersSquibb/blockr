@@ -24,7 +24,7 @@
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
-new_block(fields, expr, name = rand_names(), ..., class = character())
+new_block(fields, expr, name = NULL, ..., class = character())
 
 is_block(x)
 

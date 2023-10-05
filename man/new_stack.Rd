@@ -5,7 +5,7 @@
 \alias{serve_stack}
 \title{Stacks}
 \usage{
-new_stack(..., name = rand_names())
+new_stack(..., name = NULL)
 
 serve_stack(stack)
 }

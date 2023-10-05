@@ -13,14 +13,15 @@
 #' @param class Block subclass
 #'
 #' @export
-new_block <- function(fields, expr, name = rand_names(), ...,
+new_block <- function(fields, expr, name = NULL, ...,
                       class = character()) {
 
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
-    is.language(expr),
-    is_string(name)
+    is.language(expr)#,
+    #is_string(name)
   )
+  if (is.null(name)) name <- rand_names()
 
   structure(fields, name = name, expr = expr, result = NULL, ...,
             class = c(class, "block"))

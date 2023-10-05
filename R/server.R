@@ -175,6 +175,15 @@ generate_server.stack <- function(x, ...) {
             list(vals$blocks[[length(vals$stack)]]())
           }
         )
+
+        # For shinytest2 (so the namespace is not random)
+        if (identical(Sys.getenv("TESTTHAT"), "true")) {
+          attr(vals$stack[[length(vals$stack)]], "name") <- strsplit(
+            class(vals$stack[[length(vals$stack)]])[[1]],
+            "_"
+          )[[1]][1]
+        }
+
         # Call module
         vals$blocks[[length(vals$stack)]] <- generate_server(
           vals$stack[[length(vals$stack)]],
@@ -262,6 +271,10 @@ generate_server.stack <- function(x, ...) {
           }
         }
       })
+
+      exportTestValues(
+        vals = vals
+      )
 
       vals
 

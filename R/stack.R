@@ -7,14 +7,20 @@
 #' @param name Stack name
 #'
 #' @export
-new_stack <- function(..., name = rand_names()) {
+new_stack <- function(..., name = NULL) {
 
   ctors <- c(...)
   names <- names(ctors)
+  if (is.null(name)) name <- rand_names()
 
   blocks <- vector("list", length(ctors))
-
   blocks[[1L]] <- do.call(ctors[[1L]], list())
+  if (!is.null(name)) {
+    attr(blocks[[1L]], "name") <- strsplit(
+      class(blocks[[1L]])[[1]],
+      "_"
+    )[[1]][1]
+  }
   temp <- evalute_block(blocks[[1L]])
 
   for (i in seq_along(ctors)[-1L]) {
@@ -22,6 +28,12 @@ new_stack <- function(..., name = rand_names()) {
       blocks[[i]] <- do.call(ctors[[i]], list(temp)),
       data = temp
     )
+    if (!is.null(name)) {
+      attr(blocks[[i]], "name") <- strsplit(
+        class(blocks[[i]])[[1]],
+        "_"
+      )[[1]][1]
+    }
   }
 
   stopifnot(
