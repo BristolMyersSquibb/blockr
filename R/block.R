@@ -280,38 +280,17 @@ select_block <- function(data, ...) {
   initialize_block(new_select_block(data, ...), data)
 }
 
-#' @param data Tabular data in which to select some columns.
-#' @param columns Column(s) to select.
-#' @rdname new_block
-#' @export
-new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
-  all_cols <- function(data) colnames(data)
-
-  # Select_field only allow one value, not multi select
-  fields <- list(
-    column = new_select_field(columns, all_cols, multiple = TRUE)
-  )
-
-  new_block(
-    fields = fields,
-    expr = quote(
-      dplyr::arrange(.(column))
-    ),
-    ...,
-    class = c("arrange_block", "transform_block")
-  )
-}
-
 #' @rdname new_block
 #' @export
 arrange_block <- function(data, ...) {
   # Arrange is close to select so we can use its init functuib
-  block <- initialize_block(new_select_block(data, ...), data)
-  class(block)[[1]] <- "arrange_block"
-  attr(block, "expr") <- quote(
-    dplyr::arrange(.(column))
-  )
-  block
+  convert_block(to = arrange, data = data, ...)
+}
+
+#' @rdname new_block
+#' @export
+group_by_block <- function(data, ...) {
+  convert_block(to = group_by, data = data, ...)
 }
 
 #' @param data Tabular data in which to select some columns.

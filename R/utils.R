@@ -168,3 +168,23 @@ is_truthy <- function(x) {
 unlst <- function(x, recursive = FALSE, use_names = FALSE) {
   unlist(x, recursive = recursive, use.names = use_names)
 }
+
+#' Convert block from a type to another
+#'
+#' For instance, you can convert from a select block to an
+#' arrange block or group_by which have similar structure.
+#'
+#' @param from Block function to start from like new_select_block.
+#' @param to dplyr verb (function, not a string!) such as arrange, group_by...
+#' @param data Necessary to \link{initialize_block}.
+#' @param ... Necessary to \link{initialize_block}.
+#'
+#' @keywords internal
+convert_block <- function(from = new_select_block, to, data, ...) {
+  block <- initialize_block(from(data, ...), data)
+  class(block)[[1]] <- sprintf("%s_block", deparse(substitute(to)))
+  attr(block, "expr") <- substitute(
+    to(.(column))
+  )
+  block
+}
