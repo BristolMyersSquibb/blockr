@@ -20,6 +20,8 @@
 \alias{filter_block}
 \alias{new_select_block}
 \alias{select_block}
+\alias{new_arrange_block}
+\alias{arrange_block}
 \alias{new_plot_block}
 \alias{plot_block}
 \alias{initialize_block.transform_block}
@@ -68,6 +70,10 @@ filter_block(data, ...)
 new_select_block(data, columns = colnames(data)[1], ...)
 
 select_block(data, ...)
+
+new_arrange_block(data, columns = colnames(data)[1], ...)
+
+arrange_block(data, ...)
 
 new_plot_block(data, plot_opts = list(colors = c("blue", "red")), ...)
 

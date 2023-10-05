@@ -118,20 +118,20 @@ evalute_block.plot_block <- function(x, data, ...) {
 new_data_block <- function(...) {
   is_dataset_eligible <- function(x) {
     inherits(
-      get(x, envir = as.environment("package:datasets"), inherits = FALSE),
+      get(x, envir = as.environment("package:blockr.data"), inherits = FALSE),
       "data.frame"
     )
   }
 
-  datasets <- ls(envir = as.environment("package:datasets"))
+  datasets <- ls(envir = as.environment("package:blockr.data"))
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
   fields <- list(
-    dataset = new_select_field("iris", datasets)
+    dataset = new_select_field("merged_data", datasets)
   )
 
   expr <- quote(
-    get(.(dataset), envir = as.environment("package:datasets"))
+    get(.(dataset), envir = as.environment("package:blockr.data"))
   )
 
   new_block(
@@ -278,6 +278,40 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 #' @export
 select_block <- function(data, ...) {
   initialize_block(new_select_block(data, ...), data)
+}
+
+#' @param data Tabular data in which to select some columns.
+#' @param columns Column(s) to select.
+#' @rdname new_block
+#' @export
+new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Select_field only allow one value, not multi select
+  fields <- list(
+    column = new_select_field(columns, all_cols, multiple = TRUE)
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(
+      dplyr::arrange(.(column))
+    ),
+    ...,
+    class = c("arrange_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+arrange_block <- function(data, ...) {
+  # Arrange is close to select so we can use its init functuib
+  block <- initialize_block(new_select_block(data, ...), data)
+  class(block)[[1]] <- "arrange_block"
+  attr(block, "expr") <- quote(
+    dplyr::arrange(.(column))
+  )
+  block
 }
 
 #' @param data Tabular data in which to select some columns.
