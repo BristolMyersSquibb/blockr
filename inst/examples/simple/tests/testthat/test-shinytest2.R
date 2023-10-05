@@ -2,7 +2,7 @@ library(shinytest2)
 
 test_that("{shinytest2} recording: simple", {
   app <- AppDriver$new(
-    "inst/examples/simple",
+    #"inst/examples/simple",
     variant = platform_variant(),
     name = "simple",
     height = 859,
@@ -10,49 +10,41 @@ test_that("{shinytest2} recording: simple", {
   )
 
   values <- app$get_values()
-  expect_equal(values$input[["stack-add"]], 0)
-  expect_equal(values$input[["stack-dataset-remove"]], 0)
-  expect_equal(values$input[["stack-filter-remove"]], 0)
+  expect_equal(values$input[["stack-add"]][1], 0)
+  expect_equal(values$input[["stack-dataset-remove"]][1], 0)
+  expect_equal(values$input[["stack-filter-remove"]][1], 0)
 
   # Init state
-  stack <- isolate(app$get_values()$export[["stack-vals"]]$stack)
-  expect_length(stack, 2)
-  app$expect_values()
+  expect_length(app$get_values()$export[["stack-stack_state"]], 2)
 
+  # Remove block 1 (should show a modal failure)
   app$click("stack-dataset-remove")
-  app$expect_screenshot("remove-dataset", delay = 3)
+  app$expect_screenshot(delay = 1)
+  expect_length(app$get_values()$export[["stack-stack_state"]], 2)
+  # Remove the modal since shinytest2 can't do this.
+  app$click(selector = "[data-dismiss = 'modal']")
 
+  # Remove filter block (should be successful)
+  app$click("stack-filter-remove")
+  app$expect_screenshot(delay = 1)
+  expect_length(app$get_values()$export[["stack-stack_state"]], 1)
 
-  #app$set_inputs(`stack-last_changed` = c("stack-dataset-remove", "1", "shiny.action", 
-  #    "shiny.actionButtonInput"), allow_no_input_binding_ = TRUE)
-  #app$click("stack-dataset-remove")
-  #app$set_inputs(`stack-last_changed` = c("stack-filter-values_Sepal.Length", 6.3, 
-  #    7.9, "", "shiny.sliderInput"), allow_no_input_binding_ = TRUE)
-  #app$set_inputs(`stack-filter-values_Sepal.Length` = c(6.3, 7.9))
-  #app$set_inputs(`stack-last_changed` = c("stack-filter-values_Sepal.Length", 6.3, 
-  #    7.9, "", "shiny.sliderInput"), allow_no_input_binding_ = TRUE)
-  #app$expect_screenshot()
-  #app$set_inputs(`stack-last_changed` = c("stack-filter-remove", "1", "shiny.action", 
-  #    "shiny.actionButtonInput"), allow_no_input_binding_ = TRUE)
-  #app$click("stack-filter-remove")
-  #app$expect_screenshot()
-  #app$set_inputs(`stack-last_changed` = c("stack-dataset-dataset", "freeny", "", 
-  #    "shiny.selectInput"), allow_no_input_binding_ = TRUE)
-  #app$set_inputs(`stack-dataset-dataset` = "freeny")
-  #app$set_inputs(`stack-last_changed` = c("stack-dataset-dataset", "chickwts", "", 
-  #    "shiny.selectInput"), allow_no_input_binding_ = TRUE)
-  #app$set_inputs(`stack-dataset-dataset` = "chickwts")
-  #app$set_inputs(`stack-last_changed` = c("stack-dataset-remove", "2", "shiny.action", 
-  #    "shiny.actionButtonInput"), allow_no_input_binding_ = TRUE)
-  #app$click("stack-dataset-remove")
-  #app$set_inputs(`stack-last_changed` = c("stack-add", "1", "shiny.action", "shiny.actionButtonInput"), 
-  #    allow_no_input_binding_ = TRUE)
-  #app$click("stack-add")
-  #app$set_inputs(`stack-last_changed` = c("stack-dataset-remove", "0", "shiny.action", 
-  #    "shiny.actionButtonInput"), allow_no_input_binding_ = TRUE)
-  #app$click("stack-dataset-remove")
-  #app$set_inputs(`stack-last_changed` = c("stack-dataset-dataset", "iris", "", "shiny.selectInput"), 
-  #    allow_no_input_binding_ = TRUE)
-  #app$set_inputs(`stack-dataset-dataset` = "iris")
-  #app$expect_screenshot()
+  # Remove datablock (should work now)
+  app$click("stack-dataset-remove")
+  app$expect_screenshot(delay = 1)
+  expect_length(app$get_values()$export[["stack-stack_state"]], 0)
+
+  # Add datablock
+  app$click("stack-add")
+  app$click(selector = "[data-dismiss = 'modal']")
+  app$expect_screenshot(delay = 1)
+  expect_length(app$get_values()$export[["stack-stack_state"]], 1)
+  app$click("stack-add")
+  app$click(selector = "[data-dismiss = 'modal']")
+  expect_length(app$get_values()$export[["stack-stack_state"]], 2)
+
+  # Change filter and check output
+  app$set_inputs("stack-filter-values_Sepal.Length" = c(7.5, 7.9))
+  app$expect_screenshot(delay = 1)
+  expect_equal(nrow(app$get_values()$export[["stack-filter-data"]]), 6)
 })

@@ -125,7 +125,9 @@ generate_server.transform_block <- function(x, in_dat, ...) {
         remove_shiny_inputs(id = attr(x, "name"), input)
         o$destroy()
         session$userData$is_cleaned(TRUE)
-      })
+      }, ignoreInit = TRUE)
+
+      exportTestValues(data = out_dat())
 
       out_dat
     }
@@ -273,7 +275,7 @@ generate_server.stack <- function(x, ...) {
       })
 
       exportTestValues(
-        vals = vals
+        stack_state = vals$stack
       )
 
       vals
