@@ -112,7 +112,7 @@ generate_server.transform_block <- function(x, in_dat, ...) {
 
       out_dat <- reactive(
         evalute_block(blk(), data = in_dat())
-      })
+      )
 
       output$res <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)
@@ -232,7 +232,7 @@ generate_server.stack <- function(x, ...) {
           # we target the body container.
           # TO DO: we should actually have a proper UI for the stack
           # to avoid targeting .container-fluid ...
-          selector <- ".container-fluid"
+          selector <- attr(x, "name")
         } else {
           # Target the previous block
           selector <- sprintf(
@@ -243,14 +243,22 @@ generate_server.stack <- function(x, ...) {
         }
 
         # Insert UI after last block
-        insertUI(
-          selector,
-          where = "afterEnd",
-          ui = generate_ui(
+        bslib::accordion_panel_insert(
+          id = session$ns("stack"),
+          position = "after",
+          panel = generate_ui(
             vals$stack[[length(vals$stack)]],
             id = attr(vals$stack, "name")
           )
         )
+        #insertUI(
+        #  selector,
+        #  where = "afterEnd",
+        #  ui = generate_ui(
+        #    vals$stack[[length(vals$stack)]],
+        #    id = attr(vals$stack, "name")
+        #  )
+        #)
 
         # Necessary to communicate with downstream modules
         session$userData$stack <- vals$stack
@@ -314,6 +322,9 @@ init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
     session$userData$stack <- vals$stack
     vals$blocks[[1L]] <- generate_server(x[[1L]])
+    #vals$blocks[[2L]] <- generate_server(x[[2L]], in_dat = vals$blocks[[1L]])
+    #vals$blocks[[3L]] <- generate_server(x[[3L]], in_dat = vals$blocks[[2L]])
+    # TO DO: fix recursion issue
     for (i in seq_along(x)[-1L]) {
       vals$blocks[[i]] <- generate_server(
         x[[i]],

@@ -43,7 +43,7 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
-  shiny::tagList(
+  block_ui <- shiny::tagList(
     # Ensure collapse is visible
     shiny::tags$head(
       shiny::tags$script(
@@ -64,11 +64,11 @@ generate_ui.block <- function(x, id, ...) {
             "Block: %s",
             strsplit(class(x)[[1]], "_")[[1]][1]
           )
-        ),
-        actionButton(ns("remove"), icon("trash"), class = "pull-right")
+        )
       ),
       bslib::layout_sidebar(
         sidebar = shiny::tagList(
+          actionButton(ns("remove"), icon("trash"), class = "pull-right"),
           data_switch,
           do.call(shiny::div, unname(fields))
         ),
@@ -81,7 +81,7 @@ generate_ui.block <- function(x, id, ...) {
       )
     )
   )
-  block_ui$attribs$id <- ns("block")
+  block_ui[[2]]$attribs$id <- ns("block")
   block_ui
 }
 
@@ -121,10 +121,14 @@ generate_ui.stack <- function(x, ...) {
       c(
         lapply(x, generate_ui, id = attr(x, "name")),
         title = attr(x, "name"),
-        open = TRUE
+        open = TRUE,
+        id = ns("stack")
       )
     ),
-    actionButton(ns("add"), icon("plus"))
+    div(
+      class = "d-flex align-items-center",
+      actionButton(ns("add"), icon("plus"))
+    )
   )
 }
 
@@ -314,14 +318,9 @@ ui_update.list_field <- function(x, session, id, name) {
 #' @keywords internal
 div_card <- function(..., title = NULL, footer = NULL) {
   bslib::accordion_panel(
-    # class = "panel panel-default", #nolint start
-    # style = "margin: 10px;",
     title = if (not_null(title)) title,
     value = "plop",
-    ... # ,
-    # if (not_null(footer)) {
-    #  shiny::div(footer, class = "panel-footer")
-    # } #nolint end
+    ...
   )
 }
 
