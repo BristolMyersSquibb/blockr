@@ -340,13 +340,13 @@ select_block <- function(data, ...) {
 #' @export
 arrange_block <- function(data, ...) {
   # Arrange is close to select so we can use its init functuib
-  convert_block(to = arrange, data = data, ...)
+  convert_block(to = dplyr::arrange, data = data, ...)
 }
 
 #' @rdname new_block
 #' @export
 group_by_block <- function(data, ...) {
-  convert_block(to = group_by, data = data, ...)
+  convert_block(to = dplyr::group_by, data = data, ...)
 }
 
 #' @param data Tabular data in which to select some columns.
@@ -417,7 +417,7 @@ new_plot_block <- function(
         ) +
         scale_color_brewer(name = "Treatment Group", palette = "Set1") +
         scale_shape_manual(
-          name = "Treatment Group", 
+          name = "Treatment Group",
           values = c(16, 17, 18, 19, 20)
         )
     ),
