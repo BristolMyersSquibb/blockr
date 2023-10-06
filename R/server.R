@@ -121,7 +121,6 @@ generate_server.transform_block <- function(x, in_dat, ...) {
       # and observer
       observeEvent(input$remove, {
         message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
-        removeUI(sprintf("#%s", ns("block")))
         remove_shiny_inputs(id = attr(x, "name"), input)
         o$destroy()
         session$userData$is_cleaned(TRUE)
@@ -226,40 +225,15 @@ generate_server.stack <- function(x, ...) {
           }
         )
 
-        # Correct selector
-        if (length(vals$stack) == 1) {
-          # If this is the first module inserted,
-          # we target the body container.
-          # TO DO: we should actually have a proper UI for the stack
-          # to avoid targeting .container-fluid ...
-          selector <- attr(x, "name")
-        } else {
-          # Target the previous block
-          selector <- sprintf(
-            "#%s-%s-block",
-            attr(vals$stack, "name"),
-            attr(vals$stack[[length(vals$stack) - 1]], "name")
-          )
-        }
-
         # Insert UI after last block
         bslib::accordion_panel_insert(
-          id = session$ns("stack"),
+          id = "stack",
           position = "after",
           panel = generate_ui(
             vals$stack[[length(vals$stack)]],
             id = attr(vals$stack, "name")
           )
         )
-        #insertUI(
-        #  selector,
-        #  where = "afterEnd",
-        #  ui = generate_ui(
-        #    vals$stack[[length(vals$stack)]],
-        #    id = attr(vals$stack, "name")
-        #  )
-        #)
-
         # Necessary to communicate with downstream modules
         session$userData$stack <- vals$stack
       })
@@ -303,6 +277,14 @@ generate_server.stack <- function(x, ...) {
         } else {
           if (session$userData$is_cleaned()) {
             message(sprintf("REMOVING BLOCK %s", to_remove()))
+            bslib::accordion_panel_remove(
+              id = "stack",
+              target = sprintf(
+                "%s-%s-block",
+                attr(x, "name"),
+                attr(vals$stack[[to_remove()]], "name")
+              )
+            )
             vals$stack[[to_remove()]] <- NULL
             session$userData$stack <- vals$stack
             session$userData$is_cleaned(FALSE)

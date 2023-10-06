@@ -43,7 +43,7 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
-  block_ui <- shiny::tagList(
+  shiny::tagList(
     # Ensure collapse is visible
     shiny::tags$head(
       shiny::tags$script(
@@ -58,6 +58,7 @@ generate_ui.block <- function(x, id, ...) {
       )
     ),
     div_card(
+      value = ns("block"),
       title = shiny::h4(
         shiny::HTML(
           sprintf(
@@ -81,8 +82,6 @@ generate_ui.block <- function(x, id, ...) {
       )
     )
   )
-  block_ui[[2]]$attribs$id <- ns("block")
-  block_ui
 }
 
 #' @rdname generate_ui
@@ -316,10 +315,10 @@ ui_update.list_field <- function(x, session, id, name) {
 
 #' Custom card container
 #' @keywords internal
-div_card <- function(..., title = NULL, footer = NULL) {
+div_card <- function(..., title = NULL, value) {
   bslib::accordion_panel(
     title = if (not_null(title)) title,
-    value = "plop",
+    value = value,
     ...
   )
 }

@@ -4,7 +4,7 @@
 \alias{div_card}
 \title{Custom card container}
 \usage{
-div_card(..., title = NULL, footer = NULL)
+div_card(..., title = NULL, value)
 }
 \description{
 Custom card container
