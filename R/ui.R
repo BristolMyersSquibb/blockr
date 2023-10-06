@@ -98,7 +98,6 @@ generate_ui.stack <- function(x, ...) {
           "$(document).on(
             'shiny:inputchanged',
             function(event) {
-              console.log(event.name);
               if (event.name.match('(last_changed|clientdata)') === null) {
                 Shiny.setInputValue(
                   '%s',
