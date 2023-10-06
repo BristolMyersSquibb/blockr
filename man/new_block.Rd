@@ -11,14 +11,14 @@
 \alias{generate_code.transform_block}
 \alias{evalute_block}
 \alias{evalute_block.data_block}
-\alias{evalute_block.transform_block}
-\alias{evalute_block.plot_block}
 \alias{new_data_block}
 \alias{data_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
 \alias{new_select_block}
+\alias{new_summarize_block}
+\alias{summarize_block}
 \alias{select_block}
 \alias{arrange_block}
 \alias{group_by_block}
@@ -53,21 +53,21 @@ evalute_block(x, ...)
 
 \method{evalute_block}{data_block}(x, ...)
 
-\method{evalute_block}{transform_block}(x, data, ...)
-
-\method{evalute_block}{plot_block}(x, data, ...)
-
 new_data_block(...)
 
 data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
+new_filter_block(data, columns = "LBTEST", values = "Hemoglobin", ...)
 
 filter_block(data, ...)
 
 new_select_block(data, columns = colnames(data)[1], ...)
+
+new_summarize_block(data, column = "LBSTRESN", func = c("mean", "sd"), ...)
+
+summarize_block(data, ...)
 
 select_block(data, ...)
 
@@ -75,7 +75,14 @@ arrange_block(data, ...)
 
 group_by_block(data, ...)
 
-new_plot_block(data, plot_opts = list(colors = c("blue", "red")), ...)
+new_plot_block(
+  data,
+  plot_opts = list(colors = c("blue", "red"), point_size = 3, title = "Plot title", theme
+    = c("theme_minimal", "theme_gray", "theme_linedraw", "theme_dark", "theme_light",
+    "theme_classic", "theme_void", "theme_bw"), x_lab = "X axis label", y_lab =
+    "Y axis label"),
+  ...
+)
 
 plot_block(data, ...)
 
@@ -113,6 +120,10 @@ of the fields)}
 \item{columns}{Column(s) to select.}
 
 \item{values}{Definition of the equality filter.}
+
+\item{column}{Column to select.}
+
+\item{func}{Summarize function to apply.}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 

@@ -104,11 +104,17 @@ evalute_block.transform_block <- function(x, data, ...) {
 evalute_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   tmp_expr <- strsplit(deparse1(generate_code(x)), "\\+")[[1]]
+  # TO DO: automatically process all elements
+  #gg_exprs <- lapply(tmp_expr, str2lang)
   gg_init <- str2lang(tmp_expr[[1]])
   gg_geom <- str2lang(tmp_expr[[2]])
+  gg_labs <- str2lang(tmp_expr[[3]])
 
   eval(
-    substitute(data %>% expr + expr2, list(expr = gg_init, expr2 = gg_geom)),
+    substitute(
+      data %>% expr + expr2 + expr3,
+      list(expr = gg_init, expr2 = gg_geom, expr3 = gg_labs)
+    ),
     list(data = data)
   )
 }
@@ -166,8 +172,8 @@ initialize_block.data_block <- function(x, ...) {
 #' @param values Definition of the equality filter.
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, columns = colnames(data)[1L],
-                             values = character(), ...) {
+new_filter_block <- function(data, columns = "LBTEST",
+                             values = "Hemoglobin", ...) {
 
   sub_fields <- function(data, columns) {
 
@@ -274,6 +280,56 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
   )
 }
 
+#' @param data Tabular data in which to perform summarise.
+#' @param column Column to select.
+#' @param func Summarize function to apply.
+#' @rdname new_block
+#' @export
+new_summarize_block <- function(
+  data,
+  column = "LBSTRESN",
+  func = c("mean", "sd"),
+  ...
+) {
+  all_cols <- function(data) colnames(data)
+
+  #summarize_exps <- function(column, func) {
+  #  bquote(
+  #    .(func)(.(column)),
+  #    list(func = func, column = column)
+  #  )
+  #}
+
+  fields <- list(
+    func = new_select_field(func[[1]], func),
+    column = new_select_field(column, all_cols)
+    #expression = new_hidden_field(summarize_exps)
+  )
+
+  # TO DO: find way to name the new
+  # column instead of res ...
+
+  # TO DO: apply multiple summarize operations
+
+  new_block(
+    fields = fields,
+    expr = quote(
+      dplyr::summarise(
+        res = .(func)(!!as.name(.(column)), na.rm = TRUE),
+        .groups = "drop"
+      )
+    ),
+    ...,
+    class = c("summarize_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+summarize_block <- function(data, ...) {
+  initialize_block(new_summarize_block(data, ...), data)
+}
+
 #' @rdname new_block
 #' @export
 select_block <- function(data, ...) {
@@ -301,15 +357,37 @@ group_by_block <- function(data, ...) {
 #' @export
 new_plot_block <- function(
   data,
-  plot_opts = list(colors = c("blue", "red")),
+  plot_opts = list(
+    colors = c("blue", "red"), # when outside aes ...
+    point_size = 3,
+    title = "Plot title",
+    theme = c(
+      "theme_minimal",
+      "theme_gray",
+      "theme_linedraw",
+      "theme_dark",
+      "theme_light",
+      "theme_classic",
+      "theme_void",
+      "theme_bw"
+    ),
+    x_lab = "X axis label",
+    y_lab = "Y axis label"
+  ),
   ...
 ) {
   # For plot blocks, fields will create input to style the plot ...
   all_cols <- function(data) colnames(data)
   fields <- list(
-    x_var = new_select_field(all_cols(data)[[1]], all_cols),
-    y_var = new_select_field(all_cols(data)[[2]], all_cols),
-    color = new_select_field(plot_opts$colors[[1]], plot_opts$colors)
+    x_var = new_select_field("VISIT", all_cols),
+    y_var = new_select_field("LBSTRESN", all_cols),
+    color = new_select_field("ACTARM", all_cols),
+    shape = new_select_field("ACTARM", all_cols),
+    point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),
+    title = new_string_field(plot_opts$title),
+    x_lab = new_string_field(plot_opts$x_lab),
+    y_lab = new_string_field(plot_opts$y_lab),
+    theme = new_select_field(plot_opts$theme[[1]], plot_opts$theme)
   )
 
   new_block(
@@ -320,9 +398,27 @@ new_plot_block <- function(
           # We have to use aes_string over aes
           mapping = aes_string(
             x = .(x_var),
-            y = .(y_var)
+            y = .(y_var),
+            color = .(color),
+            shape = .(shape)
           ),
-          color = .(color)
+          size = 3#.(point_size)
+        ) +
+        labs(
+          title = .(title),
+          x = .(x_lab),
+          y = .(y_lab)
+        ) +
+        .(theme) +
+        theme(
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          legend.title = element_text(face = "bold"),
+          legend.position = "bottom"
+        ) +
+        scale_color_brewer(name = "Treatment Group", palette = "Set1") +
+        scale_shape_manual(
+          name = "Treatment Group", 
+          values = c(16, 17, 18, 19, 20)
         )
     ),
     ...,
