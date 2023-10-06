@@ -103,20 +103,7 @@ evalute_block.transform_block <- function(x, data, ...) {
 #' @export
 evalute_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
-  tmp_expr <- strsplit(deparse1(generate_code(x)), "\\+")[[1]]
-  # TO DO: automatically process all elements
-  #gg_exprs <- lapply(tmp_expr, str2lang)
-  gg_init <- str2lang(tmp_expr[[1]])
-  gg_geom <- str2lang(tmp_expr[[2]])
-  gg_labs <- str2lang(tmp_expr[[3]])
-
-  eval(
-    substitute(
-      data %>% expr + expr2 + expr3,
-      list(expr = gg_init, expr2 = gg_geom, expr3 = gg_labs)
-    ),
-    list(data = data)
-  )
+  eval(generate_code(x), list(data = data))
 }
 
 #' @rdname new_block
@@ -393,7 +380,7 @@ new_plot_block <- function(
   new_block(
     fields = fields,
     expr = quote(
-      ggplot() +
+      ggplot(data) +
         geom_point(
           # We have to use aes_string over aes
           mapping = aes_string(
@@ -409,7 +396,7 @@ new_plot_block <- function(
           x = .(x_lab),
           y = .(y_lab)
         ) +
-        .(theme) +
+        #theme_update(.(theme)) +
         theme(
           axis.text.x = element_text(angle = 45, hjust = 1),
           legend.title = element_text(face = "bold"),
