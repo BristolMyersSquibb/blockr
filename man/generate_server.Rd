@@ -7,7 +7,7 @@
 \alias{generate_server.transform_block}
 \alias{generate_server.plot_block}
 \alias{generate_server.stack}
-\title{UI}
+\title{Server}
 \usage{
 generate_server(x, ...)
 
@@ -22,12 +22,12 @@ generate_server(x, ...)
 \method{generate_server}{stack}(x, ...)
 }
 \arguments{
-\item{x}{Object for which to generate a \code{\link[shiny:moduleServer]{shiny::moduleServer()}}}
+\item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
 
 \item{...}{Generic consistency}
 
 \item{in_dat}{Reactive input data}
 }
 \description{
-Generic for UI generation
+Generic for server generation
 }
