@@ -13,13 +13,13 @@ generate_server(x, ...)
 
 \method{generate_server}{block}(x, ...)
 
-\method{generate_server}{data_block}(x, ...)
+\method{generate_server}{data_block}(x, id, ...)
 
-\method{generate_server}{transform_block}(x, in_dat, ...)
+\method{generate_server}{transform_block}(x, in_dat, id, ...)
 
-\method{generate_server}{plot_block}(x, in_dat, ...)
+\method{generate_server}{plot_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, ...)
+\method{generate_server}{stack}(x, id = NULL, ...)
 }
 \arguments{
 \item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}

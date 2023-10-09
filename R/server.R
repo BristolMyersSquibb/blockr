@@ -19,7 +19,7 @@ generate_server.block <- function(x, ...) {
 
 #' @rdname generate_server
 #' @export
-generate_server.data_block <- function(x, ...) {
+generate_server.data_block <- function(x, id, ...) {
 
   obs_expr <- function(x) {
     splice_args(
@@ -36,7 +36,7 @@ generate_server.data_block <- function(x, ...) {
   }
 
   moduleServer(
-    attr(x, "name"),
+    id,
     function(input, output, session) {
       ns <- session$ns
       blk <- reactiveVal(x)
@@ -62,9 +62,8 @@ generate_server.data_block <- function(x, ...) {
         session$userData$is_cleaned(FALSE)
         # Can only remove when it is the last stack block
         if (length(session$userData$stack) == 1) {
-          message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
-          removeUI(sprintf("#%s", ns("block")), immediate = TRUE)
-          remove_shiny_inputs(id = attr(x, "name"), input)
+          message(sprintf("CLEANING UP BLOCK %s", id))
+          remove_shiny_inputs(id = id, input)
           o$destroy()
           session$userData$is_cleaned(TRUE)
         }
@@ -82,7 +81,7 @@ generate_server.data_block <- function(x, ...) {
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
-generate_server.transform_block <- function(x, in_dat, ...) {
+generate_server.transform_block <- function(x, in_dat, id, ...) {
 
   obs_expr <- function(x) {
     splice_args(
@@ -99,7 +98,7 @@ generate_server.transform_block <- function(x, in_dat, ...) {
   }
 
   moduleServer(
-    attr(x, "name"),
+    id,
     function(input, output, session) {
       ns <- session$ns
       blk <- reactiveVal(x)
@@ -120,8 +119,8 @@ generate_server.transform_block <- function(x, in_dat, ...) {
       # Cleanup module inputs (UI and server side)
       # and observer
       observeEvent(input$remove, {
-        message(sprintf("CLEANING UP BLOCK %s", attr(x, "name")))
-        remove_shiny_inputs(id = attr(x, "name"), input)
+        message(sprintf("CLEANING UP BLOCK %s", id))
+        remove_shiny_inputs(id = id, input)
         o$destroy()
         session$userData$is_cleaned(TRUE)
       })
@@ -134,7 +133,7 @@ generate_server.transform_block <- function(x, in_dat, ...) {
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
-generate_server.plot_block <- function(x, in_dat, ...) {
+generate_server.plot_block <- function(x, in_dat, id, ...) {
 
   obs_expr <- function(x) {
     splice_args(
@@ -151,11 +150,11 @@ generate_server.plot_block <- function(x, in_dat, ...) {
   }
 
   shiny::moduleServer(
-    attr(x, "name"),
+    id,
     function(input, output, session) {
       blk <- shiny::reactiveVal(x)
 
-      shiny::observeEvent(
+      o <- shiny::observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
@@ -167,17 +166,28 @@ generate_server.plot_block <- function(x, in_dat, ...) {
 
       output$plot <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)
+
+      # Cleanup module inputs (UI and server side)
+      # and observer
+      observeEvent(input$remove, {
+        message(sprintf("CLEANING UP BLOCK %s", id))
+        remove_shiny_inputs(id = id, input)
+        o$destroy()
+        session$userData$is_cleaned(TRUE)
+      })
     }
   )
 }
 
 #' @rdname generate_server
 #' @export
-generate_server.stack <- function(x, ...) {
+generate_server.stack <- function(x, id = NULL, ...) {
   stopifnot(...length() == 0L)
 
+  id <- if (is.null(id)) attr(x, "name") else id
+
   moduleServer(
-    attr(x, "name"),
+    id = id,
     function(input, output, session) {
       vals <- reactiveValues(stack = x, blocks = vector("list", length(x)))
       init_blocks(x, vals, session)
@@ -222,7 +232,8 @@ generate_server.stack <- function(x, ...) {
           } else {
             # Data from previous block
             vals$blocks[[length(vals$stack) - 1]]
-          }
+          },
+          id = attr(vals$stack[[length(vals$stack)]], "name")
         )
 
         # Insert UI after last block
@@ -231,7 +242,7 @@ generate_server.stack <- function(x, ...) {
           position = "after",
           panel = generate_ui(
             vals$stack[[length(vals$stack)]],
-            id = attr(vals$stack, "name")
+            id = session$ns(attr(vals$stack[[length(vals$stack)]], "name"))
           )
         )
         # Necessary to communicate with downstream modules
@@ -247,7 +258,7 @@ generate_server.stack <- function(x, ...) {
 
         # Retrieve index of block to remove
         blocks_ids <- paste(
-          attr(x, "name"),
+          id,
           vapply(vals$stack, \(x) attr(x, "name"), FUN.VALUE = character(1)),
           sep = "-"
         )
@@ -281,7 +292,7 @@ generate_server.stack <- function(x, ...) {
               id = "stack",
               target = sprintf(
                 "%s-%s-block",
-                attr(x, "name"),
+                id,
                 attr(vals$stack[[to_remove()]], "name")
               )
             )
@@ -303,16 +314,17 @@ generate_server.stack <- function(x, ...) {
 init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
     session$userData$stack <- vals$stack
-    vals$blocks[[1L]] <- generate_server(x[[1L]])
-    #vals$blocks[[2L]] <- generate_server(x[[2L]], in_dat = vals$blocks[[1L]])
-    #vals$blocks[[3L]] <- generate_server(x[[3L]], in_dat = vals$blocks[[2L]])
+    vals$blocks[[1L]] <- generate_server(x[[1L]], id = attr(x[[1]], "name"))
+    vals$blocks[[2L]] <- generate_server(x[[2L]], in_dat = vals$blocks[[1L]], id = attr(x[[2]], "name"))
+    vals$blocks[[3L]] <- generate_server(x[[3L]], in_dat = vals$blocks[[2L]], id = attr(x[[3]], "name"))
     # TO DO: fix recursion issue
-    for (i in seq_along(x)[-1L]) {
-      vals$blocks[[i]] <- generate_server(
-        x[[i]],
-        in_dat = vals$blocks[[i - 1L]]
-      )
-    }
+    #for (i in seq_along(x)[-1L]) {
+    #  vals$blocks[[i]] <- generate_server(
+    #    x[[i]],
+    #    in_dat = vals$blocks[[i - 1L]],
+    #    id = attr(x[[i - 1L]], "name")
+    #  )
+    #}
   })
 }
 

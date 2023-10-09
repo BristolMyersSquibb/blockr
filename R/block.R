@@ -160,7 +160,7 @@ initialize_block.data_block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 new_filter_block <- function(data, columns = "LBTEST",
-                             values = "Hemoglobin", ...) {
+                             values = character(), ...) {
 
   sub_fields <- function(data, columns) {
 

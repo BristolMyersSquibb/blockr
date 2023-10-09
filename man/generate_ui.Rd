@@ -48,7 +48,7 @@ generate_ui(x, ...)
 
 \method{generate_ui}{block}(x, id, ...)
 
-\method{generate_ui}{stack}(x, ...)
+\method{generate_ui}{stack}(x, id = NULL, ...)
 
 ui_input(x, id, name)
 

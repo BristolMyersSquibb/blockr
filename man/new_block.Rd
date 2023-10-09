@@ -65,7 +65,7 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = "LBTEST", values = "Hemoglobin", ...)
+new_filter_block(data, columns = "LBTEST", values = character(), ...)
 
 filter_block(data, ...)
 

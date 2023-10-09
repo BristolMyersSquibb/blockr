@@ -16,9 +16,7 @@ generate_ui <- function(x, ...) {
 generate_ui.block <- function(x, id, ...) {
   stopifnot(...length() == 0L)
 
-  ns <- NS(
-    NS(id)(attr(x, "name"))
-  )
+  ns <- NS(id)
 
   fields <- Map(
     ui_input,
@@ -86,10 +84,12 @@ generate_ui.block <- function(x, id, ...) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, ...) {
+generate_ui.stack <- function(x, id = NULL, ...) {
   stopifnot(...length() == 0L)
 
-  ns <- NS(attr(x, "name"))
+  id <- if (is.null(id)) attr(x, "name") else id
+
+  ns <- NS(id)
 
   bslib::page_fluid(
     tags$script(
@@ -117,8 +117,9 @@ generate_ui.stack <- function(x, ...) {
     do.call(
       bslib::accordion,
       c(
-        lapply(x, generate_ui, id = attr(x, "name")),
-        title = attr(x, "name"),
+        lapply(x, function(b) {
+          generate_ui(b, id = ns(attr(b, "name")))
+        }),
         open = TRUE,
         id = ns("stack")
       )
