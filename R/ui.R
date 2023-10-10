@@ -41,7 +41,8 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
-  shiny::tagList(
+  shiny::div(
+    class = "block",
     # Ensure collapse is visible
     shiny::tags$head(
       shiny::tags$script(
@@ -92,6 +93,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
   ns <- NS(id)
 
   bslib::page_fluid(
+    class = "stack",
     tags$script(
       HTML(
         sprintf(
