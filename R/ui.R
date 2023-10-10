@@ -154,6 +154,12 @@ ui_input.select_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.switch_field <- function(x, id, name) {
+  bslib::input_switch(input_ids(x, id), name, value(x))
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -244,6 +250,12 @@ ui_update.select_field <- function(x, session, id, name) {
   updateSelectInput(
     session, input_ids(x, id), name, value(x, "choices"), value(x)
   )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.switch_field <- function(x, session, id, name) {
+  bslib::update_switch(input_ids(x, id), name, value(x), session)
 }
 
 #' @rdname generate_ui

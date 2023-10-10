@@ -87,6 +87,8 @@ new_plot_block(
     = c("theme_minimal", "theme_gray", "theme_linedraw", "theme_dark", "theme_light",
     "theme_classic", "theme_void", "theme_bw"), x_lab = "X axis label", y_lab =
     "Y axis label"),
+  show_errors = FALSE,
+  show_lines = TRUE,
   ...
 )
 

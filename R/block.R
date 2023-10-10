@@ -361,6 +361,8 @@ new_plot_block <- function(
     x_lab = "X axis label",
     y_lab = "Y axis label"
   ),
+  show_errors = FALSE,
+  show_lines = TRUE,
   ...
 ) {
   # For plot blocks, fields will create input to style the plot ...
@@ -374,40 +376,46 @@ new_plot_block <- function(
     title = new_string_field(plot_opts$title),
     x_lab = new_string_field(plot_opts$x_lab),
     y_lab = new_string_field(plot_opts$y_lab),
-    theme = new_select_field(plot_opts$theme[[1]], plot_opts$theme)
+    theme = new_select_field(plot_opts$theme[[1]], plot_opts$theme),
+    errors_toggle = as_control_field(new_switch_field(show_errors, TRUE))
   )
 
   new_block(
     fields = fields,
-    expr = quote(
-      ggplot(data) +
-        geom_point(
-          # We have to use aes_string over aes
-          mapping = aes_string(
-            x = .(x_var),
-            y = .(y_var),
-            color = .(color),
-            shape = .(shape)
-          ),
-          size = 3#.(point_size)
-        ) +
-        labs(
-          title = .(title),
-          x = .(x_lab),
-          y = .(y_lab)
-        ) +
-        #theme_update(.(theme)) +
-        theme(
-          axis.text.x = element_text(angle = 45, hjust = 1),
-          legend.title = element_text(face = "bold"),
-          legend.position = "bottom"
-        ) +
-        scale_color_brewer(name = "Treatment Group", palette = "Set1") +
-        scale_shape_manual(
-          name = "Treatment Group",
-          values = c(16, 17, 18, 19, 20)
-        )
-    ),
+    expr = quote({
+      p <- if (.(errors_toggle)) {
+        ggplot(data) +
+          geom_point(
+            # We have to use aes_string over aes
+            mapping = aes_string(
+              x = .(x_var),
+              y = .(y_var),
+              color = .(color),
+              shape = .(shape)
+            ),
+            size = 3#.(point_size)
+          ) +
+          labs(
+            title = .(title),
+            x = .(x_lab),
+            y = .(y_lab)
+          ) +
+          #theme_update(.(theme)) +
+          theme(
+            axis.text.x = element_text(angle = 45, hjust = 1),
+            legend.title = element_text(face = "bold"),
+            legend.position = "bottom"
+          ) +
+          scale_color_brewer(name = "Treatment Group", palette = "Set1") +
+          scale_shape_manual(
+            name = "Treatment Group",
+            values = c(16, 17, 18, 19, 20)
+          )
+      } else {
+        ggplot(data)
+      }
+      p
+    }),
     ...,
     class = c("plot_block")
   )
