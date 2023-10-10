@@ -44,6 +44,7 @@ new_stack <- function(..., name = rand_names()) {
 #' @export
 add_block <- function(stack, block, position = NULL) {
   stopifnot(length(stack) > 0)
+  if (is.null(position)) stopifnot(position >= 1)
 
   last <- stack[[length(stack)]]
   # For now, we won't be able to insert a block
@@ -66,6 +67,35 @@ add_block <- function(stack, block, position = NULL) {
     )
     stack <- append(stack, tmp, position)
   }
+  invisible(stack)
+}
+
+#' Move blocks within a stack
+#'
+#' This is to be called oustide the stack by
+#' other modules.
+#'
+#' @param stack stack to update. See \link{new_stack}.
+#' @param from Initial block position.
+#' @param to New block position. The block at the new position
+#' will take the old position.
+#'
+#' @return Invisibly returns the stack.
+#' @export
+move_block <- function(stack, from, to) {
+  stopifnot(length(stack) > 0)
+
+  tmp_from <- stack[[from]]
+  tmp_to <- stack[[to]]
+
+  if (inherits(tmp_to, "plot_block") || inherits(tmp_from, "plot_block")) {
+    stop("At the moment, we can't move a plot block.")
+  }
+
+  # TO DO: we have to check whether the reordering
+  # is valid in term of data wrangling.
+  stack[[from]] <- tmp_to
+  stack[[to]] <- tmp_from
   invisible(stack)
 }
 

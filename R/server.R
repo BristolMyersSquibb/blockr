@@ -180,8 +180,10 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 }
 
 #' @rdname generate_server
+#' @param id Unique module id. Useful when the stack is called as a module.
+#' @param new_blocks For dynamically inserted blocks.
 #' @export
-generate_server.stack <- function(x, id = NULL, ...) {
+generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
   stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
@@ -238,7 +240,7 @@ generate_server.stack <- function(x, id = NULL, ...) {
 
         # Insert UI after last block
         bslib::accordion_panel_insert(
-          id = "stack",
+          id = sprintf("%s-stack", id),
           position = "after",
           panel = generate_ui(
             vals$stack[[length(vals$stack)]],
@@ -289,7 +291,7 @@ generate_server.stack <- function(x, id = NULL, ...) {
           if (session$userData$is_cleaned()) {
             message(sprintf("REMOVING BLOCK %s", to_remove()))
             bslib::accordion_panel_remove(
-              id = "stack",
+              id = sprintf("%s-stack", id),
               target = sprintf(
                 "%s-%s-block",
                 id,

@@ -8,5 +8,6 @@
 
 library(testthat)
 library(blockr)
+library(blockr.data)
 
 test_check("blockr")

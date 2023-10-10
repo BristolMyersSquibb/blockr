@@ -6,6 +6,10 @@ Authors@R:
              family = "Bennett",
              role = c("aut", "cre"),
              email = "nicolas@cynkra.com"),
+      person(given = "David",
+             family = "Granjon",
+             role = c("aut"),
+             email = "david@cynkra.com"),
       person(given = "Voltron Data",
              role = "fnd")
     )
@@ -23,7 +27,10 @@ Imports:
     ggplot2,
     bslib,
     methods,
-    DT
+    DT,
+    blockr.data
+Remotes:
+    blockr-org/blockr.data
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

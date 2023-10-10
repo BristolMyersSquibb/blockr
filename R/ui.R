@@ -41,8 +41,7 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
-  shiny::div(
-    class = "block",
+  shiny::tagList(
     # Ensure collapse is visible
     shiny::tags$head(
       shiny::tags$script(
@@ -330,11 +329,12 @@ ui_update.list_field <- function(x, session, id, name) {
 #' Custom card container
 #' @keywords internal
 div_card <- function(..., title = NULL, value) {
-  bslib::accordion_panel(
+  panel_tag <- bslib::accordion_panel(
     title = if (not_null(title)) title,
     value = value,
     ...
   )
+  tagAppendAttributes(panel_tag, class = "block")
 }
 
 #' Custom code container

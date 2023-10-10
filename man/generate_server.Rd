@@ -19,14 +19,18 @@ generate_server(x, ...)
 
 \method{generate_server}{plot_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, id = NULL, ...)
+\method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
 }
 \arguments{
 \item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
 
 \item{...}{Generic consistency}
 
+\item{id}{Unique module id. Useful when the stack is called as a module.}
+
 \item{in_dat}{Reactive input data}
+
+\item{new_blocks}{For dynamically inserted blocks.}
 }
 \description{
 Generic for server generation

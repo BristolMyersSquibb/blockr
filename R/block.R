@@ -13,6 +13,7 @@
 #' @param class Block subclass
 #'
 #' @export
+#' @import blockr.data
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
   stopifnot(
@@ -280,17 +281,9 @@ new_summarize_block <- function(
 ) {
   all_cols <- function(data) colnames(data)
 
-  #summarize_exps <- function(column, func) {
-  #  bquote(
-  #    .(func)(.(column)),
-  #    list(func = func, column = column)
-  #  )
-  #}
-
   fields <- list(
     func = new_select_field(func[[1]], func),
     column = new_select_field(column, all_cols)
-    #expression = new_hidden_field(summarize_exps)
   )
 
   # TO DO: find way to name the new
@@ -359,10 +352,18 @@ new_plot_block <- function(
       "theme_bw"
     ),
     x_lab = "X axis label",
-    y_lab = "Y axis label"
+    y_lab = "Y axis label",
+    errors = list(
+      show = FALSE,
+      ymin = character(),
+      ymax = character()
+    ),
+    lines = list(
+      show = FALSE,
+      group = character(),
+      color = character()
+    )
   ),
-  show_errors = FALSE,
-  show_lines = TRUE,
   ...
 ) {
   # For plot blocks, fields will create input to style the plot ...
@@ -377,44 +378,68 @@ new_plot_block <- function(
     x_lab = new_string_field(plot_opts$x_lab),
     y_lab = new_string_field(plot_opts$y_lab),
     theme = new_select_field(plot_opts$theme[[1]], plot_opts$theme),
-    errors_toggle = as_control_field(new_switch_field(show_errors, TRUE))
+    errors_toggle = new_switch_field(plot_opts$errors$show),
+    lines_toggle = new_switch_field(plot_opts$lines$show)
   )
 
   new_block(
     fields = fields,
     expr = quote({
-      p <- if (.(errors_toggle)) {
-        ggplot(data) +
-          geom_point(
-            # We have to use aes_string over aes
-            mapping = aes_string(
-              x = .(x_var),
-              y = .(y_var),
-              color = .(color),
-              shape = .(shape)
-            ),
-            size = 3#.(point_size)
-          ) +
-          labs(
-            title = .(title),
-            x = .(x_lab),
-            y = .(y_lab)
-          ) +
-          #theme_update(.(theme)) +
-          theme(
-            axis.text.x = element_text(angle = 45, hjust = 1),
-            legend.title = element_text(face = "bold"),
-            legend.position = "bottom"
-          ) +
-          scale_color_brewer(name = "Treatment Group", palette = "Set1") +
-          scale_shape_manual(
-            name = "Treatment Group",
-            values = c(16, 17, 18, 19, 20)
-          )
-      } else {
-        ggplot(data)
+      x_var <- .(x_var)
+      y_var <- .(y_var)
+      color <- .(color)
+      shape <- .(shape)
+      p <- ggplot(data) +
+        geom_point(
+          # We have to use aes_string over aes
+          mapping = aes(
+            x = .data[[x_var]],
+            y = .data[[y_var]],
+            color = .data[[color]],
+            shape = .data[[shape]]
+          ),
+          size = 3 #.(point_size) TO DO: allow slide to have 1 value
+        )
+
+      # Adding errors
+      if (.(errors_toggle)) {
+        p <- p + geom_errorbar(
+          aes_string(
+            ymin = "Mean - SE",
+            ymax = "Mean + SE",
+            color = "ACTARM"
+          ),
+          width = 0.2
+        )
       }
-      p
+
+      if (.(lines_toggle)) {
+        p <- p +
+          geom_line(
+            aes_string(
+              group = "ACTARM",
+              color = "ACTARM"
+            )
+          )
+      }
+
+      p  +
+        labs(
+          title = .(title),
+          x = .(x_lab),
+          y = .(y_lab)
+        ) +
+        #theme_update(.(theme)) +
+        theme(
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          legend.title = element_text(face = "bold"),
+          legend.position = "bottom"
+        ) +
+        scale_color_brewer(name = "Treatment Group", palette = "Set1") +
+        scale_shape_manual(
+          name = "Treatment Group",
+          values = c(16, 17, 18, 19, 20)
+        )
     }),
     ...,
     class = c("plot_block")
