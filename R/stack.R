@@ -103,7 +103,7 @@ move_block <- function(stack, from, to) {
 #' @rdname new_stack
 #' @export
 serve_stack <- function(stack) {
-  ui <- generate_ui(stack)
+  ui <- bslib::page_fluid(generate_ui(stack))
 
   server <- function(input, output, session) {
     generate_server(stack)

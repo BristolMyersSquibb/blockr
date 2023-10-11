@@ -91,7 +91,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
 
   ns <- NS(id)
 
-  bslib::page_fluid(
+  div(
     class = "stack",
     tags$script(
       HTML(
