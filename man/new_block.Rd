@@ -26,6 +26,8 @@
 \alias{group_by_block}
 \alias{new_plot_block}
 \alias{plot_block}
+\alias{new_cheat_block}
+\alias{cheat_block}
 \alias{initialize_block.transform_block}
 \alias{initialize_block.plot_block}
 \alias{update_fields}
@@ -92,6 +94,10 @@ new_plot_block(
 )
 
 plot_block(data, ...)
+
+new_cheat_block(data, ...)
+
+cheat_block(data, ...)
 
 \method{initialize_block}{transform_block}(x, data, ...)
 

@@ -370,7 +370,7 @@ new_plot_block <- function(
   all_cols <- function(data) colnames(data)
   fields <- list(
     x_var = new_select_field("VISIT", all_cols),
-    y_var = new_select_field("LBSTRESN", all_cols),
+    y_var = new_select_field("Mean", all_cols),
     color = new_select_field("ACTARM", all_cols),
     shape = new_select_field("ACTARM", all_cols),
     point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),
@@ -389,6 +389,9 @@ new_plot_block <- function(
       y_var <- .(y_var)
       color <- .(color)
       shape <- .(shape)
+      ymin <- "ymin"
+      ymax <- "ymax"
+
       p <- ggplot(data) +
         geom_point(
           # We have to use aes_string over aes
@@ -399,28 +402,32 @@ new_plot_block <- function(
             shape = .data[[shape]]
           ),
           size = 3 #.(point_size) TO DO: allow slide to have 1 value
-        )
+        ) #+
+        #geom_errorbar(
+        #  aes(
+        #    ymin = .data[[ymin]],
+        #    ymax = .data[[ymax]],
+        #    color = ACTARM
+        #  ),
+        #  width = 0.2
+        #) #+
+        #geom_line(
+        #  aes(
+        #    group = .data[[color]],
+        #    color = .data[[color]]
+        #  )
+        #)
 
       # Adding errors
       if (.(errors_toggle)) {
         p <- p + geom_errorbar(
-          aes_string(
-            ymin = "Mean - SE",
-            ymax = "Mean + SE",
-            color = "ACTARM"
+          aes(
+            ymin = ymin,
+            ymax = ymax,
+            color = ACTARM
           ),
           width = 0.2
         )
-      }
-
-      if (.(lines_toggle)) {
-        p <- p +
-          geom_line(
-            aes_string(
-              group = "ACTARM",
-              color = "ACTARM"
-            )
-          )
       }
 
       p  +
@@ -450,6 +457,42 @@ new_plot_block <- function(
 #' @export
 plot_block <- function(data, ...) {
   initialize_block(new_plot_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_cheat_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      dummy = new_string_field("dummy")
+    ),
+    expr = quote({
+      dplyr::filter(data, LBTEST == "Hemoglobin") %>%
+        dplyr::filter(!startsWith(VISIT, "UNSCHEDULED")) %>%
+        dplyr::arrange(VISITNUM) %>%
+        dplyr::mutate(VISIT = factor(
+          VISIT,
+          levels = unique(VISIT),
+          ordered = TRUE
+        )) %>%
+        dplyr::group_by(VISIT, ACTARM) %>%
+        dplyr::summarise(
+          Mean = mean(LBSTRESN, na.rm = TRUE),
+          SE = sd(LBSTRESN, na.rm = TRUE) / sqrt(dplyr::n()),
+          .groups = "drop"
+        ) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(ymin = Mean - SE, ymax = Mean + SE)
+    }),
+    ...,
+    class = c("cheat_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+cheat_block <- function(data, ...) {
+  initialize_block(new_cheat_block(data, ...), data)
 }
 
 #' @rdname new_block
