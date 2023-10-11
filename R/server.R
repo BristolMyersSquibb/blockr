@@ -240,7 +240,7 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 
         # Insert UI after last block
         bslib::accordion_panel_insert(
-          id = sprintf("%s-stack", id),
+          id = "stack",
           position = "after",
           panel = generate_ui(
             vals$stack[[length(vals$stack)]],
@@ -291,7 +291,7 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           if (session$userData$is_cleaned()) {
             message(sprintf("REMOVING BLOCK %s", to_remove()))
             bslib::accordion_panel_remove(
-              id = sprintf("%s-stack", id),
+              id = "stack",
               target = sprintf(
                 "%s-%s-block",
                 id,
