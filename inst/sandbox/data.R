@@ -1,18 +1,9 @@
-library(blockr)
+library(blockr.data)
 library(ggplot2)
 library(dplyr)
 
-data_paths <- list(
-  demo = "https://github.com/cdisc-org/sdtm-adam-pilot-project/raw/master/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/dm.xpt",
-  expo  = "https://github.com/cdisc-org/sdtm-adam-pilot-project/raw/master/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/ex.xpt",
-  lab = "https://github.com/cdisc-org/sdtm-adam-pilot-project/raw/master/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/lb.xpt",
-  ae = "https://github.com/cdisc-org/sdtm-adam-pilot-project/raw/master/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/tabulations/sdtm/ae.xpt"
-)
-
-data <- lapply(data_paths, haven::read_xpt)
-
 # Plot AGE distribution
-ggplot(data$demo, aes(x = AGE)) +
+ggplot(demo, aes(x = AGE)) +
   geom_histogram(binwidth = 5, fill = "blue", alpha = 0.7) +
   labs(title = "Distribution of Age", x = "Age (Years)", y = "Count") +
   theme_minimal() +
@@ -20,9 +11,9 @@ ggplot(data$demo, aes(x = AGE)) +
 
 #Data manipulation layers
 # Step 1: Merge the lb and dm datasets based on "STUDYID" and "USUBJID" columns
-merged_data <- data$lab |>
-  # Perform inner join on STUDYID and USUBJID
-  inner_join(data$demo, by = c("STUDYID", "USUBJID"))
+#merged_data <- lab |>
+#  # Perform inner join on STUDYID and USUBJID
+#  inner_join(demo, by = c("STUDYID", "USUBJID"))
 
 # Step 2: Filter for Hemoglobin test results and preprocess
 hemoglobin_data <- merged_data |>
@@ -33,8 +24,8 @@ hemoglobin_data <- merged_data |>
 
 
 # Step 3: Compute summary statistics (Mean and SE) grouped by VISIT and ACTARM
-summary_data <- hemoglobin_data %>%
-  group_by(VISIT, ACTARM) %>%  # Group data by VISIT and ACTARM
+summary_data <- hemoglobin_data |>
+  group_by(VISIT, ACTARM) |>  # Group data by VISIT and ACTARM
   summarise(
     Mean = mean(LBSTRESN, na.rm = TRUE),  # Calculate the mean of LBSTRESN, ignoring NA values
     SE = sd(LBSTRESN, na.rm = TRUE) / sqrt(n()),  # Calculate the standard error
@@ -43,9 +34,12 @@ summary_data <- hemoglobin_data %>%
 
 # Plot layer
 # Step 4: Generate the ggplot
-ggplot(summary_data, aes(x = VISIT, y = Mean)) +  # Base ggplot mapping VISIT to x-axis and Mean to y-axis
-  geom_point(aes(color = ACTARM, shape = ACTARM), size = 3) +  # Add points colored and shaped by ACTARM
-  geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE, color = ACTARM), width = 0.2) +  # Add error bars
+p <- ggplot(summary_data, aes(x = VISIT, y = Mean)) +  # Base ggplot mapping VISIT to x-axis and Mean to y-axis
+  geom_point(aes(color = ACTARM, shape = ACTARM), size = 3)  # Add points colored and shaped by ACTARM
+
+p <- p + geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE, color = ACTARM), width = 0.2)  # Add error bars
+
+p +
   geom_line(aes(group = ACTARM, color = ACTARM)) +  # Add lines connecting points within each ACTARM group
   labs(
     title = "Mean and SD of Hemoglobin by Visit",  # Add plot title

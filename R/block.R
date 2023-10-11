@@ -402,31 +402,30 @@ new_plot_block <- function(
             shape = .data[[shape]]
           ),
           size = 3 #.(point_size) TO DO: allow slide to have 1 value
-        ) #+
-        #geom_errorbar(
-        #  aes(
-        #    ymin = .data[[ymin]],
-        #    ymax = .data[[ymax]],
-        #    color = ACTARM
-        #  ),
-        #  width = 0.2
-        #) #+
-        #geom_line(
-        #  aes(
-        #    group = .data[[color]],
-        #    color = .data[[color]]
-        #  )
-        #)
+        )
 
       # Adding errors
       if (.(errors_toggle)) {
         p <- p + geom_errorbar(
           aes(
-            ymin = ymin,
-            ymax = ymax,
+            x = .data[[x_var]],
+            y = .data[[y_var]],
+            ymin = Mean - SE,
+            ymax = Mean + SE,
             color = ACTARM
           ),
           width = 0.2
+        )
+      }
+
+      if (.(lines_toggle)) {
+        p <- p + geom_line(
+          aes(
+            x = .data[[x_var]],
+            y = .data[[y_var]],
+            group = .data[[color]],
+            color = .data[[color]]
+          )
         )
       }
 
