@@ -218,8 +218,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           position = "after",
           target = if (!is.null(position)) {
             sprintf(
-              "%s-%s-block",
-              id,
+              "%s%s-block",
+              session$ns(""),
               attr(vals$stack[[position]], "name")
             )
           },
@@ -240,10 +240,9 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         }
 
         # Retrieve index of block to remove
-        blocks_ids <- paste(
-          id,
-          vapply(vals$stack, \(x) attr(x, "name"), FUN.VALUE = character(1)),
-          sep = "-"
+        blocks_ids <- paste0(
+          session$ns(""),
+          vapply(vals$stack, \(x) attr(x, "name"), FUN.VALUE = character(1))
         )
         block_id <- strsplit(input$last_changed$name, "-remove")[[1]][1]
         tmp <- which(blocks_ids == block_id)
@@ -274,8 +273,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             bslib::accordion_panel_remove(
               id = "stack",
               target = sprintf(
-                "%s-%s-block",
-                id,
+                "%s%s-block",
+                session$ns(""),
                 attr(vals$stack[[to_remove()]], "name")
               )
             )
