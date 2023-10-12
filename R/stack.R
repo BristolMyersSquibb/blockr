@@ -65,7 +65,7 @@ add_block <- function(stack, block, position = NULL) {
       block,
       list(stack[[position]])
     )
-    stack <- append(stack, tmp, position)
+    stack <- append(stack, list(tmp), position)
   }
   invisible(stack)
 }

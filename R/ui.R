@@ -96,21 +96,24 @@ generate_ui.stack <- function(x, id = NULL, ...) {
     tags$script(
       HTML(
         sprintf(
-          "$(document).on(
-            'shiny:inputchanged',
-            function(event) {
-              if (event.name.match('(last_changed|clientdata)') === null) {
-                Shiny.setInputValue(
-                  '%s',
-                  {
-                    name: event.name,
-                    value: event.value,
-                    type: event.inputType,
-                    binding: event.binding !== null ? event.binding.name : ''
-                  }
-                );
-              }
-          });",
+          "$(function() {
+            $(document).on(
+              'shiny:inputchanged',
+              function(event) {
+                if (event.name.match('(last_changed|clientdata)') === null) {
+                  Shiny.setInputValue(
+                    '%s',
+                    {
+                      name: event.name,
+                      value: event.value,
+                      type: event.inputType,
+                      binding: event.binding !== null ? event.binding.name : ''
+                    }
+                  );
+                }
+            });
+          });
+          ",
           ns("last_changed")
         )
       )
@@ -124,10 +127,6 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         open = TRUE,
         id = ns("stack")
       )
-    ),
-    div(
-      class = "d-flex align-items-center",
-      actionButton(ns("add"), icon("plus"))
     )
   )
 }

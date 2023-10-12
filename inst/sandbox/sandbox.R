@@ -11,19 +11,22 @@ stack <- new_stack(
 serve_stack(stack)
 
 # WIP for John
+stack <- new_stack(
+  data_block
+)
 
 shinyApp(
   ui = tagList(
-    generate_ui(stack, id = "mystack"),
+    bslib::page_fluid(generate_ui(stack, id = "mystack")),
     actionButton("add", "Add", class = "my-2")
   ),
   server = function(input, output, session) {
     vals <- reactiveValues(new_blocks = NULL)
-    generate_server(stack, id = "mystack", new_blocks = vals$new_blocks)
+    generate_server(stack, id = "mystack", new_blocks = reactive(vals$new_blocks))
 
     observeEvent(input$add, {
       # For John: this will have to be replaced by your masonry logic
-      loc <- sample(seq_along(react_stack()), 1)
+      loc <- sample(seq_along(stack), 1)
       block <- select_block
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will

@@ -194,54 +194,35 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       vals <- reactiveValues(stack = x, blocks = vector("list", length(x)))
       init_blocks(x, vals, session)
 
-      # Add block
-      observeEvent(input$add, {
-        showModal(
-          modalDialog(
-            "TO DO: add a confirm button and a select input to select
-            which block to add ...",
-            title = h3(icon("check"), "Add a new block"),
-            footer = modalButton("Dismiss"),
-            size = "m",
-            easyClose = FALSE,
-            fade = TRUE
-          )
-        )
-      })
-
-      observeEvent(input$add, {
+      observeEvent({
+        req(new_blocks)
+        new_blocks()
+      }, {
         # Update stack
-        block_to_add <- if (length(vals$stack) == 0) {
-          data_block
-        } else {
-          filter_block
-        }
+        block_to_add <- new_blocks()$block
+        position <- new_blocks()$position
 
-        vals$stack[[length(vals$stack) + 1]] <- do.call(
-          block_to_add,
-          if (length(vals$stack) == 0) {
-            list()
-          } else {
-            list(vals$blocks[[length(vals$stack)]]())
-          }
-        )
+        vals$stack <- add_block(vals$stack, block_to_add, position)
+
         # Call module
-        vals$blocks[[length(vals$stack)]] <- generate_server(
-          vals$stack[[length(vals$stack)]],
-          in_dat = if (length(vals$stack) == 1) {
-            # No data for first block
-            NULL
-          } else {
-            # Data from previous block
-            vals$blocks[[length(vals$stack) - 1]]
-          },
-          id = attr(vals$stack[[length(vals$stack)]], "name")
-        )
+        p <- if (is.null(position)) {
+          length(vals$stack)
+        } else {
+          position + 1
+        }
+        vals$blocks[[p]] <- init_block(p, vals)
 
-        # Insert UI after last block
+        # Insert UI
         bslib::accordion_panel_insert(
           id = "stack",
           position = "after",
+          target = if (!is.null(position)) {
+            sprintf(
+              "%s-%s-block",
+              id,
+              attr(vals$stack[[position]], "name")
+            )
+          },
           panel = generate_ui(
             vals$stack[[length(vals$stack)]],
             id = session$ns(attr(vals$stack[[length(vals$stack)]], "name"))
@@ -316,18 +297,34 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
     session$userData$stack <- vals$stack
-    vals$blocks[[1L]] <- generate_server(x[[1L]], id = attr(x[[1]], "name"))
-    vals$blocks[[2L]] <- generate_server(x[[2L]], in_dat = vals$blocks[[1L]], id = attr(x[[2]], "name"))
-    vals$blocks[[3L]] <- generate_server(x[[3L]], in_dat = vals$blocks[[2L]], id = attr(x[[3]], "name"))
     # TO DO: fix recursion issue
-    #for (i in seq_along(x)[-1L]) {
-    #  vals$blocks[[i]] <- generate_server(
-    #    x[[i]],
-    #    in_dat = vals$blocks[[i - 1L]],
-    #    id = attr(x[[i - 1L]], "name")
-    #  )
-    #}
+    for (i in seq_along(x)) {
+      vals$blocks[[i]] <- init_block(i, vals)
+    }
   })
+}
+
+#' Init a single block
+#'
+#' Useful for \link{init_blocks} but also
+#' to be called after \link{add_block}.
+#'
+#' @param i Block position
+#' @param vals Reactive values containing the stack.
+#'
+#' @keywords internal
+init_block <- function(i, vals) {
+  generate_server(
+    vals$stack[[i]],
+    in_dat = if (i == 1) {
+      # No data for first block
+      NULL
+    } else {
+      # Data from previous block
+      vals$blocks[[i - 1]]
+    },
+    id = attr(vals$stack[[i]], "name")
+  )
 }
 
 #' Cleanup module inputs
