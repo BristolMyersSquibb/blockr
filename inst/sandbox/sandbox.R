@@ -11,9 +11,9 @@ stack <- new_stack(
 serve_stack(stack)
 
 # WIP for John
-stack <- new_stack(
-  data_block
-)
+stack <- new_stack(data_block) |>
+  add_block(select_block) |>
+  add_block(filter_block, 1)
 
 shinyApp(
   ui = tagList(

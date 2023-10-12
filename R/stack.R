@@ -45,6 +45,12 @@ new_stack <- function(..., name = rand_names()) {
 add_block <- function(stack, block, position = NULL) {
   stopifnot(length(stack) > 0)
   if (is.null(position)) stopifnot(position >= 1)
+  if (length(stack) == 0) {
+    block_name <- deparse(substitute(block))
+    if (!grepl("data", block_name)) {
+      stop("The first block must be a data block.")
+    }
+  }
 
   last <- stack[[length(stack)]]
   # For now, we won't be able to insert a block
@@ -56,17 +62,24 @@ add_block <- function(stack, block, position = NULL) {
   }
   if (is.null(position)) {
     # inject new block + pass in data from previous block
-    stack[[length(stack) + 1]] <- do.call(
-      block,
-      list(stack[[length(stack)]])
-    )
-  } else {
-    tmp <- do.call(
-      block,
-      list(stack[[position]])
-    )
-    stack <- append(stack, list(tmp), position)
+    position <- length(stack)
   }
+
+  # get data from the previous block
+  if (length(stack) == 1) {
+    data <-  evalute_block(stack[[position]])
+  } else {
+    data <- evalute_block(stack[[1]])
+    for (i in seq_along(stack)[-1L]) {
+      data <- evalute_block(
+        do.call(class(stack[[i]])[[1]], list(data)),
+        data = data
+      )
+    }
+  }
+
+  tmp <- do.call(block, list(data))
+  stack <- append(stack, list(tmp), position)
   invisible(stack)
 }
 
