@@ -41,8 +41,6 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
-  print(paste0(class(x), collapse=","))
-
   shiny::tagList(
     # Ensure collapse is visible
     shiny::tags$head(
