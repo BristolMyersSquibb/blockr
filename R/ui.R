@@ -41,48 +41,32 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
-  shiny::tagList(
-    # Ensure collapse is visible
-    shiny::tags$head(
-      shiny::tags$script(
-        sprintf(
-          "$(function() {
-            const bsCollapse = new bootstrap.Collapse('#%s', {
-              toggle: true
-            });
-          });",
-          ns("collapse_data")
+  code_id <- ns("codeCollapse")
+  output_id <- ns("outputCollapse")
+
+  header <- block_title(x, code_id, output_id, ns)
+
+  div(
+    class = "block",
+    `data-block-type` = paste0(class(x), collapse = ","),
+    shiny::div(
+      class = "card shadow-sm p-2 hidden mb-1",
+      shiny::div(
+        class = "card-body p-1",
+        header,
+        data_switch,
+        do.call(shiny::div, unname(fields)),
+        div(
+          class = "collapse block-code",
+          id = code_id,
+          uiCode(x, ns)
         )
       )
     ),
-    div_card(
-      value = ns("block"),
-      title = shiny::h4(
-        shiny::HTML(
-          sprintf(
-            "Block: %s",
-            strsplit(class(x)[[1]], "_")[[1]][1]
-          )
-        )
-      ),
-      bslib::layout_sidebar(
-        sidebar = shiny::tagList(
-          actionButton(ns("remove"), icon("trash"), class = "pull-right"),
-          data_switch,
-          do.call(shiny::div, unname(fields))
-        ),
-        ui_code(x, ns),
-        shiny::tags$div(
-          class = "collapse",
-          id = ns("collapse_data"),
-          ui_output(x, ns),
-          # we should just grab the block type
-          # but we cannot predict the order of the classes
-          # we should also pass it somewhere else but bslib seems
-          # to strip everything
-          `data-block-type` = paste0(class(x), collapse = ","),
-        )
-      )
+    div(
+      class = "collapse block-output",
+      id = output_id,
+      uiOutput(x, ns)
     )
   )
 }
@@ -96,41 +80,97 @@ generate_ui.stack <- function(x, id = NULL, ...) {
 
   ns <- NS(id)
 
-  div(
-    class = "stack",
-    tags$script(
-      HTML(
-        sprintf(
-          "$(function() {
-            $(document).on(
-              'shiny:inputchanged',
-              function(event) {
-                if (event.name.match('(last_changed|clientdata)') === null) {
-                  Shiny.setInputValue(
-                    '%s',
-                    {
-                      name: event.name,
-                      value: event.value,
-                      type: event.inputType,
-                      binding: event.binding !== null ? event.binding.name : ''
-                    }
-                  );
-                }
-            });
-          });
-          ",
-          ns("last_changed")
-        )
+  tagList(
+    shiny::div(
+      class = "card stack",
+      stack_header(x),
+      shiny::div(
+        class = "card-body p-0",
+        id = id,
+        lapply(x, \(b) {
+          generate_ui(b, id = ns(attr(b, "name")))
+        })
       )
     ),
-    do.call(
-      bslib::accordion,
-      c(
-        lapply(x, function(b) {
-          generate_ui(b, id = ns(attr(b, "name")))
-        }),
-        open = TRUE,
-        id = ns("stack")
+    sortable::sortable_js(id),
+    blockrDependencies(),
+    htmltools::singleton(
+      tags$head(
+        tags$link(
+          rel = "stylesheet",
+          href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
+        )
+      )
+    )
+  )
+}
+
+#' @importFrom shiny tags div
+block_title <- function(block, code_id, output_id, ns) {
+  title <- class(block)[1] |>
+    (\(.) gsub("_.*$", "", .))() |>
+    tools::toTitleCase()
+
+  div(
+    class = "card-title",
+    div(
+      class = "d-flex",
+      if (not_null(title)) {
+        div(class = "flex-grow-1", shiny::p(title, class = "fw-bold"))
+      },
+      div(
+        class = "flex-shrink-1",
+        actionLink(
+          ns("remove"), 
+          icon("trash"),
+          class = "text-decoration-none",
+        ),
+        tags$a(
+          class = "text-decoration-none block-code-toggle",
+          `data-bs-toggle` = "collapse",
+          href = sprintf("#%s", code_id),
+          `aria-expanded` = "false",
+          `aria-controls` = code_id,
+          iconCode()
+        ),
+        tags$a(
+          class = "text-decoration-none block-output-toggle",
+          `data-bs-toggle` = "collapse",
+          href = sprintf("#%s", output_id),
+          `aria-expanded` = "false",
+          `aria-controls` = output_id,
+          iconOutput()
+        )
+      )
+    )
+  )
+}
+
+#' @importFrom shiny icon tags div
+stack_header <- function(stack) {
+  title <- attr(stack, "name")
+
+  div(
+    class = "card-header",
+    div(
+      class = "d-flex",
+      if (not_null(title)) {
+        div(class = "flex-grow-1", shiny::h6(title))
+      },
+      div(
+        class = "flex-shrink-1",
+        tags$a(
+          class = "text-decoration-none stack-code-toggle hidden",
+          iconCode()
+        ),
+        tags$a(
+          class = "text-decoration-none stack-output-toggle hidden",
+          iconOutput()
+        ),
+        tags$a(
+          class = "text-decoration-none stack-edit-toggle",
+          iconEdit()
+        )
       )
     )
   )
@@ -351,30 +391,45 @@ custom_verbatim_output <- function(id) {
 #' @param ns Output namespace
 #' @rdname generate_ui
 #' @export
-ui_output <- function(x, ns) {
-  UseMethod("ui_output", x)
+uiOutput <- function(x, ns) {
+  UseMethod("uiOutput", x)
 }
 
 #' @rdname generate_ui
 #' @export
-ui_output.block <- function(x, ns) {
+uiOutput.block <- function(x, ns) {
   DT::dataTableOutput(ns("res"))
 }
 
 #' @rdname generate_ui
 #' @export
-ui_output.plot_block <- function(x, ns) {
+uiOutput.plot_block <- function(x, ns) {
   shiny::plotOutput(ns("plot"))
 }
 
 #' @rdname generate_ui
 #' @export
-ui_code <- function(x, ns) {
-  UseMethod("ui_code", x)
+uiCode <- function(x, ns) {
+  UseMethod("uiCode", x)
 }
 
 #' @rdname generate_ui
 #' @export
-ui_code.block <- function(x, ns) {
-  custom_verbatim_output(ns("code"))
+uiCode.block <- function(x, ns) {
+ shiny::verbatimTextOutput(ns("code"))
+}
+
+#' @importFrom shiny icon
+iconCode <- function(){
+  icon("code")
+}
+
+#' @importFrom shiny icon
+iconEdit <- function(){
+  icon("edit")
+}
+
+#' @importFrom shiny icon
+iconOutput <- function(){
+  icon("arrow-right-from-bracket")
 }

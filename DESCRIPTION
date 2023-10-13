@@ -28,7 +28,9 @@ Imports:
     bslib,
     methods,
     DT,
-    blockr.data
+    blockr.data,
+    htmltools,
+    sortable
 Remotes:
     blockr-org/blockr.data
 Suggests: 
