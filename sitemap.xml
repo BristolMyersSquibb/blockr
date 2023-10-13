@@ -16,6 +16,18 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/add_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/convert_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/custom_verbatim_output.html</loc>
+  </url>
+  <url>
+    <loc>/reference/div_card.html</loc>
+  </url>
+  <url>
     <loc>/reference/generate_server.html</loc>
   </url>
   <url>
@@ -25,7 +37,13 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/init_block.html</loc>
+  </url>
+  <url>
     <loc>/reference/init_blocks.html</loc>
+  </url>
+  <url>
+    <loc>/reference/move_block.html</loc>
   </url>
   <url>
     <loc>/reference/new_block.html</loc>
@@ -35,6 +53,9 @@
   </url>
   <url>
     <loc>/reference/new_stack.html</loc>
+  </url>
+  <url>
+    <loc>/reference/off_canvas.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>

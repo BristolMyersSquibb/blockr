@@ -53,27 +53,38 @@
 <span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data_block</span></span>
-<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for transform_block</span></span>
-<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">in_dat</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">in_dat</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for plot_block</span></span>
+<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">in_dat</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stack</span></span>
-<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, id <span class="op">=</span> <span class="cn">NULL</span>, new_blocks <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>Object for which to generate a <code>moduleServer()</code></p></dd>
+<dd><p>Object for which to generate a <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code></p></dd>
 
 
 <dt>...</dt>
 <dd><p>Generic consistency</p></dd>
 
 
+<dt>id</dt>
+<dd><p>Unique module id. Useful when the stack is called as a module.</p></dd>
+
+
 <dt>in_dat</dt>
 <dd><p>Reactive input data</p></dd>
+
+
+<dt>new_blocks</dt>
+<dd><p>For dynamically inserted blocks.</p></dd>
 
 </dl></div>
 
@@ -85,7 +96,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Nicolas Bennett, Voltron Data.</p>
+  <p></p><p>Developed by Nicolas Bennett, David Granjon, Voltron Data.</p>
 </div>
 
 <div class="pkgdown">

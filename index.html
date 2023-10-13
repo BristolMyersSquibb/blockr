@@ -74,18 +74,170 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"blockr-org/blockr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<p>A simple stack of blocks providing a dataset selector and a filter operation.</p>
+<div class="section level3">
+<h3 id="create-a-stack">Create a stack<a class="anchor" aria-label="anchor" href="#create-a-stack"></a>
+</h3>
+<p>A simple stack of blocks providing a dataset selector and a filter operation:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">data_block</span>,</span>
-<span>  <span class="va">filter_block</span></span>
+<span>  <span class="va">filter_block</span>,</span>
+<span>  <span class="va">plot_block</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="modify-a-stack">Modify a stack<a class="anchor" aria-label="anchor" href="#modify-a-stack"></a>
+</h3>
+<p>To add a block to add stack, you can leverage <code>add_block</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">data_block</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/add_block.html">add_block</a></span><span class="op">(</span><span class="va">select_block</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/add_block.html">add_block</a></span><span class="op">(</span><span class="va">filter_block</span>, <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>If you specify the position (last parameter), you can add a block right after the given index. For instance, the above command first inserts a select block after the data block. Then, a filter block is included right after the data block.</p>
+<p>Note that you can’t add a block before the data block and before the plot block. In a later version, we may add multiple plots per stack.</p>
+</div>
+<div class="section level3">
+<h3 id="moving-block">Moving block<a class="anchor" aria-label="anchor" href="#moving-block"></a>
+</h3>
+<p>TBD</p>
+</div>
+<div class="section level3">
+<h3 id="dynamically-add-a-block">Dynamically add a block<a class="anchor" aria-label="anchor" href="#dynamically-add-a-block"></a>
+</h3>
+<p>Below is an app with an interface to dynamically add blocks. We leverage the <code>new_blocks</code> slot of the <code>generate_server.stack</code> method. It accepts the name of the block to insert as well as its position in the stack.</p>
+<p>Note that <a href="https://github.com/blockr-org/block.demo" class="external-link"><code>{blockr.demo}</code></a> utilises <a href="https://github.com/blockr-org/masonry" class="external-link"><code>{masonry}</code></a> to provide a better user experience, allowing one to drag and drop blocks within the stack.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="va">filter_block</span>,</span>
+<span>  <span class="va">select_block</span>,</span>
+<span>  <span class="va">arrange_block</span>,</span>
+<span>  <span class="va">group_by_block</span>,</span>
+<span>  <span class="va">summarize_block</span>,</span>
+<span>  <span class="va">cheat_block</span>,</span>
+<span>  <span class="va">plot_block</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">data_block</span><span class="op">)</span></span>
+<span><span class="fu">shinyApp</span><span class="op">(</span></span>
+<span>  ui <span class="op">=</span> <span class="fu">bslib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bslib/man/page.html" class="external-link">page_fluid</a></span><span class="op">(</span></span>
+<span>    <span class="fu">div</span><span class="op">(</span></span>
+<span>      class <span class="op">=</span> <span class="st">"d-flex justify-content-center"</span>,</span>
+<span>      <span class="va">tags</span><span class="op">$</span><span class="fu">button</span><span class="op">(</span></span>
+<span>        type <span class="op">=</span> <span class="st">"button"</span>,</span>
+<span>        <span class="st">"Add a new block"</span>,</span>
+<span>        class <span class="op">=</span> <span class="st">"btn btn-primary"</span>,</span>
+<span>        class <span class="op">=</span> <span class="st">"my-2"</span>,</span>
+<span>        `data-bs-toggle` <span class="op">=</span> <span class="st">"offcanvas"</span>,</span>
+<span>        `data-bs-target` <span class="op">=</span> <span class="st">"#addBlockCanvas"</span>,</span>
+<span>        `aria-controls` <span class="op">=</span> <span class="st">"addBlockCanvas"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="reference/generate_ui.html">generate_ui</a></span><span class="op">(</span><span class="va">stack</span>, id <span class="op">=</span> <span class="st">"mystack"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="reference/off_canvas.html">off_canvas</a></span><span class="op">(</span></span>
+<span>      id <span class="op">=</span> <span class="st">"addBlockCanvas"</span>,</span>
+<span>      title <span class="op">=</span> <span class="st">"My blocks"</span>,</span>
+<span>      position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>      <span class="fu">radioButtons</span><span class="op">(</span></span>
+<span>        <span class="st">"selected_block"</span>,</span>
+<span>        <span class="st">"Choose a block"</span>,</span>
+<span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>          <span class="st">"filter_block"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          <span class="st">"select_block"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>          <span class="st">"arrange block"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>          <span class="st">"group_by block"</span> <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>          <span class="st">"summarize block"</span> <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>          <span class="st">"cheat block"</span> <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>          <span class="st">"plot block"</span> <span class="op">=</span> <span class="fl">7</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        inline <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      <span class="fu">actionButton</span><span class="op">(</span><span class="st">"add"</span>, <span class="fu">icon</span><span class="op">(</span><span class="st">"plus"</span><span class="op">)</span>, `data-bs-dismiss` <span class="op">=</span> <span class="st">"offcanvas"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  server <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">vals</span> <span class="op">&lt;-</span> <span class="fu">reactiveValues</span><span class="op">(</span>new_blocks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="reference/generate_server.html">generate_server</a></span><span class="op">(</span></span>
+<span>      <span class="va">stack</span>,</span>
+<span>      id <span class="op">=</span> <span class="st">"mystack"</span>,</span>
+<span>      new_blocks <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="va">vals</span><span class="op">$</span><span class="va">new_blocks</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="fu">observeEvent</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">add</span>, <span class="op">{</span></span>
+<span>      <span class="va">vals</span><span class="op">$</span><span class="va">new_blocks</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span>      <span class="co"># always append to stack</span></span>
+<span>      <span class="va">loc</span> <span class="op">&lt;-</span> <span class="va">input</span><span class="op">$</span><span class="va">add</span></span>
+<span>      <span class="va">block</span> <span class="op">&lt;-</span> <span class="va">blocks</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">selected_block</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span>
+<span>      <span class="co"># add_block expect the current stack, the block to add and its position</span></span>
+<span>      <span class="co"># (NULL is fine for the position, in that case the block will</span></span>
+<span>      <span class="co"># go at the end)</span></span>
+<span>      <span class="va">vals</span><span class="op">$</span><span class="va">new_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        block <span class="op">=</span> <span class="va">block</span>,</span>
+<span>        position <span class="op">=</span> <span class="va">loc</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Blocks can be removed in any context, but keep in mind that a data block can’t be removed unless it is the last stack block.</p>
+<p>At the moment, we don’t check whether removing a block breaks the pipeline.</p>
+</div>
+<div class="section level3">
+<h3 id="example-with-modules">Example with modules<a class="anchor" aria-label="anchor" href="#example-with-modules"></a>
+</h3>
+<p>The stack can be nested within modules. This is what we do in <a href="https://github.com/blockr-org/block.demo" class="external-link"><code>{blockr.demo}</code></a>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>shiny.fullstacktrace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">stack1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
+<span>  <span class="va">data_block</span>,</span>
+<span>  <span class="va">filter_block</span>,</span>
+<span>  <span class="va">select_block</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">block_ui</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/htmlOutput.html" class="external-link">uiOutput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"block"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">block_server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span></span>
+<span>    <span class="va">id</span>,</span>
+<span>    <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span><span class="op">{</span></span>
+<span>      <span class="va">ns</span> <span class="op">&lt;-</span> <span class="va">session</span><span class="op">$</span><span class="va">ns</span></span>
+<span></span>
+<span>      <span class="va">output</span><span class="op">$</span><span class="va">block</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">renderUI</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>        <span class="fu"><a href="reference/generate_ui.html">generate_ui</a></span><span class="op">(</span><span class="va">stack1</span>, id <span class="op">=</span> <span class="fu">ns</span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>      <span class="fu"><a href="reference/generate_server.html">generate_server</a></span><span class="op">(</span><span class="va">stack1</span>, id <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">req</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>    theme <span class="op">=</span> <span class="fu">bslib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bslib/man/bs_theme.html" class="external-link">bs_theme</a></span><span class="op">(</span><span class="fl">5L</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span>
+<span>      class <span class="op">=</span> <span class="st">"row"</span>,</span>
+<span>      <span class="fu">block_ui</span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">block_server</span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 </div>
   </div>
@@ -111,6 +263,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Nicolas Bennett <br><small class="roles"> Author, maintainer </small>  </li>
+<li>David Granjon <br><small class="roles"> Author </small>  </li>
 <li>Voltron Data <br><small class="roles"> Funder </small>  </li>
 </ul>
 </div>
@@ -129,7 +282,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Nicolas Bennett, Voltron Data.</p>
+<p>Developed by Nicolas Bennett, David Granjon, Voltron Data.</p>
 </div>
 
 <div class="pkgdown">

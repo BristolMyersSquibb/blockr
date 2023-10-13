@@ -52,6 +52,9 @@
 <span><span class="co"># S3 method for block</span></span>
 <span><span class="fu">server_output</span><span class="op">(</span><span class="va">x</span>, <span class="va">result</span>, <span class="va">output</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for plot_block</span></span>
+<span><span class="fu">server_output</span><span class="op">(</span><span class="va">x</span>, <span class="va">result</span>, <span class="va">output</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">server_code</span><span class="op">(</span><span class="va">x</span>, <span class="va">state</span>, <span class="va">output</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for block</span></span>
@@ -63,7 +66,7 @@
 <span><span class="fu">generate_ui</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stack</span></span>
-<span><span class="fu">generate_ui</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">generate_ui</span><span class="op">(</span><span class="va">x</span>, id <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ui_input</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
 <span></span>
@@ -71,6 +74,9 @@
 <span><span class="fu">ui_input</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for select_field</span></span>
+<span><span class="fu">ui_input</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for switch_field</span></span>
 <span><span class="fu">ui_input</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">input_ids</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -104,6 +110,9 @@
 <span><span class="co"># S3 method for select_field</span></span>
 <span><span class="fu">ui_update</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for switch_field</span></span>
+<span><span class="fu">ui_update</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for variable_field</span></span>
 <span><span class="fu">ui_update</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
 <span></span>
@@ -119,6 +128,9 @@
 <span><span class="fu">ui_output</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for block</span></span>
+<span><span class="fu">ui_output</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for plot_block</span></span>
 <span><span class="fu">ui_output</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ui_code</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span><span class="op">)</span></span>
@@ -174,7 +186,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Nicolas Bennett, Voltron Data.</p>
+  <p></p><p>Developed by Nicolas Bennett, David Granjon, Voltron Data.</p>
 </div>
 
 <div class="pkgdown">

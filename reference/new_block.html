@@ -78,6 +78,9 @@ plus some meta data.</p>
 <span><span class="co"># S3 method for transform_block</span></span>
 <span><span class="fu">evalute_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for plot_block</span></span>
+<span><span class="fu">evalute_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">new_data_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">data_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
@@ -85,11 +88,42 @@ plus some meta data.</p>
 <span><span class="co"># S3 method for data_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_filter_block</span><span class="op">(</span><span class="va">data</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1L</span><span class="op">]</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">new_filter_block</span><span class="op">(</span><span class="va">data</span>, columns <span class="op">=</span> <span class="st">"LBTEST"</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">filter_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">new_select_block</span><span class="op">(</span><span class="va">data</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_summarize_block</span><span class="op">(</span><span class="va">data</span>, column <span class="op">=</span> <span class="st">"LBSTRESN"</span>, func <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"sd"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">summarize_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">select_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">arrange_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">group_by_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_plot_block</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  plot_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, point_size <span class="op">=</span> <span class="fl">3</span>, title <span class="op">=</span> <span class="st">"Plot title"</span>, theme</span>
+<span>    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"theme_minimal"</span>, <span class="st">"theme_gray"</span>, <span class="st">"theme_linedraw"</span>, <span class="st">"theme_dark"</span>, <span class="st">"theme_light"</span>,</span>
+<span>    <span class="st">"theme_classic"</span>, <span class="st">"theme_void"</span>, <span class="st">"theme_bw"</span><span class="op">)</span>, x_lab <span class="op">=</span> <span class="st">"X axis label"</span>, y_lab <span class="op">=</span></span>
+<span>    <span class="st">"Y axis label"</span>, errors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">FALSE</span>, ymin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    lines <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">FALSE</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">plot_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_cheat_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">cheat_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for transform_block</span></span>
+<span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for plot_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -98,6 +132,9 @@ plus some meta data.</p>
 <span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for transform_block</span></span>
+<span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for plot_block</span></span>
 <span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for field</span></span>
@@ -121,7 +158,7 @@ of the fields)</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Further (metadata) attributes</p></dd>
+<dd><p>Any other params. TO DO</p></dd>
 
 
 <dt>class</dt>
@@ -136,8 +173,24 @@ of the fields)</p></dd>
 <dd><p>Block input data</p></dd>
 
 
-<dt>columns, values</dt>
-<dd><p>Definition of the equality filter</p></dd>
+<dt>columns</dt>
+<dd><p>Column(s) to select.</p></dd>
+
+
+<dt>values</dt>
+<dd><p>Definition of the equality filter.</p></dd>
+
+
+<dt>column</dt>
+<dd><p>Column to select.</p></dd>
+
+
+<dt>func</dt>
+<dd><p>Summarize function to apply.</p></dd>
+
+
+<dt>plot_opts</dt>
+<dd><p>List containing options for ggplot (color, ...).</p></dd>
 
 
 <dt>session</dt>
@@ -153,7 +206,7 @@ of the fields)</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Nicolas Bennett, Voltron Data.</p>
+  <p></p><p>Developed by Nicolas Bennett, David Granjon, Voltron Data.</p>
 </div>
 
 <div class="pkgdown">
