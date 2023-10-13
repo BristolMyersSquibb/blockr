@@ -296,7 +296,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
     session$userData$stack <- vals$stack
-    # TO DO: fix recursion issue
     for (i in seq_along(x)) {
       vals$blocks[[i]] <- init_block(i, vals)
     }

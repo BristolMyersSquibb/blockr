@@ -188,3 +188,74 @@ convert_block <- function(from = new_select_block, to, data, ...) {
   )
   block
 }
+
+#' Finds dependency
+#'
+#' Find dependency through pattern matching.
+#'
+#' @param tag Tag inside which to find the dependency.
+#' @param dep Dependency regex pattern like
+#' `^bootstrap-5*`.
+#'
+#' @return Boolean. TRUE if dependency found.
+#'
+#' @keywords internal
+find_dep <- function(tag, dep) {
+  deps <- vapply(
+    htmltools::findDependencies(tag), function(dep) {
+      paste(
+        dep[["name"]],
+        dep[["version"]],
+        sep = "-"
+      )
+    }, FUN.VALUE = character(1)
+  )
+
+  length(which(grepl(dep, deps) == TRUE)) > 0
+}
+
+#' Bootstrap 5 offcanvas
+#'
+#' Sidebar like element either a top, bottom, right or left.
+#'
+#' @param id Unique id. Must be triggered by a button
+#' whose `data-bs-target` attributes matches this id.
+#' @param title Title.
+#' @param ... Body content.
+#' @param position Either `start` (left), `top`, `bottom`
+#' or `end` (right).
+#'
+#' @return Boolean. TRUE if dependency found.
+#'
+#' @keywords internal
+off_canvas <- function(
+  id,
+  title,
+  ...,
+  position = c("start", "top", "bottom", "end")
+) {
+
+  position <- match.arg(position)
+  label <- rand_names()
+
+  tags$div(
+    class = sprintf("offcanvas offcanvas-%s", position),
+    tabindex = "-1",
+    id = id,
+    `aria-labelledby` = label,
+    tags$div(
+      class = "offcanvas-header",
+      tags$h5(
+        class = "offcanvas-title",
+        id = label, title
+      ),
+      tags$button(
+        type = "button",
+        class = "btn-close",
+        `data-bs-dismiss` = "offcanvas",
+        `aria-label` = "Close"
+      )
+    ),
+    tags$div(class = "offcanvas-body small", ...)
+  )
+}
