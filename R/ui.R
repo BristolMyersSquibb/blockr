@@ -123,7 +123,7 @@ block_title <- function(block, code_id, output_id, ns) {
         actionLink(
           ns("remove"), 
           icon("trash"),
-          class = "text-decoration-none",
+          class = "text-decoration-none text-danger block-remove",
         ),
         tags$a(
           class = "text-decoration-none block-code-toggle",

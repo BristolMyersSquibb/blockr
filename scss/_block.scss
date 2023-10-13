@@ -19,7 +19,11 @@ html {
     .block-code-toggle {
       color: var(--bs-gray-800);
     }
+    .block-remove {
+      color: var(--bs-success);
+    }
 
+    .block-remove,
     .block-output-toggle,
     .block-edit-toggle,
     .block-code-toggle {
@@ -27,6 +31,7 @@ html {
     }
 
     &:hover{
+      .block-remove,
       .block-output-toggle,
       .block-edit-toggle,
       .block-code-toggle {
