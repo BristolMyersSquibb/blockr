@@ -5,6 +5,7 @@
 \alias{generate_server.block}
 \alias{generate_server.data_block}
 \alias{generate_server.transform_block}
+\alias{generate_server.plot_block}
 \alias{generate_server.stack}
 \title{Server}
 \usage{
@@ -12,18 +13,24 @@ generate_server(x, ...)
 
 \method{generate_server}{block}(x, ...)
 
-\method{generate_server}{data_block}(x, ...)
+\method{generate_server}{data_block}(x, id, ...)
 
-\method{generate_server}{transform_block}(x, in_dat, ...)
+\method{generate_server}{transform_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, ...)
+\method{generate_server}{plot_block}(x, in_dat, id, ...)
+
+\method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
 }
 \arguments{
 \item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
 
 \item{...}{Generic consistency}
 
+\item{id}{Unique module id. Useful when the stack is called as a module.}
+
 \item{in_dat}{Reactive input data}
+
+\item{new_blocks}{For dynamically inserted blocks.}
 }
 \description{
 Generic for server generation

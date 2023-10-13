@@ -14,12 +14,9 @@ generate_ui <- function(x, ...) {
 #' @rdname generate_ui
 #' @export
 generate_ui.block <- function(x, id, ...) {
-
   stopifnot(...length() == 0L)
 
-  ns <- NS(
-    NS(id)(attr(x, "name"))
-  )
+  ns <- NS(id)
 
   fields <- Map(
     ui_input,
@@ -28,60 +25,114 @@ generate_ui.block <- function(x, id, ...) {
     name = names(x)
   )
 
-  block_ui <- div_card(
-    title = h4(
-      attr(x, "name"),
-      actionButton(ns("remove"), icon("trash"), class = "pull-right")
+  data_switch <- NULL
+  if (!inherits(x, "plot_block")) {
+    data_switch <- bslib::input_switch(
+      ns("data_switch"),
+      "Show data?",
+      value = TRUE
     )
-    ,
-    do.call(div, unname(fields)),
-    ui_code(x, ns),
-    ui_output(x, ns)
+    data_switch <- shiny::tagAppendAttributes(
+      data_switch,
+      `data-bs-toggle` = "collapse",
+      href = sprintf("#%s", ns("collapse_data")),
+      `aria-expanded` = "true",
+      `aria-controls` = ns("collapse_data")
+    )
+  }
+
+  shiny::tagList(
+    # Ensure collapse is visible
+    shiny::tags$head(
+      shiny::tags$script(
+        sprintf(
+          "$(function() {
+            const bsCollapse = new bootstrap.Collapse('#%s', {
+              toggle: true
+            });
+          });",
+          ns("collapse_data")
+        )
+      )
+    ),
+    div_card(
+      value = ns("block"),
+      title = shiny::h4(
+        shiny::HTML(
+          sprintf(
+            "Block: %s",
+            strsplit(class(x)[[1]], "_")[[1]][1]
+          )
+        )
+      ),
+      bslib::layout_sidebar(
+        sidebar = shiny::tagList(
+          actionButton(ns("remove"), icon("trash"), class = "pull-right"),
+          data_switch,
+          do.call(shiny::div, unname(fields))
+        ),
+        ui_code(x, ns),
+        shiny::tags$div(
+          class = "collapse",
+          id = ns("collapse_data"),
+          ui_output(x, ns),
+          # we should just grab the block type
+          # but we cannot predict the order of the classes
+          # we should also pass it somewhere else but bslib seems
+          # to strip everything
+          `data-block-type` = paste0(class(x), collapse = ","),
+        )
+      )
+    )
   )
-  block_ui$attribs$id <- ns("block")
-  block_ui
 }
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, ...) {
-
+generate_ui.stack <- function(x, id = NULL, ...) {
   stopifnot(...length() == 0L)
 
-  ns <- NS(attr(x, "name"))
+  id <- if (is.null(id)) attr(x, "name") else id
 
-  tagList(
+  ns <- NS(id)
+
+  div(
+    class = "stack",
     tags$script(
       HTML(
         sprintf(
-          "$(document).on(
-            'shiny:inputchanged',
-            function(event) {
-              console.log(event.name);
-              if (event.name.match('(last_changed|clientdata)') === null) {
-                Shiny.setInputValue(
-                  '%s',
-                  {
-                    name: event.name,
-                    value: event.value,
-                    type: event.inputType,
-                    binding: event.binding !== null ? event.binding.name : ''
-                  }
-                );
-              }
-          });",
+          "$(function() {
+            $(document).on(
+              'shiny:inputchanged',
+              function(event) {
+                if (event.name.match('(last_changed|clientdata)') === null) {
+                  Shiny.setInputValue(
+                    '%s',
+                    {
+                      name: event.name,
+                      value: event.value,
+                      type: event.inputType,
+                      binding: event.binding !== null ? event.binding.name : ''
+                    }
+                  );
+                }
+            });
+          });
+          ",
           ns("last_changed")
         )
       )
     ),
     do.call(
-      fluidPage,
+      bslib::accordion,
       c(
-        lapply(x, generate_ui, id = attr(x, "name")),
-        title = attr(x, "name")
+        lapply(x, function(b) {
+          generate_ui(b, id = ns(attr(b, "name")))
+        }),
+        open = TRUE,
+        id = ns("stack")
       )
-    ),
-    actionButton(ns("add"), icon("plus"))
+    )
   )
 }
 
@@ -104,6 +155,12 @@ ui_input.select_field <- function(x, id, name) {
   selectInput(
     input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple")
   )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.switch_field <- function(x, id, name) {
+  bslib::input_switch(input_ids(x, id), name, value(x))
 }
 
 #' @rdname generate_ui
@@ -202,6 +259,12 @@ ui_update.select_field <- function(x, session, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_update.switch_field <- function(x, session, id, name) {
+  bslib::update_switch(input_ids(x, id), name, value(x), session)
+}
+
+#' @rdname generate_ui
+#' @export
 ui_update.variable_field <- function(x, session, id, name) {
 
   ns <- session$ns
@@ -267,23 +330,24 @@ ui_update.list_field <- function(x, session, id, name) {
   )
 }
 
-div_card <- function(..., title = NULL, footer = NULL) {
-  div(
-    class = "panel panel-default",
-    style = "margin: 10px",
-    if (not_null(title)) {
-      div(title, class = "panel-heading")
-    },
-    div(
-      class = "panel-body",
-      ...
-    ),
-    if (not_null(footer)) {
-      div(footer, class = "panel-footer")
-    }
+#' Custom card container
+#' @keywords internal
+div_card <- function(..., title = NULL, value) {
+  panel_tag <- bslib::accordion_panel(
+    title = if (not_null(title)) title,
+    value = value,
+    ...
   )
+  tagAppendAttributes(panel_tag, class = "block")
 }
 
+#' Custom code container
+#' @keywords internal
+custom_verbatim_output <- function(id) {
+  tmp <- shiny::verbatimTextOutput(id)
+  tmp$attribs$style <- "max-height: 400px; overflow-y: scroll"
+  tmp
+}
 #' @param ns Output namespace
 #' @rdname generate_ui
 #' @export
@@ -294,7 +358,13 @@ ui_output <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 ui_output.block <- function(x, ns) {
-  verbatimTextOutput(ns("output"))
+  DT::dataTableOutput(ns("res"))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_output.plot_block <- function(x, ns) {
+  shiny::plotOutput(ns("plot"))
 }
 
 #' @rdname generate_ui
@@ -306,5 +376,5 @@ ui_code <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 ui_code.block <- function(x, ns) {
-  verbatimTextOutput(ns("code"))
+  custom_verbatim_output(ns("code"))
 }

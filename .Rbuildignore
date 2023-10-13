@@ -1,3 +1,6 @@
 ^LICENSE\.md$
 ^README\.(Rmd|html)$
 ^\.github$
+^\.lintr$
+^.*\.Rproj$
+^\.Rproj\.user$

@@ -12,15 +12,28 @@
 \alias{evalute_block}
 \alias{evalute_block.data_block}
 \alias{evalute_block.transform_block}
+\alias{evalute_block.plot_block}
 \alias{new_data_block}
 \alias{data_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
+\alias{new_select_block}
+\alias{new_summarize_block}
+\alias{summarize_block}
+\alias{select_block}
+\alias{arrange_block}
+\alias{group_by_block}
+\alias{new_plot_block}
+\alias{plot_block}
+\alias{new_cheat_block}
+\alias{cheat_block}
 \alias{initialize_block.transform_block}
+\alias{initialize_block.plot_block}
 \alias{update_fields}
 \alias{update_fields.data_block}
 \alias{update_fields.transform_block}
+\alias{update_fields.plot_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -46,23 +59,57 @@ evalute_block(x, ...)
 
 \method{evalute_block}{transform_block}(x, data, ...)
 
+\method{evalute_block}{plot_block}(x, data, ...)
+
 new_data_block(...)
 
 data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
+new_filter_block(data, columns = "LBTEST", values = character(), ...)
 
 filter_block(data, ...)
 
+new_select_block(data, columns = colnames(data)[1], ...)
+
+new_summarize_block(data, column = "LBSTRESN", func = c("mean", "sd"), ...)
+
+summarize_block(data, ...)
+
+select_block(data, ...)
+
+arrange_block(data, ...)
+
+group_by_block(data, ...)
+
+new_plot_block(
+  data,
+  plot_opts = list(colors = c("blue", "red"), point_size = 3, title = "Plot title", theme
+    = c("theme_minimal", "theme_gray", "theme_linedraw", "theme_dark", "theme_light",
+    "theme_classic", "theme_void", "theme_bw"), x_lab = "X axis label", y_lab =
+    "Y axis label", errors = list(show = FALSE, ymin = character(), ymax = character()),
+    lines = list(show = FALSE, group = character(), color = character())),
+  ...
+)
+
+plot_block(data, ...)
+
+new_cheat_block(data, ...)
+
+cheat_block(data, ...)
+
 \method{initialize_block}{transform_block}(x, data, ...)
+
+\method{initialize_block}{plot_block}(x, data, ...)
 
 update_fields(x, ...)
 
 \method{update_fields}{data_block}(x, session, ...)
 
 \method{update_fields}{transform_block}(x, session, data, ...)
+
+\method{update_fields}{plot_block}(x, session, data, ...)
 
 \method{is_initialized}{field}(x)
 }
@@ -75,7 +122,7 @@ of the fields)}
 
 \item{name}{Block name}
 
-\item{...}{Further (metadata) attributes}
+\item{...}{Any other params. TO DO}
 
 \item{class}{Block subclass}
 
@@ -83,7 +130,15 @@ of the fields)}
 
 \item{data}{Block input data}
 
-\item{columns, values}{Definition of the equality filter}
+\item{columns}{Column(s) to select.}
+
+\item{values}{Definition of the equality filter.}
+
+\item{column}{Column to select.}
+
+\item{func}{Summarize function to apply.}
+
+\item{plot_opts}{List containing options for ggplot (color, ...).}
 
 \item{session}{Shiny session}
 }

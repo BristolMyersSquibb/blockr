@@ -3,6 +3,7 @@
 \name{server_output}
 \alias{server_output}
 \alias{server_output.block}
+\alias{server_output.plot_block}
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
@@ -11,6 +12,7 @@
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
+\alias{ui_input.switch_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -22,12 +24,14 @@
 \alias{ui_update}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
+\alias{ui_update.switch_field}
 \alias{ui_update.variable_field}
 \alias{ui_update.range_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
 \alias{ui_output}
 \alias{ui_output.block}
+\alias{ui_output.plot_block}
 \alias{ui_code}
 \alias{ui_code.block}
 \title{UI}
@@ -35,6 +39,8 @@
 server_output(x, result, output)
 
 \method{server_output}{block}(x, result, output)
+
+\method{server_output}{plot_block}(x, result, output)
 
 server_code(x, state, output)
 
@@ -44,13 +50,15 @@ generate_ui(x, ...)
 
 \method{generate_ui}{block}(x, id, ...)
 
-\method{generate_ui}{stack}(x, ...)
+\method{generate_ui}{stack}(x, id = NULL, ...)
 
 ui_input(x, id, name)
 
 \method{ui_input}{string_field}(x, id, name)
 
 \method{ui_input}{select_field}(x, id, name)
+
+\method{ui_input}{switch_field}(x, id, name)
 
 input_ids(x, ...)
 
@@ -74,6 +82,8 @@ ui_update(x, session, id, name)
 
 \method{ui_update}{select_field}(x, session, id, name)
 
+\method{ui_update}{switch_field}(x, session, id, name)
+
 \method{ui_update}{variable_field}(x, session, id, name)
 
 \method{ui_update}{range_field}(x, session, id, name)
@@ -85,6 +95,8 @@ ui_update(x, session, id, name)
 ui_output(x, ns)
 
 \method{ui_output}{block}(x, ns)
+
+\method{ui_output}{plot_block}(x, ns)
 
 ui_code(x, ns)
 

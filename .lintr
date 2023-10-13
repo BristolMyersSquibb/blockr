@@ -1,0 +1,7 @@
+linters: linters_with_defaults(
+  object_name_linter = NULL, # Because we use S3 and end up with is_initialized.field
+  object_usage_linter = NULL # When code is WIP this is annoying ...
+  )
+exclusions: list(
+    "inst/sandbox"
+  )

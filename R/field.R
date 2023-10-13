@@ -11,7 +11,6 @@
 #' @export
 new_field <- function(value, ..., type = c("literal", "name"),
                       class = character()) {
-
   x <- list(value = value, ...)
 
   stopifnot(is.list(x), length(unique(names(x))) == length(x))
@@ -44,11 +43,18 @@ update_field <- function(x, new, env = list()) {
 #' @rdname new_field
 #' @export
 update_field.field <- function(x, new, env = list()) {
-
   x <- eval_set_field_value(x, env)
 
-  if (is_truthy(new)) {
+  # Boolean need a special care because
+  # when new is FALSE, then is_truthy()
+  # will always be FALSE and the value
+  # never updated ...
+  if (inherits(x, "switch_field")) {
     value(x) <- new
+  } else {
+    if (is_truthy(new)) {
+      value(x) <- new
+    }
   }
 
   validate_field(x)
@@ -85,7 +91,6 @@ is_field <- function(x) inherits(x, "field")
 #' @rdname new_field
 #' @export
 validate_field.string_field <- function(x) {
-
   val <- value(x)
 
   if (!is.character(val) || length(val) != 1L) {
@@ -108,7 +113,6 @@ string_field <- function(...) validate_field(new_string_field(...))
 #' @rdname new_field
 #' @export
 validate_field.select_field <- function(x) {
-
   val <- value(x)
   opt <- value(x, "choices")
 
@@ -140,11 +144,32 @@ new_select_field <- function(value = character(), choices = character(),
 #' @export
 select_field <- function(...) validate_field(new_select_field(...))
 
+#' @rdname new_field
+#' @export
+new_switch_field <- function(value = FALSE, ...) {
+  new_field(value, ..., class = "switch_field")
+}
+
+#' @rdname new_field
+#' @export
+switch_field <- function(...) validate_field(new_switch_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.switch_field <- function(x) {
+
+  val <- value(x)
+
+  if (length(val) == 0) {
+    value(x) <- FALSE
+  }
+  x
+}
+
 #' @param name Field component name
 #' @rdname new_field
 #' @export
 value <- function(x, name = "value") {
-
   stopifnot(is_field(x))
 
   res <- x[[name]]

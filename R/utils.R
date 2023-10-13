@@ -15,7 +15,6 @@ NULL
 
 rand_names <- function(old_names = character(0L), n = 1L, length = 15L,
                        chars = letters, prefix = "", suffix = "") {
-
   stopifnot(
     is.null(old_names) || is.character(old_names),
     is_count(n), is_count(length),
@@ -27,8 +26,8 @@ rand_names <- function(old_names = character(0L), n = 1L, length = 15L,
   length <- length - (nchar(prefix) + nchar(suffix))
 
   repeat {
-
-    res <- replicate(n,
+    res <- replicate(
+      n,
       paste0(
         prefix,
         paste(sample(chars, length, replace = TRUE), collapse = ""),
@@ -48,6 +47,7 @@ chr_ply <- function(x, fun, ..., length = 1L, use_names = FALSE) {
   vapply(x, fun, character(length), ..., USE.NAMES = use_names)
 }
 
+#' @keywords internal
 lgl_ply <- function(x, fun, ..., length = 1L, use_names = FALSE) {
   vapply(x, fun, logical(length), ..., USE.NAMES = use_names)
 }
@@ -89,7 +89,6 @@ is_intish <- function(x) {
 }
 
 is_count <- function(x, include_zero = TRUE) {
-
   if (length(x) != 1) {
     return(FALSE)
   }
@@ -135,11 +134,9 @@ splice_args <- function(expr, ...) {
 }
 
 type_trans <- function(x) {
-
   res <- value(x)
 
-  switch(
-    attr(x, "type"),
+  switch(attr(x, "type"),
     literal = res,
     name = as.name(res)
   )
@@ -170,4 +167,70 @@ is_truthy <- function(x) {
 
 unlst <- function(x, recursive = FALSE, use_names = FALSE) {
   unlist(x, recursive = recursive, use.names = use_names)
+}
+
+#' Convert block from a type to another
+#'
+#' For instance, you can convert from a select block to an
+#' arrange block or group_by which have similar structure.
+#'
+#' @param from Block function to start from like new_select_block.
+#' @param to dplyr verb (function, not a string!) such as arrange, group_by...
+#' @param data Necessary to \link{initialize_block}.
+#' @param ... Necessary to \link{initialize_block}.
+#'
+#' @keywords internal
+convert_block <- function(from = new_select_block, to, data, ...) {
+  block <- initialize_block(from(data, ...), data)
+  class(block)[[1]] <- sprintf("%s_block", deparse(substitute(to)))
+  attr(block, "expr") <- substitute(
+    to(.(column))
+  )
+  block
+}
+
+#' Bootstrap 5 offcanvas
+#'
+#' Sidebar like element either a top, bottom, right or left.
+#'
+#' @param id Unique id. Must be triggered by a button
+#' whose `data-bs-target` attributes matches this id.
+#' @param title Title.
+#' @param ... Body content.
+#' @param position Either `start` (left), `top`, `bottom`
+#' or `end` (right).
+#'
+#' @return Boolean. TRUE if dependency found.
+#'
+#' @keywords internal
+off_canvas <- function(
+  id,
+  title,
+  ...,
+  position = c("start", "top", "bottom", "end")
+) {
+
+  position <- match.arg(position)
+  label <- rand_names()
+
+  tags$div(
+    class = sprintf("offcanvas offcanvas-%s", position),
+    tabindex = "-1",
+    id = id,
+    `aria-labelledby` = label,
+    tags$div(
+      class = "offcanvas-header",
+      tags$h5(
+        class = "offcanvas-title",
+        id = label, title
+      ),
+      tags$button(
+        type = "button",
+        class = "btn-close",
+        `data-bs-dismiss` = "offcanvas",
+        `aria-label` = "Close"
+      )
+    ),
+    tags$div(class = "offcanvas-body small", ...)
+  )
 }

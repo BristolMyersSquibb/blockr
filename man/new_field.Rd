@@ -14,6 +14,9 @@
 \alias{validate_field.select_field}
 \alias{new_select_field}
 \alias{select_field}
+\alias{new_switch_field}
+\alias{switch_field}
+\alias{validate_field.switch_field}
 \alias{value}
 \alias{values}
 \alias{value<-}
@@ -61,6 +64,12 @@ new_select_field(
 )
 
 select_field(...)
+
+new_switch_field(value = FALSE, ...)
+
+switch_field(...)
+
+\method{validate_field}{switch_field}(x)
 
 value(x, name = "value")
 

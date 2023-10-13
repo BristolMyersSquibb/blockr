@@ -12,7 +12,7 @@ test_that("data blocks", {
   ui <- generate_ui(block, "foo")
 
   expect_type(ui, "list")
-  expect_s3_class(ui, "shiny.tag")
+  expect_s3_class(ui, "shiny.tag.list")
 })
 
 test_that("filter blocks", {
