@@ -80,7 +80,7 @@ generate_ui.block <- function(x, id, ...) {
           # but we cannot predict the order of the classes
           # we should also pass it somewhere else but bslib seems
           # to strip everything
-          `data-block-type` = paste0(class(x), collapse=","),
+          `data-block-type` = paste0(class(x), collapse = ","),
         )
       )
     )
