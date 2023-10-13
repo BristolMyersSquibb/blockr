@@ -189,31 +189,6 @@ convert_block <- function(from = new_select_block, to, data, ...) {
   block
 }
 
-#' Finds dependency
-#'
-#' Find dependency through pattern matching.
-#'
-#' @param tag Tag inside which to find the dependency.
-#' @param dep Dependency regex pattern like
-#' `^bootstrap-5*`.
-#'
-#' @return Boolean. TRUE if dependency found.
-#'
-#' @keywords internal
-find_dep <- function(tag, dep) {
-  deps <- vapply(
-    htmltools::findDependencies(tag), function(dep) {
-      paste(
-        dep[["name"]],
-        dep[["version"]],
-        sep = "-"
-      )
-    }, FUN.VALUE = character(1)
-  )
-
-  length(which(grepl(dep, deps) == TRUE)) > 0
-}
-
 #' Bootstrap 5 offcanvas
 #'
 #' Sidebar like element either a top, bottom, right or left.
