@@ -224,8 +224,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             )
           },
           panel = generate_ui(
-            vals$stack[[length(vals$stack)]],
-            id = session$ns(attr(vals$stack[[length(vals$stack)]], "name"))
+            vals$stack[[p]],
+            id = session$ns(attr(vals$stack[[p]], "name"))
           )
         )
         # Necessary to communicate with downstream modules
