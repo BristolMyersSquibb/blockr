@@ -41,6 +41,8 @@ generate_ui.block <- function(x, id, ...) {
     )
   }
 
+  print(paste0(class(x), collapse=","))
+
   shiny::tagList(
     # Ensure collapse is visible
     shiny::tags$head(
@@ -75,7 +77,12 @@ generate_ui.block <- function(x, id, ...) {
         shiny::tags$div(
           class = "collapse",
           id = ns("collapse_data"),
-          ui_output(x, ns)
+          ui_output(x, ns),
+          # we should just grab the block type
+          # but we cannot predict the order of the classes
+          # we should also pass it somewhere else but bslib seems
+          # to strip everything
+          `data-block-type` = paste0(class(x), collapse=","),
         )
       )
     )
