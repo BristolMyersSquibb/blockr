@@ -141,7 +141,6 @@ shinyApp(
     )
 
     observeEvent(input$add, {
-      vals$new_blocks <- NULL
       # always append to stack
       loc <- input$add
       block <- blocks[[as.numeric(input$selected_block)]]
