@@ -14,10 +14,10 @@ new_stack <- function(..., name = rand_names()) {
   blocks <- vector("list", length(ctors))
 
   blocks[[1L]] <- do.call(ctors[[1L]], list())
-  temp <- evalute_block(blocks[[1L]])
+  temp <- evaluate_block(blocks[[1L]])
 
   for (i in seq_along(ctors)[-1L]) {
-    temp <- evalute_block(
+    temp <- evaluate_block(
       blocks[[i]] <- do.call(ctors[[i]], list(temp)),
       data = temp
     )
@@ -67,11 +67,11 @@ add_block <- function(stack, block, position = NULL) {
 
   # get data from the previous block
   if (length(stack) == 1) {
-    data <-  evalute_block(stack[[position]])
+    data <-  evaluate_block(stack[[position]])
   } else {
-    data <- evalute_block(stack[[1]])
+    data <- evaluate_block(stack[[1]])
     for (i in seq_along(stack)[-1L]) {
-      data <- evalute_block(
+      data <- evaluate_block(
         do.call(class(stack[[i]])[[1]], list(data)),
         data = data
       )

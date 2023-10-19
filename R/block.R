@@ -77,13 +77,13 @@ generate_code.transform_block <- function(x) {
 
 #' @rdname new_block
 #' @export
-evalute_block <- function(x, ...) {
-  UseMethod("evalute_block")
+evaluate_block <- function(x, ...) {
+  UseMethod("evaluate_block")
 }
 
 #' @rdname new_block
 #' @export
-evalute_block.data_block <- function(x, ...) {
+evaluate_block.data_block <- function(x, ...) {
   stopifnot(...length() == 0L)
   eval(generate_code(x), new.env())
 }
@@ -91,7 +91,7 @@ evalute_block.data_block <- function(x, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evalute_block.transform_block <- function(x, data, ...) {
+evaluate_block.transform_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
@@ -102,7 +102,7 @@ evalute_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evalute_block.plot_block <- function(x, data, ...) {
+evaluate_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(generate_code(x), list(data = data))
 }

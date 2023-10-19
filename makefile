@@ -4,10 +4,10 @@ check: document
 document: bundle
 	Rscript -e "devtools::document()"
 
-bundle:
+bundle: sass
 	Rscript -e "packer::bundle_prod()"
 
-bundle_dev:
+bundle_dev: sass
 	Rscript -e "packer::bundle_dev()"
 
 install: check
@@ -16,6 +16,6 @@ install: check
 sass:
 	Rscript dev/sass.R
 
-run: bundle_dev sass
+run: bundle_dev 
 	Rscript test.R
 

@@ -6,7 +6,7 @@ $(() => {
 });
 
 const toggler = (item) => {
-  $(`.stack-${item}-toggle`).each((i, btn) => {
+  $(`.stack-${item}-toggle`).each((_, btn) => {
     // already has a listener
     if (btn.getAttribute("listener") == "true") {
       return;
@@ -16,7 +16,7 @@ const toggler = (item) => {
       $(btn).toggleClass("showing");
 
       $(event.target).closest(".stack").find(`.block-${item}`).each(
-        (j, code) => {
+        (_, code) => {
           const collapse = bootstrap.Collapse.getOrCreateInstance(code);
 
           if (!$(btn).hasClass("showing")) {
@@ -37,7 +37,7 @@ const collapseAll = (stack) => {
 };
 
 const collapseStackItem = (stack, item) => {
-  let blocks = $(stack).find(`.block-${item}`);
+  const blocks = $(stack).find(`.block-${item}`);
   blocks.each(
     (j, code) => {
       if (j == (blocks.length - 1) && item == "output") {
@@ -60,7 +60,7 @@ const editor = () => {
       $stack.find(".block").find(".card").hide();
       $stack.find(`.stack-code-toggle`).hide();
       $stack.find(`.stack-output-toggle`).hide();
-      $stack.find(".card-body").toggleClass("p-0");
+      $stack.find(".card-body").toggleClass("p-1");
       $stack.find(".block").toggleClass("mb-2");
       collapseAll($stack);
       return;
@@ -69,7 +69,7 @@ const editor = () => {
     $stack.find(".block").find(".card").show();
     $stack.find(`.stack-code-toggle`).show();
     $stack.find(`.stack-output-toggle`).show();
-    $stack.find(".card-body").toggleClass("p-0");
+    $stack.find(".card-body").toggleClass("p-1");
     $stack.find(".block").toggleClass("mb-2");
   });
 };

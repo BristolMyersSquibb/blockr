@@ -9,10 +9,10 @@
 \alias{generate_code}
 \alias{generate_code.block}
 \alias{generate_code.transform_block}
-\alias{evalute_block}
-\alias{evalute_block.data_block}
-\alias{evalute_block.transform_block}
-\alias{evalute_block.plot_block}
+\alias{evaluate_block}
+\alias{evaluate_block.data_block}
+\alias{evaluate_block.transform_block}
+\alias{evaluate_block.plot_block}
 \alias{new_data_block}
 \alias{data_block}
 \alias{initialize_block.data_block}
@@ -53,13 +53,13 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
-evalute_block(x, ...)
+evaluate_block(x, ...)
 
-\method{evalute_block}{data_block}(x, ...)
+\method{evaluate_block}{data_block}(x, ...)
 
-\method{evalute_block}{transform_block}(x, data, ...)
+\method{evaluate_block}{transform_block}(x, data, ...)
 
-\method{evalute_block}{plot_block}(x, data, ...)
+\method{evaluate_block}{plot_block}(x, data, ...)
 
 new_data_block(...)
 

@@ -49,8 +49,9 @@ generate_ui.block <- function(x, id, ...) {
   div(
     class = "block",
     `data-block-type` = paste0(class(x), collapse = ","),
+    `data-value` = ns("block"),
     shiny::div(
-      class = "card shadow-sm p-2 hidden mb-1",
+      class = "card shadow-sm p-2 hidden mb-1 border",
       shiny::div(
         class = "card-body p-1",
         header,
@@ -82,11 +83,11 @@ generate_ui.stack <- function(x, id = NULL, ...) {
 
   tagList(
     shiny::div(
-      class = "card stack",
+      class = "card stack border",
+      id = id,
       stack_header(x),
       shiny::div(
-        class = "card-body p-0",
-        id = id,
+        class = "card-body p-1",
         lapply(x, \(b) {
           generate_ui(b, id = ns(attr(b, "name")))
         })

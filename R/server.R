@@ -48,7 +48,7 @@ generate_server.data_block <- function(x, id, ...) {
       )
 
       out_dat <- reactive(
-        evalute_block(blk())
+        evaluate_block(blk())
       )
 
       output$res <- server_output(x, out_dat, output)
@@ -110,7 +110,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       )
 
       out_dat <- reactive(
-        evalute_block(blk(), data = in_dat())
+        evaluate_block(blk(), data = in_dat())
       )
 
       output$res <- server_output(x, out_dat, output)
@@ -161,7 +161,7 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
       )
 
       out_dat <- shiny::reactive({
-        evalute_block(blk(), data = in_dat())
+        evaluate_block(blk(), data = in_dat())
       })
 
       output$plot <- server_output(x, out_dat, output)
@@ -213,17 +213,10 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         vals$blocks[[p]] <- init_block(p, vals)
 
         # Insert UI
-        bslib::accordion_panel_insert(
-          id = "stack",
-          position = "after",
-          target = if (!is.null(position)) {
-            sprintf(
-              "%s%s-block",
-              session$ns(""),
-              attr(vals$stack[[position]], "name")
-            )
-          },
-          panel = generate_ui(
+        insertUI(
+          selector = sprintf("[data-value='%s-block']", session$ns(attr(vals$stack[[p-1]], "name"))),
+          where = "afterEnd",
+          generate_ui(
             vals$stack[[p]],
             id = session$ns(attr(vals$stack[[p]], "name"))
           )
