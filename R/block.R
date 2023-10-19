@@ -11,11 +11,14 @@
 #' of the fields)
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
+#' @param layout Callback function accepting one argument: the list of fields to layout
+#'  and returns one or more UI tag(s).
 #'
 #' @export
 #' @import blockr.data
 new_block <- function(fields, expr, name = rand_names(), ...,
-                      class = character()) {
+                      class = character(),
+                      layout = default_layout_fields) {
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
     is.language(expr),
@@ -24,6 +27,7 @@ new_block <- function(fields, expr, name = rand_names(), ...,
 
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
+    layout = layout,
     class = c(class, "block")
   )
 }
@@ -448,7 +452,8 @@ new_plot_block <- function(
         )
     }),
     ...,
-    class = c("plot_block")
+    class = c("plot_block"),
+    layout = plot_layout_fields
   )
 }
 

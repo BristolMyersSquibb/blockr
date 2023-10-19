@@ -38,6 +38,8 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
   if(.hidden)
     inputs_hidden <- "hidden"
 
+  layout <- attr(x, "layout")
+
   div(
     class = block_class,
     `data-block-type` = paste0(class(x), collapse = ","),
@@ -49,7 +51,7 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
         div(
           class = sprintf("block-inputs %s", inputs_hidden),
           header,
-          do.call(shiny::div, unname(fields)),
+          layout(fields)
         ),
         div(
           class = "collapse block-code",
