@@ -191,8 +191,12 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-      vals <- reactiveValues(stack = x, blocks = vector("list", length(x)))
+      vals <- reactiveValues(stack = x, blocks = vector("list", length(x)), remove = FALSE)
       init_blocks(x, vals, session)
+
+      observeEvent(input$remove, {
+        vals$remove <- TRUE
+      })
 
       observeEvent({
         req(new_blocks)
@@ -278,7 +282,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       })
 
       vals
-
     }
   )
 }

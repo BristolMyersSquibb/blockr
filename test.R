@@ -14,7 +14,11 @@ ui <- fluidPage(
 )
 
 server <- function(input, output){
-  generate_server(stack)
+  x <- generate_server(stack)
+
+  observe({
+    print(x$remove)
+  })
 }
 
 shinyApp(ui, server, options = list(port = 3000L))

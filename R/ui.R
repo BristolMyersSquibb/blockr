@@ -191,6 +191,12 @@ stack_header <- function(stack, ns) {
           class = "text-decoration-none stack-output-toggle hidden",
           iconOutput()
         ),
+        actionLink(
+          ns("remove"),
+          "",
+          class = "text-decoration-none stack-trash text-muted",
+          iconTrash()
+        ),
         tags$a(
           class = "text-decoration-none stack-edit-toggle",
           iconEdit()
@@ -456,4 +462,9 @@ iconEdit <- function(){
 #' @importFrom shiny icon
 iconOutput <- function(){
   icon("arrow-right-from-bracket")
+}
+
+#' @importFrom shiny icon
+iconTrash <- function(){
+  icon("trash")
 }
