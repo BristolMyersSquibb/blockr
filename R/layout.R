@@ -12,7 +12,7 @@ plot_layout_fields <- function(fields, ...) {
       ),
       div(
         class = "col-md-3",
-        fields$x_var
+        fields$y_var
       ),
       div(
         class = "col-md-3",
