@@ -25,22 +25,6 @@ generate_ui.block <- function(x, id, ...) {
     name = names(x)
   )
 
-  data_switch <- NULL
-  if (!inherits(x, "plot_block")) {
-    data_switch <- bslib::input_switch(
-      ns("data_switch"),
-      "Show data?",
-      value = TRUE
-    )
-    data_switch <- shiny::tagAppendAttributes(
-      data_switch,
-      `data-bs-toggle` = "collapse",
-      href = sprintf("#%s", ns("collapse_data")),
-      `aria-expanded` = "true",
-      `aria-controls` = ns("collapse_data")
-    )
-  }
-
   code_id <- ns("codeCollapse")
   output_id <- ns("outputCollapse")
 
@@ -55,7 +39,6 @@ generate_ui.block <- function(x, id, ...) {
       shiny::div(
         class = "card-body p-1",
         header,
-        data_switch,
         do.call(shiny::div, unname(fields)),
         div(
           class = "collapse block-code",
