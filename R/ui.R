@@ -194,7 +194,7 @@ stack_header <- function(stack, ns) {
         actionLink(
           ns("remove"),
           "",
-          class = "text-decoration-none stack-trash text-muted",
+          class = "text-decoration-none stack-remove text-muted",
           iconTrash()
         ),
         tags$a(
