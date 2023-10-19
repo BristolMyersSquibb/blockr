@@ -6,5 +6,5 @@ Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
   setTimeout(() => {
     remove(stack);
     collapse(stack);
-  }, 500);
+  }, 750);
 });
