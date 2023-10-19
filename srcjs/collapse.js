@@ -1,9 +1,9 @@
-$(() => {
+export const collapse = (stack) => {
   toggler("code");
   toggler("output");
-  editor();
-  showLastOutputs();
-});
+  editor(stack);
+  showLastOutputs(stack);
+};
 
 const toggler = (item) => {
   $(`.stack-${item}-toggle`).each((_, btn) => {
@@ -31,21 +31,8 @@ const toggler = (item) => {
   });
 };
 
-const collapseStackItem = (stack, item) => {
-  const blocks = $(stack).find(`.block-${item}`);
-  blocks.each(
-    (j, code) => {
-      if (j == (blocks.length - 1) && item == "output") {
-        bootstrap.Collapse.getOrCreateInstance(code, { toggle: false }).show();
-        return;
-      }
-      bootstrap.Collapse.getOrCreateInstance(code, { toggle: false }).hide();
-    },
-  );
-};
-
-const editor = () => {
-  $(".stack-edit-toggle").on("click", (event) => {
+const editor = (stack) => {
+  $(stack).find(".stack-edit-toggle").on("click", (event) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
 
@@ -88,8 +75,8 @@ const showLastOutput = (el) => {
     .show();
 };
 
-const showLastOutputs = () => {
-  $(".stack").each((_, el) => {
+const showLastOutputs = (stack) => {
+  $(stack).each((_, el) => {
     showLastOutput(el);
   });
 };

@@ -4,7 +4,7 @@ export const copyCode = (el) => {
 };
 
 $(() => {
-  $(".block-copy-code").each((i, btn) => {
+  $(".block-copy-code").each((_, btn) => {
     // already has a listener
     if (btn.getAttribute("listener") == "true") {
       return;
