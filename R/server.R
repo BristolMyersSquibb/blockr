@@ -263,10 +263,9 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         } else {
           if (session$userData$is_cleaned()) {
             message(sprintf("REMOVING BLOCK %s", to_remove()))
-            bslib::accordion_panel_remove(
-              id = "stack",
-              target = sprintf(
-                "%s%s-block",
+            removeUI(
+              selector = sprintf(
+                "[data-value='%s%s-block']",
                 session$ns(""),
                 attr(vals$stack[[to_remove()]], "name")
               )
