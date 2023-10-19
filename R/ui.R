@@ -31,26 +31,29 @@ generate_ui.block <- function(x, id, ...) {
   header <- block_title(x, code_id, output_id, ns)
 
   div(
-    class = "block",
+    class = "block hidden",
     `data-block-type` = paste0(class(x), collapse = ","),
     `data-value` = ns("block"),
     shiny::div(
-      class = "card shadow-sm p-2 hidden mb-1 border",
+      class = "card shadow-sm p-2 mb-1 border",
       shiny::div(
         class = "card-body p-1",
-        header,
-        do.call(shiny::div, unname(fields)),
+        div(
+          class = "hidden block-inputs",
+          header,
+          do.call(shiny::div, unname(fields)),
+        ),
         div(
           class = "collapse block-code",
           id = code_id,
           uiCode(x, ns)
+        ),
+        div(
+          class = "collapse block-output",
+          id = output_id,
+          uiOutput(x, ns)
         )
       )
-    ),
-    div(
-      class = "collapse block-output",
-      id = output_id,
-      uiOutput(x, ns)
     )
   )
 }
@@ -61,6 +64,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
   stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
+  body_id <- sprintf("%s-body", id)
 
   ns <- NS(id)
 
@@ -93,15 +97,16 @@ generate_ui.stack <- function(x, id = NULL, ...) {
     shiny::div(
       class = "card stack border",
       id = id,
-      stack_header(x),
+      stack_header(x, ns),
       shiny::div(
         class = "card-body p-1",
+        id = body_id,
         lapply(x, \(b) {
           generate_ui(b, id = ns(attr(b, "name")))
         })
       )
     ),
-    sortable::sortable_js(id),
+    sortable::sortable_js(body_id, options = sortable::sortable_options(draggable = ".block")),
     blockrDependencies(),
     htmltools::singleton(
       tags$head(
@@ -125,7 +130,10 @@ block_title <- function(block, code_id, output_id, ns) {
     div(
       class = "d-flex",
       if (not_null(title)) {
-        div(class = "flex-grow-1", shiny::p(title, class = "fw-bold"))
+        div(
+          class = "flex-grow-1", 
+          shiny::p(title, class = "fw-bold")
+        )
       },
       div(
         class = "flex-shrink-1",
@@ -156,7 +164,7 @@ block_title <- function(block, code_id, output_id, ns) {
 }
 
 #' @importFrom shiny icon tags div
-stack_header <- function(stack) {
+stack_header <- function(stack, ns) {
   title <- attr(stack, "name")
 
   div(
@@ -164,7 +172,14 @@ stack_header <- function(stack) {
     div(
       class = "d-flex",
       if (not_null(title)) {
-        div(class = "flex-grow-1", shiny::h6(title))
+        div(
+          class = "flex-grow-1", 
+          bmsui::togglerTextInput(
+            ns("title"),
+            title,
+            restore = TRUE
+          )
+        )
       },
       div(
         class = "flex-shrink-1",

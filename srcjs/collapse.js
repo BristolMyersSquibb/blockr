@@ -31,11 +31,6 @@ const toggler = (item) => {
   });
 };
 
-const collapseAll = (stack) => {
-  collapseStackItem(stack, "code");
-  collapseStackItem(stack, "output");
-};
-
 const collapseStackItem = (stack, item) => {
   const blocks = $(stack).find(`.block-${item}`);
   blocks.each(
@@ -52,38 +47,49 @@ const collapseStackItem = (stack, item) => {
 const editor = () => {
   $(".stack-edit-toggle").on("click", (event) => {
     const $stack = $(event.target).closest(".stack");
+    const $blocks = $stack.find(".block");
 
-    const editable = $(event.currentTarget).hasClass("etidable");
     $(event.currentTarget).toggleClass("etidable");
+    const editable = $(event.currentTarget).hasClass("etidable");
 
-    if (editable) {
-      $stack.find(".block").find(".card").hide();
-      $stack.find(`.stack-code-toggle`).hide();
-      $stack.find(`.stack-output-toggle`).hide();
-      $stack.find(".card-body").toggleClass("p-1");
-      $stack.find(".block").toggleClass("mb-2");
-      collapseAll($stack);
-      return;
-    }
+    $blocks.each((index, block) => {
+      const $block = $(block);
 
-    $stack.find(".block").find(".card").show();
-    $stack.find(`.stack-code-toggle`).show();
-    $stack.find(`.stack-output-toggle`).show();
-    $stack.find(".card-body").toggleClass("p-1");
-    $stack.find(".block").toggleClass("mb-2");
+      if (editable) {
+        $block.show();
+        $block.find(".block-inputs").show();
+
+        if (index == ($blocks.length - 1)) {
+          $block.find(".block-inputs").show();
+          $block.find(".block-output").show();
+        }
+        return;
+      }
+
+      $block.hide();
+      $block.find(".block-inputs").hide();
+
+      if (index == ($blocks.length - 1)) {
+        $block.show();
+        $block.find(".block-inputs").hide();
+        $block.find(".block-output").show();
+      }
+    });
   });
 };
 
 const showLastOutput = (el) => {
-  const lastOutput = $(el).find(".block-output")
-    .last();
+  const $block = $(el).find(".block").last();
+
+  $block.show();
+  const lastOutput = $block.find(".block-output");
 
   bootstrap.Collapse.getOrCreateInstance(lastOutput, { toggle: false })
     .show();
 };
 
 const showLastOutputs = () => {
-  $(".stack").each((i, el) => {
+  $(".stack").each((_, el) => {
     showLastOutput(el);
   });
 };
