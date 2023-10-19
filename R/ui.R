@@ -13,7 +13,7 @@ generate_ui <- function(x, ...) {
 #' @param id UI IDs
 #' @rdname generate_ui
 #' @export
-generate_ui.block <- function(x, id, ...) {
+generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
@@ -30,8 +30,16 @@ generate_ui.block <- function(x, id, ...) {
 
   header <- block_title(x, code_id, output_id, ns)
 
+  block_class <- "block"
+  if(.hidden)
+    block_class <- sprintf("%s hidden", block_class)
+
+  inputs_hidden <- ""
+  if(.hidden)
+    inputs_hidden <- "hidden"
+
   div(
-    class = "block hidden",
+    class = block_class,
     `data-block-type` = paste0(class(x), collapse = ","),
     `data-value` = ns("block"),
     shiny::div(
@@ -39,7 +47,7 @@ generate_ui.block <- function(x, id, ...) {
       shiny::div(
         class = "card-body p-1",
         div(
-          class = "hidden block-inputs",
+          class = sprintf("block-inputs %s", inputs_hidden),
           header,
           do.call(shiny::div, unname(fields)),
         ),

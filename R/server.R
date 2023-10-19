@@ -222,7 +222,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           where = "afterEnd",
           generate_ui(
             vals$stack[[p]],
-            id = session$ns(attr(vals$stack[[p]], "name"))
+            id = session$ns(attr(vals$stack[[p]], "name")),
+            .hidden = FALSE
           )
         )
         # Necessary to communicate with downstream modules

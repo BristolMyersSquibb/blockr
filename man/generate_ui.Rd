@@ -48,7 +48,7 @@ server_code(x, state, output)
 
 generate_ui(x, ...)
 
-\method{generate_ui}{block}(x, id, ...)
+\method{generate_ui}{block}(x, id, ..., .hidden = TRUE)
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
 
