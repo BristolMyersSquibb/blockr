@@ -17,6 +17,7 @@ html {
     }
 
     .stack-output-toggle,
+    .stack-remove,
     .stack-edit-toggle,
     .stack-code-toggle {
       opacity: 0;
@@ -24,6 +25,7 @@ html {
 
     &:hover{
       .stack-output-toggle,
+      .stack-remove,
       .stack-edit-toggle,
       .stack-code-toggle {
         opacity: 1;
