@@ -346,7 +346,16 @@ server_output <- function(x, result, output) {
 #' @rdname generate_ui
 #' @export
 server_output.block <- function(x, result, output) {
-  DT::renderDT(DT::datatable(result(), options = list(pageLength = 5L, processing = FALSE)))
+  DT::renderDT({
+    result() |>
+      DT::datatable(
+        selection = "none",
+        options = list(
+          pageLength = 5L, 
+          processing = FALSE
+        )
+      )
+  })
 }
 
 #' @rdname generate_ui
