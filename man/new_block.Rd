@@ -37,7 +37,14 @@
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
-new_block(fields, expr, name = rand_names(), ..., class = character())
+new_block(
+  fields,
+  expr,
+  name = rand_names(),
+  ...,
+  class = character(),
+  layout = default_layout_fields
+)
 
 is_block(x)
 
@@ -125,6 +132,9 @@ of the fields)}
 \item{...}{Any other params. TO DO}
 
 \item{class}{Block subclass}
+
+\item{layout}{Callback function accepting one argument: the list of fields to layout
+and returns one or more UI tag(s).}
 
 \item{x}{An object inheriting form \code{"block"}}
 

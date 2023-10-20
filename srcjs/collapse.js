@@ -1,11 +1,11 @@
 export const collapse = (stack) => {
-  toggler("code");
-  toggler("output");
+  bindCollapse("code");
+  bindCollapse("output");
   editor(stack);
   showLastOutputs(stack);
 };
 
-const toggler = (item) => {
+const bindCollapse = (item) => {
   $(`.stack-${item}-toggle`).each((_, btn) => {
     // already has a listener
     if (btn.getAttribute("listener") == "true") {
@@ -17,7 +17,9 @@ const toggler = (item) => {
 
       $(event.target).closest(".stack").find(`.block-${item}`).each(
         (_, code) => {
-          const collapse = bootstrap.Collapse.getOrCreateInstance(code);
+          const collapse = bootstrap.Collapse.getOrCreateInstance(code, {
+            toggle: false,
+          });
 
           if (!$(btn).hasClass("showing")) {
             collapse.hide();
@@ -32,7 +34,14 @@ const toggler = (item) => {
 };
 
 const editor = (stack) => {
-  $(stack).find(".stack-edit-toggle").on("click", (event) => {
+  const editBtn = $(stack).find(".stack-edit-toggle");
+
+  // already has a listener
+  if (editBtn[0].getAttribute("listener")) {
+    return;
+  }
+
+  $(editBtn).on("click", (event) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
 
@@ -65,7 +74,7 @@ const editor = (stack) => {
   });
 };
 
-const showLastOutput = (el) => {
+export const showLastOutput = (el) => {
   const $block = $(el).find(".block").last();
 
   $block.show();

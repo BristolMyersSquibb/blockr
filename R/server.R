@@ -226,8 +226,12 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             .hidden = FALSE
           )
         )
+
         # Necessary to communicate with downstream modules
         session$userData$stack <- vals$stack
+
+        # trigger javascript-ui functionalities on add
+        session$sendCustomMessage("blockr-add-block", list(stack = session$ns(NULL)))
       })
 
       # Remove block from stack (can't be done within the block)
@@ -355,7 +359,7 @@ server_output.block <- function(x, result, output) {
           processing = FALSE
         )
       )
-  })
+  }, server = TRUE)
 }
 
 #' @rdname generate_ui
