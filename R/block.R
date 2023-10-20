@@ -274,13 +274,13 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    column = new_select_field(columns, all_cols, multiple = TRUE)
+    columns = new_select_field(columns, all_cols, multiple = TRUE)
   )
 
   new_block(
     fields = fields,
     expr = quote(
-      dplyr::select(.(column))
+      dplyr::select(.(columns))
     ),
     ...,
     class = c("select_block", "transform_block")

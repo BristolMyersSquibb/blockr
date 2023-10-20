@@ -250,7 +250,7 @@ secure <- function(expr) {
   }, error = function(e) {
     showModal(
       modalDialog(
-        as.character(e),
+        e$message,
         title = h3(icon("xmark"), "ERROR"),
         footer = modalButton("Dismiss"),
         size = "l",
