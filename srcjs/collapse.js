@@ -57,7 +57,9 @@ const editor = (stack) => {
 
         if (index == ($blocks.length - 1)) {
           $block.find(".block-inputs").show();
+          $block.find(".block-inputs").trigger("shown");
           $block.find(".block-output").show();
+          $block.find(".block-output").trigger("shown");
         }
         return;
       }
@@ -68,7 +70,9 @@ const editor = (stack) => {
       if (index == ($blocks.length - 1)) {
         $block.show();
         $block.find(".block-inputs").hide();
+        $block.find(".block-inputs").trigger("hidden");
         $block.find(".block-output").show();
+        $block.find(".block-output").trigger("shown");
       }
     });
   });
