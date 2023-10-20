@@ -42,7 +42,8 @@ cheat_block <- function(data, ...) {
 new_join_block <- function(
   data,
   y = data(package = "blockr.data")$result[, "Item"][[2]],
-  type = c("inner", "left")
+  type = c("inner", "left"),
+  ...
 ) {
   # TO DO: this should be a dependent field.
   # Once y is selected ...
@@ -54,9 +55,9 @@ new_join_block <- function(
   fields <- list(
     join_func = new_select_field(
       "left_join",
-      paste(type, "join", sep = "-")
+      paste(type, "join", sep = "_")
     ),
-    #y = new_select_field(y[[1]], y),
+    y = new_hidden_field(y[[1]]),
     by = new_select_field(
       by_choices[[1]],
       by_choices,
@@ -64,10 +65,9 @@ new_join_block <- function(
     )
   )
 
-  expr <- quote({
-    browser()
-    .(join_func)(y, by = .(by))
-  })
+  attr(fields$y, "type") <- "name"
+  # TO DO: find a way to not call match.fun ...
+  expr <- quote(match.fun(.(join_func))(.(y), by = .(by)))
 
   new_block(
     fields = fields,
