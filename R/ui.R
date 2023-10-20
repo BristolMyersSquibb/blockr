@@ -4,6 +4,7 @@
 #'
 #' @param x Object for which to generate UI components
 #' @param ... Generic consistency
+#' @param .hidden Whether to initialise the block hidden.
 #'
 #' @export
 generate_ui <- function(x, ...) {

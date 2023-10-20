@@ -514,6 +514,10 @@ initialize_block.transform_block <- function(x, data, ...) {
 
 #' @rdname new_block
 #' @export
+initialize_block.default <- initialize_block.transform_block
+
+#' @rdname new_block
+#' @export
 initialize_block.plot_block <- initialize_block.transform_block
 
 #' @rdname new_block

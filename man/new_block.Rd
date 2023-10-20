@@ -29,6 +29,7 @@
 \alias{new_cheat_block}
 \alias{cheat_block}
 \alias{initialize_block.transform_block}
+\alias{initialize_block.default}
 \alias{initialize_block.plot_block}
 \alias{update_fields}
 \alias{update_fields.data_block}
@@ -107,6 +108,8 @@ new_cheat_block(data, ...)
 cheat_block(data, ...)
 
 \method{initialize_block}{transform_block}(x, data, ...)
+
+\method{initialize_block}{default}(x, data, ...)
 
 \method{initialize_block}{plot_block}(x, data, ...)
 

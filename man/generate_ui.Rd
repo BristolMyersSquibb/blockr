@@ -115,6 +115,8 @@ uiCode(x, ns)
 
 \item{id}{UI IDs}
 
+\item{.hidden}{Whether to initialise the block hidden.}
+
 \item{name}{Field name}
 
 \item{session}{Shiny session}

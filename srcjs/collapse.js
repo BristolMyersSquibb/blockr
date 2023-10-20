@@ -80,8 +80,8 @@ export const showLastOutput = (el) => {
   $block.show();
   const lastOutput = $block.find(".block-output");
 
-  bootstrap.Collapse.getOrCreateInstance(lastOutput, { toggle: false })
-    .show();
+  bootstrap.Collapse.getOrCreateInstance(lastOutput, { toggle: false }).show();
+  $(lastOutput).trigger("shown");
 };
 
 const showLastOutputs = (stack) => {
