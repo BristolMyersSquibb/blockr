@@ -67,13 +67,18 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = "LBTEST", values = character(), ...)
+new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
 new_select_block(data, columns = colnames(data)[1], ...)
 
-new_summarize_block(data, column = "LBSTRESN", func = c("mean", "sd"), ...)
+new_summarize_block(
+  data,
+  column = colnames(data)[1L],
+  func = c("mean", "sd"),
+  ...
+)
 
 summarize_block(data, ...)
 

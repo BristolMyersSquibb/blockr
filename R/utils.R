@@ -184,7 +184,7 @@ convert_block <- function(from = new_select_block, to, data, ...) {
   block <- initialize_block(from(data, ...), data)
   class(block)[[1]] <- sprintf("%s_block", deparse(substitute(to)))
   attr(block, "expr") <- substitute(
-    to(.(column))
+    to(..(column))
   )
   block
 }
@@ -233,4 +233,29 @@ off_canvas <- function(
     ),
     tags$div(class = "offcanvas-body small", ...)
   )
+}
+
+#' Evaluate expression safely
+#'
+#' tryCatch wrapper.
+#'
+#' @param expr Expression to evaluate.
+#'
+#' @return Result or error message.
+#'
+#' @keywords internal
+secure <- function(expr) {
+  tryCatch({
+    expr
+  }, error = function(e) {
+    showModal(
+      modalDialog(
+        e$message,
+        title = h3(icon("xmark"), "ERROR"),
+        footer = modalButton("Dismiss"),
+        size = "l",
+        fade = TRUE
+      )
+    )
+  })
 }

@@ -14,6 +14,7 @@
 #'
 #' @export
 #' @import blockr.data
+#' @import dplyr
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
   stopifnot(
@@ -62,7 +63,25 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
+  if (class(x)[[1]] %in% c("arrange_block", "group_by_block")) {
+    where <- lapply(x, function(b) {
+      res <- value(b)
+      lapply(res, as.name)
+    })
+    splice <- TRUE
+  } else {
+    where <- lapply(x, type_trans)
+    splice <- FALSE
+  }
+
+  do.call(
+    bquote,
+    list(
+      attr(x, "expr"),
+      where = where,
+      splice = splice
+    )
+  )
 }
 
 #' @rdname new_block
@@ -160,7 +179,7 @@ initialize_block.data_block <- function(x, ...) {
 #' @param values Definition of the equality filter.
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, columns = "LBTEST",
+new_filter_block <- function(data, columns = colnames(data)[1L],
                              values = character(), ...) {
 
   sub_fields <- function(data, columns) {
@@ -255,13 +274,13 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    column = new_select_field(columns, all_cols, multiple = TRUE)
+    columns = new_select_field(columns, all_cols, multiple = TRUE)
   )
 
   new_block(
     fields = fields,
     expr = quote(
-      dplyr::select(.(column))
+      dplyr::select(.(columns))
     ),
     ...,
     class = c("select_block", "transform_block")
@@ -275,7 +294,7 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 #' @export
 new_summarize_block <- function(
   data,
-  column = "LBSTRESN",
+  column = colnames(data)[1L],
   func = c("mean", "sd"),
   ...
 ) {
@@ -320,13 +339,13 @@ select_block <- function(data, ...) {
 #' @export
 arrange_block <- function(data, ...) {
   # Arrange is close to select so we can use its init functuib
-  convert_block(to = dplyr::arrange, data = data, ...)
+  convert_block(to = arrange, data = data, ...)
 }
 
 #' @rdname new_block
 #' @export
 group_by_block <- function(data, ...) {
-  convert_block(to = dplyr::group_by, data = data, ...)
+  convert_block(to = group_by, data = data, ...)
 }
 
 #' @param data Tabular data in which to select some columns.
