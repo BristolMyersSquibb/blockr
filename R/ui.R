@@ -46,7 +46,7 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
     `data-block-type` = paste0(class(x), collapse = ","),
     `data-value` = ns("block"),
     shiny::div(
-      class = "card shadow-sm p-2 mb-1 border",
+      class = "card shadow-sm p-2 mb-2 border",
       shiny::div(
         class = "card-body p-1",
         div(
