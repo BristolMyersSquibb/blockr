@@ -11,12 +11,15 @@
 #' of the fields)
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
+#' @param layout Callback function accepting one argument: the list of fields to layout
+#'  and returns one or more UI tag(s).
 #'
 #' @export
 #' @import blockr.data
 #' @import dplyr
 new_block <- function(fields, expr, name = rand_names(), ...,
-                      class = character()) {
+                      class = character(),
+                      layout = default_layout_fields) {
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
     is.language(expr),
@@ -25,6 +28,7 @@ new_block <- function(fields, expr, name = rand_names(), ...,
 
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
+    layout = layout,
     class = c(class, "block")
   )
 }
@@ -96,13 +100,13 @@ generate_code.transform_block <- function(x) {
 
 #' @rdname new_block
 #' @export
-evalute_block <- function(x, ...) {
-  UseMethod("evalute_block")
+evaluate_block <- function(x, ...) {
+  UseMethod("evaluate_block")
 }
 
 #' @rdname new_block
 #' @export
-evalute_block.data_block <- function(x, ...) {
+evaluate_block.data_block <- function(x, ...) {
   stopifnot(...length() == 0L)
   eval(generate_code(x), new.env())
 }
@@ -110,7 +114,7 @@ evalute_block.data_block <- function(x, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evalute_block.transform_block <- function(x, data, ...) {
+evaluate_block.transform_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
@@ -121,7 +125,7 @@ evalute_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evalute_block.plot_block <- function(x, data, ...) {
+evaluate_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(generate_code(x), list(data = data))
 }
@@ -467,7 +471,8 @@ new_plot_block <- function(
         )
     }),
     ...,
-    class = c("plot_block")
+    class = c("plot_block"),
+    layout = plot_layout_fields
   )
 }
 
@@ -525,6 +530,10 @@ initialize_block.transform_block <- function(x, data, ...) {
 
   x
 }
+
+#' @rdname new_block
+#' @export
+initialize_block.default <- initialize_block.transform_block
 
 #' @rdname new_block
 #' @export

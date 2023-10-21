@@ -4,3 +4,14 @@
 ^\.lintr$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^node_modules$
+dev
+makefile
+package-lock.json
+package.json
+scss
+srcjs
+test.R
+webpack.common.js
+webpack.dev.js
+webpack.prod.js

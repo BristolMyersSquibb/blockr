@@ -1,0 +1,45 @@
+html {
+  .block-code-output{
+    max-height: 10rem;
+    overflow-y: auto;
+  }
+
+  .block {
+
+    overflow-y: auto;
+
+    pre {
+      border-radius: 0;
+    }
+
+    .block-output-toggle {
+      color: var(--bs-success);
+    }
+    .block-edit-toggle {
+      color: var(--bs-primary);
+    }
+    .block-code-toggle {
+      color: var(--bs-gray-800);
+    }
+    .block-remove {
+      color: var(--bs-success);
+    }
+
+    .block-remove,
+    .block-output-toggle,
+    .block-edit-toggle,
+    .block-code-toggle {
+      opacity: 0;
+    }
+
+    &:hover{
+      .block-remove,
+      .block-output-toggle,
+      .block-edit-toggle,
+      .block-code-toggle {
+        opacity: 1;
+      }
+    }
+  }
+}
+

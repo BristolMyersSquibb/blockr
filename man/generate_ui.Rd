@@ -29,11 +29,11 @@
 \alias{ui_update.range_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
-\alias{ui_output}
-\alias{ui_output.block}
-\alias{ui_output.plot_block}
-\alias{ui_code}
-\alias{ui_code.block}
+\alias{uiOutput}
+\alias{uiOutput.block}
+\alias{uiOutput.plot_block}
+\alias{uiCode}
+\alias{uiCode.block}
 \title{UI}
 \usage{
 server_output(x, result, output)
@@ -48,7 +48,7 @@ server_code(x, state, output)
 
 generate_ui(x, ...)
 
-\method{generate_ui}{block}(x, id, ...)
+\method{generate_ui}{block}(x, id, ..., .hidden = TRUE)
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
 
@@ -92,15 +92,15 @@ ui_update(x, session, id, name)
 
 \method{ui_update}{list_field}(x, session, id, name)
 
-ui_output(x, ns)
+uiOutput(x, ns)
 
-\method{ui_output}{block}(x, ns)
+\method{uiOutput}{block}(x, ns)
 
-\method{ui_output}{plot_block}(x, ns)
+\method{uiOutput}{plot_block}(x, ns)
 
-ui_code(x, ns)
+uiCode(x, ns)
 
-\method{ui_code}{block}(x, ns)
+\method{uiCode}{block}(x, ns)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
@@ -114,6 +114,8 @@ ui_code(x, ns)
 \item{...}{Generic consistency}
 
 \item{id}{UI IDs}
+
+\item{.hidden}{Whether to initialise the block hidden.}
 
 \item{name}{Field name}
 

@@ -5,7 +5,7 @@ test_that("data blocks", {
   expect_s3_class(block, "data_block")
   expect_type(block, "list")
 
-  dat <- evalute_block(block)
+  dat <- evaluate_block(block)
 
   expect_s3_class(dat, "data.frame")
 
@@ -24,13 +24,13 @@ test_that("filter blocks", {
   expect_s3_class(block, "filter_block")
   expect_type(block, "list")
 
-  res <- evalute_block(block, data)
+  res <- evaluate_block(block, data)
 
   expect_identical(nrow(res), nrow(data))
 
   block <- filter_block(data, "Species", "setosa")
 
-  res <- evalute_block(block, data)
+  res <- evaluate_block(block, data)
 
   expect_identical(nrow(res), nrow(data[data$Species == "setosa", ]))
 })
