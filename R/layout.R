@@ -26,20 +26,16 @@ plot_layout_fields <- function(fields, ...) {
     div(
       class = "row",
       div(
-        class = "col-md-3",
+        class = "col-md-4",
         fields$x_lab
       ),
       div(
-        class = "col-md-3",
+        class = "col-md-4",
         fields$y_lab
       ),
       div(
-        class = "col-md-3",
+        class = "col-md-4",
         fields$point_size
-      ),
-      div(
-        class = "col-md-3",
-        fields$theme
       )
     ),
     div(
@@ -61,3 +57,5 @@ plot_layout_fields <- function(fields, ...) {
     )
   )
 }
+
+ggiraph_layout_fields <- plot_layout_fields

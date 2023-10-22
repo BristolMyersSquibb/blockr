@@ -130,6 +130,11 @@ evaluate_block.plot_block <- function(x, data, ...) {
   eval(generate_code(x), list(data = data))
 }
 
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evaluate_block.ggiraph_block <- evaluate_block.plot_block
+
 #' @rdname new_block
 #' @export
 new_data_block <- function(...) {
@@ -158,6 +163,11 @@ new_data_block <- function(...) {
     class = c("dataset_block", "data_block")
   )
 }
+
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evaluate_block.plot_block <- evaluate_block.ggiraph_block
 
 #' @rdname new_block
 #' @export
@@ -482,6 +492,138 @@ plot_block <- function(data, ...) {
   initialize_block(new_plot_block(data, ...), data)
 }
 
+#' @param data Tabular data in which to select some columns.
+#' @param plot_opts List containing options for ggplot (color, ...).
+#' @param ... Any other params. TO DO
+#' @rdname new_block
+#' @import ggiraph
+#' @export
+new_ggiraph_block <- function(
+  data,
+  plot_opts = list(
+    colors = c("blue", "red"), # when outside aes ...
+    point_size = 3,
+    title = "Plot title",
+    theme = c(
+      "theme_minimal",
+      "theme_gray",
+      "theme_linedraw",
+      "theme_dark",
+      "theme_light",
+      "theme_classic",
+      "theme_void",
+      "theme_bw"
+    ),
+    x_lab = "X axis label",
+    y_lab = "Y axis label",
+    errors = list(
+      show = FALSE,
+      ymin = character(),
+      ymax = character()
+    ),
+    lines = list(
+      show = FALSE,
+      group = character(),
+      color = character()
+    )
+  ),
+  ...
+) {
+  # For plot blocks, fields will create input to style the plot ...
+  all_cols <- function(data) colnames(data)
+  fields <- list(
+    x_var = new_select_field("VISIT", all_cols),
+    y_var = new_select_field("Mean", all_cols),
+    color = new_select_field("ACTARM", all_cols),
+    shape = new_select_field("ACTARM", all_cols),
+    point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),
+    title = new_string_field(plot_opts$title),
+    x_lab = new_string_field(plot_opts$x_lab),
+    y_lab = new_string_field(plot_opts$y_lab),
+    errors_toggle = new_switch_field(plot_opts$errors$show),
+    lines_toggle = new_switch_field(plot_opts$lines$show)
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote({
+      x_var <- .(x_var)
+      y_var <- .(y_var)
+      color <- .(color)
+      shape <- .(shape)
+      ymin <- "ymin"
+      ymax <- "ymax"
+
+      p <- ggplot(data) +
+        ggiraph::geom_point_interactive(
+          # We have to use aes_string over aes
+          mapping = aes(
+            x = .data[[x_var]],
+            y = .data[[y_var]],
+            color = .data[[color]],
+            shape = .data[[shape]],
+            data_id = .data[["VISIT"]]
+          ),
+          size = 3 #.(point_size) TO DO: allow slide to have 1 value
+        )
+
+      # Adding errors
+      if (.(errors_toggle)) {
+        p <- p + ggiraph::geom_errorbar_interactive(
+          aes(
+            x = .data[[x_var]],
+            y = .data[[y_var]],
+            ymin = Mean - SE,
+            ymax = Mean + SE,
+            color = ACTARM
+          ),
+          width = 0.2
+        )
+      }
+
+      if (.(lines_toggle)) {
+        p <- p + ggiraph::geom_line_interactive(
+          aes(
+            x = .data[[x_var]],
+            y = .data[[y_var]],
+            group = .data[[color]],
+            color = .data[[color]]
+          )
+        )
+      }
+
+      p <- p  +
+        labs(
+          title = .(title),
+          x = .(x_lab),
+          y = .(y_lab)
+        ) +
+        theme(
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          legend.title = element_text(face = "bold"),
+          legend.position = "bottom"
+        ) +
+        ggiraph::scale_color_brewer_interactive(name = "Treatment Group", palette = "Set1") +
+        ggiraph::scale_shape_manual_interactive(
+          name = "Treatment Group",
+          values = c(16, 17, 18, 19, 20)
+        )
+
+      ggiraph::girafe(ggobj = p)
+    }),
+    ...,
+    class = c("ggiraph_block"),
+    layout = ggiraph_layout_fields
+  )
+}
+
+#' @rdname new_block
+#' @export
+ggiraph_block <- function(data, ...) {
+  initialize_block(new_ggiraph_block(data, ...), data)
+}
+
+
 #' @rdname new_block
 #' @export
 new_cheat_block <- function(data, ...) {
@@ -588,3 +730,8 @@ update_fields.transform_block <- function(x, session, data, ...) {
 #' @rdname new_block
 #' @export
 update_fields.plot_block <- update_fields.transform_block
+
+#' @param data Block input data
+#' @rdname new_block
+#' @export
+update_fields.ggiraph_block <- update_fields.transform_block

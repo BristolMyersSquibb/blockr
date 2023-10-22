@@ -6,6 +6,7 @@
 \alias{generate_server.data_block}
 \alias{generate_server.transform_block}
 \alias{generate_server.plot_block}
+\alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
 \title{Server}
 \usage{
@@ -18,6 +19,8 @@ generate_server(x, ...)
 \method{generate_server}{transform_block}(x, in_dat, id, ...)
 
 \method{generate_server}{plot_block}(x, in_dat, id, ...)
+
+\method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
 
 \method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
 }
