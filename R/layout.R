@@ -34,12 +34,8 @@ plot_layout_fields <- function(fields, ...) {
         fields$y_lab
       ),
       div(
-        class = "col-md-3",
+        class = "col-md-4",
         fields$point_size
-      ),
-      div(
-        class = "col-md-3",
-        fields$tooltip
       )
     ),
     div(

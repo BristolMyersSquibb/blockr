@@ -540,7 +540,6 @@ new_ggiraph_block <- function(
     title = new_string_field(plot_opts$title),
     x_lab = new_string_field(plot_opts$x_lab),
     y_lab = new_string_field(plot_opts$y_lab),
-    tooltip = new_select_field("VISIT", all_cols),
     errors_toggle = new_switch_field(plot_opts$errors$show),
     lines_toggle = new_switch_field(plot_opts$lines$show)
   )
