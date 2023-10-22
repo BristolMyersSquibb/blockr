@@ -540,6 +540,7 @@ new_ggiraph_block <- function(
     title = new_string_field(plot_opts$title),
     x_lab = new_string_field(plot_opts$x_lab),
     y_lab = new_string_field(plot_opts$y_lab),
+    tooltip = new_select_field("VISIT", all_cols),
     errors_toggle = new_switch_field(plot_opts$errors$show),
     lines_toggle = new_switch_field(plot_opts$lines$show)
   )
@@ -554,6 +555,16 @@ new_ggiraph_block <- function(
       ymin <- "ymin"
       ymax <- "ymax"
 
+      data <- data |> 
+        mutate(
+          TOOLTIP = sprintf("x: %s\ny: %s", .data[[x_var]], .data[[y_var]]),
+          TOOLTIP_SE = sprintf(
+            "x: %s\ny: %s\nmin: %s\nmax: %s", 
+            .data[[x_var]], .data[[y_var]],
+            .data[[ymin]],  .data[[ymax]]
+          )
+        )
+
       p <- ggplot(data) +
         ggiraph::geom_point_interactive(
           # We have to use aes_string over aes
@@ -562,7 +573,7 @@ new_ggiraph_block <- function(
             y = .data[[y_var]],
             color = .data[[color]],
             shape = .data[[shape]],
-            data_id = .data[["VISIT"]]
+            tooltip = TOOLTIP
           ),
           size = 3 #.(point_size) TO DO: allow slide to have 1 value
         )
@@ -575,7 +586,8 @@ new_ggiraph_block <- function(
             y = .data[[y_var]],
             ymin = Mean - SE,
             ymax = Mean + SE,
-            color = ACTARM
+            color = ACTARM,
+            tooltip = TOOLTIP_SE
           ),
           width = 0.2
         )
@@ -609,7 +621,12 @@ new_ggiraph_block <- function(
           values = c(16, 17, 18, 19, 20)
         )
 
-      ggiraph::girafe(ggobj = p)
+      p <- ggiraph::girafe(ggobj = p)
+      p <- girafe_options(p,
+      opts_tooltip(opacity = .7,
+        offx = 20, offy = -10,
+        use_fill = TRUE, use_stroke = TRUE,
+        delay_mouseout = 1000) )
     }),
     ...,
     class = c("ggiraph_block"),
