@@ -34,3 +34,19 @@ test_that("filter blocks", {
 
   expect_identical(nrow(res), nrow(data[data$Species == "setosa", ]))
 })
+
+test_that("select blocks", {
+
+  data <- datasets::iris
+
+  block <- select_block(data)
+
+  expect_s3_class(block, "select_block")
+  expect_type(block, "list")
+
+  res <- evalute_block(block, data)
+
+  expect_identical(nrow(res), nrow(data))
+  expect_equal(ncol(res), 1)
+  expect_equal(colnames(res), colnames(data)[1])
+})
