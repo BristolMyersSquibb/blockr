@@ -9,10 +9,10 @@
 \alias{generate_code}
 \alias{generate_code.block}
 \alias{generate_code.transform_block}
-\alias{evalute_block}
-\alias{evalute_block.data_block}
-\alias{evalute_block.transform_block}
-\alias{evalute_block.plot_block}
+\alias{evaluate_block}
+\alias{evaluate_block.data_block}
+\alias{evaluate_block.transform_block}
+\alias{evaluate_block.plot_block}
 \alias{new_data_block}
 \alias{data_block}
 \alias{initialize_block.data_block}
@@ -29,6 +29,7 @@
 \alias{new_plot_block}
 \alias{plot_block}
 \alias{initialize_block.transform_block}
+\alias{initialize_block.default}
 \alias{initialize_block.plot_block}
 \alias{update_fields}
 \alias{update_fields.data_block}
@@ -41,7 +42,14 @@
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
-new_block(fields, expr, name = rand_names(), ..., class = character())
+new_block(
+  fields,
+  expr,
+  name = rand_names(),
+  ...,
+  class = character(),
+  layout = default_layout_fields
+)
 
 is_block(x)
 
@@ -57,13 +65,13 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
-evalute_block(x, ...)
+evaluate_block(x, ...)
 
-\method{evalute_block}{data_block}(x, ...)
+\method{evaluate_block}{data_block}(x, ...)
 
-\method{evalute_block}{transform_block}(x, data, ...)
+\method{evaluate_block}{transform_block}(x, data, ...)
 
-\method{evalute_block}{plot_block}(x, data, ...)
+\method{evaluate_block}{plot_block}(x, data, ...)
 
 new_data_block(...)
 
@@ -71,13 +79,18 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = "LBTEST", values = character(), ...)
+new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
 
 filter_block(data, ...)
 
 new_select_block(data, columns = colnames(data)[1], ...)
 
-new_summarize_block(data, column = "LBSTRESN", func = c("mean", "sd"), ...)
+new_summarize_block(
+  data,
+  column = colnames(data)[1L],
+  func = c("mean", "sd"),
+  ...
+)
 
 summarize_block(data, ...)
 
@@ -109,6 +122,8 @@ new_plot_block(
 plot_block(data, ...)
 
 \method{initialize_block}{transform_block}(x, data, ...)
+
+\method{initialize_block}{default}(x, data, ...)
 
 \method{initialize_block}{plot_block}(x, data, ...)
 
@@ -142,6 +157,9 @@ at the moment. Not used yet...}
 \item{...}{Any other params. TO DO}
 
 \item{class}{Block subclass}
+
+\item{layout}{Callback function accepting one argument: the list of fields to layout
+and returns one or more UI tag(s).}
 
 \item{x}{An object inheriting form \code{"block"}}
 

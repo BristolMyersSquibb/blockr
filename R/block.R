@@ -11,12 +11,15 @@
 #' of the fields)
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
+#' @param layout Callback function accepting one argument: the list of fields to layout
+#'  and returns one or more UI tag(s).
 #'
 #' @export
 #' @import blockr.data
 #' @import dplyr
 new_block <- function(fields, expr, name = rand_names(), ...,
-                      class = character()) {
+                      class = character(),
+                      layout = default_layout_fields) {
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
     is.language(expr),
@@ -25,6 +28,7 @@ new_block <- function(fields, expr, name = rand_names(), ...,
 
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
+    layout = layout,
     class = c(class, "block")
   )
 }
@@ -63,7 +67,25 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  do.call(bquote, list(attr(x, "expr"), where = lapply(x, type_trans)))
+  if (class(x)[[1]] %in% c("arrange_block", "group_by_block")) {
+    where <- lapply(x, function(b) {
+      res <- value(b)
+      lapply(res, as.name)
+    })
+    splice <- TRUE
+  } else {
+    where <- lapply(x, type_trans)
+    splice <- FALSE
+  }
+
+  do.call(
+    bquote,
+    list(
+      attr(x, "expr"),
+      where = where,
+      splice = splice
+    )
+  )
 }
 
 #' @rdname new_block
@@ -78,13 +100,13 @@ generate_code.transform_block <- function(x) {
 
 #' @rdname new_block
 #' @export
-evalute_block <- function(x, ...) {
-  UseMethod("evalute_block")
+evaluate_block <- function(x, ...) {
+  UseMethod("evaluate_block")
 }
 
 #' @rdname new_block
 #' @export
-evalute_block.data_block <- function(x, ...) {
+evaluate_block.data_block <- function(x, ...) {
   stopifnot(...length() == 0L)
   eval(generate_code(x), new.env())
 }
@@ -92,7 +114,7 @@ evalute_block.data_block <- function(x, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evalute_block.transform_block <- function(x, data, ...) {
+evaluate_block.transform_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
@@ -103,7 +125,7 @@ evalute_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evalute_block.plot_block <- function(x, data, ...) {
+evaluate_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(generate_code(x), list(data = data))
 }
@@ -161,7 +183,7 @@ initialize_block.data_block <- function(x, ...) {
 #' @param values Definition of the equality filter.
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, columns = "LBTEST",
+new_filter_block <- function(data, columns = colnames(data)[1L],
                              values = character(), ...) {
 
   sub_fields <- function(data, columns) {
@@ -273,13 +295,13 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    column = new_select_field(columns, all_cols, multiple = TRUE)
+    columns = new_select_field(columns, all_cols, multiple = TRUE)
   )
 
   new_block(
     fields = fields,
     expr = quote(
-      dplyr::select(.(column))
+      dplyr::select(.(columns))
     ),
     ...,
     class = c("select_block", "transform_block")
@@ -293,7 +315,7 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 #' @export
 new_summarize_block <- function(
   data,
-  column = "LBSTRESN",
+  column = colnames(data)[1L],
   func = c("mean", "sd"),
   ...
 ) {
@@ -531,7 +553,8 @@ new_plot_block <- function(
         )
     }),
     ...,
-    class = c("plot_block")
+    class = c("plot_block"),
+    layout = plot_layout_fields
   )
 }
 
@@ -553,6 +576,10 @@ initialize_block.transform_block <- function(x, data, ...) {
 
   x
 }
+
+#' @rdname new_block
+#' @export
+initialize_block.default <- initialize_block.transform_block
 
 #' @rdname new_block
 #' @export

@@ -28,9 +28,13 @@ Imports:
     bslib,
     methods,
     DT,
-    blockr.data
+    blockr.data,
+    htmltools,
+    sortable,
+    bmsui
 Remotes:
-    blockr-org/blockr.data
+    blockr-org/blockr.data,
+    blockr-org/bmsui
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

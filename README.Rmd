@@ -31,6 +31,13 @@ You can install the development version of blockr from [GitHub](https://github.c
 devtools::install_github("blockr-org/blockr")
 ```
 
+## Contribute
+
+Easiest is to run `make`, otherwise:
+
+1. Install npm dependencies with `packer::npm_install()`
+2. Build CSS by running the script in `dev/sass.R`
+
 ## Examples
 
 ### Create a stack
@@ -141,7 +148,6 @@ shinyApp(
     )
 
     observeEvent(input$add, {
-      vals$new_blocks <- NULL
       # always append to stack
       loc <- input$add
       block <- blocks[[as.numeric(input$selected_block)]]
