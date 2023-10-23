@@ -621,8 +621,8 @@ new_ggiraph_block <- function(
         )
 
       p <- ggiraph::girafe(ggobj = p)
-      p <- girafe_options(p,
-      opts_tooltip(opacity = .7,
+      p <- ggiraph::girafe_options(p,
+      ggiraph::opts_tooltip(opacity = .7,
         offx = 20, offy = -10,
         use_fill = TRUE, use_stroke = TRUE,
         delay_mouseout = 1000) )
