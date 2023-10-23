@@ -68,13 +68,13 @@ generate_code <- function(x) {
 #' @export
 generate_code.block <- function(x) {
   if (class(x)[[1]] %in% c("arrange_block", "group_by_block")) {
-    where <- lapply(x, function(b) {
+    where_tmp <- lapply(x, function(b) {
       res <- value(b)
       lapply(res, as.name)
     })
     splice <- TRUE
   } else {
-    where <- lapply(x, type_trans)
+    where_tmp <- lapply(x, type_trans)
     splice <- FALSE
   }
 
@@ -82,7 +82,7 @@ generate_code.block <- function(x) {
     bquote,
     list(
       attr(x, "expr"),
-      where = where,
+      where = where_tmp,
       splice = splice
     )
   )

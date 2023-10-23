@@ -41,6 +41,7 @@
 \alias{update_fields.ggiraph_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
+\alias{new_mutate_block}
 \alias{mutate_block}
 \alias{is_initialized.field}
 \title{Blocks}
@@ -140,10 +141,6 @@ new_ggiraph_block(
 
 ggiraph_block(data, ...)
 
-new_cheat_block(data, ...)
-
-cheat_block(data, ...)
-
 \method{initialize_block}{transform_block}(x, data, ...)
 
 \method{initialize_block}{default}(x, data, ...)
@@ -159,6 +156,10 @@ update_fields(x, ...)
 \method{update_fields}{plot_block}(x, session, data, ...)
 
 \method{update_fields}{ggiraph_block}(x, session, data, ...)
+
+new_cheat_block(data, ...)
+
+cheat_block(data, ...)
 
 new_mutate_block(data, expr = NULL, ...)
 

@@ -184,7 +184,7 @@ convert_block <- function(from = new_select_block, to, data, ...) {
   block <- initialize_block(from(data, ...), data)
   class(block)[[1]] <- sprintf("%s_block", deparse(substitute(to)))
   attr(block, "expr") <- substitute(
-    to(..(column))
+    to(..(columns))
   )
   block
 }

@@ -1,3 +1,4 @@
+library(blockr.data)
 test_that("add_block works", {
   stack <- new_stack(data_block) |>
     add_block(select_block)

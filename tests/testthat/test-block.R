@@ -1,3 +1,5 @@
+library(dplyr)
+library(blockr.data)
 test_that("data blocks", {
 
   block <- data_block()
@@ -12,7 +14,7 @@ test_that("data blocks", {
   ui <- generate_ui(block, "foo")
 
   expect_type(ui, "list")
-  expect_s3_class(ui, "shiny.tag.list")
+  expect_s3_class(ui, "shiny.tag")
 })
 
 test_that("filter blocks", {
@@ -44,7 +46,7 @@ test_that("select blocks", {
   expect_s3_class(block, "select_block")
   expect_type(block, "list")
 
-  res <- evalute_block(block, data)
+  res <- evaluate_block(block, data)
 
   expect_identical(nrow(res), nrow(data))
   expect_equal(ncol(res), 1)
@@ -61,7 +63,7 @@ test_that("arrange blocks", {
   expect_s3_class(block, "arrange_block")
   expect_type(block, "list")
 
-  res <- evalute_block(block, data)
+  res <- evaluate_block(block, data)
 
   expect_identical(nrow(res), nrow(data))
   expect_equal(ncol(res), ncol(data))
@@ -76,9 +78,9 @@ test_that("group_by blocks", {
   expect_s3_class(block, "group_by_block")
   expect_type(block, "list")
 
-  res <- evalute_block(block, data) %>% summarise(n = n())
+  res <- evaluate_block(block, data) %>% summarise(n = n())
 
-  expect_identical(nrow(res), 3)
+  expect_equal(nrow(res), 3)
 })
 
 test_that("join blocks", {
@@ -87,12 +89,12 @@ test_that("join blocks", {
   expect_s3_class(block, "join_block")
   expect_type(block, "list")
 
-  res <- evalute_block(block, band_members)
+  res <- evaluate_block(block, band_members)
 
   expect_equal(nrow(res), 3)
 
   block <- join_block(band_members, y = "band_instruments", type = "inner")
-  res <- evalute_block(block, band_members)
+  res <- evaluate_block(block, band_members)
   expect_equal(nrow(res), 2)
 })
 
@@ -122,7 +124,7 @@ test_that("plot block", {
   expect_s3_class(block, "plot_block")
   expect_type(block, "list")
 
-  res <- evalute_block(block, data)
+  res <- evaluate_block(block, data)
   expect_s3_class(res, "ggplot")
   # TO DO: more testing for ggplot2 element ...
 })
