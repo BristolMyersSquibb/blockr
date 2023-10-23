@@ -194,7 +194,7 @@ new_filter_block <- function(data, columns = "LBTEST",
   }
 
 
-  filter_exps <- function(data, values) {
+  filter_exps <- function(data, values, filter_func) {
 
     filter_exp <- function(cls, col, val) {
 
@@ -209,7 +209,10 @@ new_filter_block <- function(data, columns = "LBTEST",
           list(column = as.name(col), values = val),
           splice = TRUE
         ),
-        bquote(.(column) == .(value), list(column = as.name(col), value = val))
+        bquote(
+          eval(call(.(filter_func), .(column), .(value))),
+          list(column = as.name(col), value = val, filter_func = filter_func)
+        )
       )
     }
 
@@ -226,6 +229,19 @@ new_filter_block <- function(data, columns = "LBTEST",
   fields <- list(
     columns = new_select_field(columns, col_choices, multiple = TRUE),
     values = new_list_field(values, sub_fields),
+    filter_func = new_select_field(
+      "==",
+      choices = c(
+        "==",
+        "!=",
+        "startsWith",
+        "grepl",
+        ">",
+        "<",
+        ">=",
+        "<="
+      )
+    ),
     expression = new_hidden_field(filter_exps)
   )
 
