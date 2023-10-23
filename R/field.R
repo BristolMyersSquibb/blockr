@@ -335,9 +335,13 @@ validate_field.list_field <- function(x) {
 }
 
 update_sub_fields <- function(sub, val) {
-
-  for (fld in names(val)[lgl_ply(val, is_truthy)]) {
-    value(sub[[fld]]) <- val[[fld]]
+  # Added this because of the join_block
+  if (is.null(names(val))) {
+    value(sub[[1]]) <- unlist(val)
+  } else {
+    for (fld in names(val)[lgl_ply(val, is_truthy)]) {
+      value(sub[[fld]]) <- unlist(val[[fld]])
+    }
   }
 
   sub
