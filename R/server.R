@@ -196,7 +196,11 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-      vals <- reactiveValues(stack = x, blocks = vector("list", length(x)), remove = FALSE)
+      vals <- reactiveValues(
+        stack = x,
+        blocks = vector("list", length(x)),
+        remove = FALSE
+      )
       init_blocks(x, vals, session)
 
       observeEvent(input$remove, {
@@ -223,7 +227,10 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 
         # Insert UI
         insertUI(
-          selector = sprintf("[data-value='%s-block']", session$ns(attr(vals$stack[[p-1]], "name"))),
+          selector = sprintf(
+            "[data-value='%s-block']",
+            session$ns(attr(vals$stack[[p - 1]], "name"))
+          ),
           where = "afterEnd",
           generate_ui(
             vals$stack[[p]],
@@ -236,7 +243,10 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         session$userData$stack <- vals$stack
 
         # trigger javascript-ui functionalities on add
-        session$sendCustomMessage("blockr-add-block", list(stack = session$ns(NULL)))
+        session$sendCustomMessage(
+          "blockr-add-block",
+          list(stack = session$ns(NULL))
+        )
       })
 
       # Remove block from stack (can't be done within the block)
@@ -292,7 +302,10 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       })
 
       observe({
-        session$sendCustomMessage("blockr-bind-stack", list(stack = session$ns(NULL)))
+        session$sendCustomMessage(
+          "blockr-bind-stack",
+          list(stack = session$ns(NULL))
+        )
       })
 
       vals
@@ -360,7 +373,7 @@ server_output.block <- function(x, result, output) {
       DT::datatable(
         selection = "none",
         options = list(
-          pageLength = 5L, 
+          pageLength = 5L,
           processing = FALSE
         )
       )

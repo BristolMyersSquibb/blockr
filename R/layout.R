@@ -1,4 +1,4 @@
-default_layout_fields <- function(fields, ...){
+default_layout_fields <- function(fields, ...) {
   unname(fields)
 }
 

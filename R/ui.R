@@ -32,11 +32,11 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
   header <- block_title(x, code_id, output_id, ns)
 
   block_class <- "block"
-  if(.hidden)
+  if (.hidden)
     block_class <- sprintf("%s hidden", block_class)
 
   inputs_hidden <- ""
-  if(.hidden)
+  if (.hidden)
     inputs_hidden <- "hidden"
 
   layout <- attr(x, "layout")
@@ -117,7 +117,10 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         })
       )
     ),
-    sortable::sortable_js(body_id, options = sortable::sortable_options(draggable = ".block")),
+    sortable::sortable_js(
+      body_id,
+      options = sortable::sortable_options(draggable = ".block")
+    ),
     blockrDependencies(),
     htmltools::singleton(
       tags$head(
@@ -142,14 +145,14 @@ block_title <- function(block, code_id, output_id, ns) {
       class = "d-flex",
       if (not_null(title)) {
         div(
-          class = "flex-grow-1", 
+          class = "flex-grow-1",
           shiny::p(title, class = "fw-bold")
         )
       },
       div(
         class = "flex-shrink-1",
         actionLink(
-          ns("remove"), 
+          ns("remove"),
           icon("trash"),
           class = "text-decoration-none text-danger block-remove",
         ),
@@ -184,7 +187,7 @@ stack_header <- function(stack, ns) {
       class = "d-flex",
       if (not_null(title)) {
         div(
-          class = "flex-grow-1", 
+          class = "flex-grow-1",
           bmsui::togglerTextInput(
             ns("title"),
             title,
@@ -463,25 +466,25 @@ uiCode <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 uiCode.block <- function(x, ns) {
- shiny::verbatimTextOutput(ns("code"))
+  shiny::verbatimTextOutput(ns("code"))
 }
 
 #' @importFrom shiny icon
-iconCode <- function(){
+iconCode <- function() {
   icon("code")
 }
 
 #' @importFrom shiny icon
-iconEdit <- function(){
+iconEdit <- function() {
   icon("edit")
 }
 
 #' @importFrom shiny icon
-iconOutput <- function(){
+iconOutput <- function() {
   icon("arrow-right-from-bracket")
 }
 
 #' @importFrom shiny icon
-iconTrash <- function(){
+iconTrash <- function() {
   icon("trash")
 }

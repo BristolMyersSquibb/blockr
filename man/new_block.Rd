@@ -180,8 +180,8 @@ at the moment. Not used yet...}
 
 \item{class}{Block subclass}
 
-\item{layout}{Callback function accepting one argument: the list of fields to layout
-and returns one or more UI tag(s).}
+\item{layout}{Callback function accepting one argument:
+the list of fields to layout and returns one or more UI tag(s).}
 
 \item{x}{An object inheriting form \code{"block"}}
 

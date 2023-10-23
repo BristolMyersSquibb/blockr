@@ -11,8 +11,8 @@
 #' of the fields)
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
-#' @param layout Callback function accepting one argument: the list of fields to layout
-#'  and returns one or more UI tag(s).
+#' @param layout Callback function accepting one argument:
+#' the list of fields to layout and returns one or more UI tag(s).
 #'
 #' @export
 #' @import blockr.data
@@ -636,11 +636,11 @@ new_ggiraph_block <- function(
       ymin <- "ymin"
       ymax <- "ymax"
 
-      data <- data |> 
+      data <- data |>
         mutate(
           TOOLTIP = sprintf("x: %s\ny: %s", .data[[x_var]], .data[[y_var]]),
           TOOLTIP_SE = sprintf(
-            "x: %s\ny: %s\nmin: %s\nmax: %s", 
+            "x: %s\ny: %s\nmin: %s\nmax: %s",
             .data[[x_var]], .data[[y_var]],
             .data[[ymin]],  .data[[ymax]]
           )
@@ -696,18 +696,27 @@ new_ggiraph_block <- function(
           legend.title = element_text(face = "bold"),
           legend.position = "bottom"
         ) +
-        ggiraph::scale_color_brewer_interactive(name = "Treatment Group", palette = "Set1") +
+        ggiraph::scale_color_brewer_interactive(
+          name = "Treatment Group",
+          palette = "Set1"
+        ) +
         ggiraph::scale_shape_manual_interactive(
           name = "Treatment Group",
           values = c(16, 17, 18, 19, 20)
         )
 
       p <- ggiraph::girafe(ggobj = p)
-      p <- ggiraph::girafe_options(p,
-      ggiraph::opts_tooltip(opacity = .7,
-        offx = 20, offy = -10,
-        use_fill = TRUE, use_stroke = TRUE,
-        delay_mouseout = 1000) )
+      p <- ggiraph::girafe_options(
+        p,
+        ggiraph::opts_tooltip(
+          opacity = .7,
+          offx = 20,
+          offy = -10,
+          use_fill = TRUE,
+          use_stroke = TRUE,
+          delay_mouseout = 1000
+        )
+      )
     }),
     ...,
     class = c("ggiraph_block"),
