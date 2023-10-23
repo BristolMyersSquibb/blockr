@@ -34,3 +34,45 @@ cheat_block <- function(data, ...) {
   initialize_block(new_cheat_block(data, ...), data)
 }
 
+#' @rdname new_block
+#' @param expr Pass mutate expression.
+#' This will be hardcoded but we can't do better
+#' at the moment. Not used yet...
+#' @export
+new_mutate_block <- function(data, expr = NULL, ...) {
+
+  mutate_expr <- function(data) {
+
+    if (!("VISIT" %in% colnames(data))) {
+      return(NULL)
+    }
+
+    bquote(
+      dplyr::mutate(
+        VISIT = factor(
+          .(column),
+          levels = unique(.(column)),
+          ordered = TRUE
+        )
+      ),
+      list(column = as.name("VISIT"))
+    )
+  }
+
+  fields <- list(
+    expression = new_hidden_field(mutate_expr)
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(expression)),
+    ...,
+    class = c("mutate_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+mutate_block <- function(data, ...) {
+  initialize_block(new_mutate_block(data, ...), data)
+}

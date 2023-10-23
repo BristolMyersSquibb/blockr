@@ -24,6 +24,8 @@
 \alias{select_block}
 \alias{arrange_block}
 \alias{group_by_block}
+\alias{new_join_block}
+\alias{join_block}
 \alias{new_plot_block}
 \alias{plot_block}
 \alias{initialize_block.transform_block}
@@ -34,8 +36,8 @@
 \alias{update_fields.plot_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
-\alias{new_join_block}
-\alias{join_block}
+\alias{new_mutate_block}
+\alias{mutate_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -85,6 +87,15 @@ arrange_block(data, ...)
 
 group_by_block(data, ...)
 
+new_join_block(
+  data,
+  y = data(package = "blockr.data")$result[, "Item"],
+  type = c("inner", "left"),
+  ...
+)
+
+join_block(data, ...)
+
 new_plot_block(
   data,
   plot_opts = list(colors = c("blue", "red"), point_size = 3, title = "Plot title", theme
@@ -113,23 +124,18 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_join_block(
-  data,
-  y = data(package = "blockr.data")$result[, "Item"],
-  type = c("inner", "left"),
-  ...
-)
+new_mutate_block(data, expr = NULL, ...)
 
-join_block(data, ...)
+mutate_block(data, ...)
 
 \method{is_initialized}{field}(x)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}
 
-\item{expr}{A quoted expression (compatible with partial substitution as
-implemented in \code{\link[base:bquote]{base::bquote()}} and intended for evaluation in the context
-of the fields)}
+\item{expr}{Pass mutate expression.
+This will be hardcoded but we can't do better
+at the moment. Not used yet...}
 
 \item{name}{Block name}
 
@@ -139,7 +145,7 @@ of the fields)}
 
 \item{x}{An object inheriting form \code{"block"}}
 
-\item{data}{Input data coming from previous block.}
+\item{data}{Block input data}
 
 \item{columns}{Column(s) to select.}
 
@@ -149,13 +155,13 @@ of the fields)}
 
 \item{func}{Summarize function to apply.}
 
-\item{plot_opts}{List containing options for ggplot (color, ...).}
-
-\item{session}{Shiny session}
-
 \item{y}{Second data block.}
 
 \item{type}{Join type.}
+
+\item{plot_opts}{List containing options for ggplot (color, ...).}
+
+\item{session}{Shiny session}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block
