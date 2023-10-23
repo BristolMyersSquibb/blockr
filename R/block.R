@@ -149,7 +149,7 @@ new_data_block <- function(...) {
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
   fields <- list(
-    dataset = new_select_field(datasets[[1]], datasets)
+    dataset = new_select_field("merged_data", datasets)
   )
 
   expr <- quote(
