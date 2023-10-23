@@ -14,6 +14,7 @@
 #'
 #' @export
 #' @import blockr.data
+#' @import dplyr
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
   stopifnot(

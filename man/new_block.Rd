@@ -115,7 +115,7 @@ cheat_block(data, ...)
 
 new_join_block(
   data,
-  y = data(package = "blockr.data")$result[, "Item"][[2]],
+  y = data(package = "blockr.data")$result[, "Item"],
   type = c("inner", "left"),
   ...
 )
