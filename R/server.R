@@ -182,51 +182,7 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
-generate_server.ggiraph_block <- function(x, in_dat, id, ...) {
-
-  obs_expr <- function(x) {
-    splice_args(
-      list(in_dat(), ..(args)),
-      args = lapply(unlst(input_ids(x)), quoted_input_entry)
-    )
-  }
-
-  set_expr <- function(x) {
-    splice_args(
-      blk(update_fields(blk(), session, in_dat(), ..(args))),
-      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-    )
-  }
-
-  shiny::moduleServer(
-    id,
-    function(input, output, session) {
-      blk <- shiny::reactiveVal(x)
-
-      o <- shiny::observeEvent(
-        eval(obs_expr(blk())),
-        eval(set_expr(blk())),
-        ignoreInit = TRUE
-      )
-
-      out_dat <- shiny::reactive({
-        evaluate_block(blk(), data = in_dat())
-      })
-
-      output$plot <- server_output(x, out_dat, output)
-      output$code <- server_code(x, blk, output)
-
-      # Cleanup module inputs (UI and server side)
-      # and observer
-      observeEvent(input$remove, {
-        message(sprintf("CLEANING UP BLOCK %s", id))
-        remove_shiny_inputs(id = id, input)
-        o$destroy()
-        session$userData$is_cleaned(TRUE)
-      })
-    }
-  )
-}
+generate_server.ggiraph_block <- generate_server.plot_block
 
 #' @rdname generate_server
 #' @param id Unique module id. Useful when the stack is called as a module.
