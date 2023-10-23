@@ -338,13 +338,13 @@ select_block <- function(data, ...) {
 #' @export
 arrange_block <- function(data, ...) {
   # Arrange is close to select so we can use its init functuib
-  convert_block(to = dplyr::arrange, data = data, ...)
+  convert_block(to = arrange, data = data, ...)
 }
 
 #' @rdname new_block
 #' @export
 group_by_block <- function(data, ...) {
-  convert_block(to = dplyr::group_by, data = data, ...)
+  convert_block(to = group_by, data = data, ...)
 }
 
 #' @rdname new_block
