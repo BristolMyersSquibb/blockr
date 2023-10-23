@@ -234,6 +234,7 @@ new_filter_block <- function(data, columns = "LBTEST",
       choices = c(
         "==",
         "!=",
+        "!startsWith",
         "startsWith",
         "grepl",
         ">",
