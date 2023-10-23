@@ -4,6 +4,7 @@
 \alias{server_output}
 \alias{server_output.block}
 \alias{server_output.plot_block}
+\alias{server_output.ggiraph_block}
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
@@ -32,6 +33,7 @@
 \alias{uiOutput}
 \alias{uiOutput.block}
 \alias{uiOutput.plot_block}
+\alias{uiOutput.ggiraph_block}
 \alias{uiCode}
 \alias{uiCode.block}
 \title{UI}
@@ -41,6 +43,8 @@ server_output(x, result, output)
 \method{server_output}{block}(x, result, output)
 
 \method{server_output}{plot_block}(x, result, output)
+
+\method{server_output}{ggiraph_block}(x, result, output)
 
 server_code(x, state, output)
 
@@ -97,6 +101,8 @@ uiOutput(x, ns)
 \method{uiOutput}{block}(x, ns)
 
 \method{uiOutput}{plot_block}(x, ns)
+
+\method{uiOutput}{ggiraph_block}(x, ns)
 
 uiCode(x, ns)
 

@@ -13,6 +13,7 @@
 \alias{evaluate_block.data_block}
 \alias{evaluate_block.transform_block}
 \alias{evaluate_block.plot_block}
+\alias{evaluate_block.ggiraph_block}
 \alias{new_data_block}
 \alias{data_block}
 \alias{initialize_block.data_block}
@@ -28,6 +29,8 @@
 \alias{join_block}
 \alias{new_plot_block}
 \alias{plot_block}
+\alias{new_ggiraph_block}
+\alias{ggiraph_block}
 \alias{initialize_block.transform_block}
 \alias{initialize_block.default}
 \alias{initialize_block.plot_block}
@@ -35,9 +38,9 @@
 \alias{update_fields.data_block}
 \alias{update_fields.transform_block}
 \alias{update_fields.plot_block}
+\alias{update_fields.ggiraph_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
-\alias{new_mutate_block}
 \alias{mutate_block}
 \alias{is_initialized.field}
 \title{Blocks}
@@ -73,7 +76,11 @@ evaluate_block(x, ...)
 
 \method{evaluate_block}{plot_block}(x, data, ...)
 
+\method{evaluate_block}{ggiraph_block}(x, data, ...)
+
 new_data_block(...)
+
+\method{evaluate_block}{plot_block}(x, data, ...)
 
 data_block(...)
 
@@ -121,6 +128,22 @@ new_plot_block(
 
 plot_block(data, ...)
 
+new_ggiraph_block(
+  data,
+  plot_opts = list(colors = c("blue", "red"), point_size = 3, title = "Plot title", theme
+    = c("theme_minimal", "theme_gray", "theme_linedraw", "theme_dark", "theme_light",
+    "theme_classic", "theme_void", "theme_bw"), x_lab = "X axis label", y_lab =
+    "Y axis label", errors = list(show = FALSE, ymin = character(), ymax = character()),
+    lines = list(show = FALSE, group = character(), color = character())),
+  ...
+)
+
+ggiraph_block(data, ...)
+
+new_cheat_block(data, ...)
+
+cheat_block(data, ...)
+
 \method{initialize_block}{transform_block}(x, data, ...)
 
 \method{initialize_block}{default}(x, data, ...)
@@ -135,9 +158,7 @@ update_fields(x, ...)
 
 \method{update_fields}{plot_block}(x, session, data, ...)
 
-new_cheat_block(data, ...)
-
-cheat_block(data, ...)
+\method{update_fields}{ggiraph_block}(x, session, data, ...)
 
 new_mutate_block(data, expr = NULL, ...)
 
