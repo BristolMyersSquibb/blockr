@@ -136,24 +136,31 @@ evaluate_block.plot_block <- function(x, data, ...) {
 evaluate_block.ggiraph_block <- evaluate_block.plot_block
 
 #' @rdname new_block
+#' @param dat Multiple datasets.
+#' @param selected Selected dataset.
 #' @export
-new_data_block <- function(...) {
+new_data_block <- function(
+  ...,
+  dat = as.environment("package:datasets"),
+  selected = character()
+) {
   is_dataset_eligible <- function(x) {
     inherits(
-      get(x, envir = as.environment("package:blockr.data"), inherits = FALSE),
+      get(x, envir = dat, inherits = FALSE),
       "data.frame"
     )
   }
 
-  datasets <- ls(envir = as.environment("package:blockr.data"))
+  datasets <- ls(envir = dat)
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
   fields <- list(
-    dataset = new_select_field("merged_data", datasets)
+    dataset = new_select_field(selected, datasets)
   )
 
-  expr <- quote(
-    get(.(dataset), envir = as.environment("package:blockr.data"))
+  expr <- substitute(
+    get(.(dataset), envir = data),
+    list(data = dat)
   )
 
   new_block(

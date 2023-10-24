@@ -43,6 +43,7 @@
 \alias{cheat_block}
 \alias{new_as_factor_block}
 \alias{as_factor_block}
+\alias{data_demo_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -79,7 +80,11 @@ evaluate_block(x, ...)
 
 \method{evaluate_block}{ggiraph_block}(x, data, ...)
 
-new_data_block(...)
+new_data_block(
+  ...,
+  dat = as.environment("package:datasets"),
+  selected = character()
+)
 
 \method{evaluate_block}{plot_block}(x, data, ...)
 
@@ -164,6 +169,8 @@ new_as_factor_block(data, column = "VISIT", ...)
 
 as_factor_block(data, ...)
 
+data_demo_block(...)
+
 \method{is_initialized}{field}(x)
 }
 \arguments{
@@ -185,6 +192,10 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{x}{An object inheriting form \code{"block"}}
 
 \item{data}{Block input data}
+
+\item{dat}{Multiple datasets.}
+
+\item{selected}{Selected dataset.}
 
 \item{columns}{Column(s) to select.}
 

@@ -77,3 +77,15 @@ new_as_factor_block <- function(data, column = "VISIT", ...) {
 as_factor_block <- function(data, ...) {
   initialize_block(new_as_factor_block(data, ...), data)
 }
+
+#' @rdname new_block
+#' @export
+data_demo_block <- function(...) {
+  initialize_block(
+    new_data_block(
+      ...,
+      dat = as.environment("package:blockr.data"),
+      selected = "lab"
+    )
+  )
+}

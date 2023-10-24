@@ -1,9 +1,11 @@
 # Basic example
 pkgload::load_all()
 library(blockr.data)
+
 stack <- new_stack(
-  data_block,
+  data_demo_block,
   #join_block,
+  filter_block,
   filter_block,
   arrange_block,
   as_factor_block,
