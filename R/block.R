@@ -319,36 +319,65 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 }
 
 #' @param data Tabular data in which to perform summarise.
-#' @param column Column to select.
 #' @param func Summarize function to apply.
 #' @rdname new_block
 #' @export
 new_summarize_block <- function(
   data,
-  column = colnames(data)[1L],
-  func = c("mean", "sd"),
+  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
   ...
 ) {
-  all_cols <- function(data) colnames(data)
+  # Columns are only a select input
+  sub_fields <- function(data, funcs) {
+    all_cols <- colnames(data)
+    tmp_selects <- lapply(
+      funcs,
+      function(func) {
+        new_select_field(value = all_cols[[1]], choices = all_cols)
+      }
+    )
+    names(tmp_selects) <- funcs
+    tmp_selects
+  }
+
+  summarize_expr <- function(funcs, columns) {
+    # Build expressions that will go inside the summarize
+    if (length(columns) == 0) return(quote(TRUE))
+
+    tmp_exprs <- lapply(funcs, function(fun) {
+
+      bquote(
+        .(fun)(.(column), na.rm = TRUE),
+        list(
+          fun = as.name(fun),
+          column = as.name(unlist(columns))
+        )
+      )
+    })
+
+    # TO DO: find a way to rename the summarise expressions
+    # so that column have readable names ...
+    #expr_name <- paste(fun, columns, sep = "_")
+
+    bquote(
+      dplyr::summarise(..(exprs), .groups = "drop"),
+      list(exprs = tmp_exprs),
+      splice = TRUE
+    )
+  }
 
   fields <- list(
-    func = new_select_field(func[[1]], func),
-    column = new_select_field(column, all_cols)
+    funcs = new_select_field(func[[1]], func, multiple = TRUE),
+    columns = new_list_field(sub_fields = sub_fields),
+    expression = new_hidden_field(summarize_expr)
   )
 
   # TO DO: find way to name the new
   # column instead of res ...
 
-  # TO DO: apply multiple summarize operations
-
   new_block(
     fields = fields,
-    expr = quote(
-      dplyr::summarise(
-        res = .(func)(!!as.name(.(column)), na.rm = TRUE),
-        .groups = "drop"
-      )
-    ),
+    expr = quote(.(expression)),
     ...,
     class = c("summarize_block", "transform_block")
   )

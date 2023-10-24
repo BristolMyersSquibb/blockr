@@ -95,8 +95,7 @@ new_select_block(data, columns = colnames(data)[1], ...)
 
 new_summarize_block(
   data,
-  column = colnames(data)[1L],
-  func = c("mean", "sd"),
+  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
   ...
 )
 
@@ -190,8 +189,6 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{columns}{Column(s) to select.}
 
 \item{values}{Definition of the equality filter.}
-
-\item{column}{Column to select.}
 
 \item{func}{Summarize function to apply.}
 

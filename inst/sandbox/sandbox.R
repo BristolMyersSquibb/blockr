@@ -3,12 +3,13 @@ pkgload::load_all()
 library(blockr.data)
 stack <- new_stack(
   data_block,
-  mutate_block#,
-  #filter_block#,
-  #join_block#,
-  #summarize_block#,
-  #arrange_block,
-  #plot_block
+  #join_block,
+  filter_block,
+  arrange_block,
+  mutate_block,
+  group_by_block,
+  summarize_block,
+  plot_block
 )
 serve_stack(stack)
 
