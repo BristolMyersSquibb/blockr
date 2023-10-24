@@ -236,8 +236,9 @@ ui_input.string_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.select_field <- function(x, id, name) {
-  selectInput(
-    input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple")
+  selectizeInput(
+    input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple"),
+    options = list(dropdownParent = "body")
   )
 }
 
