@@ -35,15 +35,15 @@ cheat_block <- function(data, ...) {
 }
 
 #' @rdname new_block
-#' @param expr Pass mutate expression.
-#' This will be hardcoded but we can't do better
-#' at the moment. Not used yet...
+#' @param column Column to apply the operation on.
 #' @export
-new_mutate_block <- function(data, expr = NULL, ...) {
+new_as_factor_block <- function(data, column = "VISIT", ...) {
 
-  mutate_expr <- function(data) {
+  all_cols <- function(data) colnames(data)
 
-    if (!("VISIT" %in% colnames(data))) {
+  mutate_expr <- function(data, column) {
+    if (is.null(column)) return(NULL)
+    if (!(column %in% colnames(data))) {
       return(NULL)
     }
 
@@ -55,11 +55,12 @@ new_mutate_block <- function(data, expr = NULL, ...) {
           ordered = TRUE
         )
       ),
-      list(column = as.name("VISIT"))
+      list(column = as.name(column))
     )
   }
 
   fields <- list(
+    column = new_select_field(column, column),
     expression = new_hidden_field(mutate_expr)
   )
 
@@ -67,12 +68,87 @@ new_mutate_block <- function(data, expr = NULL, ...) {
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("mutate_block", "transform_block")
+    class = c("dummy_block", "transform_block")
   )
 }
 
 #' @rdname new_block
 #' @export
-mutate_block <- function(data, ...) {
-  initialize_block(new_mutate_block(data, ...), data)
+as_factor_block <- function(data, ...) {
+  initialize_block(new_as_factor_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+demo_data_block <- function(...) {
+  initialize_block(
+    new_data_block(
+      ...,
+      dat = as.environment("package:blockr.data"),
+      selected = "lab"
+    )
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_join_block <- function(data, ...) {
+  initialize_block(
+    new_join_block(
+      data,
+      y = "demo",
+      type = "inner",
+      ...
+    ),
+    data
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_arrange_block <- function(data, ...) {
+  arrange_block(
+    data,
+    columns = "VISITNUM",
+    ...
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_group_by_block <- function(data, ...) {
+  group_by_block(
+    data,
+    columns = c("VISIT", "ACTARM"),
+    ...
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_filter_block_1 <- function(data, ...) {
+  initialize_block(
+    new_filter_block(
+      data,
+      columns = "LBTEST",
+      values = "Hemoglobin",
+      ...
+    ),
+    data
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_filter_block_2 <- function(data, ...) {
+  initialize_block(
+    new_filter_block(
+      data,
+      columns = "VISIT",
+      values = "UNSCHEDULED",
+      filter_fun = "!startsWith",
+      ...
+    ),
+    data
+  )
 }

@@ -41,8 +41,14 @@
 \alias{update_fields.ggiraph_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
-\alias{new_mutate_block}
-\alias{mutate_block}
+\alias{new_as_factor_block}
+\alias{as_factor_block}
+\alias{demo_data_block}
+\alias{demo_join_block}
+\alias{demo_arrange_block}
+\alias{demo_group_by_block}
+\alias{demo_filter_block_1}
+\alias{demo_filter_block_2}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -79,7 +85,11 @@ evaluate_block(x, ...)
 
 \method{evaluate_block}{ggiraph_block}(x, data, ...)
 
-new_data_block(...)
+new_data_block(
+  ...,
+  dat = as.environment("package:datasets"),
+  selected = character()
+)
 
 \method{evaluate_block}{plot_block}(x, data, ...)
 
@@ -87,7 +97,13 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
+new_filter_block(
+  data,
+  columns = colnames(data)[1L],
+  values = character(),
+  filter_fun = "==",
+  ...
+)
 
 filter_block(data, ...)
 
@@ -95,8 +111,7 @@ new_select_block(data, columns = colnames(data)[1], ...)
 
 new_summarize_block(
   data,
-  column = colnames(data)[1L],
-  func = c("mean", "sd"),
+  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
   ...
 )
 
@@ -161,18 +176,30 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_mutate_block(data, expr = NULL, ...)
+new_as_factor_block(data, column = "VISIT", ...)
 
-mutate_block(data, ...)
+as_factor_block(data, ...)
+
+demo_data_block(...)
+
+demo_join_block(data, ...)
+
+demo_arrange_block(data, ...)
+
+demo_group_by_block(data, ...)
+
+demo_filter_block_1(data, ...)
+
+demo_filter_block_2(data, ...)
 
 \method{is_initialized}{field}(x)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}
 
-\item{expr}{Pass mutate expression.
-This will be hardcoded but we can't do better
-at the moment. Not used yet...}
+\item{expr}{A quoted expression (compatible with partial substitution as
+implemented in \code{\link[base:bquote]{base::bquote()}} and intended for evaluation in the context
+of the fields)}
 
 \item{name}{Block name}
 
@@ -187,11 +214,15 @@ the list of fields to layout and returns one or more UI tag(s).}
 
 \item{data}{Block input data}
 
+\item{dat}{Multiple datasets.}
+
+\item{selected}{Selected dataset.}
+
 \item{columns}{Column(s) to select.}
 
 \item{values}{Definition of the equality filter.}
 
-\item{column}{Column to select.}
+\item{filter_fun}{Default filter fun for the expression.}
 
 \item{func}{Summarize function to apply.}
 
@@ -202,6 +233,8 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 
 \item{session}{Shiny session}
+
+\item{column}{Column to apply the operation on.}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block

@@ -1,14 +1,20 @@
 # Basic example
 pkgload::load_all()
 library(blockr.data)
+
+# Note: sometimes memories issue due to the join block
+# can be solved by restarting R between each run.
+
 stack <- new_stack(
-  data_block,
-  mutate_block#,
-  #filter_block#,
-  #join_block#,
-  #summarize_block#,
-  #arrange_block,
-  #plot_block
+  demo_data_block,
+  demo_join_block,
+  demo_filter_block_1,
+  demo_filter_block_2,
+  demo_arrange_block,
+  as_factor_block,
+  demo_group_by_block,
+  summarize_block,
+  plot_block
 )
 serve_stack(stack)
 

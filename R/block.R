@@ -136,24 +136,33 @@ evaluate_block.plot_block <- function(x, data, ...) {
 evaluate_block.ggiraph_block <- evaluate_block.plot_block
 
 #' @rdname new_block
+#' @param dat Multiple datasets.
+#' @param selected Selected dataset.
 #' @export
-new_data_block <- function(...) {
+new_data_block <- function(
+  ...,
+  dat = as.environment("package:datasets"),
+  selected = character()
+) {
   is_dataset_eligible <- function(x) {
     inherits(
-      get(x, envir = as.environment("package:blockr.data"), inherits = FALSE),
+      get(x, envir = dat, inherits = FALSE),
       "data.frame"
     )
   }
 
-  datasets <- ls(envir = as.environment("package:blockr.data"))
+  datasets <- ls(envir = dat)
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
+  if (length(selected) == 0) selected <- datasets[1]
+
   fields <- list(
-    dataset = new_select_field("merged_data", datasets)
+    dataset = new_select_field(selected, datasets)
   )
 
-  expr <- quote(
-    get(.(dataset), envir = as.environment("package:blockr.data"))
+  expr <- substitute(
+    get(.(dataset), envir = data),
+    list(data = dat)
   )
 
   new_block(
@@ -191,10 +200,16 @@ initialize_block.data_block <- function(x, ...) {
 #' @param data Tabular data to filter (rows)
 #' @param columns Definition of the equality filter.
 #' @param values Definition of the equality filter.
+#' @param filter_fun Default filter fun for the expression.
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, columns = colnames(data)[1L],
-                             values = character(), ...) {
+new_filter_block <- function(
+  data,
+  columns = colnames(data)[1L],
+  values = character(),
+  filter_fun = "==",
+  ...
+) {
 
   sub_fields <- function(data, columns) {
 
@@ -262,7 +277,7 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
     columns = new_select_field(columns, col_choices, multiple = TRUE),
     values = new_list_field(values, sub_fields),
     filter_func = new_select_field(
-      "==",
+      filter_fun,
       choices = c(
         "==",
         "!=",
@@ -319,36 +334,82 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 }
 
 #' @param data Tabular data in which to perform summarise.
-#' @param column Column to select.
 #' @param func Summarize function to apply.
 #' @rdname new_block
 #' @export
 new_summarize_block <- function(
   data,
-  column = colnames(data)[1L],
-  func = c("mean", "sd"),
+  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
   ...
 ) {
-  all_cols <- function(data) colnames(data)
+  # Columns are only a select input
+  sub_fields <- function(data, funcs) {
+    all_cols <- colnames(data)
+    tmp_selects <- lapply(
+      funcs,
+      function(func) {
+        new_select_field(value = all_cols[[1]], choices = all_cols)
+      }
+    )
+    names(tmp_selects) <- funcs
+    tmp_selects
+  }
+
+  summarize_expr <- function(funcs, columns) {
+    # Build expressions that will go inside the summarize
+    if (length(columns) == 0) return(quote(TRUE))
+
+    tmp_exprs <- lapply(funcs, function(fun) {
+      col <- columns[[fun]]
+
+      if (is.null(col)) return(quote(TRUE))
+      col <- as.name(col)
+
+      expr <- if (fun == "se") {
+        bquote(
+          sd(.(column), na.rm = TRUE) / sqrt(n()),
+          list(column = col)
+        )
+      } else {
+        bquote(
+          .(fun)(.(column), na.rm = TRUE),
+          list(
+            fun = as.name(fun),
+            column = col
+          )
+        )
+      }
+
+      bquote(
+        .(expr),
+        list(
+          expr = expr,
+          column = col
+        )
+      )
+    })
+
+    names(tmp_exprs) <- toupper(names(columns))
+
+    bquote(
+      dplyr::summarise(..(exprs), .groups = "drop"),
+      list(exprs = tmp_exprs),
+      splice = TRUE
+    )
+  }
 
   fields <- list(
-    func = new_select_field(func[[1]], func),
-    column = new_select_field(column, all_cols)
+    funcs = new_select_field(func[[1]], func, multiple = TRUE),
+    columns = new_list_field(sub_fields = sub_fields),
+    expression = new_hidden_field(summarize_expr)
   )
 
   # TO DO: find way to name the new
   # column instead of res ...
 
-  # TO DO: apply multiple summarize operations
-
   new_block(
     fields = fields,
-    expr = quote(
-      dplyr::summarise(
-        res = .(func)(!!as.name(.(column)), na.rm = TRUE),
-        .groups = "drop"
-      )
-    ),
+    expr = quote(.(expression)),
     ...,
     class = c("summarize_block", "transform_block")
   )
