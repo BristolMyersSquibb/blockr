@@ -43,7 +43,12 @@
 \alias{cheat_block}
 \alias{new_as_factor_block}
 \alias{as_factor_block}
-\alias{data_demo_block}
+\alias{demo_data_block}
+\alias{demo_join_block}
+\alias{demo_arrange_block}
+\alias{demo_group_by_block}
+\alias{demo_filter_block_1}
+\alias{demo_filter_block_2}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -92,7 +97,13 @@ data_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-new_filter_block(data, columns = colnames(data)[1L], values = character(), ...)
+new_filter_block(
+  data,
+  columns = colnames(data)[1L],
+  values = character(),
+  filter_fun = "==",
+  ...
+)
 
 filter_block(data, ...)
 
@@ -169,7 +180,17 @@ new_as_factor_block(data, column = "VISIT", ...)
 
 as_factor_block(data, ...)
 
-data_demo_block(...)
+demo_data_block(...)
+
+demo_join_block(data, ...)
+
+demo_arrange_block(data, ...)
+
+demo_group_by_block(data, ...)
+
+demo_filter_block_1(data, ...)
+
+demo_filter_block_2(data, ...)
 
 \method{is_initialized}{field}(x)
 }
@@ -200,6 +221,8 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{columns}{Column(s) to select.}
 
 \item{values}{Definition of the equality filter.}
+
+\item{filter_fun}{Default filter fun for the expression.}
 
 \item{func}{Summarize function to apply.}
 

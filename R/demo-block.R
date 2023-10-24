@@ -80,12 +80,75 @@ as_factor_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
-data_demo_block <- function(...) {
+demo_data_block <- function(...) {
   initialize_block(
     new_data_block(
       ...,
       dat = as.environment("package:blockr.data"),
       selected = "lab"
     )
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_join_block <- function(data, ...) {
+  initialize_block(
+    new_join_block(
+      data,
+      y = "demo",
+      type = "inner",
+      ...
+    ),
+    data
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_arrange_block <- function(data, ...) {
+  arrange_block(
+    data,
+    columns = "VISITNUM",
+    ...
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_group_by_block <- function(data, ...) {
+  group_by_block(
+    data,
+    columns = c("VISIT", "ACTARM"),
+    ...
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_filter_block_1 <- function(data, ...) {
+  initialize_block(
+    new_filter_block(
+      data,
+      columns = "LBTEST",
+      values = "Hemoglobin",
+      ...
+    ),
+    data
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_filter_block_2 <- function(data, ...) {
+  initialize_block(
+    new_filter_block(
+      data,
+      columns = "VISIT",
+      values = "UNSCHEDULED",
+      filter_fun = "!startsWith",
+      ...
+    ),
+    data
   )
 }

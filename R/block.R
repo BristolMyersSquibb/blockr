@@ -198,10 +198,16 @@ initialize_block.data_block <- function(x, ...) {
 #' @param data Tabular data to filter (rows)
 #' @param columns Definition of the equality filter.
 #' @param values Definition of the equality filter.
+#' @param filter_fun Default filter fun for the expression.
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, columns = colnames(data)[1L],
-                             values = character(), ...) {
+new_filter_block <- function(
+  data,
+  columns = colnames(data)[1L],
+  values = character(),
+  filter_fun = "==",
+  ...
+) {
 
   sub_fields <- function(data, columns) {
 
@@ -241,8 +247,6 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
         return(quote(TRUE))
       }
 
-      if (filter_func == "!startsWith") `!startsWith` <- Negate(startsWith)
-
       switch(
         cls,
         numeric = bquote(
@@ -271,7 +275,7 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
     columns = new_select_field(columns, col_choices, multiple = TRUE),
     values = new_list_field(values, sub_fields),
     filter_func = new_select_field(
-      "==",
+      filter_fun,
       choices = c(
         "==",
         "!=",
