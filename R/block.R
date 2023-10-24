@@ -154,6 +154,8 @@ new_data_block <- function(
   datasets <- ls(envir = dat)
   datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
 
+  if (length(selected) == 0) selected <- datasets[1]
+
   fields <- list(
     dataset = new_select_field(selected, datasets)
   )

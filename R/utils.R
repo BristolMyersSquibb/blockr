@@ -189,11 +189,6 @@ convert_block <- function(from = new_select_block, to, data, ...) {
   block
 }
 
-#' Not starting with
-#'
-#' Useful in filter block
-#'
-#' @keywords internal
 `!startsWith` <- Negate(startsWith)
 
 #' Bootstrap 5 offcanvas
