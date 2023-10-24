@@ -234,6 +234,8 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
         return(quote(TRUE))
       }
 
+      if (filter_func == "!startsWith") `!startsWith` <- Negate(startsWith)
+
       switch(
         cls,
         numeric = bquote(
