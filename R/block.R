@@ -347,19 +347,36 @@ new_summarize_block <- function(
     if (length(columns) == 0) return(quote(TRUE))
 
     tmp_exprs <- lapply(funcs, function(fun) {
+      col <- columns[[fun]]
+
+      if (is.null(col)) return(quote(TRUE))
+      col <- as.name(col)
+
+      expr <- if (fun == "se") {
+        bquote(
+          sd(.(column), na.rm = TRUE) / sqrt(n()),
+          list(column = col)
+        )
+      } else {
+        bquote(
+          .(fun)(.(column), na.rm = TRUE),
+          list(
+            fun = as.name(fun),
+            column = col
+          )
+        )
+      }
 
       bquote(
-        .(fun)(.(column), na.rm = TRUE),
+        .(expr),
         list(
-          fun = as.name(fun),
-          column = as.name(unlist(columns))
+          expr = expr,
+          column = col
         )
       )
     })
 
-    # TO DO: find a way to rename the summarise expressions
-    # so that column have readable names ...
-    #expr_name <- paste(fun, columns, sep = "_")
+    names(tmp_exprs) <- toupper(names(columns))
 
     bquote(
       dplyr::summarise(..(exprs), .groups = "drop"),
