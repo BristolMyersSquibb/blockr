@@ -6,7 +6,7 @@ stack <- new_stack(
   #join_block,
   filter_block,
   arrange_block,
-  mutate_block,
+  as_factor_block,
   group_by_block,
   summarize_block,
   plot_block

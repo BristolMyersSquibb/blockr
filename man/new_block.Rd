@@ -41,8 +41,8 @@
 \alias{update_fields.ggiraph_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
-\alias{new_mutate_block}
-\alias{mutate_block}
+\alias{new_as_factor_block}
+\alias{as_factor_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -160,18 +160,18 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_mutate_block(data, expr = NULL, ...)
+new_as_factor_block(data, column = "VISIT", ...)
 
-mutate_block(data, ...)
+as_factor_block(data, ...)
 
 \method{is_initialized}{field}(x)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}
 
-\item{expr}{Pass mutate expression.
-This will be hardcoded but we can't do better
-at the moment. Not used yet...}
+\item{expr}{A quoted expression (compatible with partial substitution as
+implemented in \code{\link[base:bquote]{base::bquote()}} and intended for evaluation in the context
+of the fields)}
 
 \item{name}{Block name}
 
@@ -199,6 +199,8 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 
 \item{session}{Shiny session}
+
+\item{column}{Column to apply the operation on.}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block
