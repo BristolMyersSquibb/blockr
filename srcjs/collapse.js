@@ -1,36 +1,6 @@
 export const collapse = (stack) => {
-  bindCollapse("code");
-  bindCollapse("output");
   editor(stack);
   showLastOutputs(stack);
-};
-
-const bindCollapse = (item) => {
-  $(`.stack-${item}-toggle`).each((_, btn) => {
-    // already has a listener
-    if (btn.getAttribute("listener") == "true") {
-      return;
-    }
-
-    $(btn).on("click", (event) => {
-      $(btn).toggleClass("showing");
-
-      $(event.target).closest(".stack").find(`.block-${item}`).each(
-        (_, code) => {
-          const collapse = bootstrap.Collapse.getOrCreateInstance(code, {
-            toggle: false,
-          });
-
-          if (!$(btn).hasClass("showing")) {
-            collapse.hide();
-            return;
-          }
-
-          collapse.show();
-        },
-      );
-    });
-  });
 };
 
 const editor = (stack) => {
