@@ -105,7 +105,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
       o <- observeEvent(
         eval(obs_expr(blk())),
-        eval(set_expr(blk())),
+        secure(eval(set_expr(blk()))),
         ignoreInit = TRUE
       )
 

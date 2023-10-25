@@ -335,34 +335,52 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 
 #' @param data Tabular data in which to perform summarise.
 #' @param func Summarize function to apply.
+#' @param default_columns If you know in advance each function to apply,
+#' you can also pass predefined selected column for each summary.
+#' Therefore when not of length 0, columns should have the same length
+#' as func.
 #' @rdname new_block
 #' @export
 new_summarize_block <- function(
   data,
-  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
+  func = character(),
+  default_columns = character(),
   ...
 ) {
+
+  if (length(default_columns) > 0) {
+    stopifnot(length(func) == length(default_columns))
+  }
+
   # Columns are only a select input
   sub_fields <- function(data, funcs) {
     all_cols <- colnames(data)
     tmp_selects <- lapply(
-      funcs,
-      function(func) {
-        new_select_field(value = all_cols[[1]], choices = all_cols)
+      seq_along(funcs),
+      function(i) {
+        default <- if (length(default_columns) > 0) {
+          default_columns[[i]]
+        } else {
+          all_cols[[1]]
+        }
+
+        new_select_field(value = default, choices = all_cols)
       }
     )
     names(tmp_selects) <- funcs
     tmp_selects
   }
 
-  summarize_expr <- function(funcs, columns) {
+  summarize_expr <- function(data, funcs, columns) {
     # Build expressions that will go inside the summarize
+    if (length(funcs) == 0) return(quote(TRUE))
     if (length(columns) == 0) return(quote(TRUE))
 
     tmp_exprs <- lapply(funcs, function(fun) {
       col <- columns[[fun]]
 
       if (is.null(col)) return(quote(TRUE))
+      if (!any(col %in% colnames(data))) return(quote(TRUE))
       col <- as.name(col)
 
       expr <- if (fun == "se") {
@@ -398,8 +416,19 @@ new_summarize_block <- function(
     )
   }
 
+  func_choices <- c(
+    "mean",
+    "median",
+    "sd",
+    "se",
+    "min",
+    "max",
+    "n",
+    "n_distinct"
+  )
+
   fields <- list(
-    funcs = new_select_field(func[[1]], func, multiple = TRUE),
+    funcs = new_select_field(func, func_choices, multiple = TRUE),
     columns = new_list_field(sub_fields = sub_fields),
     expression = new_hidden_field(summarize_expr)
   )
@@ -501,7 +530,7 @@ new_join_block <- function(
 
   fields <- list(
     join_func = new_select_field(
-      type,
+      paste(type, "join", sep = "_"),
       paste(join_types, "join", sep = "_")
     ),
     y = new_select_field(y[[1]], y),
@@ -570,7 +599,7 @@ new_plot_block <- function(
   all_cols <- function(data) colnames(data)
   fields <- list(
     x_var = new_select_field("VISIT", all_cols),
-    y_var = new_select_field("Mean", all_cols),
+    y_var = new_select_field("MEAN", all_cols),
     color = new_select_field("ACTARM", all_cols),
     shape = new_select_field("ACTARM", all_cols),
     point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),
@@ -700,7 +729,7 @@ new_ggiraph_block <- function(
   all_cols <- function(data) colnames(data)
   fields <- list(
     x_var = new_select_field("VISIT", all_cols),
-    y_var = new_select_field("Mean", all_cols),
+    y_var = new_select_field("MEAN", all_cols),
     color = new_select_field("ACTARM", all_cols),
     shape = new_select_field("ACTARM", all_cols),
     point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),

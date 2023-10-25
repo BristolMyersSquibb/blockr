@@ -6,7 +6,7 @@ library(blockr.data)
 # can be solved by restarting R between each run.
 
 stack <- new_stack(
-  data_block,
+  demo_data_block,
   demo_join_block,
   demo_filter_block_1,
   demo_filter_block_2,

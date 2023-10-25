@@ -84,7 +84,6 @@ demo_data_block <- function(...) {
   initialize_block(
     new_data_block(
       ...,
-      dat = as.environment("package:datasets"),
       selected = "lab"
     )
   )
@@ -161,6 +160,7 @@ demo_summarize_block <- function(data, ...) {
     new_summarize_block(
       data,
       func = c("mean", "se"),
+      default_columns = c("LBSTRESN", "LBSTRESN"),
       ...
     ),
     data

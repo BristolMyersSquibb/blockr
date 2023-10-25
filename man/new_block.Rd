@@ -112,7 +112,8 @@ new_select_block(data, columns = colnames(data)[1], ...)
 
 new_summarize_block(
   data,
-  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
+  func = character(),
+  default_columns = character(),
   ...
 )
 
@@ -229,6 +230,11 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{filter_fun}{Default filter fun for the expression.}
 
 \item{func}{Summarize function to apply.}
+
+\item{default_columns}{If you know in advance each function to apply,
+you can also pass predefined selected column for each summary.
+Therefore when not of length 0, columns should have the same length
+as func.}
 
 \item{y}{Second data block.}
 
