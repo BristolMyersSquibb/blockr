@@ -458,11 +458,17 @@ new_join_block <- function(
       colnames(eval(as.name(y)))
     )
 
+    default <- if (length(choices) == 0) {
+      character()
+    } else {
+      choices[[1]]
+    }
+
     # TO DO: currently, validate_field.list_field don't work
     # if we don't return a list.
     list(
       val = new_select_field(
-        choices[[1]],
+        default,
         choices,
         multiple = TRUE
       )
