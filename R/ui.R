@@ -33,11 +33,11 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
 
   block_class <- "block"
   if (.hidden)
-    block_class <- sprintf("%s hidden", block_class)
+    block_class <- sprintf("%s d-none", block_class)
 
   inputs_hidden <- ""
   if (.hidden)
-    inputs_hidden <- "hidden"
+    inputs_hidden <- "d-none"
 
   layout <- attr(x, "layout")
 

@@ -22,26 +22,27 @@ const editor = (stack) => {
       const $block = $(block);
 
       if (editable) {
-        $block.show();
-        $block.find(".block-inputs").show();
+        $block.removeClass("d-none");
+        $block.find(".block-inputs").removeClass("d-none");
 
         if (index == ($blocks.length - 1)) {
-          $block.find(".block-inputs").show();
+          $block.find(".block-inputs").removeClass("d-none");
           $block.find(".block-inputs").trigger("shown");
-          $block.find(".block-output").show();
+          $block.find(".block-output").removeClass("d-none");
           $block.find(".block-output").trigger("shown");
         }
         return;
       }
 
-      $block.hide();
-      $block.find(".block-inputs").hide();
+      $block.addClass("d-none");
+      $block.find(".block-inputs").addClass("d-none");
 
       if (index == ($blocks.length - 1)) {
-        $block.show();
-        $block.find(".block-inputs").hide();
+        $block.removeClass("d-none");
+        $block.find(".block-inputs").addClass("d-none");
         $block.find(".block-inputs").trigger("hidden");
-        $block.find(".block-output").show();
+        $block.find(".block-output").removeClass("d-none");
+        $block.find(".block-output").removeClass("collapse");
         $block.find(".block-output").trigger("shown");
       }
     });
@@ -51,7 +52,7 @@ const editor = (stack) => {
 export const showLastOutput = (el) => {
   const $block = $(el).find(".block").last();
 
-  $block.show();
+  $block.removeClass("d-none");
   const lastOutput = $block.find(".block-output");
 
   bootstrap.Collapse.getOrCreateInstance(lastOutput, { toggle: false }).show();
