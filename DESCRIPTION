@@ -10,6 +10,10 @@ Authors@R:
              family = "Granjon",
              role = c("aut"),
              email = "david@cynkra.com"),
+      person(given = "John",
+             family = "Coene",
+             role = c("aut"),
+             email = "john@opifex.org"),
       person(given = "Voltron Data",
              role = "fnd")
     )

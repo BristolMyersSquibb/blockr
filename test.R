@@ -3,8 +3,8 @@ library(blockr.data)
 library(shiny)
 
 stack <- new_stack(
-  data_block,
-  select_block
+  demo_data_block,
+  demo_join_block
 )
 
 ui <- fluidPage(
