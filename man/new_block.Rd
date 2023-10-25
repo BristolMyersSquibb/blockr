@@ -43,8 +43,6 @@
 \alias{cheat_block}
 \alias{new_as_factor_block}
 \alias{as_factor_block}
-\alias{new_errorbar_block}
-\alias{errorbar_block}
 \alias{demo_data_block}
 \alias{demo_join_block}
 \alias{demo_arrange_block}
@@ -90,7 +88,7 @@ evaluate_block(x, ...)
 
 new_data_block(
   ...,
-  dat = as.environment("package:datasets"),
+  dat = as.environment("package:blockr.data"),
   selected = character()
 )
 
@@ -129,7 +127,8 @@ group_by_block(data, ...)
 new_join_block(
   data,
   y = data(package = "blockr.data")$result[, "Item"],
-  type = c("inner", "left"),
+  type = character(),
+  by_col = character(),
   ...
 )
 
@@ -183,10 +182,6 @@ new_as_factor_block(data, column = "VISIT", ...)
 
 as_factor_block(data, ...)
 
-new_errorbar_block(data, column = "SE", ...)
-
-errorbar_block(data, ...)
-
 demo_data_block(...)
 
 demo_join_block(data, ...)
@@ -238,6 +233,9 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{y}{Second data block.}
 
 \item{type}{Join type.}
+
+\item{by_col}{If you know in advance which column you want
+to join}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 

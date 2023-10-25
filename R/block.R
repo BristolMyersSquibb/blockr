@@ -141,7 +141,7 @@ evaluate_block.ggiraph_block <- evaluate_block.plot_block
 #' @export
 new_data_block <- function(
   ...,
-  dat = as.environment("package:datasets"),
+  dat = as.environment("package:blockr.data"),
   selected = character()
 ) {
   is_dataset_eligible <- function(x) {
@@ -444,11 +444,14 @@ group_by_block <- function(data, ...) {
 #' @param data Input data coming from previous block.
 #' @param y Second data block.
 #' @param type Join type.
+#' @param by_col If you know in advance which column you want
+#' to join
 #' @export
 new_join_block <- function(
   data,
   y = data(package = "blockr.data")$result[, "Item"],
-  type = c("inner", "left"),
+  type = character(),
+  by_col = character(),
   ...
 ) {
   # by depends on selected dataset and the input data.
@@ -461,7 +464,11 @@ new_join_block <- function(
     default <- if (length(choices) == 0) {
       character()
     } else {
-      choices[[1]]
+      if (length(by_col) > 0) {
+        by_col
+      } else {
+        choices[[1]]
+      }
     }
 
     # TO DO: currently, validate_field.list_field don't work
@@ -481,10 +488,21 @@ new_join_block <- function(
     # like in filter_block
   }
 
+  join_types <- c(
+    "left",
+    "inner",
+    "right",
+    "full",
+    "semi",
+    "anti"
+  )
+
+  if (length(type) == 0) type <- join_types[1]
+
   fields <- list(
     join_func = new_select_field(
-      "left_join",
-      paste(type, "join", sep = "_")
+      type,
+      paste(join_types, "join", sep = "_")
     ),
     y = new_select_field(y[[1]], y),
     by = new_list_field(sub_fields = by_choices)

@@ -79,53 +79,12 @@ as_factor_block <- function(data, ...) {
 }
 
 #' @rdname new_block
-#' @param column Column to apply the operation on.
-#' @export
-new_errorbar_block <- function(data, column = "SE", ...) {
-
-  errorbar_expr <- function(data, column) {
-    if (is.null(column)) return(NULL)
-    if (!(column %in% colnames(data))) {
-      return(NULL)
-    }
-    if (all(is.na(data[["MEAN"]]))) return(NULL)
-    if (all(is.na(data[[column]]))) return(NULL)
-
-    bquote(
-      dplyr::mutate(
-        ymin = .(mean) - .(column),
-        ymax = .(mean) + .(column)
-      ),
-      list(column = as.name(column), mean = as.name("MEAN"))
-    )
-  }
-
-  fields <- list(
-    column = new_select_field(column, c("SE", "SD")),
-    expression = new_hidden_field(errorbar_expr)
-  )
-
-  new_block(
-    fields = fields,
-    expr = quote(.(expression)),
-    ...,
-    class = c("errorbar_block", "transform_block")
-  )
-}
-
-#' @rdname new_block
-#' @export
-errorbar_block <- function(data, ...) {
-  initialize_block(new_errorbar_block(data, ...), data)
-}
-
-#' @rdname new_block
 #' @export
 demo_data_block <- function(...) {
   initialize_block(
     new_data_block(
       ...,
-      dat = as.environment("package:blockr.data"),
+      dat = as.environment("package:datasets"),
       selected = "lab"
     )
   )
@@ -139,6 +98,7 @@ demo_join_block <- function(data, ...) {
       data,
       y = "demo",
       type = "inner",
+      by_col = c("STUDYID", "USUBJID"),
       ...
     ),
     data
