@@ -24,27 +24,29 @@ const editor = (stack) => {
       if (editable) {
         $block.removeClass("d-none");
         $block.find(".block-inputs").removeClass("d-none");
+        $block.find(".block-inputs").trigger("shown");
 
         if (index == ($blocks.length - 1)) {
-          $block.find(".block-inputs").removeClass("d-none");
-          $block.find(".block-inputs").trigger("shown");
+          $block.find(".block-output").addClass("show");
           $block.find(".block-output").removeClass("d-none");
           $block.find(".block-output").trigger("shown");
         }
         return;
       }
 
-      $block.addClass("d-none");
       $block.find(".block-inputs").addClass("d-none");
+      $block.find(".block-inputs").trigger("hidden");
 
       if (index == ($blocks.length - 1)) {
         $block.removeClass("d-none");
-        $block.find(".block-inputs").addClass("d-none");
-        $block.find(".block-inputs").trigger("hidden");
+
+        $block.find(".block-output").addClass("show");
         $block.find(".block-output").removeClass("d-none");
-        $block.find(".block-output").removeClass("collapse");
         $block.find(".block-output").trigger("shown");
+        return;
       }
+
+      $block.addClass("d-none");
     });
   });
 };
