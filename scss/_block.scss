@@ -8,6 +8,10 @@ html {
 
     overflow-y: auto;
 
+    .block-output {
+      overflow-y: hidden;
+    }
+
     pre {
       border-radius: 0;
     }
