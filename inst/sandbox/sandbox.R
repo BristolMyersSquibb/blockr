@@ -13,8 +13,10 @@ stack <- new_stack(
   demo_arrange_block,
   as_factor_block,
   demo_group_by_block,
-  summarize_block,
+  demo_summarize_block,
+  errorbar_block,
   plot_block
+  #ggiraph_block
 )
 serve_stack(stack)
 

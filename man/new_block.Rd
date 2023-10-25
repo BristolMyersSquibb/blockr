@@ -43,12 +43,15 @@
 \alias{cheat_block}
 \alias{new_as_factor_block}
 \alias{as_factor_block}
+\alias{new_errorbar_block}
+\alias{errorbar_block}
 \alias{demo_data_block}
 \alias{demo_join_block}
 \alias{demo_arrange_block}
 \alias{demo_group_by_block}
 \alias{demo_filter_block_1}
 \alias{demo_filter_block_2}
+\alias{demo_summarize_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -180,6 +183,10 @@ new_as_factor_block(data, column = "VISIT", ...)
 
 as_factor_block(data, ...)
 
+new_errorbar_block(data, column = "SE", ...)
+
+errorbar_block(data, ...)
+
 demo_data_block(...)
 
 demo_join_block(data, ...)
@@ -191,6 +198,8 @@ demo_group_by_block(data, ...)
 demo_filter_block_1(data, ...)
 
 demo_filter_block_2(data, ...)
+
+demo_summarize_block(data, ...)
 
 \method{is_initialized}{field}(x)
 }

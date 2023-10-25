@@ -586,8 +586,8 @@ new_plot_block <- function(
           aes(
             x = .data[[x_var]],
             y = .data[[y_var]],
-            ymin = Mean - SE,
-            ymax = Mean + SE,
+            ymin = MEAN - SE,
+            ymax = MEAN + SE,
             color = ACTARM
           ),
           width = 0.2
@@ -726,8 +726,8 @@ new_ggiraph_block <- function(
           aes(
             x = .data[[x_var]],
             y = .data[[y_var]],
-            ymin = Mean - SE,
-            ymax = Mean + SE,
+            ymin = MEAN - SE,
+            ymax = MEAN + SE,
             color = ACTARM,
             tooltip = TOOLTIP_SE
           ),
