@@ -511,10 +511,12 @@ new_join_block <- function(
     )
   }
 
-  # TO LATER
-  join_expr <- function(data) {
-    # try to build expression within function
-    # like in filter_block
+  join_expr <- function(data, join_func, y, by) {
+    if (length(by$val) == 0) stop("Nothing to merge, restoring defaults.")
+    bquote(
+      .(join_func)(y = .(y), by = .(by)),
+      list(join_func = as.name(join_func), y = as.name(y), by = by$val)
+    )
   }
 
   join_types <- c(
@@ -534,15 +536,14 @@ new_join_block <- function(
       paste(join_types, "join", sep = "_")
     ),
     y = new_select_field(y[[1]], y),
-    by = new_list_field(sub_fields = by_choices)
+    by = new_list_field(sub_fields = by_choices),
+    expression = new_hidden_field(join_expr)
   )
 
   attr(fields$y, "type") <- "name"
   # TO DO: expression is ugly: try to get rid of get and
   # unlist.
-  expr <- quote(
-    get(.(join_func))(y = .(y), by = unlist(.(by), use.names = FALSE))
-  )
+  expr <- quote(.(expression))
 
   new_block(
     fields = fields,
