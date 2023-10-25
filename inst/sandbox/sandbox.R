@@ -14,8 +14,7 @@ stack <- new_stack(
   as_factor_block,
   demo_group_by_block,
   demo_summarize_block,
-  plot_block
-  #ggiraph_block
+  ggiraph_block
 )
 serve_stack(stack)
 

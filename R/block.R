@@ -713,12 +713,12 @@ new_ggiraph_block <- function(
     x_lab = "X axis label",
     y_lab = "Y axis label",
     errors = list(
-      show = FALSE,
+      show = TRUE,
       ymin = character(),
       ymax = character()
     ),
     lines = list(
-      show = FALSE,
+      show = TRUE,
       group = character(),
       color = character()
     )
@@ -747,16 +747,16 @@ new_ggiraph_block <- function(
       y_var <- .(y_var)
       color <- .(color)
       shape <- .(shape)
-      ymin <- "ymin"
-      ymax <- "ymax"
 
       data <- data |>
         mutate(
+          ymin = MEAN - SE,
+          ymax = MEAN + SE,
           TOOLTIP = sprintf("x: %s\ny: %s", .data[[x_var]], .data[[y_var]]),
           TOOLTIP_SE = sprintf(
             "x: %s\ny: %s\nmin: %s\nmax: %s",
             .data[[x_var]], .data[[y_var]],
-            .data[[ymin]],  .data[[ymax]]
+            ymin,  ymax
           )
         )
 
