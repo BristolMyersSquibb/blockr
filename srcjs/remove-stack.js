@@ -6,7 +6,16 @@ export const remove = (stack) => {
     }
 
     $(btn).on("click", (event) => {
-      $(event.target).closest(".stack").remove();
+      const $stack = $(event.target).closest(".stack");
+      const $masonry = $stack.closest(".masonry-item");
+
+      $stack.remove();
+
+      if ($masonry.length === 0) {
+        return;
+      }
+
+      $masonry.remove();
     });
   });
 };
