@@ -27,6 +27,8 @@
 \alias{group_by_block}
 \alias{new_join_block}
 \alias{join_block}
+\alias{new_head_block}
+\alias{head_block}
 \alias{new_plot_block}
 \alias{plot_block}
 \alias{new_ggiraph_block}
@@ -135,6 +137,10 @@ new_join_block(
 
 join_block(data, ...)
 
+new_head_block(data, n_rows = numeric(), ...)
+
+head_block(data, ...)
+
 new_plot_block(
   data,
   plot_opts = list(colors = c("blue", "red"), point_size = 3, title = "Plot title", theme
@@ -179,7 +185,7 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_asfactor_block(data, column = "VISIT", ...)
+new_asfactor_block(data, column = character(), ...)
 
 asfactor_block(data, ...)
 
@@ -242,6 +248,8 @@ as func.}
 
 \item{by_col}{If you know in advance which column you want
 to join}
+
+\item{n_rows}{Number of rows to return.}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 

@@ -81,8 +81,6 @@ eval_set_field_value <- function(x, env) {
     tmp <- do.call(fun, env[methods::formalArgs(fun)])
     if (length(tmp) > 0) {
       value(x, cmp) <- tmp
-    } else {
-      stop("Column can't be empty, restoring to default value.")
     }
   }
 
@@ -171,6 +169,40 @@ validate_field.switch_field <- function(x) {
   x
 }
 
+#' @rdname new_field
+#' @export
+new_numeric_field <- function(
+  value = numeric(),
+  min = numeric(),
+  max = numeric(),
+  ...
+) {
+
+  new_field(value, min = min, max = max, ..., class = "numeric_field")
+}
+
+#' @rdname new_field
+#' @export
+numeric_field <- function(...) {
+  validate_field(new_numeric_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.numeric_field <- function(x) {
+  val <- value(x)
+
+  if (!is.numeric(val) || length(val) == 0) {
+    value(x) <- value(x, "min")
+  } else if (val < value(x, "min")) {
+    value(x) <- value(x, "min")
+  } else if (val > value(x, "max")) {
+    value(x) <- value(x, "max")
+  }
+
+  x
+}
+
 #' @param name Field component name
 #' @rdname new_field
 #' @export
@@ -232,7 +264,12 @@ variable_field <- function(...) validate_field(new_variable_field(...))
 validate_field.variable_field <- function(x) {
 
   val <- value(x, "field")
-  opt <- c("string_field", "select_field", "range_field")
+  opt <- c(
+    "string_field",
+    "select_field",
+    "range_field",
+    "numeric_field"
+  )
 
   stopifnot(is.character(val), length(val) <= 1L)
 

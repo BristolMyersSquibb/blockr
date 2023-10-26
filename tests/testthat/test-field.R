@@ -42,3 +42,18 @@ test_that("range fields", {
   expect_type(field, "list")
   expect_identical(value(field), c(0, 10))
 })
+
+test_that("numeric fields", {
+
+  field <- numeric_field(min = 0, max = 10)
+
+  expect_s3_class(field, "numeric_field")
+  expect_type(field, "list")
+  expect_identical(value(field), 0)
+
+  field <- numeric_field(value = 200, min = 0, max = 10)
+  expect_identical(value(field), 10)
+
+  field <- numeric_field(value = -10, min = 0, max = 10)
+  expect_identical(value(field), 0)
+})

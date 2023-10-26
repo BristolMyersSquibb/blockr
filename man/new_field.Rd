@@ -17,6 +17,9 @@
 \alias{new_switch_field}
 \alias{switch_field}
 \alias{validate_field.switch_field}
+\alias{new_numeric_field}
+\alias{numeric_field}
+\alias{validate_field.numeric_field}
 \alias{value}
 \alias{values}
 \alias{value<-}
@@ -70,6 +73,12 @@ new_switch_field(value = FALSE, ...)
 switch_field(...)
 
 \method{validate_field}{switch_field}(x)
+
+new_numeric_field(value = numeric(), min = numeric(), max = numeric(), ...)
+
+numeric_field(...)
+
+\method{validate_field}{numeric_field}(x)
 
 value(x, name = "value")
 
@@ -125,13 +134,13 @@ list_field(...)
 
 \item{multiple}{Allow multiple selections}
 
+\item{min, max}{Slider boundaries (inclusive)}
+
 \item{name}{Field component name}
 
 \item{field}{Field type}
 
 \item{components}{Variable list of field components}
-
-\item{min, max}{Slider boundaries (inclusive)}
 
 \item{sub_fields}{Fields contained in \code{list_field}}
 }

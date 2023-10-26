@@ -237,6 +237,25 @@ off_canvas <- function(
   )
 }
 
+#' Create and show a Bootstrap modal
+#'
+#' TBD.
+#'
+#' @param ... Modal content.
+#'
+#' @keywords internal
+create_modal <- function(...) {
+  showModal(
+    modalDialog(
+      ...,
+      title = h3(icon("xmark"), "ERROR"),
+      footer = modalButton("Dismiss"),
+      size = "l",
+      fade = TRUE
+    )
+  )
+}
+
 #' Evaluate expression safely
 #'
 #' tryCatch wrapper.
@@ -250,14 +269,6 @@ secure <- function(expr) {
   tryCatch({
     expr
   }, error = function(e) {
-    showModal(
-      modalDialog(
-        e$message,
-        title = h3(icon("xmark"), "ERROR"),
-        footer = modalButton("Dismiss"),
-        size = "l",
-        fade = TRUE
-      )
-    )
+    create_modal(e$message)
   })
 }

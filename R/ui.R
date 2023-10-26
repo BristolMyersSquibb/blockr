@@ -237,7 +237,10 @@ ui_input.string_field <- function(x, id, name) {
 ui_input.select_field <- function(x, id, name) {
   selectizeInput(
     input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple"),
-    options = list(dropdownParent = "body")
+    options = list(
+      dropdownParent = "body",
+      placeholder = "Please select an option below"
+    )
   )
 }
 
@@ -245,6 +248,14 @@ ui_input.select_field <- function(x, id, name) {
 #' @export
 ui_input.switch_field <- function(x, id, name) {
   bslib::input_switch(input_ids(x, id), name, value(x))
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.numeric_field <- function(x, id, name) {
+  numericInput(
+    input_ids(x, id), name, value(x), value(x, "min"), value(x, "max") 
+  )
 }
 
 #' @rdname generate_ui
@@ -374,6 +385,14 @@ ui_update.variable_field <- function(x, session, id, name) {
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
   updateSliderInput(
+    session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.numeric_field <- function(x, session, id, name) {
+  updateNumericInput(
     session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
   )
 }

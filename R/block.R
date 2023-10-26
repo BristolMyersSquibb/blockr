@@ -562,6 +562,37 @@ join_block <- function(data, ...) {
   initialize_block(new_join_block(data, ...), data)
 }
 
+#' @rdname new_block
+#' @param n_rows Number of rows to return.
+#' @export
+new_head_block <- function(data, n_rows = numeric(), ...) {
+
+  tmp_expr <- function(n_rows) {
+    bquote(
+      head(n = .(n_rows)),
+      list(n_rows = n_rows)
+    )
+  }
+
+  fields <- list(
+    n_rows = new_numeric_field(n_rows, 10, nrow(data)),
+    expression = new_hidden_field(tmp_expr)
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(expression)),
+    ...,
+    class = c("head_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+head_block <- function(data, ...) {
+  initialize_block(new_head_block(data, ...), data)
+}
+
 #' @param data Tabular data in which to select some columns.
 #' @param plot_opts List containing options for ggplot (color, ...).
 #' @param ... Any other params. TO DO
