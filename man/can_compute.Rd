@@ -13,28 +13,30 @@
 \usage{
 can_compute(x, ...)
 
-\method{can_compute}{block}(x, in_dat, trigger, ...)
+\method{can_compute}{block}(x, iv, input, in_dat, ...)
 
-\method{can_compute}{select_block}(x, in_dat, trigger, ...)
+\method{can_compute}{select_block}(x, iv, input, in_dat, ...)
 
-\method{can_compute}{arrange_block}(x, in_dat, trigger, ...)
+\method{can_compute}{arrange_block}(x, iv, input, in_dat, ...)
 
-\method{can_compute}{group_by_block}(x, in_dat, trigger, ...)
+\method{can_compute}{group_by_block}(x, iv, input, in_dat, ...)
 
-\method{can_compute}{filter_block}(x, in_dat, trigger, ...)
+\method{can_compute}{filter_block}(x, iv, input, in_dat, ...)
 
-\method{can_compute}{join_block}(x, in_dat, trigger, ...)
+\method{can_compute}{join_block}(x, iv, input, in_dat, ...)
 
-\method{can_compute}{summarize_block}(x, in_dat, trigger, ...)
+\method{can_compute}{summarize_block}(x, iv, input, in_dat, ...)
 }
 \arguments{
 \item{x}{Block.}
 
 \item{...}{Generic consistency}
 
-\item{in_dat}{Reactive input data}
+\item{iv}{Input validator (R6 instance).}
 
-\item{trigger}{List of reactive triggering calculation}
+\item{input}{Input name to validate. Without namespace.}
+
+\item{in_dat}{Reactive input data}
 }
 \value{
 Boolean value depending on the state.

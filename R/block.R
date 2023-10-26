@@ -514,7 +514,7 @@ new_join_block <- function(
   }
 
   join_expr <- function(data, join_func, y, by) {
-    if (length(by$val) == 0) stop("Nothing to merge, restoring defaults.")
+    if (length(by$val) == 0) return(quote(TRUE))
     bquote(
       .(join_func)(y = .(y), by = .(by)),
       list(join_func = as.name(join_func), y = as.name(y), by = by$val)
