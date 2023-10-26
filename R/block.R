@@ -551,7 +551,8 @@ new_join_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("join_block", "transform_block")
+    class = c("join_block", "transform_block"),
+    layout = join_layout_fields
   )
 }
 

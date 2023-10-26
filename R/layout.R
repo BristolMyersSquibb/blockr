@@ -97,3 +97,24 @@ summarize_layout_fields <- function(fields, ...) {
     fields$expression
   )
 }
+
+join_layout_fields <- function(fields, ...){
+  tagList(
+    div(
+      class = "row",
+      div(
+        class = "col-md-4",
+        fields$join_func
+      ),
+      div(
+        class = "col-md-4",
+        fields$y
+      ),
+      div(
+        class = "col-md-4",
+        fields$by
+      )
+    ),
+    fields$expression
+  )
+}
