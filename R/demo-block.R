@@ -37,11 +37,12 @@ cheat_block <- function(data, ...) {
 #' @rdname new_block
 #' @param column Column to apply the operation on.
 #' @export
-new_as_factor_block <- function(data, column = "VISIT", ...) {
+new_asfactor_block <- function(data, column = "VISIT", ...) {
 
   all_cols <- function(data) colnames(data)
 
   mutate_expr <- function(data, column) {
+
     if (is.null(column)) return(NULL)
     if (!(column %in% colnames(data))) {
       return(NULL)
@@ -74,8 +75,8 @@ new_as_factor_block <- function(data, column = "VISIT", ...) {
 
 #' @rdname new_block
 #' @export
-as_factor_block <- function(data, ...) {
-  initialize_block(new_as_factor_block(data, ...), data)
+asfactor_block <- function(data, ...) {
+  initialize_block(new_asfactor_block(data, ...), data)
 }
 
 #' @rdname new_block

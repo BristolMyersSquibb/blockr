@@ -41,8 +41,8 @@
 \alias{update_fields.ggiraph_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
-\alias{new_as_factor_block}
-\alias{as_factor_block}
+\alias{new_asfactor_block}
+\alias{asfactor_block}
 \alias{demo_data_block}
 \alias{demo_join_block}
 \alias{demo_arrange_block}
@@ -152,8 +152,8 @@ new_ggiraph_block(
   plot_opts = list(colors = c("blue", "red"), point_size = 3, title = "Plot title", theme
     = c("theme_minimal", "theme_gray", "theme_linedraw", "theme_dark", "theme_light",
     "theme_classic", "theme_void", "theme_bw"), x_lab = "X axis label", y_lab =
-    "Y axis label", errors = list(show = FALSE, ymin = character(), ymax = character()),
-    lines = list(show = FALSE, group = character(), color = character())),
+    "Y axis label", errors = list(show = TRUE, ymin = character(), ymax = character()),
+    lines = list(show = TRUE, group = character(), color = character())),
   ...
 )
 
@@ -179,9 +179,9 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_as_factor_block(data, column = "VISIT", ...)
+new_asfactor_block(data, column = "VISIT", ...)
 
-as_factor_block(data, ...)
+asfactor_block(data, ...)
 
 demo_data_block(...)
 

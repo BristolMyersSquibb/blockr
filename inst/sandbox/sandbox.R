@@ -11,7 +11,7 @@ stack <- new_stack(
   demo_filter_block_1,
   demo_filter_block_2,
   demo_arrange_block,
-  as_factor_block,
+  asfactor_block,
   demo_group_by_block,
   demo_summarize_block,
   ggiraph_block
