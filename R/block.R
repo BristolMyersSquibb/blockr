@@ -412,7 +412,8 @@ new_summarize_block <- function(
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("summarize_block", "transform_block")
+    class = c("summarize_block", "transform_block"),
+    layout = summarize_layout_fields
   )
 }
 

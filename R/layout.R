@@ -80,3 +80,20 @@ filter_layout_fields <- function(fields, ...){
     fields$expression
   )
 }
+
+summarize_layout_fields <- function(fields, ...) {
+  tagList(
+    div(
+      class = "row",
+      div(
+        class = "col-md-6",
+        fields$funcs
+      ),
+      div(
+        class = "col-md-6",
+        fields$columns
+      )
+    ),
+    fields$expression
+  )
+}
