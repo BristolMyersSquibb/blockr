@@ -1,18 +1,15 @@
-export const copyCode = (el) => {
-  el.select();
+const copy = (el) => {
   navigator.clipboard.writeText($(el).text());
 };
 
-$(() => {
-  $(".block-copy-code").each((_, btn) => {
-    // already has a listener
-    if (btn.getAttribute("listener") == "true") {
-      return;
-    }
+export const copyCode = () => {
+  $(".block-copy-code").each((_index, btn) => {
+    // TODO bind selectively instead of reset
+    $(btn).off("click");
 
     $(btn).on("click", (event) => {
       const code = $(event.target).closest("div").find("pre");
-      copyCode(code);
+      copy(code);
     });
   });
-});
+};

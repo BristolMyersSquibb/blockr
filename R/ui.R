@@ -467,7 +467,14 @@ uiCode <- function(x, ns) {
 #' @rdname generate_ui
 #' @export
 uiCode.block <- function(x, ns) {
-  shiny::verbatimTextOutput(ns("code"))
+  div(
+    class = "position-relative",
+    tags$a(
+      class = "btn btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
+      icon("copy")
+    ),
+    shiny::verbatimTextOutput(ns("code"))
+  )
 }
 
 #' @importFrom shiny icon
