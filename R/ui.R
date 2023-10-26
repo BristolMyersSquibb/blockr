@@ -254,7 +254,7 @@ ui_input.switch_field <- function(x, id, name) {
 #' @export
 ui_input.numeric_field <- function(x, id, name) {
   numericInput(
-    input_ids(x, id), name, value(x), value(x, "min"), value(x, "max") 
+    input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
   )
 }
 

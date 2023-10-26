@@ -116,7 +116,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
           "filter_func",
           "dummy"
         )
-        exclude <- which(inputs %in% to_exclude )
+        exclude <- which(inputs %in% to_exclude)
         if (length(exclude) > 0) {
           inputs <- inputs[-exclude]
         }
@@ -257,18 +257,18 @@ can_compute.join_block <- can_compute.select_block
 #' @export
 can_compute.summarize_block <- function(x, iv, input, in_dat, ...) {
   iv$add_rule(input, sv_required())
-  #iv$add_rule(input, function(value) {
-  #  if (input != "funcs" && !(value %in% colnames(in_dat))) {
-  #    create_modal(
-  #      sprintf(
-  #        "Error in block %s: column 
-  #        %s not in incoming data",
-  #        class(x)[[1]],
-  #        value
-  #      )
-  #    )
-  #  }
-  #})
+  iv$add_rule(input, function(value) {
+    if (input != "funcs" && !(value %in% colnames(in_dat))) {
+      create_modal(
+        sprintf(
+          "Error in block %s: column 
+          %s not in incoming data",
+          class(x)[[1]],
+          value
+        )
+      )
+    }
+  })
 }
 
 #' @param in_dat Reactive input data
