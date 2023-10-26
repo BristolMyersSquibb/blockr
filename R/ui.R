@@ -197,19 +197,22 @@ stack_header <- function(stack, ns) {
       },
       div(
         class = "flex-shrink-1",
-        actionLink(
-          ns("remove"),
-          "",
-          class = "text-decoration-none stack-remove",
-          iconTrash()
-        ),
-        tags$a(
-          class = "text-decoration-none stack-copy-code",
-          iconCode()
-        ),
-        tags$a(
-          class = "text-decoration-none stack-edit-toggle",
-          iconEdit()
+        div(
+          class = "ps-1 py-2",
+          actionLink(
+            ns("remove"),
+            "",
+            class = "text-decoration-none stack-remove",
+            iconTrash()
+          ),
+          tags$a(
+            class = "text-decoration-none stack-copy-code",
+            iconCode()
+          ),
+          tags$a(
+            class = "text-decoration-none stack-edit-toggle",
+            iconEdit()
+          )
         )
       )
     )
