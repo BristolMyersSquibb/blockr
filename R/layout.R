@@ -59,3 +59,41 @@ plot_layout_fields <- function(fields, ...) {
 }
 
 ggiraph_layout_fields <- plot_layout_fields
+
+filter_layout_fields <- function(fields, ...){
+  tagList(
+    div(
+      class = "row",
+      div(
+        class = "col-md-4",
+        fields$columns
+      ),
+      div(
+        class = "col-md-4",
+        fields$filter_func
+      ),
+      div(
+        class = "col-md-4",
+        fields$values
+      )
+    ),
+    fields$expression
+  )
+}
+
+summarize_layout_fields <- function(fields, ...) {
+  tagList(
+    div(
+      class = "row",
+      div(
+        class = "col-md-6",
+        fields$funcs
+      ),
+      div(
+        class = "col-md-6",
+        fields$columns
+      )
+    ),
+    fields$expression
+  )
+}
