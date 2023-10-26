@@ -272,3 +272,52 @@ secure <- function(expr) {
     create_modal(e$message)
   })
 }
+
+#' Initialize input validator
+#'
+#' To validate inputs in server blocks.
+#'
+#' @param x Current block.
+#' @param iv R6 validator instance.
+#' @param update FALSE to init. TRUE to update
+#' and add new rules.
+#'
+#' @return Result or error message.
+#'
+#' @keywords internal
+init_input_validator <- function(x, iv, update = FALSE) {
+  inputs <- unlst(input_ids(x))
+  existing_fields <- if (length(iv$fields()) > 0) {
+    vapply(
+      strsplit(iv$fields(), "-"),
+      \(el) {
+        tail(el, n = 1)
+      },
+      FUN.VALUE = character(1)
+    )
+  } else {
+    NULL
+  }
+
+  to_exclude <- unique(
+    c(
+      "expression",
+      "join_func",
+      "filter_func",
+      "dummy",
+      existing_fields
+    )
+  )
+  exclude <- which(inputs %in% to_exclude)
+  if (length(exclude) > 0) {
+    inputs <- inputs[-exclude]
+  }
+  # add rules
+  lapply(inputs, \(input) {
+    iv$add_rule(input, sv_required())
+  })
+  # Activate only once
+  if (!update) {
+    iv$enable()
+  }
+}
