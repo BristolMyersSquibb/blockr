@@ -68,7 +68,7 @@ new_as_factor_block <- function(data, column = "VISIT", ...) {
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("dummy_block", "transform_block")
+    class = c("asfactor_block", "transform_block")
   )
 }
 
@@ -84,7 +84,6 @@ demo_data_block <- function(...) {
   initialize_block(
     new_data_block(
       ...,
-      dat = as.environment("package:blockr.data"),
       selected = "lab"
     )
   )
@@ -98,6 +97,7 @@ demo_join_block <- function(data, ...) {
       data,
       y = "demo",
       type = "inner",
+      by_col = c("STUDYID", "USUBJID"),
       ...
     ),
     data
@@ -147,6 +147,20 @@ demo_filter_block_2 <- function(data, ...) {
       columns = "VISIT",
       values = "UNSCHEDULED",
       filter_fun = "!startsWith",
+      ...
+    ),
+    data
+  )
+}
+
+#' @rdname new_block
+#' @export
+demo_summarize_block <- function(data, ...) {
+  initialize_block(
+    new_summarize_block(
+      data,
+      func = c("mean", "se"),
+      default_columns = c("LBSTRESN", "LBSTRESN"),
       ...
     ),
     data

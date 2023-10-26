@@ -81,6 +81,8 @@ eval_set_field_value <- function(x, env) {
     tmp <- do.call(fun, env[methods::formalArgs(fun)])
     if (length(tmp) > 0) {
       value(x, cmp) <- tmp
+    } else {
+      stop("Column can't be empty, restoring to default value.")
     }
   }
 

@@ -49,6 +49,7 @@
 \alias{demo_group_by_block}
 \alias{demo_filter_block_1}
 \alias{demo_filter_block_2}
+\alias{demo_summarize_block}
 \alias{is_initialized.field}
 \title{Blocks}
 \usage{
@@ -87,7 +88,7 @@ evaluate_block(x, ...)
 
 new_data_block(
   ...,
-  dat = as.environment("package:datasets"),
+  dat = as.environment("package:blockr.data"),
   selected = character()
 )
 
@@ -111,7 +112,8 @@ new_select_block(data, columns = colnames(data)[1], ...)
 
 new_summarize_block(
   data,
-  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
+  func = character(),
+  default_columns = character(),
   ...
 )
 
@@ -126,7 +128,8 @@ group_by_block(data, ...)
 new_join_block(
   data,
   y = data(package = "blockr.data")$result[, "Item"],
-  type = c("inner", "left"),
+  type = character(),
+  by_col = character(),
   ...
 )
 
@@ -192,6 +195,8 @@ demo_filter_block_1(data, ...)
 
 demo_filter_block_2(data, ...)
 
+demo_summarize_block(data, ...)
+
 \method{is_initialized}{field}(x)
 }
 \arguments{
@@ -226,9 +231,17 @@ the list of fields to layout and returns one or more UI tag(s).}
 
 \item{func}{Summarize function to apply.}
 
+\item{default_columns}{If you know in advance each function to apply,
+you can also pass predefined selected column for each summary.
+Therefore when not of length 0, columns should have the same length
+as func.}
+
 \item{y}{Second data block.}
 
 \item{type}{Join type.}
+
+\item{by_col}{If you know in advance which column you want
+to join}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 

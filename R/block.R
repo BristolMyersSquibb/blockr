@@ -141,7 +141,7 @@ evaluate_block.ggiraph_block <- evaluate_block.plot_block
 #' @export
 new_data_block <- function(
   ...,
-  dat = as.environment("package:datasets"),
+  dat = as.environment("package:blockr.data"),
   selected = character()
 ) {
   is_dataset_eligible <- function(x) {
@@ -335,34 +335,52 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 
 #' @param data Tabular data in which to perform summarise.
 #' @param func Summarize function to apply.
+#' @param default_columns If you know in advance each function to apply,
+#' you can also pass predefined selected column for each summary.
+#' Therefore when not of length 0, columns should have the same length
+#' as func.
 #' @rdname new_block
 #' @export
 new_summarize_block <- function(
   data,
-  func = c("mean", "median", "sd", "se", "min", "max", "n", "n_distinct"),
+  func = character(),
+  default_columns = character(),
   ...
 ) {
+
+  if (length(default_columns) > 0) {
+    stopifnot(length(func) == length(default_columns))
+  }
+
   # Columns are only a select input
   sub_fields <- function(data, funcs) {
     all_cols <- colnames(data)
     tmp_selects <- lapply(
-      funcs,
-      function(func) {
-        new_select_field(value = all_cols[[1]], choices = all_cols)
+      seq_along(funcs),
+      function(i) {
+        default <- if (length(default_columns) > 0) {
+          default_columns[[i]]
+        } else {
+          all_cols[[1]]
+        }
+
+        new_select_field(value = default, choices = all_cols)
       }
     )
     names(tmp_selects) <- funcs
     tmp_selects
   }
 
-  summarize_expr <- function(funcs, columns) {
+  summarize_expr <- function(data, funcs, columns) {
     # Build expressions that will go inside the summarize
+    if (length(funcs) == 0) return(quote(TRUE))
     if (length(columns) == 0) return(quote(TRUE))
 
     tmp_exprs <- lapply(funcs, function(fun) {
       col <- columns[[fun]]
 
       if (is.null(col)) return(quote(TRUE))
+      if (!any(col %in% colnames(data))) return(quote(TRUE))
       col <- as.name(col)
 
       expr <- if (fun == "se") {
@@ -398,8 +416,19 @@ new_summarize_block <- function(
     )
   }
 
+  func_choices <- c(
+    "mean",
+    "median",
+    "sd",
+    "se",
+    "min",
+    "max",
+    "n",
+    "n_distinct"
+  )
+
   fields <- list(
-    funcs = new_select_field(func[[1]], func, multiple = TRUE),
+    funcs = new_select_field(func, func_choices, multiple = TRUE),
     columns = new_list_field(sub_fields = sub_fields),
     expression = new_hidden_field(summarize_expr)
   )
@@ -444,11 +473,14 @@ group_by_block <- function(data, ...) {
 #' @param data Input data coming from previous block.
 #' @param y Second data block.
 #' @param type Join type.
+#' @param by_col If you know in advance which column you want
+#' to join
 #' @export
 new_join_block <- function(
   data,
   y = data(package = "blockr.data")$result[, "Item"],
-  type = c("inner", "left"),
+  type = character(),
+  by_col = character(),
   ...
 ) {
   # by depends on selected dataset and the input data.
@@ -458,38 +490,60 @@ new_join_block <- function(
       colnames(eval(as.name(y)))
     )
 
+    default <- if (length(choices) == 0) {
+      character()
+    } else {
+      if (length(by_col) > 0) {
+        by_col
+      } else {
+        choices[[1]]
+      }
+    }
+
     # TO DO: currently, validate_field.list_field don't work
     # if we don't return a list.
     list(
       val = new_select_field(
-        choices[[1]],
+        default,
         choices,
         multiple = TRUE
       )
     )
   }
 
-  # TO LATER
-  join_expr <- function(data) {
-    # try to build expression within function
-    # like in filter_block
+  join_expr <- function(data, join_func, y, by) {
+    if (length(by$val) == 0) stop("Nothing to merge, restoring defaults.")
+    bquote(
+      .(join_func)(y = .(y), by = .(by)),
+      list(join_func = as.name(join_func), y = as.name(y), by = by$val)
+    )
   }
+
+  join_types <- c(
+    "left",
+    "inner",
+    "right",
+    "full",
+    "semi",
+    "anti"
+  )
+
+  if (length(type) == 0) type <- join_types[1]
 
   fields <- list(
     join_func = new_select_field(
-      "left_join",
-      paste(type, "join", sep = "_")
+      paste(type, "join", sep = "_"),
+      paste(join_types, "join", sep = "_")
     ),
     y = new_select_field(y[[1]], y),
-    by = new_list_field(sub_fields = by_choices)
+    by = new_list_field(sub_fields = by_choices),
+    expression = new_hidden_field(join_expr)
   )
 
   attr(fields$y, "type") <- "name"
   # TO DO: expression is ugly: try to get rid of get and
   # unlist.
-  expr <- quote(
-    get(.(join_func))(y = .(y), by = unlist(.(by), use.names = FALSE))
-  )
+  expr <- quote(.(expression))
 
   new_block(
     fields = fields,
@@ -546,7 +600,7 @@ new_plot_block <- function(
   all_cols <- function(data) colnames(data)
   fields <- list(
     x_var = new_select_field("VISIT", all_cols),
-    y_var = new_select_field("Mean", all_cols),
+    y_var = new_select_field("MEAN", all_cols),
     color = new_select_field("ACTARM", all_cols),
     shape = new_select_field("ACTARM", all_cols),
     point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),
@@ -586,8 +640,8 @@ new_plot_block <- function(
           aes(
             x = .data[[x_var]],
             y = .data[[y_var]],
-            ymin = Mean - SE,
-            ymax = Mean + SE,
+            ymin = MEAN - SE,
+            ymax = MEAN + SE,
             color = ACTARM
           ),
           width = 0.2
@@ -660,12 +714,12 @@ new_ggiraph_block <- function(
     x_lab = "X axis label",
     y_lab = "Y axis label",
     errors = list(
-      show = FALSE,
+      show = TRUE,
       ymin = character(),
       ymax = character()
     ),
     lines = list(
-      show = FALSE,
+      show = TRUE,
       group = character(),
       color = character()
     )
@@ -676,7 +730,7 @@ new_ggiraph_block <- function(
   all_cols <- function(data) colnames(data)
   fields <- list(
     x_var = new_select_field("VISIT", all_cols),
-    y_var = new_select_field("Mean", all_cols),
+    y_var = new_select_field("MEAN", all_cols),
     color = new_select_field("ACTARM", all_cols),
     shape = new_select_field("ACTARM", all_cols),
     point_size = new_range_field(plot_opts$point_size, min = 1, max = 10),
@@ -694,16 +748,16 @@ new_ggiraph_block <- function(
       y_var <- .(y_var)
       color <- .(color)
       shape <- .(shape)
-      ymin <- "ymin"
-      ymax <- "ymax"
 
       data <- data |>
         mutate(
+          ymin = MEAN - SE,
+          ymax = MEAN + SE,
           TOOLTIP = sprintf("x: %s\ny: %s", .data[[x_var]], .data[[y_var]]),
           TOOLTIP_SE = sprintf(
             "x: %s\ny: %s\nmin: %s\nmax: %s",
             .data[[x_var]], .data[[y_var]],
-            .data[[ymin]],  .data[[ymax]]
+            ymin,  ymax
           )
         )
 
@@ -726,8 +780,8 @@ new_ggiraph_block <- function(
           aes(
             x = .data[[x_var]],
             y = .data[[y_var]],
-            ymin = Mean - SE,
-            ymax = Mean + SE,
+            ymin = MEAN - SE,
+            ymax = MEAN + SE,
             color = ACTARM,
             tooltip = TOOLTIP_SE
           ),
