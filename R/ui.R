@@ -204,6 +204,10 @@ stack_header <- function(stack, ns) {
           iconTrash()
         ),
         tags$a(
+          class = "text-decoration-none stack-copy-code",
+          iconCode()
+        ),
+        tags$a(
           class = "text-decoration-none stack-edit-toggle",
           iconEdit()
         )

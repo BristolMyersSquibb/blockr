@@ -8,8 +8,17 @@ html {
 
     .stack-edit-toggle {
       color: var(--bs-gray);
+      cursor: pointer;
       &:hover {
         color: var(--bs-primary);
+      }
+    }
+
+    .stack-copy-code {
+      color: var(--bs-gray);
+      cursor: pointer;
+      &:hover {
+        color: var(--bs-info);
       }
     }
 
@@ -21,12 +30,14 @@ html {
     }
 
     .stack-remove,
+    .stack-copy-code,
     .stack-edit-toggle{
       opacity: 0;
     }
 
     &:hover{
       .stack-remove,
+      .stack-copy-code,
       .stack-edit-toggle {
         opacity: 1;
       }
