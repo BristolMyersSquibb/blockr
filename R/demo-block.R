@@ -37,31 +37,34 @@ cheat_block <- function(data, ...) {
 #' @rdname new_block
 #' @param column Column to apply the operation on.
 #' @export
-new_asfactor_block <- function(data, column = "VISIT", ...) {
+new_asfactor_block <- function(data, column = character(), ...) {
 
   all_cols <- function(data) colnames(data)
 
   mutate_expr <- function(data, column) {
 
-    if (is.null(column)) return(NULL)
-    if (!(column %in% colnames(data))) {
-      return(NULL)
-    }
-
-    bquote(
-      dplyr::mutate(
-        VISIT = factor(
+    tmp_expr <- list(
+      bquote(
+        factor(
           .(column),
           levels = unique(.(column)),
           ordered = TRUE
-        )
-      ),
-      list(column = as.name(column))
+        ),
+        list(column = as.name(column))
+      )
+    )
+
+    names(tmp_expr) <- column
+
+    bquote(
+      mutate(..(expr)),
+      list(expr = tmp_expr),
+      splice = TRUE
     )
   }
 
   fields <- list(
-    column = new_select_field(column, column),
+    column = new_select_field(column, all_cols),
     expression = new_hidden_field(mutate_expr)
   )
 

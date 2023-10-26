@@ -103,15 +103,83 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       ns <- session$ns
       blk <- reactiveVal(x)
 
+      block_updated <- reactiveVal(FALSE)
+
+      # Updating data will prevent to recalculate
+      # the block output before having updated the
+      # block itself (some inputs may change depending
+      # on the incoming data).
+      in_dat_ev <- observeEvent(in_dat(), {
+        if (block_updated()) block_updated(FALSE)
+      })
+
+      inputs_hash <- reactiveVal(NULL)
+
+      trigger <- reactive(eval(obs_expr(blk())))
+
+      # We can't do subsequent computations as long as
+      # the current column name is not in the incoming
+      # data ...
+      # TO DO: handle the case with dependent inputs
+      # like in filter block: values_<COLUMN_NAME>
+      allow_compute <- reactive({
+        trigger <- trigger()
+        trigger[[1]] <- NULL
+        names(trigger) <- unlst(input_ids(x))
+
+        do.call(
+          can_compute,
+          list(
+            x = x,
+            in_dat = in_dat(),
+            trigger = trigger
+          )
+        )
+      })
+
+      # This event can trigger even if can_compute is FALSE.
+      # This will allow to display a message to the end user
+      # and reset the column choice to match with the current data.
       o <- observeEvent(
-        eval(obs_expr(blk())),
-        secure(eval(set_expr(blk()))),
-        ignoreInit = TRUE
+        trigger(),
+        {
+          # This will prevent this event from
+          # triggering multiple times
+          ev_hash <- rlang::hash(trigger())
+          if (!is.null(inputs_hash())) {
+            if (inputs_hash() != ev_hash) {
+              inputs_hash(ev_hash)
+            } else {
+              inputs_hash(NULL)
+            }
+          } else {
+            inputs_hash(ev_hash)
+          }
+
+          req(inputs_hash())
+
+          # Validate column
+          if (!allow_compute()) {
+            create_modal(
+              sprintf(
+                "The block %s is not valid (missing input value or 
+                incorrect value). Please fix to go futher.",
+                class(x)[[1]]
+              )
+            )
+          }
+          eval(set_expr(blk()))
+          block_updated(TRUE)
+        }
       )
 
-      out_dat <- reactive(
+      out_dat <- reactive({
+        req(
+          block_updated(),
+          allow_compute()
+        )
         evaluate_block(blk(), data = in_dat())
-      )
+      })
 
       output$res <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)
@@ -122,12 +190,89 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         message(sprintf("CLEANING UP BLOCK %s", id))
         remove_shiny_inputs(id = id, input)
         o$destroy()
+        in_dat_ev$destroy()
         session$userData$is_cleaned(TRUE)
       })
 
       out_dat
     }
   )
+}
+
+#' Allow/Prevent computation
+#'
+#' Each block is able to validate the input state
+#' to see whether values are compatible with the incoming
+#' data to process.
+#'
+#' @param x Block.
+#' @param ... Generic consistency
+#'
+#' @export
+#' @import shiny
+#' @return Boolean value depending on the state.
+can_compute <- function(x, ...) {
+  UseMethod("can_compute")
+}
+
+#' @param in_dat Reactive input data
+#' @param trigger List of reactive triggering calculation
+#' @rdname can_compute
+#' @export
+can_compute.block <- function(x, in_dat, trigger, ...) {
+  TRUE
+}
+
+#' @rdname can_compute
+#' @export
+can_compute.select_block <- function(x, in_dat, trigger, ...) {
+  cond1 <- !is.null(trigger$columns)
+  cond2 <- all(trigger$columns %in% colnames(in_dat()))
+  cond1 && cond2
+}
+
+#' @rdname can_compute
+#' @export
+can_compute.arrange_block <- can_compute.select_block
+
+#' @rdname can_compute
+#' @export
+can_compute.group_by_block <- can_compute.select_block
+
+#' @rdname can_compute
+#' @export
+can_compute.filter_block <- function(x, in_dat, trigger, ...) {
+  cond1 <- !is.null(trigger$columns)
+  if (cond1) {
+    if (length(input_ids(x)$values) != length(trigger$columns)) {
+      FALSE
+    } else {
+      vals <- trigger[[paste("values", trigger$columns, sep = "_")]]
+      all(nchar(vals) > 0)
+    }
+  } else {
+    FALSE
+  }
+}
+
+#' @rdname can_compute
+#' @export
+can_compute.join_block <- function(x, in_dat, trigger, ...) {
+  cond1 <- !is.null(trigger$by_val)
+  cond2 <- all(trigger$by_val %in% colnames(in_dat))
+  cond1 && cond2
+}
+
+#' @rdname can_compute
+#' @export
+can_compute.summarize_block <- function(x, in_dat, trigger, ...) {
+  cond1 <- !is.null(trigger$funcs)
+  if (cond1) {
+    vals <- trigger[[paste("columns", trigger$funcs, sep = "_")]]
+    all(vals %in% colnames(in_dat))
+  } else {
+    FALSE
+  }
 }
 
 #' @param in_dat Reactive input data
