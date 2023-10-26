@@ -17,16 +17,24 @@ html {
     }
 
     .block-output-toggle {
-      color: var(--bs-success);
+      color: var(--bs-gray);
+      &:hover {
+        color: var(--bs-success);
+      }
     }
-    .block-edit-toggle {
-      color: var(--bs-primary);
-    }
+
     .block-code-toggle {
-      color: var(--bs-gray-800);
+      color: var(--bs-gray);
+      &:hover {
+        color: var(--bs-info);
+      }
     }
+
     .block-remove {
-      color: var(--bs-success);
+      color: var(--bs-gray);
+      &:hover {
+        color: var(--bs-danger);
+      }
     }
 
     .block-remove,

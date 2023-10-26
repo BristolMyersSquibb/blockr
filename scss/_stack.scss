@@ -6,28 +6,28 @@ html {
 
   .stack {
 
-    .stack-output-toggle {
-      color: var(--bs-success);
-    }
     .stack-edit-toggle {
-      color: var(--bs-primary);
-    }
-    .stack-code-toggle {
-      color: var(--bs-gray-800);
+      color: var(--bs-gray);
+      &:hover {
+        color: var(--bs-primary);
+      }
     }
 
-    .stack-output-toggle,
+    .stack-remove {
+      color: var(--bs-gray);
+      &:hover {
+        color: var(--bs-danger);
+      }
+    }
+
     .stack-remove,
-    .stack-edit-toggle,
-    .stack-code-toggle {
+    .stack-edit-toggle{
       opacity: 0;
     }
 
     &:hover{
-      .stack-output-toggle,
       .stack-remove,
-      .stack-edit-toggle,
-      .stack-code-toggle {
+      .stack-edit-toggle {
         opacity: 1;
       }
     }

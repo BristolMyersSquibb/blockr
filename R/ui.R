@@ -154,7 +154,7 @@ block_title <- function(block, code_id, output_id, ns) {
         actionLink(
           ns("remove"),
           icon("trash"),
-          class = "text-decoration-none text-danger block-remove",
+          class = "text-decoration-none block-remove",
         ),
         tags$a(
           class = "text-decoration-none block-code-toggle",
@@ -197,18 +197,10 @@ stack_header <- function(stack, ns) {
       },
       div(
         class = "flex-shrink-1",
-        tags$a(
-          class = "text-decoration-none stack-code-toggle hidden",
-          iconCode()
-        ),
-        tags$a(
-          class = "text-decoration-none stack-output-toggle hidden",
-          iconOutput()
-        ),
         actionLink(
           ns("remove"),
           "",
-          class = "text-decoration-none stack-remove text-muted",
+          class = "text-decoration-none stack-remove",
           iconTrash()
         ),
         tags$a(
