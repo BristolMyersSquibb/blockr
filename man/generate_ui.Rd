@@ -32,10 +32,10 @@
 \alias{ui_update.numeric_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
-\alias{uiOutput}
-\alias{uiOutput.block}
-\alias{uiOutput.plot_block}
-\alias{uiOutput.ggiraph_block}
+\alias{uiOutputBlock}
+\alias{uiOutputBlock.block}
+\alias{uiOutputBlock.plot_block}
+\alias{uiOutputBlock.ggiraph_block}
 \alias{uiCode}
 \alias{uiCode.block}
 \title{UI}
@@ -102,13 +102,13 @@ ui_update(x, session, id, name)
 
 \method{ui_update}{list_field}(x, session, id, name)
 
-uiOutput(x, ns)
+uiOutputBlock(x, ns)
 
-\method{uiOutput}{block}(x, ns)
+\method{uiOutputBlock}{block}(x, ns)
 
-\method{uiOutput}{plot_block}(x, ns)
+\method{uiOutputBlock}{plot_block}(x, ns)
 
-\method{uiOutput}{ggiraph_block}(x, ns)
+\method{uiOutputBlock}{ggiraph_block}(x, ns)
 
 uiCode(x, ns)
 

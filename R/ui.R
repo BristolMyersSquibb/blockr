@@ -29,7 +29,7 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
   code_id <- ns("codeCollapse")
   output_id <- ns("outputCollapse")
 
-  header <- block_title(x, code_id, output_id, ns)
+  header <- block_title(x, code_id, output_id, ns, .hidden)
 
   block_class <- "block"
   if (.hidden) {
@@ -51,9 +51,9 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
       class = "card shadow-sm p-2 mb-2 border",
       shiny::div(
         class = "card-body p-1",
+        header,
         div(
           class = sprintf("block-inputs %s", inputs_hidden),
-          header,
           layout(fields)
         ),
         div(
@@ -62,9 +62,9 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
           uiCode(x, ns)
         ),
         div(
-          class = "collapse block-output",
+          class = sprintf("%s block-output", inputs_hidden),
           id = output_id,
-          uiOutput(x, ns)
+          uiOutputBlock(x, ns)
         )
       )
     )
@@ -136,21 +136,38 @@ generate_ui.stack <- function(x, id = NULL, ...) {
 }
 
 #' @importFrom shiny tags div
-block_title <- function(block, code_id, output_id, ns) {
+block_title <- function(block, code_id, output_id, ns, .hidden) {
+  hidden_class <- ""
+  if (.hidden) {
+    hidden_class <- "d-none"
+  }
+
   title <- class(block)[1] |>
     (\(.) gsub("_.*$", "", .))() |>
     tools::toTitleCase()
 
   div(
-    class = "card-title",
+    class = sprintf("m-0 card-title block-title %s", hidden_class),
     div(
       class = "d-flex",
-      if (not_null(title)) {
-        div(
-          class = "flex-grow-1",
-          shiny::p(title, class = "fw-bold")
+      div(
+        class = "flex-grow-1",
+        shiny::p(
+          title,
+          class = "fw-bold"
         )
-      },
+      ),
+      div(
+        class = "flex-grow-1",
+        span(
+          class = "block-feedback text-muted",
+          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
+          "rows |",
+          class = "block-feedback text-muted",
+          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
+          "cols"
+        )
+      ),
       div(
         class = "flex-shrink-1",
         actionLink(
@@ -168,10 +185,7 @@ block_title <- function(block, code_id, output_id, ns) {
         ),
         tags$a(
           class = "text-decoration-none block-output-toggle",
-          `data-bs-toggle` = "collapse",
           href = sprintf("#%s", output_id),
-          `aria-expanded` = "false",
-          `aria-controls` = output_id,
           iconOutput()
         )
       )
@@ -452,25 +466,25 @@ custom_verbatim_output <- function(id) {
 #' @param ns Output namespace
 #' @rdname generate_ui
 #' @export
-uiOutput <- function(x, ns) {
-  UseMethod("uiOutput", x)
+uiOutputBlock <- function(x, ns) {
+  UseMethod("uiOutputBlock", x)
 }
 
 #' @rdname generate_ui
 #' @export
-uiOutput.block <- function(x, ns) {
+uiOutputBlock.block <- function(x, ns) {
   DT::dataTableOutput(ns("res"))
 }
 
 #' @rdname generate_ui
 #' @export
-uiOutput.plot_block <- function(x, ns) {
+uiOutputBlock.plot_block <- function(x, ns) {
   shiny::plotOutput(ns("plot"))
 }
 
 #' @rdname generate_ui
 #' @export
-uiOutput.ggiraph_block <- function(x, ns) {
+uiOutputBlock.ggiraph_block <- function(x, ns) {
   ggiraph::girafeOutput(ns("plot"))
 }
 
