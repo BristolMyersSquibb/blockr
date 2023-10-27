@@ -75,7 +75,6 @@ initialize_field.field <- function(x, env = list()) {
 }
 
 eval_set_field_value <- function(x, env) {
-
   for (cmp in names(x)[lgl_ply(x, is.function)]) {
     fun <- x[[cmp]]
     tmp <- do.call(fun, env[methods::formalArgs(fun)])
@@ -138,9 +137,10 @@ validate_field.select_field <- function(x) {
 #' @export
 new_select_field <- function(value = character(), choices = character(),
                              multiple = FALSE, ...) {
-
-  new_field(value, choices = choices, multiple = multiple, ...,
-            class = "select_field")
+  new_field(value,
+    choices = choices, multiple = multiple, ...,
+    class = "select_field"
+  )
 }
 
 #' @rdname new_field
@@ -160,7 +160,6 @@ switch_field <- function(...) validate_field(new_switch_field(...))
 #' @rdname new_field
 #' @export
 validate_field.switch_field <- function(x) {
-
   val <- value(x)
 
   if (length(val) == 0) {
@@ -172,12 +171,10 @@ validate_field.switch_field <- function(x) {
 #' @rdname new_field
 #' @export
 new_numeric_field <- function(
-  value = numeric(),
-  min = numeric(),
-  max = numeric(),
-  ...
-) {
-
+    value = numeric(),
+    min = numeric(),
+    max = numeric(),
+    ...) {
   new_field(value, min = min, max = max, ..., class = "numeric_field")
 }
 
@@ -228,7 +225,6 @@ values <- function(x, name = names(x)) {
 #' @rdname new_field
 #' @export
 `value<-` <- function(x, name = "value", value) {
-
   if (is.null(x)) {
     return(NULL)
   }
@@ -250,9 +246,10 @@ values <- function(x, name = names(x)) {
 #' @export
 new_variable_field <- function(value = character(), field = character(),
                                components = list(), ...) {
-
-  new_field(value, field = field, components = components, ...,
-            class = "variable_field")
+  new_field(value,
+    field = field, components = components, ...,
+    class = "variable_field"
+  )
 }
 
 #' @rdname new_field
@@ -262,7 +259,6 @@ variable_field <- function(...) validate_field(new_variable_field(...))
 #' @rdname new_field
 #' @export
 validate_field.variable_field <- function(x) {
-
   val <- value(x, "field")
   opt <- c(
     "string_field",
@@ -287,7 +283,6 @@ validate_field.variable_field <- function(x) {
 }
 
 materialize_variable_field <- function(x) {
-
   cmp <- value(x, "components")
   val <- value(x)
 
@@ -303,7 +298,6 @@ materialize_variable_field <- function(x) {
 #' @export
 new_range_field <- function(value = numeric(), min = numeric(),
                             max = numeric(), ...) {
-
   new_field(value, min = min, max = max, ..., class = "range_field")
 }
 
@@ -314,7 +308,6 @@ range_field <- function(...) validate_field(new_range_field(...))
 #' @rdname new_field
 #' @export
 validate_field.range_field <- function(x) {
-
   val <- value(x)
 
   if (!is.numeric(val) || length(val) < 2L) {
@@ -358,13 +351,11 @@ list_field <- function(...) validate_field(new_list_field(...))
 #' @rdname new_field
 #' @export
 validate_field.list_field <- function(x) {
-
   val <- value(x)
   sub <- value(x, "sub_fields")
 
   if (!is.list(val) || length(val) != length(sub) ||
-        !setequal(names(val), names(sub))) {
-
+    !setequal(names(val), names(sub))) {
     value(x) <- lst_xtr(sub, "value")
   }
 

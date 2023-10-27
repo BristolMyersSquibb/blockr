@@ -38,12 +38,12 @@ cheat_block <- function(data, ...) {
 #' @param column Column to apply the operation on.
 #' @export
 new_asfactor_block <- function(data, column = "VISIT", ...) {
-
   all_cols <- function(data) colnames(data)
 
   mutate_expr <- function(data, column) {
-
-    if (is.null(column)) return(NULL)
+    if (is.null(column)) {
+      return(NULL)
+    }
     if (!(column %in% colnames(data))) {
       return(NULL)
     }

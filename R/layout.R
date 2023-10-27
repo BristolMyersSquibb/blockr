@@ -60,7 +60,7 @@ plot_layout_fields <- function(fields, ...) {
 
 ggiraph_layout_fields <- plot_layout_fields
 
-filter_layout_fields <- function(fields, ...){
+filter_layout_fields <- function(fields, ...) {
   tagList(
     div(
       class = "row",
@@ -98,7 +98,7 @@ summarize_layout_fields <- function(fields, ...) {
   )
 }
 
-join_layout_fields <- function(fields, ...){
+join_layout_fields <- function(fields, ...) {
   tagList(
     div(
       class = "row",
