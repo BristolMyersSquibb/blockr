@@ -335,15 +335,24 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           )
         } else {
           if (session$userData$is_cleaned()) {
-            message(sprintf("REMOVING BLOCK %s", to_remove()))
+            to_remove <- to_remove()
+            message(sprintf("REMOVING BLOCK %s", to_remove))
             removeUI(
               selector = sprintf(
                 "[data-value='%s%s-block']",
                 session$ns(""),
-                attr(vals$stack[[to_remove()]], "name")
+                attr(vals$stack[[to_remove]], "name")
               )
             )
-            vals$stack[[to_remove()]] <- NULL
+
+            vals$stack[[to_remove]] <- NULL
+            vals$blocks[[to_remove]] <- NULL
+            # Reinitialize all the downstream stack blocks with new data ...
+            for (i in to_remove:length(vals$stack)) {
+              attr(vals$stack[[i]], "position") <- i
+              vals$blocks[[i]] <- init_block(i, vals)
+            }
+
             session$userData$stack <- vals$stack
             session$userData$is_cleaned(FALSE)
           }
