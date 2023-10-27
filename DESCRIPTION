@@ -37,7 +37,8 @@ Imports:
     sortable,
     bmsui,
     ggiraph,
-    shinyvalidate
+    shinyvalidate,
+    rlang
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui
