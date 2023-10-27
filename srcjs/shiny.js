@@ -1,4 +1,4 @@
-import { collapse, showLastOutput } from "./collapse.js";
+import { collapse, toggleOutputInput } from "./collapse.js";
 import { remove } from "./remove-stack.js";
 import { copyCode } from "./copy.js";
 
@@ -17,5 +17,6 @@ Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   // be event based/async instead of timeout
   setTimeout(() => {
     copyCode();
+    toggleOutputInput(stack);
   }, 500);
 });

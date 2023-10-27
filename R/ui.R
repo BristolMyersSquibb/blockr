@@ -62,7 +62,7 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
           uiCode(x, ns)
         ),
         div(
-          class = "d-none block-output",
+          class = sprintf("%s block-output", inputs_hidden),
           id = output_id,
           uiOutputBlock(x, ns)
         )

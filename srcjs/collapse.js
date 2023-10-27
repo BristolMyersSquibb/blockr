@@ -4,7 +4,7 @@ export const collapse = (stack) => {
   toggleOutputInput(stack);
 };
 
-const toggleOutputInput = (stack) => {
+export const toggleOutputInput = (stack) => {
   $(stack).find(".block-output-toggle").each((_index, btn) => {
     // already has a listener
     if ($(btn).hasClass("block-bound")) {
