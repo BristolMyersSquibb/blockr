@@ -1,9 +1,9 @@
 #' NAME
-#' 
+#'
 #' A new transform block.
-#' 
+#'
 #' @export
-NAME_block <- function(data, ...){
+NAME_block <- function(data, ...) {
   fields <- list(
     n_rows = new_numeric_field(10, 10, nrow(data))
   )

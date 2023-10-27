@@ -1,9 +1,9 @@
 #' NAME
-#' 
+#'
 #' A new plot block.
-#' 
+#'
 #' @export
-NAME_block <- function(data, ...){
+NAME_block <- function(data, ...) {
   all_cols <- function(data) colnames(data)
 
   fields <- list(
@@ -15,12 +15,12 @@ NAME_block <- function(data, ...){
     fields = fields,
     expr = quote({
       ggplot(
-          data,
-          mapping = aes_string(
-            x = .(x_var),
-            y = .(y_var)
-          )
-        ) +
+        data,
+        mapping = aes_string(
+          x = .(x_var),
+          y = .(y_var)
+        )
+      ) +
         geom_point() +
         geom_line()
     }),
@@ -28,4 +28,3 @@ NAME_block <- function(data, ...){
     class = c("NAME_block", "plot_block")
   )
 }
-

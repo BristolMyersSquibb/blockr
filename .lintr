@@ -1,4 +1,5 @@
 linters: linters_with_defaults(
+  line_length_linter(length = 100L),
   object_name_linter = NULL, # Because we use S3 and end up with is_initialized.field
   object_usage_linter = NULL # When code is WIP this is annoying ...
   )
