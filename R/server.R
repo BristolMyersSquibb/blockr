@@ -81,6 +81,7 @@ generate_server.data_block <- function(x, id, ...) {
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
+#' @import shinyvalidate
 generate_server.transform_block <- function(x, in_dat, id, ...) {
 
   obs_expr <- function(x) {
