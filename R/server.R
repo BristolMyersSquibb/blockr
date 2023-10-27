@@ -347,10 +347,13 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 
             vals$stack[[to_remove]] <- NULL
             vals$blocks[[to_remove]] <- NULL
+
             # Reinitialize all the downstream stack blocks with new data ...
-            for (i in to_remove:length(vals$stack)) {
-              attr(vals$stack[[i]], "position") <- i
-              vals$blocks[[i]] <- init_block(i, vals)
+            if (to_remove < length(vals$stack)) {
+              for (i in to_remove:length(vals$stack)) {
+                attr(vals$stack[[i]], "position") <- i
+                vals$blocks[[i]] <- init_block(i, vals)
+              }
             }
 
             session$userData$stack <- vals$stack
