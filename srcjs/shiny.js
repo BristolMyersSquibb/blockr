@@ -16,7 +16,6 @@ Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   // TODO remove this
   // be event based/async instead of timeout
   setTimeout(() => {
-    showLastOutput(stack);
     copyCode();
   }, 500);
 });

@@ -53,6 +53,14 @@ generate_server.data_block <- function(x, id, ...) {
       output$res <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)
 
+      output$nrow <- renderText({
+        prettyNum(nrow(out_dat()), big.mark = ",")
+      })
+
+      output$ncol <- renderText({
+        prettyNum(ncol(out_dat()), big.mark = ",")
+      })
+
       # Cleanup module inputs (UI and server side)
       # and observer
       observeEvent(input$remove,
@@ -117,6 +125,14 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       output$res <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)
 
+      output$nrow <- renderText({
+        prettyNum(nrow(out_dat()), big.mark = ",")
+      })
+
+      output$ncol <- renderText({
+        prettyNum(ncol(out_dat()), big.mark = ",")
+      })
+
       # Cleanup module inputs (UI and server side)
       # and observer
       observeEvent(input$remove, {
@@ -166,6 +182,14 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 
       output$plot <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)
+
+      output$nrow <- renderText({
+        prettyNum(nrow(out_dat()), big.mark = ",")
+      })
+
+      output$ncol <- renderText({
+        prettyNum(ncol(out_dat()), big.mark = ",")
+      })
 
       # Cleanup module inputs (UI and server side)
       # and observer

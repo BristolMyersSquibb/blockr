@@ -185,7 +185,7 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_asfactor_block(data, column = character(), ...)
+new_asfactor_block(data, column = "VISIT", ...)
 
 asfactor_block(data, ...)
 
