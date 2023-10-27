@@ -32,12 +32,14 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
   header <- block_title(x, code_id, output_id, ns)
 
   block_class <- "block"
-  if (.hidden)
+  if (.hidden) {
     block_class <- sprintf("%s d-none", block_class)
+  }
 
   inputs_hidden <- ""
-  if (.hidden)
+  if (.hidden) {
     inputs_hidden <- "d-none"
+  }
 
   layout <- attr(x, "layout")
 
@@ -254,7 +256,7 @@ ui_input.switch_field <- function(x, id, name) {
 #' @export
 ui_input.numeric_field <- function(x, id, name) {
   numericInput(
-    input_ids(x, id), name, value(x), value(x, "min"), value(x, "max") 
+    input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
   )
 }
 
@@ -286,7 +288,6 @@ input_ids.list_field <- function(x, name, ...) {
 #' @rdname generate_ui
 #' @export
 ui_input.variable_field <- function(x, id, name) {
-
   field <- validate_field(
     materialize_variable_field(x)
   )
@@ -314,7 +315,6 @@ ui_input.hidden_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.list_field <- function(x, id, name) {
-
   fields <- lapply(
     update_sub_fields(value(x, "sub_fields"), value(x)),
     validate_field
@@ -361,7 +361,6 @@ ui_update.switch_field <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.variable_field <- function(x, session, id, name) {
-
   ns <- session$ns
   ns_id <- ns(id)
 
@@ -406,7 +405,6 @@ ui_update.hidden_field <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.list_field <- function(x, session, id, name) {
-
   ns <- session$ns
   ns_id <- ns(id)
 

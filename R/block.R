@@ -140,10 +140,9 @@ evaluate_block.ggiraph_block <- evaluate_block.plot_block
 #' @param selected Selected dataset.
 #' @export
 new_data_block <- function(
-  ...,
-  dat = as.environment("package:blockr.data"),
-  selected = character()
-) {
+    ...,
+    dat = as.environment("package:blockr.data"),
+    selected = character()) {
   is_dataset_eligible <- function(x) {
     inherits(
       get(x, envir = dat, inherits = FALSE),
@@ -204,18 +203,14 @@ initialize_block.data_block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 new_filter_block <- function(
-  data,
-  columns = colnames(data)[1L],
-  values = character(),
-  filter_fun = "==",
-  ...
-) {
-
+    data,
+    columns = colnames(data)[1L],
+    values = character(),
+    filter_fun = "==",
+    ...) {
   sub_fields <- function(data, columns) {
-
     determine_field <- function(x) {
-      switch(
-        class(x),
+      switch(class(x),
         factor = select_field,
         numeric = range_field,
         string_field
@@ -223,9 +218,7 @@ new_filter_block <- function(
     }
 
     field_args <- function(x) {
-
-      switch(
-        class(x),
+      switch(class(x),
         factor = list(levels(x)[1L], choices = levels(x)),
         numeric = list(range(x), min = min(x), max = max(x)),
         list()
@@ -242,15 +235,12 @@ new_filter_block <- function(
 
 
   filter_exps <- function(data, values, filter_func) {
-
     filter_exp <- function(cls, col, val) {
-
       if (is.null(val)) {
         return(quote(TRUE))
       }
 
-      switch(
-        cls,
+      switch(cls,
         numeric = bquote(
           dplyr::between(.(column), ..(values)),
           list(column = as.name(col), values = val),
@@ -343,12 +333,10 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 #' @rdname new_block
 #' @export
 new_summarize_block <- function(
-  data,
-  func = character(),
-  default_columns = character(),
-  ...
-) {
-
+    data,
+    func = character(),
+    default_columns = character(),
+    ...) {
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -374,14 +362,22 @@ new_summarize_block <- function(
 
   summarize_expr <- function(data, funcs, columns) {
     # Build expressions that will go inside the summarize
-    if (length(funcs) == 0) return(quote(TRUE))
-    if (length(columns) == 0) return(quote(TRUE))
+    if (length(funcs) == 0) {
+      return(quote(TRUE))
+    }
+    if (length(columns) == 0) {
+      return(quote(TRUE))
+    }
 
     tmp_exprs <- lapply(funcs, function(fun) {
       col <- columns[[fun]]
 
-      if (is.null(col)) return(quote(TRUE))
-      if (!any(col %in% colnames(data))) return(quote(TRUE))
+      if (is.null(col)) {
+        return(quote(TRUE))
+      }
+      if (!any(col %in% colnames(data))) {
+        return(quote(TRUE))
+      }
       col <- as.name(col)
 
       expr <- if (fun == "se") {
@@ -479,12 +475,11 @@ group_by_block <- function(data, ...) {
 #' to join
 #' @export
 new_join_block <- function(
-  data,
-  y = data(package = "blockr.data")$result[, "Item"],
-  type = character(),
-  by_col = character(),
-  ...
-) {
+    data,
+    y = data(package = "blockr.data")$result[, "Item"],
+    type = character(),
+    by_col = character(),
+    ...) {
   # by depends on selected dataset and the input data.
   by_choices <- function(data, y) {
     choices <- intersect(
@@ -566,7 +561,6 @@ join_block <- function(data, ...) {
 #' @param n_rows Number of rows to return.
 #' @export
 new_head_block <- function(data, n_rows = numeric(), ...) {
-
   tmp_expr <- function(n_rows) {
     bquote(
       head(n = .(n_rows)),
@@ -600,36 +594,35 @@ head_block <- function(data, ...) {
 #' @import ggplot2
 #' @export
 new_plot_block <- function(
-  data,
-  plot_opts = list(
-    colors = c("blue", "red"), # when outside aes ...
-    point_size = 3,
-    title = "Plot title",
-    theme = c(
-      "theme_minimal",
-      "theme_gray",
-      "theme_linedraw",
-      "theme_dark",
-      "theme_light",
-      "theme_classic",
-      "theme_void",
-      "theme_bw"
+    data,
+    plot_opts = list(
+      colors = c("blue", "red"), # when outside aes ...
+      point_size = 3,
+      title = "Plot title",
+      theme = c(
+        "theme_minimal",
+        "theme_gray",
+        "theme_linedraw",
+        "theme_dark",
+        "theme_light",
+        "theme_classic",
+        "theme_void",
+        "theme_bw"
+      ),
+      x_lab = "X axis label",
+      y_lab = "Y axis label",
+      errors = list(
+        show = FALSE,
+        ymin = character(),
+        ymax = character()
+      ),
+      lines = list(
+        show = FALSE,
+        group = character(),
+        color = character()
+      )
     ),
-    x_lab = "X axis label",
-    y_lab = "Y axis label",
-    errors = list(
-      show = FALSE,
-      ymin = character(),
-      ymax = character()
-    ),
-    lines = list(
-      show = FALSE,
-      group = character(),
-      color = character()
-    )
-  ),
-  ...
-) {
+    ...) {
   # For plot blocks, fields will create input to style the plot ...
   all_cols <- function(data) colnames(data)
   fields <- list(
@@ -665,7 +658,7 @@ new_plot_block <- function(
             color = .data[[color]],
             shape = .data[[shape]]
           ),
-          size = 3 #.(point_size) TO DO: allow slide to have 1 value
+          size = 3 # .(point_size) TO DO: allow slide to have 1 value
         )
 
       # Adding errors
@@ -693,13 +686,13 @@ new_plot_block <- function(
         )
       }
 
-      p  +
+      p +
         labs(
           title = .(title),
           x = .(x_lab),
           y = .(y_lab)
         ) +
-        #theme_update(.(theme)) +
+        # theme_update(.(theme)) +
         theme(
           axis.text.x = element_text(angle = 45, hjust = 1),
           legend.title = element_text(face = "bold"),
@@ -730,36 +723,35 @@ plot_block <- function(data, ...) {
 #' @import ggiraph
 #' @export
 new_ggiraph_block <- function(
-  data,
-  plot_opts = list(
-    colors = c("blue", "red"), # when outside aes ...
-    point_size = 3,
-    title = "Plot title",
-    theme = c(
-      "theme_minimal",
-      "theme_gray",
-      "theme_linedraw",
-      "theme_dark",
-      "theme_light",
-      "theme_classic",
-      "theme_void",
-      "theme_bw"
+    data,
+    plot_opts = list(
+      colors = c("blue", "red"), # when outside aes ...
+      point_size = 3,
+      title = "Plot title",
+      theme = c(
+        "theme_minimal",
+        "theme_gray",
+        "theme_linedraw",
+        "theme_dark",
+        "theme_light",
+        "theme_classic",
+        "theme_void",
+        "theme_bw"
+      ),
+      x_lab = "X axis label",
+      y_lab = "Y axis label",
+      errors = list(
+        show = TRUE,
+        ymin = character(),
+        ymax = character()
+      ),
+      lines = list(
+        show = TRUE,
+        group = character(),
+        color = character()
+      )
     ),
-    x_lab = "X axis label",
-    y_lab = "Y axis label",
-    errors = list(
-      show = TRUE,
-      ymin = character(),
-      ymax = character()
-    ),
-    lines = list(
-      show = TRUE,
-      group = character(),
-      color = character()
-    )
-  ),
-  ...
-) {
+    ...) {
   # For plot blocks, fields will create input to style the plot ...
   all_cols <- function(data) colnames(data)
   fields <- list(
@@ -791,7 +783,7 @@ new_ggiraph_block <- function(
           TOOLTIP_SE = sprintf(
             "x: %s\ny: %s\nmin: %s\nmax: %s",
             .data[[x_var]], .data[[y_var]],
-            ymin,  ymax
+            ymin, ymax
           )
         )
 
@@ -805,7 +797,7 @@ new_ggiraph_block <- function(
             shape = .data[[shape]],
             tooltip = TOOLTIP
           ),
-          size = 3 #.(point_size) TO DO: allow slide to have 1 value
+          size = 3 # .(point_size) TO DO: allow slide to have 1 value
         )
 
       # Adding errors
@@ -834,7 +826,7 @@ new_ggiraph_block <- function(
         )
       }
 
-      p <- p  +
+      p <- p +
         labs(
           title = .(title),
           x = .(x_lab),

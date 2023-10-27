@@ -1,5 +1,4 @@
 test_that("string fields", {
-
   field <- string_field("foo")
 
   expect_s3_class(field, "string_field")
@@ -14,7 +13,6 @@ test_that("string fields", {
 })
 
 test_that("select fields", {
-
   field <- select_field("a", letters)
 
   expect_s3_class(field, "select_field")
@@ -35,7 +33,6 @@ test_that("select fields", {
 })
 
 test_that("range fields", {
-
   field <- range_field(min = 0, max = 10)
 
   expect_s3_class(field, "range_field")
@@ -44,7 +41,6 @@ test_that("range fields", {
 })
 
 test_that("numeric fields", {
-
   field <- numeric_field(min = 0, max = 10)
 
   expect_s3_class(field, "numeric_field")
