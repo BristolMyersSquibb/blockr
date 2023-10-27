@@ -1,7 +1,6 @@
 library(dplyr)
 library(blockr.data)
 test_that("data blocks", {
-
   block <- data_block()
 
   expect_s3_class(block, "data_block")
@@ -18,7 +17,6 @@ test_that("data blocks", {
 })
 
 test_that("filter blocks", {
-
   data <- datasets::iris
 
   block <- filter_block(data)
@@ -38,7 +36,6 @@ test_that("filter blocks", {
 })
 
 test_that("select blocks", {
-
   data <- datasets::iris
 
   block <- select_block(data)
@@ -54,7 +51,6 @@ test_that("select blocks", {
 })
 
 test_that("arrange blocks", {
-
   data <- datasets::iris
   min_sepal_len <- min(data$Sepal.Length)
 
@@ -71,7 +67,6 @@ test_that("arrange blocks", {
 })
 
 test_that("group_by blocks", {
-
   data <- datasets::iris
   block <- group_by_block(data, columns = "Species")
 

@@ -114,7 +114,6 @@ quoted_input_entry <- function(x) {
 }
 
 quoted_input_entries <- function(x) {
-
   if (length(x) == 1L && is.null(names(x))) {
     return(quoted_input_entry(x))
   }
@@ -143,7 +142,6 @@ type_trans <- function(x) {
 }
 
 is_truthy <- function(x) {
-
   if (inherits(x, "try-error")) {
     FALSE
   } else if (!is.atomic(x)) {
@@ -206,12 +204,10 @@ convert_block <- function(from = new_select_block, to, data, ...) {
 #'
 #' @keywords internal
 off_canvas <- function(
-  id,
-  title,
-  ...,
-  position = c("start", "top", "bottom", "end")
-) {
-
+    id,
+    title,
+    ...,
+    position = c("start", "top", "bottom", "end")) {
   position <- match.arg(position)
   label <- rand_names()
 
@@ -266,9 +262,12 @@ create_modal <- function(...) {
 #'
 #' @keywords internal
 secure <- function(expr) {
-  tryCatch({
-    expr
-  }, error = function(e) {
-    create_modal(e$message)
-  })
+  tryCatch(
+    {
+      expr
+    },
+    error = function(e) {
+      create_modal(e$message)
+    }
+  )
 }

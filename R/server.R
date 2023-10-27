@@ -20,7 +20,6 @@ generate_server.block <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.data_block <- function(x, id, ...) {
-
   obs_expr <- function(x) {
     splice_args(
       list(..(args)),
@@ -56,22 +55,25 @@ generate_server.data_block <- function(x, id, ...) {
 
       # Cleanup module inputs (UI and server side)
       # and observer
-      observeEvent(input$remove, {
-        # Trick to be able to tell the stack to wait
-        # for this event to run.
-        session$userData$is_cleaned(FALSE)
-        # Can only remove when it is the last stack block
-        if (length(session$userData$stack) == 1) {
-          message(sprintf("CLEANING UP BLOCK %s", id))
-          remove_shiny_inputs(id = id, input)
-          o$destroy()
-          session$userData$is_cleaned(TRUE)
-        }
-        # We have to set high priority so this event
-        # executes before the one in the stack which
-        # updates the stack. If we don't, this will
-        # never execute because the stack will be empty :)
-      }, priority = 500)
+      observeEvent(input$remove,
+        {
+          # Trick to be able to tell the stack to wait
+          # for this event to run.
+          session$userData$is_cleaned(FALSE)
+          # Can only remove when it is the last stack block
+          if (length(session$userData$stack) == 1) {
+            message(sprintf("CLEANING UP BLOCK %s", id))
+            remove_shiny_inputs(id = id, input)
+            o$destroy()
+            session$userData$is_cleaned(TRUE)
+          }
+          # We have to set high priority so this event
+          # executes before the one in the stack which
+          # updates the stack. If we don't, this will
+          # never execute because the stack will be empty :)
+        },
+        priority = 500
+      )
 
       out_dat
     }
@@ -82,7 +84,6 @@ generate_server.data_block <- function(x, id, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.transform_block <- function(x, in_dat, id, ...) {
-
   obs_expr <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
@@ -134,7 +135,6 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.plot_block <- function(x, in_dat, id, ...) {
-
   obs_expr <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
@@ -207,47 +207,50 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         vals$remove <- TRUE
       })
 
-      observeEvent({
-        req(new_blocks)
-        new_blocks()
-      }, {
-        # Update stack
-        block_to_add <- new_blocks()$block
-        position <- new_blocks()$position
+      observeEvent(
+        {
+          req(new_blocks)
+          new_blocks()
+        },
+        {
+          # Update stack
+          block_to_add <- new_blocks()$block
+          position <- new_blocks()$position
 
-        vals$stack <- add_block(vals$stack, block_to_add, position)
+          vals$stack <- add_block(vals$stack, block_to_add, position)
 
-        # Call module
-        p <- if (is.null(position)) {
-          length(vals$stack)
-        } else {
-          position + 1
-        }
-        vals$blocks[[p]] <- init_block(p, vals)
+          # Call module
+          p <- if (is.null(position)) {
+            length(vals$stack)
+          } else {
+            position + 1
+          }
+          vals$blocks[[p]] <- init_block(p, vals)
 
-        # Insert UI
-        insertUI(
-          selector = sprintf(
-            "[data-value='%s-block']",
-            session$ns(attr(vals$stack[[p - 1]], "name"))
-          ),
-          where = "afterEnd",
-          generate_ui(
-            vals$stack[[p]],
-            id = session$ns(attr(vals$stack[[p]], "name")),
-            .hidden = FALSE
+          # Insert UI
+          insertUI(
+            selector = sprintf(
+              "[data-value='%s-block']",
+              session$ns(attr(vals$stack[[p - 1]], "name"))
+            ),
+            where = "afterEnd",
+            generate_ui(
+              vals$stack[[p]],
+              id = session$ns(attr(vals$stack[[p]], "name")),
+              .hidden = FALSE
+            )
           )
-        )
 
-        # Necessary to communicate with downstream modules
-        session$userData$stack <- vals$stack
+          # Necessary to communicate with downstream modules
+          session$userData$stack <- vals$stack
 
-        # trigger javascript-ui functionalities on add
-        session$sendCustomMessage(
-          "blockr-add-block",
-          list(stack = session$ns(NULL))
-        )
-      })
+          # trigger javascript-ui functionalities on add
+          session$sendCustomMessage(
+            "blockr-add-block",
+            list(stack = session$ns(NULL))
+          )
+        }
+      )
 
       # Remove block from stack (can't be done within the block)
       to_remove <- reactive({
@@ -269,37 +272,40 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 
       session$userData$is_cleaned <- reactiveVal(FALSE)
 
-      observeEvent({
-        c(
-          to_remove(),
-          session$userData$is_cleaned()
-        )
-      }, {
-        # We can't remove the data block if there are downstream consumers...
-        if (to_remove() == 1 && length(vals$stack) > 1) {
-          showModal(
-            modalDialog(
-              title = h3(icon("xmark"), "Error"),
-              "Can't remove a datablock whenever there are 
-              downstream data block consumers."
-            )
+      observeEvent(
+        {
+          c(
+            to_remove(),
+            session$userData$is_cleaned()
           )
-        } else {
-          if (session$userData$is_cleaned()) {
-            message(sprintf("REMOVING BLOCK %s", to_remove()))
-            removeUI(
-              selector = sprintf(
-                "[data-value='%s%s-block']",
-                session$ns(""),
-                attr(vals$stack[[to_remove()]], "name")
+        },
+        {
+          # We can't remove the data block if there are downstream consumers...
+          if (to_remove() == 1 && length(vals$stack) > 1) {
+            showModal(
+              modalDialog(
+                title = h3(icon("xmark"), "Error"),
+                "Can't remove a datablock whenever there are
+              downstream data block consumers."
               )
             )
-            vals$stack[[to_remove()]] <- NULL
-            session$userData$stack <- vals$stack
-            session$userData$is_cleaned(FALSE)
+          } else {
+            if (session$userData$is_cleaned()) {
+              message(sprintf("REMOVING BLOCK %s", to_remove()))
+              removeUI(
+                selector = sprintf(
+                  "[data-value='%s%s-block']",
+                  session$ns(""),
+                  attr(vals$stack[[to_remove()]], "name")
+                )
+              )
+              vals$stack[[to_remove()]] <- NULL
+              session$userData$stack <- vals$stack
+              session$userData$is_cleaned(FALSE)
+            }
           }
         }
-      })
+      )
 
       observe({
         session$sendCustomMessage(
@@ -368,16 +374,19 @@ server_output <- function(x, result, output) {
 #' @rdname generate_ui
 #' @export
 server_output.block <- function(x, result, output) {
-  DT::renderDT({
-    result() |>
-      DT::datatable(
-        selection = "none",
-        options = list(
-          pageLength = 5L,
-          processing = FALSE
+  DT::renderDT(
+    {
+      result() |>
+        DT::datatable(
+          selection = "none",
+          options = list(
+            pageLength = 5L,
+            processing = FALSE
+          )
         )
-      )
-  }, server = TRUE)
+    },
+    server = TRUE
+  )
 }
 
 #' @rdname generate_ui

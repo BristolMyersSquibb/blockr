@@ -1,5 +1,4 @@
 test_that("stacks", {
-
   stack <- new_stack(
     new_data_block,
     new_filter_block
