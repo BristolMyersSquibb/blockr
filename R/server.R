@@ -82,6 +82,7 @@ generate_server.data_block <- function(x, id, ...) {
 #' @rdname generate_server
 #' @importFrom shinyvalidate InputValidator
 #' @export
+#' @import shinyvalidate
 generate_server.transform_block <- function(x, in_dat, id, ...) {
 
   obs_expr <- function(x) {
