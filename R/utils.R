@@ -302,8 +302,6 @@ init_input_validator <- function(x, iv, update = FALSE) {
   to_exclude <- unique(
     c(
       "expression",
-      "join_func",
-      "filter_func",
       "dummy",
       existing_fields
     )
