@@ -285,6 +285,7 @@ secure <- function(expr) {
 #' @return Result or error message.
 #'
 #' @keywords internal
+#' @importFrom utils tail
 init_input_validator <- function(x, iv, update = FALSE) {
   inputs <- unlst(input_ids(x))
   existing_fields <- if (length(iv$fields()) > 0) {
