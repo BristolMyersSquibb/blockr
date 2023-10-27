@@ -284,6 +284,8 @@ secure <- function(expr) {
 #'
 #' @return Result or error message.
 #'
+#' @importFrom shinyvalidate sv_required
+#'
 #' @keywords internal
 init_input_validator <- function(x, iv, update = FALSE) {
   inputs <- unlst(input_ids(x))
@@ -291,7 +293,7 @@ init_input_validator <- function(x, iv, update = FALSE) {
     vapply(
       strsplit(iv$fields(), "-"),
       \(el) {
-        tail(el, n = 1)
+        utils::tail(el, n = 1)
       },
       FUN.VALUE = character(1)
     )
