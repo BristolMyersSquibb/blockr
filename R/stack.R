@@ -67,7 +67,7 @@ add_block <- function(stack, block, position = NULL) {
 
   # get data from the previous block
   if (length(stack) == 1) {
-    data <-  evaluate_block(stack[[position]])
+    data <- evaluate_block(stack[[position]])
   } else {
     data <- evaluate_block(stack[[1]])
     for (i in seq_along(stack)[-1L]) {
