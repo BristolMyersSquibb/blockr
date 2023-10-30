@@ -168,7 +168,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # the validator is FALSE. Avoids to
       # send wrong data to the next block.
       out_dat <- reactive({
-        req(iv$is_valid(), block_updated())
+        req(block_updated())
         message("update output")
         evaluate_block(blk(), data = in_dat())
       })
@@ -353,29 +353,40 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             to_remove(),
             session$userData$is_cleaned()
           )
-        } else {
-          if (session$userData$is_cleaned()) {
-            to_remove <- to_remove()
-            message(sprintf("REMOVING BLOCK %s", to_remove))
-            removeUI(
-              selector = sprintf(
-                "[data-value='%s%s-block']",
-                session$ns(""),
-                attr(vals$stack[[to_remove]], "name")
+        },
+        {  # We can't remove the data block if there are downstream consumers...
+          if (to_remove() == 1 && length(vals$stack) > 1) {
+            showModal(
+              modalDialog(
+                title = h3(icon("xmark"), "Error"),
+                "Can't remove a datablock whenever there are
+              downstream data block consumers."
               )
             )
+          } else {
+            if (session$userData$is_cleaned()) {
+              to_remove <- to_remove()
+              message(sprintf("REMOVING BLOCK %s", to_remove))
+              removeUI(
+                selector = sprintf(
+                  "[data-value='%s%s-block']",
+                  session$ns(""),
+                  attr(vals$stack[[to_remove]], "name")
+                )
+              )
 
-            vals$stack[[to_remove]] <- NULL
-            vals$blocks[[to_remove]] <- NULL
+              vals$stack[[to_remove]] <- NULL
+              vals$blocks[[to_remove]] <- NULL
 
-            # Reinitialize all the downstream stack blocks with new data ...
-            for (i in to_remove:length(vals$stack)) {
-              attr(vals$stack[[i]], "position") <- i
-              vals$blocks[[i]] <- init_block(i, vals)
+              # Reinitialize all the downstream stack blocks with new data ...
+              for (i in to_remove:length(vals$stack)) {
+                attr(vals$stack[[i]], "position") <- i
+                vals$blocks[[i]] <- init_block(i, vals)
+              }
+
+              session$userData$stack <- vals$stack
+              session$userData$is_cleaned(FALSE)
             }
-
-            session$userData$stack <- vals$stack
-            session$userData$is_cleaned(FALSE)
           }
         }
       )
