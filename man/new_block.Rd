@@ -103,7 +103,7 @@ data_block(...)
 new_filter_block(
   data,
   columns = colnames(data)[1L],
-  values = data[1, colnames(data)[1L]],
+  values = character(),
   filter_fun = "==",
   ...
 )
@@ -185,7 +185,7 @@ new_cheat_block(data, ...)
 
 cheat_block(data, ...)
 
-new_asfactor_block(data, column = "VISIT", ...)
+new_asfactor_block(data, column = character(), ...)
 
 asfactor_block(data, ...)
 
