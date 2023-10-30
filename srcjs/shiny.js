@@ -20,3 +20,14 @@ Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
     toggleOutputInput(stack);
   }, 500);
 });
+
+Shiny.addCustomMessageHandler("validate-block", (msg) => {
+  if (msg.state) {
+    $(`[data-value="${msg.id}"] .card`)
+      .addClass("border");
+  } else {
+    $(`[data-value="${msg.id}"] .card`)
+      .removeClass("border")
+      .css("border-color", "#DC3444");
+  }
+});

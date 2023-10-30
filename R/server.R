@@ -123,6 +123,17 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         init_input_validator(x, iv)
       })
 
+      # When block is invalid, modify the UI color
+      obs$invalid_callback <- observeEvent(iv$is_valid(), {
+        session$sendCustomMessage(
+          "validate-block",
+          list(
+            state = iv$is_valid(),
+            id = session$ns("block")
+          )
+        )
+      })
+
       # When upstream data are reset,
       # output recalculation should happen
       # only whenever the block is updated
@@ -354,7 +365,7 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             session$userData$is_cleaned()
           )
         },
-        {  # We can't remove the data block if there are downstream consumers...
+        { # We can't remove the data block if there are downstream consumers...
           if (to_remove() == 1 && length(vals$stack) > 1) {
             showModal(
               modalDialog(
