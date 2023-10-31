@@ -1,0 +1,174 @@
+---
+title: "Developer guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Developer guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DiagrammeR)
+```
+
+# `{blockr}` structure
+
+Under the hood, `{blockr}` utilises S3 to creates classes and apply the relevant methods
+whenever necessary. We describe the general idea below.
+
+## Introduction
+
+`{blockr}` aims at abstracting the logic behind `{dplyr}` functions
+under __blocks__. We assume that a __stack__ is a succession
+of dependent blocks. We designed 3 kinds of blocks:
+
+- __data__ block: entry level block to determine input data.
+- __transform__ block: materialize `{dplyr}` operations on the selected data.
+- __output__ (only plot for now) block: consumes transformed data to produce visualizations.
+
+A __stack__ always starts from a data block and may end either by a data transform blocks or by an output block.
+Note that at the moment, there is only one output block per stack.
+
+```{r, echo=FALSE}
+mermaid("
+flowchart TB
+    subgraph stack
+      input(Data);
+      transform(Transform);
+      output(Visualize);
+      input-->transform--> output;
+    end
+")
+```
+
+```{r, echo=FALSE}
+mermaid("
+classDiagram
+    class stack
+    stack : +name
+    stack : +class
+    stack : +generate_server(stack, ...)
+")
+```
+
+The stack is able to dynamically add new blocks through `add_block`.
+
+## Blocks
+
+A block is a structure carrying important information:
+
+- The __class__: `{blockr}` leverages S3, so the class is important to apply
+the right methods. For instance, data block, tranform and output blocks have different
+specific method (`generate_server.data_block`, ..., respectively).
+- __expr__: is the expression which will be evaluated to produce the block __result__.
+- __result__: the block output which can be fed into another block.
+
+```{r, echo=FALSE}
+mermaid("
+classDiagram
+    class block
+    block : +name
+    block : +expr
+    block : +result
+    block : +layout
+    block : +class
+    block : +initialize_block(block)
+    block : +is_initialized(block)
+    block : +generate_code(block)
+    block : +evaluate_block(block, ...)
+    block : +generate_server(block, ...)
+    block : +update_fields(block, ...)
+")
+```
+
+A block is composed of __fields__ gather in a list, which are translated into Shiny inputs.
+These fields are the necessary elements to reconstruct the block __expression__ and subsequently
+produce the result whenever it gets evaluated.
+
+## Fields
+
+### Simple fields
+
+A field is a structure with a __type__ and a __class__.
+
+```{r, echo=FALSE}
+mermaid("
+classDiagram
+    class field
+    field : +type
+    field : +class
+    field : +initialize_field(x, env)
+    field : +validate_field(field)
+    field : +update_field(field, value, ...)
+")
+```
+
+The `validate_field` generic ensures each field has revelant values. For instance, for a string field,
+which ultimately becomes a shiny text input, the method `validate_field.string_field` is responsible
+for checking that the value is a character string and modifies it if not (I BELIEVE WE'RE DOING
+TOO MUCH HERE SINCE THE VALIDATION SHOULD HAPPEN ON THE SHINY SIDE).
+
+### More complex fields
+
+With basic fields, we can't handle dependence between 2 fields. This is typically what happens
+in a join block. To join datasets, we need a 2 datasets and some columns to join by. Assuming, 
+the dataset choice is managed by a field, changing the datasets may update the possible
+choices for the `join_by` choice. Below shows the definition of 2 simple fields, one for selecting
+the join function (static set of choices) and another for selecting the second dataset.
+
+```r
+fields <- list(
+  join_func = new_select_field(
+    paste(type, "join", sep = "_"),
+    paste(join_types, "join", sep = "_")
+  ),
+  y = new_select_field(y[[1]], y),
+  by = ...
+)
+```
+
+How do we handle the `by` field as it depends on `y`?
+
+This is where we introduce `list_field`. `list_field` accepts a function generating 
+the choices with a dependence on other existing fields:
+
+```r
+by_choices <- function(data, y) {
+    # DEPENDENCY on y
+    choices <- intersect(
+      colnames(data),
+      colnames(eval(as.name(y)))
+    )
+
+    ...
+
+    # Return nested field
+    list(
+      val = new_select_field(
+        default,
+        choices,
+        multiple = TRUE
+      )
+    )
+  }
+```
+
+`by_choices` can then be injected into the fields:
+
+```r
+fields <- list(
+  join_func = new_select_field(
+    paste(type, "join", sep = "_"),
+    paste(join_types, "join", sep = "_")
+  ),
+  y = new_select_field(y[[1]], y),
+  by = new_list_field(sub_fields = by_choices) # HERE
+)
+```

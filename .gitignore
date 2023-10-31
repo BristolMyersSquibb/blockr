@@ -1,3 +1,5 @@
 README.html
 .Rproj.user
 node_modules
+docs
+inst/doc

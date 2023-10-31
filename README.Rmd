@@ -59,7 +59,7 @@ serve_stack(stack)
 
 ### Modify a stack
 
-To add a block to add stack, you can leverage `add_block`:
+To add a block to a stack, you can leverage `add_block`:
 
 ```r
 stack <- new_stack(data_block) |>
