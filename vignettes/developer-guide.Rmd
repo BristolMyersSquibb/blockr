@@ -172,3 +172,27 @@ fields <- list(
   by = new_list_field(sub_fields = by_choices) # HERE
 )
 ```
+
+# Adding new fields
+
+Fields are translated into shiny inputs. For instance, the `select_field` surprinsingly
+yields a shiny `selectInput`. It is quite easy to add a new field:
+
+1. Under `./R/field.R`, create a new `new_*_field` and `*_field` functions, `*` being the field name.
+2. Under `./R/field.R`, add a specific validation method `validate_field.*_field`.
+3. Under `./R/ui.R`, add `ui_input.*_field` and `ui_update.*_field` 
+to create the corresponding HTML element for Shiny.
+
+# Create a new block
+
+You may find yourself in a situation where the set of existing blocks does not fully meet
+your needs. We exposed few helpers to get you quickly started creating new block. You can call
+`create_block` choosing between `transform` or `plot` block. This will create a new block file
+in `R/<name>-block.R`.
+
+If your block has specific output, you may need to tweak `./R/server.R`:
+
+1. Add a `server_output.*_block` method, `*` being the new block name.
+2. Add a specific `generate_server.*_block`.
+
+If you had to include new fields, refer to the previous section.
