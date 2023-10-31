@@ -179,7 +179,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # the validator is FALSE. Avoids to
       # send wrong data to the next block.
       out_dat <- reactive({
-        req(block_updated())
+        req(iv$is_valid(), block_updated())
         message("update output")
         evaluate_block(blk(), data = in_dat())
       })

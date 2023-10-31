@@ -313,9 +313,11 @@ init_input_validator <- function(x, iv, update = FALSE) {
     inputs <- inputs[-exclude]
   }
   # add rules
-  lapply(inputs, \(input) {
-    iv$add_rule(input, sv_required())
-  })
+  if (length(inputs) > 0) {
+    lapply(inputs, \(input) {
+      iv$add_rule(input, sv_required())
+    })
+  }
   # Activate only once
   if (!update) {
     iv$enable()

@@ -205,7 +205,7 @@ initialize_block.data_block <- function(x, ...) {
 new_filter_block <- function(
     data,
     columns = colnames(data)[1L],
-    values = character(),
+    values = data[1, colnames(data)[1L]],
     filter_fun = "==",
     ...) {
   sub_fields <- function(data, columns) {
