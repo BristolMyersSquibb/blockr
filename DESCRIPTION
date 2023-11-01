@@ -14,8 +14,8 @@ Authors@R:
              family = "Coene",
              role = c("aut"),
              email = "john@opifex.org"),
-      person(given = "Voltron Data",
-             role = "fnd")
+      person(family = "Bristol Myers Squibb",
+           role = c("cph", "fnd"))
     )
 Description: A framework for data manipulation and visualization using a
     web-based point and click user interface.
