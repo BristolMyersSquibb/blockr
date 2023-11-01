@@ -62,13 +62,12 @@ The stack is able to dynamically add new blocks through `add_block`.
 
 ## Blocks
 
-A block is a structure carrying important information:
+A block is a structure carrying various information:
 
 - The __class__: `{blockr}` leverages S3, so the class is important to apply
-the right methods. For instance, data block, tranform and output blocks have different
-specific method (`generate_server.data_block`, ..., respectively).
+the right methods. For instance, data block, tranform and output blocks have different methods (`generate_server.data_block`, ..., respectively).
 - __expr__: is the expression which will be evaluated to produce the block __result__.
-- __result__: the block output which can be fed into another block.
+- __result__: the block output which can be passed to another block.
 
 ```{r, echo=FALSE}
 mermaid("
@@ -88,7 +87,7 @@ classDiagram
 ")
 ```
 
-A block is composed of __fields__ gather in a list, which are translated into Shiny inputs.
+A block is composed of __fields__ gathered in a list, which are translated into Shiny inputs.
 These fields are the necessary elements to reconstruct the block __expression__ and subsequently
 produce the result whenever it gets evaluated.
 
@@ -117,10 +116,10 @@ TOO MUCH HERE SINCE THE VALIDATION SHOULD HAPPEN ON THE SHINY SIDE).
 
 ### More complex fields
 
-With basic fields, we can't handle dependence between 2 fields. This is typically what happens
-in a join block. To join datasets, we need a 2 datasets and some columns to join by. Assuming, 
+With basic fields, we can't handle __dependencies__ between 2 fields. This is typically what happens
+in a join block. To join datasets, we need 2 datasets and some columns for the join. Assuming, 
 the dataset choice is managed by a field, changing the datasets may update the possible
-choices for the `join_by` choice. Below shows the definition of 2 simple fields, one for selecting
+choices for the `join_by` field. Below shows the definition of 2 simple fields, one for selecting
 the join function (static set of choices) and another for selecting the second dataset.
 
 ```r
@@ -137,7 +136,7 @@ fields <- list(
 How do we handle the `by` field as it depends on `y`?
 
 This is where we introduce `list_field`. `list_field` accepts a function generating 
-the choices with a dependence on other existing fields:
+the choices with a dependency on other existing fields:
 
 ```r
 by_choices <- function(data, y) {
@@ -160,7 +159,7 @@ by_choices <- function(data, y) {
   }
 ```
 
-`by_choices` can then be injected into the fields:
+`by_choices` can then be injected inside `new_list_field`:
 
 ```r
 fields <- list(
@@ -186,8 +185,8 @@ to create the corresponding HTML element for Shiny.
 # Create a new block
 
 You may find yourself in a situation where the set of existing blocks does not fully meet
-your needs. We exposed few helpers to get you quickly started creating new block. You can call
-`create_block` choosing between `transform` or `plot` block. This will create a new block file
+your needs. We exposed few helpers so you can quickly get started creating new block. You can call
+`create_block` choosing between `transform` or `plot` block. This creates a new block file
 in `R/<name>-block.R`.
 
 If your block has specific output, you may need to tweak `./R/server.R`:
