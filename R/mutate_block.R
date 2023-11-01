@@ -27,6 +27,7 @@ new_mutate_block <- function(data, value = "tt = Time * 2", ...) {
   # Select_field only allow one value, not multi select
   fields <- list(
     value = new_string_field(value = value),
+    # value = new_editor_field(value = value),
     expression = new_hidden_field(mutate_expr)
   )
 
