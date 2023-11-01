@@ -152,8 +152,6 @@ test_that("head blocks", {
 
 test_that("summarize block", {
   data <- datasets::iris
-  # Min is 1. As 12 > 1, validate_field.numeric_field
-  # returns TRUE and does not change n_rows.
   block <- summarize_block(data, func = "mean", default_column = "Sepal.Length")
 
   expect_s3_class(block, "summarize_block")
