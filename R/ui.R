@@ -14,7 +14,7 @@ generate_ui <- function(x, ...) {
 #' @param id UI IDs
 #' @rdname generate_ui
 #' @export
-generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
+generate_ui.block <- function(x, id, ..., .hidden = FALSE) {
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
