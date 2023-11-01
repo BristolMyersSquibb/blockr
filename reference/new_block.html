@@ -148,7 +148,7 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">join_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_head_block</span><span class="op">(</span><span class="va">data</span>, n_rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">new_head_block</span><span class="op">(</span><span class="va">data</span>, n_rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>, n_rows_min <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">head_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -308,6 +308,10 @@ to join</p></dd>
 
 <dt>n_rows</dt>
 <dd><p>Number of rows to return.</p></dd>
+
+
+<dt>n_rows_min</dt>
+<dd><p>Minimum number of rows.</p></dd>
 
 
 <dt>plot_opts</dt>
