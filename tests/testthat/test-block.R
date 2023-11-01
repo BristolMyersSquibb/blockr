@@ -149,3 +149,34 @@ test_that("head blocks", {
   res <- evaluate_block(block, data)
   expect_equal(nrow(res), nrow(data))
 })
+
+test_that("summarize block", {
+  data <- datasets::iris
+  # Min is 1. As 12 > 1, validate_field.numeric_field
+  # returns TRUE and does not change n_rows.
+  block <- summarize_block(data, func = "mean", default_column = "Sepal.Length")
+
+  expect_s3_class(block, "summarize_block")
+  expect_type(block, "list")
+
+  res <- evaluate_block(block, data)
+  expect_equal(colnames(res), toupper(block$funcs$value))
+  expect_equal(nrow(res), 1)
+  expect_equal(ncol(res), 1)
+
+  expect_error(summarize_block(
+    data,
+    func = c("mean", "se"),
+    default_column = "Sepal.Length"
+  ))
+
+  block <- summarize_block(
+    data,
+    func = c("mean", "se"),
+    default_column = rep("Sepal.Length", 2)
+  )
+  res <- evaluate_block(block, data)
+  expect_equal(colnames(res), toupper(block$funcs$value))
+  expect_equal(nrow(res), 1)
+  expect_equal(ncol(res), 2)
+})
