@@ -123,3 +123,29 @@ test_that("plot block", {
   expect_s3_class(res, "ggplot")
   # TO DO: more testing for ggplot2 element ...
 })
+
+test_that("head blocks", {
+  data <- datasets::iris
+  # Min is 1. As 12 > 1, validate_field.numeric_field
+  # returns TRUE and does not change n_rows.
+  block <- head_block(data, n_rows = 12L)
+
+  expect_s3_class(block, "head_block")
+  expect_type(block, "list")
+
+  res <- evaluate_block(block, data)
+
+  expect_equal(nrow(res), 12)
+
+  # Now, we set n_rows to be lower than the allowed minimum which is 1.
+  # validate_field.numeric_field is responsible for restoring n_rows
+  # to an acceptable value, that is 1.
+  block <- head_block(data, n_rows = -5L)
+  res <- evaluate_block(block, data)
+  expect_equal(nrow(res), 1)
+
+  # The same above the maximum (nrow(data))
+  block <- head_block(data, n_rows = nrow(data) + 1000)
+  res <- evaluate_block(block, data)
+  expect_equal(nrow(res), nrow(data))
+})

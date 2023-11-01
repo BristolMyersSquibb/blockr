@@ -559,8 +559,14 @@ join_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @param n_rows Number of rows to return.
+#' @param n_rows_min Minimum number of rows.
 #' @export
-new_head_block <- function(data, n_rows = numeric(), ...) {
+new_head_block <- function(
+  data,
+  n_rows = numeric(),
+  n_rows_min = 1L,
+  ...
+) {
   tmp_expr <- function(n_rows) {
     bquote(
       head(n = .(n_rows)),
@@ -569,7 +575,7 @@ new_head_block <- function(data, n_rows = numeric(), ...) {
   }
 
   fields <- list(
-    n_rows = new_numeric_field(n_rows, 10, nrow(data)),
+    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data)),
     expression = new_hidden_field(tmp_expr)
   )
 

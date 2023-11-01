@@ -137,7 +137,7 @@ new_join_block(
 
 join_block(data, ...)
 
-new_head_block(data, n_rows = numeric(), ...)
+new_head_block(data, n_rows = numeric(), n_rows_min = 1L, ...)
 
 head_block(data, ...)
 
@@ -250,6 +250,8 @@ as func.}
 to join}
 
 \item{n_rows}{Number of rows to return.}
+
+\item{n_rows_min}{Minimum number of rows.}
 
 \item{plot_opts}{List containing options for ggplot (color, ...).}
 
