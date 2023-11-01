@@ -39,7 +39,7 @@ Imports:
     ggiraph
 Remotes:
     blockr-org/blockr.data,
-    blockr-org/bmsui
+    blockr-org/bmsui,
     DivadNojnarg/DiagrammeR
 Suggests: 
     knitr,
