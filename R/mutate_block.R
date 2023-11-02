@@ -2,7 +2,7 @@
 #' @param columns Column(s) to select.
 #' @rdname new_block
 #' @export
-new_mutate_block <- function(data, value = "tt = Time * 2", ...) {
+new_mutate_block <- function(data, value = "Time * 2", ...) {
   # all_cols <- function(data) colnames(data)
 
   mutate_expr <- function(data, value) {
@@ -12,15 +12,13 @@ new_mutate_block <- function(data, value = "tt = Time * 2", ...) {
       exprs <- expression()
     }
 
+    exprs <- setNames(exprs, "new_col")
+
     ans <- bquote(
       dplyr::mutate(..(exprs)),
       list(exprs = exprs),
       splice = TRUE
     )
-    print(ans)
-    # FIXME
-    # I get dplyr::mutate((tt = Time * 2)) here but would like to get
-    # dplyr::mutate(tt = Time * 2)
     ans
   }
 
