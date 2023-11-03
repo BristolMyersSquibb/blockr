@@ -69,12 +69,16 @@ filter_layout_fields <- function(fields, ...) {
         fields$columns
       ),
       div(
-        class = "col-md-4",
+        class = "col-md-2",
         fields$filter_func
       ),
       div(
         class = "col-md-4",
         fields$values
+      ),
+      div(
+        class = "col-md-2",
+        fields$submit
       )
     ),
     fields$expression
@@ -86,12 +90,16 @@ summarize_layout_fields <- function(fields, ...) {
     div(
       class = "row",
       div(
-        class = "col-md-6",
+        class = "col-md-5",
         fields$funcs
       ),
       div(
-        class = "col-md-6",
+        class = "col-md-5",
         fields$columns
+      ),
+      div(
+        class = "col-md-2",
+        fields$submit
       )
     ),
     fields$expression
@@ -103,7 +111,7 @@ join_layout_fields <- function(fields, ...) {
     div(
       class = "row",
       div(
-        class = "col-md-4",
+        class = "col-md-3",
         fields$join_func
       ),
       div(
@@ -111,8 +119,12 @@ join_layout_fields <- function(fields, ...) {
         fields$y
       ),
       div(
-        class = "col-md-4",
+        class = "col-md-3",
         fields$by
+      ),
+      div(
+        class = "col-md-2",
+        fields$submit
       )
     ),
     fields$expression

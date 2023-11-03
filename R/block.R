@@ -26,6 +26,14 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
+  # Add submit button
+  if ("submit_block" %in% class) {
+    fields <- c(
+      fields,
+      submit = list(new_submit_field())
+    )
+  }
+
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
     layout = layout,
@@ -291,7 +299,7 @@ new_filter_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("filter_block", "transform_block"),
+    class = c("filter_block", "transform_block", "submit_block"),
     layout = filter_layout_fields
   )
 }
@@ -437,7 +445,7 @@ new_summarize_block <- function(
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("summarize_block", "transform_block"),
+    class = c("summarize_block", "transform_block", "submit_block"),
     layout = summarize_layout_fields
   )
 }
@@ -546,7 +554,7 @@ new_join_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("join_block", "transform_block"),
+    class = c("join_block", "transform_block", "submit_block"),
     layout = join_layout_fields
   )
 }

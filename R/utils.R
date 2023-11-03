@@ -167,6 +167,11 @@ unlst <- function(x, recursive = FALSE, use_names = FALSE) {
   unlist(x, recursive = recursive, use.names = use_names)
 }
 
+# dropNulls
+dropNulls <- function(x) {
+  x[!vapply(x, is.null, FUN.VALUE = logical(1))]
+}
+
 #' Convert block from a type to another
 #'
 #' For instance, you can convert from a select block to an

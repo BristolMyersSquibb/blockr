@@ -7,15 +7,22 @@
 #' @param ... Further field components
 #' @param type Field type (allowed values are `"literal"` and `"name"`)
 #' @param class Field subclass
+#' @param exclude Experimental: Exclude field from being captured in the update_fields
+#' feature. Default to FALSE. Not yet used.
 #'
 #' @export
 new_field <- function(value, ..., type = c("literal", "name"),
-                      class = character()) {
+                      class = character(), exclude = FALSE) {
   x <- list(value = value, ...)
 
   stopifnot(is.list(x), length(unique(names(x))) == length(x))
 
-  structure(x, type = match.arg(type), class = c(class, "field"))
+  structure(
+    x,
+    type = match.arg(type),
+    class = c(class, "field"),
+    exclude = exclude
+  )
 }
 
 #' @rdname new_block
@@ -197,6 +204,25 @@ validate_field.numeric_field <- function(x) {
     value(x) <- value(x, "max")
   }
 
+  x
+}
+
+#' @rdname new_field
+#' @export
+new_submit_field <- function(...) {
+  # action buttons always start from 0
+  new_field(value = 0, ..., class = "submit_field")
+}
+
+#' @rdname new_field
+#' @export
+submit_field <- function(...) {
+  validate_field(new_submit_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.submit_field <- function(x) {
   x
 }
 
