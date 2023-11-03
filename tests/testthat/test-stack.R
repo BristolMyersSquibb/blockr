@@ -9,6 +9,7 @@ test_that("stacks", {
 })
 
 test_that("serve stacks", {
+  skip_on_cran()
   stack <- new_stack(
     new_data_block,
     new_filter_block
