@@ -21,6 +21,13 @@ You can install the development version of blockr from
 devtools::install_github("blockr-org/blockr")
 ```
 
+## Contribute
+
+Easiest is to run `make`, otherwise:
+
+1.  Install npm dependencies with `packer::npm_install()`
+2.  Build CSS by running the script in `dev/sass.R`
+
 ## Examples
 
 ### Create a stack
@@ -43,7 +50,7 @@ serve_stack(stack)
 
 ### Modify a stack
 
-To add a block to add stack, you can leverage `add_block`:
+To add a block to a stack, you can leverage `add_block`:
 
 ``` r
 stack <- new_stack(data_block) |>
@@ -75,6 +82,10 @@ a better user experience, allowing one to drag and drop blocks within
 the stack.
 
 ``` r
+library(shiny)
+library(blockr)
+library(blockr.data)
+
 blocks <- list(
   filter_block,
   select_block,
@@ -84,7 +95,9 @@ blocks <- list(
   cheat_block,
   plot_block
 )
+
 stack <- new_stack(data_block)
+
 shinyApp(
   ui = bslib::page_fluid(
     div(
@@ -123,23 +136,20 @@ shinyApp(
   ),
   server = function(input, output, session) {
     vals <- reactiveValues(new_blocks = NULL)
-    generate_server(
+    o <- generate_server(
       stack,
       id = "mystack",
       new_blocks = reactive(vals$new_blocks)
     )
 
     observeEvent(input$add, {
-      vals$new_blocks <- NULL
-      # always append to stack
-      loc <- input$add
       block <- blocks[[as.numeric(input$selected_block)]]
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will
       # go at the end)
       vals$new_blocks <- list(
         block = block,
-        position = loc
+        position = length(o$stack)
       )
     })
   }

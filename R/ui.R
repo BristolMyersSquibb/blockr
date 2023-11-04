@@ -276,6 +276,17 @@ ui_input.numeric_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.submit_field <- function(x, id, name) {
+  actionButton(
+    input_ids(x, id),
+    name,
+    icon = icon("play"),
+    class = "btn btn-success mt-4"
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -407,6 +418,16 @@ ui_update.range_field <- function(x, session, id, name) {
 ui_update.numeric_field <- function(x, session, id, name) {
   updateNumericInput(
     session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.submit_field <- function(x, session, id, name) {
+  updateActionButton(
+    session,
+    input_ids(x, id),
+    name
   )
 }
 

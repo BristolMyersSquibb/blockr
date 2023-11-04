@@ -2,3 +2,5 @@ README.html
 .Rproj.user
 node_modules
 .DS_Store
+docs
+inst/doc

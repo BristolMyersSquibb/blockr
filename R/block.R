@@ -26,6 +26,14 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
+  # Add submit button
+  if ("submit_block" %in% class) {
+    fields <- c(
+      fields,
+      submit = list(new_submit_field())
+    )
+  }
+
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
     layout = layout,
@@ -291,7 +299,7 @@ new_filter_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("filter_block", "transform_block"),
+    class = c("filter_block", "transform_block", "submit_block"),
     layout = filter_layout_fields
   )
 }
@@ -437,7 +445,7 @@ new_summarize_block <- function(
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("summarize_block", "transform_block"),
+    class = c("summarize_block", "transform_block", "submit_block"),
     layout = summarize_layout_fields
   )
 }
@@ -546,7 +554,7 @@ new_join_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("join_block", "transform_block"),
+    class = c("join_block", "transform_block", "submit_block"),
     layout = join_layout_fields
   )
 }
@@ -559,8 +567,14 @@ join_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @param n_rows Number of rows to return.
+#' @param n_rows_min Minimum number of rows.
 #' @export
-new_head_block <- function(data, n_rows = numeric(), ...) {
+new_head_block <- function(
+  data,
+  n_rows = numeric(),
+  n_rows_min = 1L,
+  ...
+) {
   tmp_expr <- function(n_rows) {
     bquote(
       head(n = .(n_rows)),
@@ -569,7 +583,7 @@ new_head_block <- function(data, n_rows = numeric(), ...) {
   }
 
   fields <- list(
-    n_rows = new_numeric_field(n_rows, 10, nrow(data)),
+    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data)),
     expression = new_hidden_field(tmp_expr)
   )
 

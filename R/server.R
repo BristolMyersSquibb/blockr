@@ -118,9 +118,19 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         ignoreInit = TRUE
       )
 
-      out_dat <- reactive(
-        evaluate_block(blk(), data = in_dat())
-      )
+      # For submit blocks like filter, summarise,
+      # join that can have computationally intense tasks
+      # and have nested fields, we require to click on
+      # the action button before doing anything.
+      out_dat <- if ("submit_block" %in% class(x)) {
+        eventReactive(input$submit, {
+          evaluate_block(blk(), data = in_dat())
+        })
+      } else {
+        reactive(
+          evaluate_block(blk(), data = in_dat())
+        )
+      }
 
       output$res <- server_output(x, out_dat, output)
       output$code <- server_code(x, blk, output)

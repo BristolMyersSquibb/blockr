@@ -20,6 +20,9 @@
 \alias{new_numeric_field}
 \alias{numeric_field}
 \alias{validate_field.numeric_field}
+\alias{new_submit_field}
+\alias{submit_field}
+\alias{validate_field.submit_field}
 \alias{value}
 \alias{values}
 \alias{value<-}
@@ -38,7 +41,13 @@
 \alias{new_editor_field}
 \title{Fields}
 \usage{
-new_field(value, ..., type = c("literal", "name"), class = character())
+new_field(
+  value,
+  ...,
+  type = c("literal", "name"),
+  class = character(),
+  exclude = FALSE
+)
 
 validate_field(x)
 
@@ -80,6 +89,12 @@ new_numeric_field(value = numeric(), min = numeric(), max = numeric(), ...)
 numeric_field(...)
 
 \method{validate_field}{numeric_field}(x)
+
+new_submit_field(...)
+
+submit_field(...)
+
+\method{validate_field}{submit_field}(x)
 
 value(x, name = "value")
 
@@ -126,6 +141,9 @@ new_editor_field(value = character(), ...)
 \item{type}{Field type (allowed values are \code{"literal"} and \code{"name"})}
 
 \item{class}{Field subclass}
+
+\item{exclude}{Experimental: Exclude field from being captured in the update_fields
+feature. Default to FALSE. Not yet used.}
 
 \item{x}{An object inheriting form \code{"field"}}
 

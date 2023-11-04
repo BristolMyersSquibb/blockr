@@ -15,3 +15,6 @@ test.R
 webpack.common.js
 webpack.dev.js
 webpack.prod.js
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

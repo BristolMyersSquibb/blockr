@@ -53,3 +53,11 @@ test_that("numeric fields", {
   field <- numeric_field(value = -10, min = 0, max = 10)
   expect_identical(value(field), 0)
 })
+
+test_that("submit fields", {
+  field <- submit_field()
+
+  expect_s3_class(field, "submit_field")
+  expect_type(field, "list")
+  expect_identical(value(field), 0)
+})
