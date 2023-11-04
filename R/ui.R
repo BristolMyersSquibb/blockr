@@ -119,10 +119,11 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         })
       )
     ),
-    sortable::sortable_js(
-      body_id,
-      options = sortable::sortable_options(draggable = ".block")
-    ),
+    # # sortable interferes with shinyAce
+    # sortable::sortable_js(
+    #   body_id,
+    #   options = sortable::sortable_options(draggable = ".block")
+    # ),
     blockrDependencies(),
     htmltools::singleton(
       tags$head(
