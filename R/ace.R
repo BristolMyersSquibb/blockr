@@ -1,0 +1,192 @@
+# preview UI only
+# shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
+exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
+  div(
+    id = id,
+    tags$style(HTML("
+      .shiny-ace {
+        border: none;
+        margin: 10px;
+      }
+    ")),
+    class="input-group",
+    style = "margin: 10px; border: 1px solid rgb(206, 212, 218); border-radius: 6px; width: 697px",
+    span(
+      style = "width: 120px",
+      shinyAce::aceEditor(
+        outputId = paste0(id, "_name"),
+        debounce = 300,  # default value of 1000 may result in no update when clicking 'submit' too fast.
+        value = value_name,
+        mode = "r",
+        autoComplete = "disabled",
+        height = "20px",
+        showPrintMargin = FALSE,
+        highlightActiveLine = FALSE,
+        tabSize = 2,
+        theme = "tomorrow",
+        maxLines = 1,
+        fontSize = 14,
+        showLineNumbers = FALSE
+      )
+    ),
+
+    span(class="input-group-text", icon("arrow-left"), style = "margin: -1px;"),
+
+    span(
+      style = "width: 500px",
+      shinyAce::aceEditor(
+        outputId = paste0(id, "_val"),
+        debounce = 300,
+        value = value_val,
+        mode = "r",
+        autoComplete = "live",
+        autoCompleters = c("static"),
+        autoCompleteList = list(R = "paste"),
+        height = "20px",
+        showPrintMargin = FALSE,
+        highlightActiveLine = FALSE,
+        tabSize = 2,
+        theme = "tomorrow",
+        maxLines = 1,
+        fontSize = 14,
+        showLineNumbers = FALSE
+        # placeholder = "type expression, e.g., `col1 + col2`"
+      )
+    ),
+    tags$button(
+      id = paste0(id, "_rm"),
+      style = "margin: -1px;",
+      type = "button",
+      class = "btn btn-default action-button",
+      icon("trash-can")
+    )
+  )
+}
+
+
+
+get_input_names <- function(prefix, input, garbage, regex) {
+  input_names <- grep(paste0("^", prefix), names(input), value = TRUE)
+  input_names <- grep(regex, input_names, value = TRUE)
+
+  # see comment r_rms_garbage
+  is_garbage <- gsub(regex, "", input_names) %in% garbage
+  input_names[!is_garbage]
+}
+
+get_rms <- function(prefix, input, garbage) {
+  input_names <- get_input_names(prefix, input, garbage, "_rm$")
+  vapply(setNames(input_names, input_names), \(x) input[[x]], 0L)
+}
+
+get_exprs <- function(prefix, input, garbage) {
+  input_names <- get_input_names(prefix, input, garbage, "_name$|_val$")
+  ans <- lapply(setNames(input_names, input_names), \(x) input[[x]])
+  vals <- unlist(ans[grepl("_val$", names(ans))])
+  names <- unlist(ans[grepl("_name$", names(ans))])
+  setNames(vals, names)  # a named character vector
+}
+
+
+ace_module_server <- function(id) {
+  library(shinyAce)
+
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
+    print(ns("test-server"))
+
+    r_result <- reactiveVal("init")
+    observeEvent(input$i_submit, {
+      r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
+    })
+
+    # remove pairlist UI on trash click
+    r_rms_previous <- reactiveVal(integer())
+    r_rms_garbage <- reactiveVal(character())  # store removed elements (since I cannot find a way to 'flush' input after removing a UI element)
+    observe({
+      rms <- get_rms("pl_", input, garbage = character())
+      rms_previous <- isolate(r_rms_previous())
+      nms_both <- intersect(names(rms), names(rms_previous))
+      to_be_rm <- gsub("_rm$", "", nms_both[rms[nms_both] != rms_previous[nms_both]])
+      if (length(to_be_rm) > 0) {
+
+        removeUI(paste0("#", ns(to_be_rm)))
+        # make sure it is not read again in the future
+        r_rms_garbage(c(isolate(r_rms_garbage()), to_be_rm))
+      }
+      r_rms_previous(rms)
+    })
+
+    observeEvent(input$i_add, {
+      pl_ints <-
+        names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
+        gsub("_rm$", "", x = _) |>
+        gsub("^pl_", "", x = _) |>
+        as.integer()
+
+      if (length(pl_ints) == 0) {
+        # if everything is in garbage
+        last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())))
+      } else {
+        last_pl_int <- max(pl_ints)
+      }
+
+      next_pl <- paste0("pl_", last_pl_int + 1L)
+      insertUI(
+        paste0("#", ns("pls")),
+        ui = exprs_ui(ns(next_pl)),
+        where = "beforeEnd",
+        session = session
+      )
+
+    })
+
+    r_result  # return 'pairlist'
+
+  })
+}
+
+
+# exprs_init = c(a = "bla", b = "blabla")
+ace_module_ui <- function(id, exprs_init = NULL) {
+  ns <- NS(id)
+  print(ns("test-ui"))
+
+  if (is.null(exprs_init)) {
+    init <- exprs_ui(ns("pl_1"))
+  } else {
+    ids <- paste0("pl_", seq(exprs_init))
+    init <- Map(exprs_ui, id = ns(ids), value_name = names(exprs_init), value_val = exprs_init)
+  }
+
+  div(
+    div(id = ns("pls"),
+      init
+    ),
+    div(
+      style = "margin: 10px; width: 697px; display: flex; justify-content: flex-end;",
+      div(style = "margin: 0px;",
+        div(# class = "input-group",
+          actionButton(ns("i_add"), label = NULL, icon = icon("plus"), class = "btn btn-success", style = "margin-right: 7px"),
+          actionButton(ns("i_submit"), label = "Submit", icon = icon("paper-plane"), class = "btn btn-primary")
+        )
+      )
+    )
+  )
+}
+
+
+ui <-  bslib::page_fluid(
+  ace_module_ui("m1", exprs_init = c(a = "bla", b = "blabla")),
+  verbatimTextOutput("o_result")
+)
+server <- function(input, output) {
+  r_result <- ace_module_server("m1")
+  output$o_result <- renderPrint({
+    r_result()
+  })
+}
+
+# Run the application
+# shinyApp(ui = ui, server = server)
