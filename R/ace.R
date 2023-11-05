@@ -1,6 +1,7 @@
 # preview UI only
 # shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
 exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
+
   div(
     id = id,
     tags$style(HTML("
@@ -40,8 +41,8 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         value = value_val,
         mode = "r",
         autoComplete = "live",
-        autoCompleters = c("static"),
-        autoCompleteList = list(R = "paste"),
+        autoCompleters = c("rlang", "static"),
+        autoCompleteList = list(columns = c("Name", "Time")),
         height = "20px",
         showPrintMargin = FALSE,
         highlightActiveLine = FALSE,
@@ -94,7 +95,8 @@ ace_module_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    print(ns("test-server"))
+    aceAutocomplete("pl_1_val")
+    aceTooltip("pl_1_val")
 
     r_result <- reactiveVal("init")
     observeEvent(input$i_submit, {
@@ -119,6 +121,10 @@ ace_module_server <- function(id) {
     })
 
     observeEvent(input$i_add, {
+
+
+
+
       pl_ints <-
         names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
         gsub("_rm$", "", x = _) |>
@@ -140,6 +146,9 @@ ace_module_server <- function(id) {
         session = session
       )
 
+      aceAutocomplete(paste0(next_pl, "_val"))
+      aceTooltip(paste0(next_pl, "_val"))
+
     })
 
     r_result  # return 'pairlist'
@@ -151,7 +160,6 @@ ace_module_server <- function(id) {
 # exprs_init = c(a = "bla", b = "blabla")
 ace_module_ui <- function(id, exprs_init = NULL) {
   ns <- NS(id)
-  print(ns("test-ui"))
 
   if (is.null(exprs_init)) {
     init <- exprs_ui(ns("pl_1"))
@@ -167,7 +175,7 @@ ace_module_ui <- function(id, exprs_init = NULL) {
     div(
       style = "margin: 10px; width: 697px; display: flex; justify-content: flex-end;",
       div(style = "margin: 0px;",
-        div(# class = "input-group",
+        div(
           actionButton(ns("i_add"), label = NULL, icon = icon("plus"), class = "btn btn-success", style = "margin-right: 7px"),
           actionButton(ns("i_submit"), label = "Submit", icon = icon("paper-plane"), class = "btn btn-primary")
         )
@@ -189,4 +197,7 @@ server <- function(input, output) {
 }
 
 # Run the application
-# shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server)
+
+
+
