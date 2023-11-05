@@ -925,7 +925,7 @@ update_fields.data_block <- function(x, session, ...) {
     env <- args[-which(names(args) == field)]
 
     x[[field]] <- update_field(x[[field]], args[[field]], env)
-    ui_update(x[[field]], session, field, field)
+    # ui_update(x[[field]], session, field, field)
   }
 
   x
@@ -944,9 +944,8 @@ update_fields.transform_block <- function(x, session, data, ...) {
       list(data = data),
       args[-which(names(args) == field)]
     )
-
     x[[field]] <- update_field(x[[field]], args[[field]], env)
-    ui_update(x[[field]], session, field, field)
+    # ui_update(x[[field]], session, field, field)
   }
 
   x
