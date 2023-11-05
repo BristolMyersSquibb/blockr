@@ -1,19 +1,19 @@
 # preview UI only
-# shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
+# pkgload::load_all("."); shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
 exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
 
   div(
     id = id,
+    class="input-group d-flex justify-content-between mt-1 mb-3",
+    style = "border: 1px solid rgb(206, 212, 218); border-radius: 6px; margin-right: 20px;",
     tags$style(HTML("
       .shiny-ace {
         border: none;
         margin: 10px;
       }
     ")),
-    class="input-group",
-    style = "margin: 10px; border: 1px solid rgb(206, 212, 218); border-radius: 6px; width: 697px",
     span(
-      style = "width: 120px",
+      style = "width: 20%",
       shinyAce::aceEditor(
         outputId = paste0(id, "_name"),
         debounce = 300,  # default value of 1000 may result in no update when clicking 'submit' too fast.
@@ -34,7 +34,8 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
     span(class="input-group-text", icon("arrow-left"), style = "margin: -1px;"),
 
     span(
-      style = "width: 500px",
+      # class = ""
+      style = "width: 70%",
       shinyAce::aceEditor(
         outputId = paste0(id, "_val"),
         debounce = 300,
@@ -173,12 +174,12 @@ ace_module_ui <- function(id, exprs_init = NULL) {
       init
     ),
     div(
-      style = "margin: 10px; width: 697px; display: flex; justify-content: flex-end;",
-      div(style = "margin: 0px;",
-        div(
-          actionButton(ns("i_add"), label = NULL, icon = icon("plus"), class = "btn btn-success", style = "margin-right: 7px"),
-          actionButton(ns("i_submit"), label = "Submit", icon = icon("paper-plane"), class = "btn btn-primary")
-        )
+      style = "width: 100%; display: flex; justify-content: flex-end;",
+      div(
+        style = "margin: 0px;",
+        class = "mb-5",
+        actionButton(ns("i_add"), label = NULL, icon = icon("plus"), class = "btn btn-success", style = "margin-right: 7px"),
+        actionButton(ns("i_submit"), label = "Submit", icon = icon("paper-plane"), class = "btn btn-primary")
       )
     )
   )
