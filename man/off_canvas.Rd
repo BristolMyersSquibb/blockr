@@ -23,4 +23,3 @@ Boolean. TRUE if dependency found.
 \description{
 Sidebar like element either a top, bottom, right or left.
 }
-\keyword{internal}
