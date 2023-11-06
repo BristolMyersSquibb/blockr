@@ -26,14 +26,13 @@ jobs:
   
         - uses: r-lib/actions/setup-r-dependencies@v2
           with:
-            cache-version: 2
             extra-packages: |
-                github::blockr-org/blockr
-                github::blockr-org/blockr.data
-                github::blockr-org/bmsui
-                rsconnect
-                connectapi
-                cpp11
+              github::blockr-org/blockr.data
+              github::blockr-org/bmsui
+              github::blockr-org/blockr
+              rsconnect
+              connectapi
+              cpp11
   
         - name: Deploy app
           run: |
