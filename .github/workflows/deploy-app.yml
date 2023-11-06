@@ -36,6 +36,7 @@ jobs:
         - name: Deploy app
           run: |
             renv::status()
+            renv::install("blockr-org/blockr")
             source("deploy/deploy-workflow.R")
             app_path <- "inst/examples/add-blocks"
             deploy_app_rsc("blockr-demo", app_path)
