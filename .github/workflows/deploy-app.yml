@@ -36,10 +36,11 @@ jobs:
         - name: Deploy app
           run: |
             renv::status()
-            renv::install("blockr-org/blockr")
             # Have to manually install blockr because
-            # it is ignore by renv restore, despite
+            # it is ignored by renv restore, despite
             # being in the lock file ...
+            # This will install the latest version from main branch.
+            renv::install("blockr-org/blockr")
             source("deploy/deploy-workflow.R")
             app_path <- "inst/examples/add-blocks"
             deploy_app_rsc("blockr-demo", app_path)
