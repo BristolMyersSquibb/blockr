@@ -40,7 +40,6 @@ Imports:
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui,
-    blockr-org/blockr
     DivadNojnarg/DiagrammeR
 Suggests: 
     knitr,
