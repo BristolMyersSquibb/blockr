@@ -64,7 +64,7 @@ jobs:
 
     needs: smoke
   
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy-app.yml
   
     secrets: inherit
 
