@@ -207,7 +207,7 @@ convert_block <- function(from = new_select_block, to, data, ...) {
 #'
 #' @return Boolean. TRUE if dependency found.
 #'
-#' @keywords internal
+#' @export
 off_canvas <- function(
     id,
     title,
