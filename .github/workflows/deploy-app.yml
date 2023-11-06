@@ -26,7 +26,13 @@ jobs:
   
         - uses: r-lib/actions/setup-r-dependencies@v2
           with:
-            extra-packages: local::., rsconnect, connectapi, cpp11
+            extra-packages: |
+                github::block-org/blockr
+                github::block-org/blockr.data
+                github::block-org/bmsui
+                rsconnect
+                connectapi
+                cpp11
   
         - name: Deploy app
           run: |

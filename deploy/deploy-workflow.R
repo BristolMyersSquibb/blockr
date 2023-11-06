@@ -35,7 +35,7 @@ register_connect_user <- function() {
 
 allow_users_access <- function(
   users = c(
-    "david",
+    #"david",
     "nicolas",
     "christoph"
   ),
@@ -154,8 +154,8 @@ deploy_app_rsc <- function(app_name, app_path) {
 
   # Deploy!
   app_name <- sub("\\.", "", app_name)
-  deploy_error <- NULL
-  deploy_res <- tryCatch(
+
+  tryCatch(
     {
       rsconnect::deployApp(
         appDir = app_path,
@@ -183,7 +183,7 @@ deploy_app_rsc <- function(app_name, app_path) {
           app_name
         )
       )
-      stop(deploy_error$message)
+      stop(e$message)
     }
   )
 }
