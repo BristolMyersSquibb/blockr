@@ -59,6 +59,14 @@ jobs:
     uses: ./.github/workflows/lint.yml
 
     secrets: inherit
+  
+  deploy:
+
+    needs: smoke
+  
+    uses: ./.github/workflows/deploy.yml
+  
+    secrets: inherit
 
   pkgdown:
 
