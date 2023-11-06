@@ -26,7 +26,7 @@ jobs:
   
         - uses: r-lib/actions/setup-r-dependencies@v2
           with:
-            extra-packages: local::., rsconnect, connectapi
+            extra-packages: local::., rsconnect, connectapi, cpp11
   
         - name: Deploy app
           run: |
