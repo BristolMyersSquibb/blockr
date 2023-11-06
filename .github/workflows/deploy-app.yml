@@ -27,9 +27,9 @@ jobs:
         - uses: r-lib/actions/setup-r-dependencies@v2
           with:
             extra-packages: |
-                github::block-org/blockr
-                github::block-org/blockr.data
-                github::block-org/bmsui
+                github::blockr-org/blockr
+                github::blockr-org/blockr.data
+                github::blockr-org/bmsui
                 rsconnect
                 connectapi
                 cpp11
