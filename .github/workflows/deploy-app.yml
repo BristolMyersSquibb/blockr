@@ -24,15 +24,12 @@ jobs:
           with:
             use-public-rspm: true
   
-        - uses: r-lib/actions/setup-r-dependencies@v2
+        - uses: r-lib/actions/setup-renv@v2
           with:
-            packages: |
-              deps::.
-              github::blockr-org/blockr
-            extra-packages: |
-              rsconnect
-              connectapi
-              cpp11
+            # Where the renv.lock is
+            # Requires to run renv::snapshot from inst/examples
+            # to capture all deps from all apps
+            working-directory: "inst/examples"
   
         - name: Deploy app
           run: |
