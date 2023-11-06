@@ -26,10 +26,12 @@ jobs:
   
         - uses: r-lib/actions/setup-renv@v2
           with:
-            # Where the renv.lock is
-            # Requires to run renv::snapshot from inst/examples
-            # to capture all deps from all apps
-            working-directory: "inst/examples"
+            # renv.lock is created inside inst/examples
+            # to capture all deps from all apps. 
+            # We must create a symlink in the package root
+            # so packages are installed in the right location
+            # for the next step.
+            working-directory: "."
   
         - name: Deploy app
           run: |
