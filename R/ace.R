@@ -43,7 +43,7 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         mode = "r",
         autoComplete = "live",
         autoCompleters = c("rlang", "static"),
-        autoCompleteList = list(columns = c("Name", "Time")),
+        autoCompleteList = list(columns = c("demand", "Time")),
         height = "20px",
         showPrintMargin = FALSE,
         highlightActiveLine = FALSE,
