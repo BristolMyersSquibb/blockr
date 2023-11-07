@@ -31,7 +31,7 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
       )
     ),
 
-    span(class="input-group-text", icon("arrow-left"), style = "margin: -1px;"),
+    span(class="input-group-text", icon("equals"), style = "margin: -1px;"),
 
     span(
       # class = ""
