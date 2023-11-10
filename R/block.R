@@ -37,7 +37,8 @@ new_block <- function(fields, expr, name = rand_names(), ...,
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
     layout = layout,
-    class = c(class, "block")
+    class = c(class, "block"),
+    is_valid = TRUE
   )
 }
 
@@ -939,11 +940,16 @@ update_fields.transform_block <- function(x, session, data, ...) {
 
   stopifnot(setequal(names(args), names(x)))
 
+  attr(x, "is_valid") <- TRUE
+
   for (field in names(x)) {
     env <- c(
       list(data = data),
       args[-which(names(args) == field)]
     )
+
+    # Invalidate block as soon as a field is invalid
+    if (!attr(x[[field]], "is_valid")) attr(x, "is_valid") <- FALSE
 
     x[[field]] <- update_field(x[[field]], args[[field]], env)
     ui_update(x[[field]], session, field, field)

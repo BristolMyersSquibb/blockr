@@ -111,12 +111,89 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
     function(input, output, session) {
       ns <- session$ns
       blk <- reactiveVal(x)
+      obs <- list()
+      # block and inputs are booleans. message is a character vector.
+      is_valid <- reactiveValues(block = FALSE, message = NULL, error = NULL)
 
-      o <- observeEvent(
+      ns <- session$ns
+
+      # Validate block expression.
+      # Requires to validate inputs first
+      obs$validate_block <- observeEvent(
         eval(obs_expr(blk())),
-        secure(eval(set_expr(blk()))),
-        ignoreInit = TRUE
+        {
+          secure(eval(set_expr(blk())), is_valid)
+          #if (!is.null(is_valid$error)) create_modal(is_valid$error)
+          message(sprintf("Updating block %s", class(x)[[1]]))
+        },
+        ignoreInit = FALSE
       )
+
+      # Validate block inputs
+      obs$validate_inputs <- observeEvent(eval(obs_expr(blk())), {
+        message(sprintf("Validating block %s", class(x)[[1]]))
+        is_valid$message <- NULL
+        is_valid$block <- attr(blk(), "is_valid")
+        exclude <- which(names(blk()) %in% c("expression", "submit"))
+        inputs_to_validate <- names(blk())[-exclude]
+
+        lapply(inputs_to_validate, function(el) {
+          if (!attr(blk()[[el]], "is_valid")) {
+            is_valid$message <- c(
+              is_valid$message,
+              sprintf("Error: input '%s' is not valid.", el)
+            )
+          }
+
+          # Input border is red if invalid
+          session$sendCustomMessage(
+            "validate-input",
+            list(
+              state = attr(blk()[[el]], "is_valid"),
+              id = if (el == "values") {
+                ns(paste(el, names(value(blk()[[el]])), sep = "_"))
+              } else {
+                ns(el)
+              }
+            )
+          )
+        })
+
+        # Block will have a red border if any nested input is invalid
+        # since blocks can be collapsed and people won't see the input
+        # elements.
+        session$sendCustomMessage(
+          "validate-block",
+          list(
+            state = is_valid$block,
+            id = ns("block")
+          )
+        )
+
+        # Toggle submit field
+        if ("submit_block" %in% class(x)) {
+          session$sendCustomMessage(
+            "toggle-submit",
+            list(state = is_valid$block, id = ns("submit"))
+          )
+        }
+
+        removeUI(
+          selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
+          multiple = TRUE
+        )
+
+        # Send validation message
+        if (!is_valid$block) {
+          insertUI(
+            selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
+            ui = lapply(is_valid$message, function(m) {
+              p(m, class = "message text-center", style = "color: red;")
+            }),
+            where = "afterEnd"
+          )
+        }
+      })
 
       # For submit blocks like filter, summarise,
       # join that can have computationally intense tasks
@@ -124,12 +201,14 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # the action button before doing anything.
       out_dat <- if ("submit_block" %in% class(x)) {
         eventReactive(input$submit, {
+          req(is_valid$block)
           evaluate_block(blk(), data = in_dat())
         })
       } else {
-        reactive(
+        reactive({
+          req(is_valid$block)
           evaluate_block(blk(), data = in_dat())
-        )
+        })
       }
 
       output$res <- server_output(x, out_dat, output)
@@ -148,7 +227,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       observeEvent(input$remove, {
         message(sprintf("CLEANING UP BLOCK %s", id))
         remove_shiny_inputs(id = id, input)
-        o$destroy()
+        lapply(obs, \(o) o$destroy())
         session$userData$is_cleaned(TRUE)
       })
 
@@ -325,15 +404,23 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             )
           } else {
             if (session$userData$is_cleaned()) {
+              to_remove <- to_remove()
               message(sprintf("REMOVING BLOCK %s", to_remove()))
               removeUI(
                 selector = sprintf(
                   "[data-value='%s%s-block']",
                   session$ns(""),
-                  attr(vals$stack[[to_remove()]], "name")
+                  attr(vals$stack[[to_remove]], "name")
                 )
               )
-              vals$stack[[to_remove()]] <- NULL
+              vals$stack[[to_remove]] <- NULL
+              vals$blocks[[to_remove]] <- NULL
+              # Reinitialize all the downstream stack blocks with new data ...
+              for (i in to_remove:length(vals$stack)) {
+                attr(vals$stack[[i]], "position") <- i
+                vals$blocks[[i]] <- init_block(i, vals)
+              }
+
               session$userData$stack <- vals$stack
               session$userData$is_cleaned(FALSE)
             }
