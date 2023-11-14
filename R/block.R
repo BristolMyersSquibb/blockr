@@ -570,11 +570,10 @@ join_block <- function(data, ...) {
 #' @param n_rows_min Minimum number of rows.
 #' @export
 new_head_block <- function(
-  data,
-  n_rows = numeric(),
-  n_rows_min = 1L,
-  ...
-) {
+    data,
+    n_rows = numeric(),
+    n_rows_min = 1L,
+    ...) {
   tmp_expr <- function(n_rows) {
     bquote(
       head(n = .(n_rows)),
