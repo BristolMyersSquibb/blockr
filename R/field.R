@@ -21,8 +21,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
     x,
     type = match.arg(type),
     class = c(class, "field"),
-    exclude = exclude,
-    is_valid = TRUE
+    exclude = exclude
   )
 }
 
@@ -93,12 +92,9 @@ is_field <- function(x) inherits(x, "field")
 validate_field.string_field <- function(x) {
   val <- value(x)
 
-  attr(x, "is_valid") <- TRUE
   if (!is.character(val) || length(val) != 1L) {
     value(x) <- ""
   }
-
-  if (nchar(value(x)) == 0) attr(x, "is_valid") <- FALSE
 
   x
 }
@@ -124,9 +120,8 @@ validate_field.select_field <- function(x) {
     len_ok <- length(val) == 1L
   }
 
-  attr(x, "is_valid") <- TRUE
   if (!is.character(val) || !len_ok || !all(val %in% opt)) {
-    attr(x, "is_valid") <- FALSE
+    # ...
   }
 
   x
@@ -383,14 +378,6 @@ validate_field.list_field <- function(x) {
     update_sub_fields(sub, val),
     validate_field
   )
-
-  attr(x, "is_valid") <- TRUE
-  # Invalidate if any subfield is not valid
-  for (val in value(x, "sub_fields")) {
-    if (!attr(val, "is_valid")) {
-      attr(x, "is_valid") <- FALSE
-    }
-  }
 
   x
 }

@@ -37,12 +37,19 @@ Shiny.addCustomMessageHandler("validate-block", (msg) => {
 Shiny.addCustomMessageHandler("validate-input", (msg) => {
   // Some inputs are dynamically generated like in filter block.
   // Adding a delay ensure they're in the DOM.
+  let sel;
+  if ($(`#${msg.id}`).hasClass("shiny-input-select")) {
+    sel = $(`#${msg.id}-selectized`).parent(".selectize-input");
+  } else {
+    sel = `#${msg.id}`;
+  }
+
   setTimeout(() => {
     if (msg.state) {
-      $(`#${msg.id}`)
+      $(sel)
         .css("border-color", "#ced4da");
     } else {
-      $(`#${msg.id}`)
+      $(sel)
         .css("border-color", "#DC3444");
     }
   }, 500);

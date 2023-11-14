@@ -113,48 +113,54 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       blk <- reactiveVal(x)
       obs <- list()
       # block and inputs are booleans. message is a character vector.
-      is_valid <- reactiveValues(block = FALSE, message = NULL, error = NULL)
+      is_valid <- reactiveValues(block = TRUE, message = NULL, error = NULL)
 
       ns <- session$ns
 
       # Validate block expression.
       # Requires to validate inputs first
-      obs$validate_block <- observeEvent(
+      obs$update_block <- observeEvent(
         eval(obs_expr(blk())),
         {
+          is_valid$message <- NULL
+          is_valid$block <- TRUE
           secure(eval(set_expr(blk())), is_valid)
           #if (!is.null(is_valid$error)) create_modal(is_valid$error)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
-        ignoreInit = FALSE
+        ignoreInit = TRUE
       )
 
       # Validate block inputs
       obs$validate_inputs <- observeEvent(eval(obs_expr(blk())), {
         message(sprintf("Validating block %s", class(x)[[1]]))
-        is_valid$message <- NULL
-        is_valid$block <- attr(blk(), "is_valid")
         exclude <- which(names(blk()) %in% c("expression", "submit"))
         inputs_to_validate <- names(blk())[-exclude]
 
         lapply(inputs_to_validate, function(el) {
-          if (!attr(blk()[[el]], "is_valid")) {
+          if (el == "values") {
+            name <- paste(el, names(value(blk()[[el]])), sep = "_")
+            name_ns <- ns(name)
+            val <- input[[name]]
+          } else {
+            name_ns <- ns(el)
+            val <- input[[el]]
+          }
+
+          if (is.null(val) || nchar(val) == 0) {
             is_valid$message <- c(
               is_valid$message,
               sprintf("Error: input '%s' is not valid.", el)
             )
+            is_valid$block <- FALSE
           }
 
           # Input border is red if invalid
           session$sendCustomMessage(
             "validate-input",
             list(
-              state = attr(blk()[[el]], "is_valid"),
-              id = if (el == "values") {
-                ns(paste(el, names(value(blk()[[el]])), sep = "_"))
-              } else {
-                ns(el)
-              }
+              state = is_valid$block,
+              id = name_ns
             )
           )
         })
