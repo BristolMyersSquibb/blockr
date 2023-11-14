@@ -5,13 +5,12 @@
 new_mutate_block <- function(data, value = NULL, ...) {
 
   fields <- list(
-    value = new_namedchar_field(value = value),
-    expression = new_hidden_field(mutate_expr(value))
+    value = new_namedchar_field(value = value)
   )
 
   new_block(
     fields = fields,
-    expr = quote(.(expression)),,  # FIXME mutate_expr() to transform value to expr
+    expr = mutate_expr(value = value),
     ...,
     class = c("mutate_block", "transform_block")
   )
@@ -36,8 +35,7 @@ mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
     expr
   }
 
-  # FIXME don't know how to do this with vapply...
-  exprs <- sapply(value, parse_one)
+  exprs <- do.call(c, lapply(value, parse_one))
 
   bquote(
     dplyr::mutate(..(exprs)),
@@ -70,10 +68,10 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
            blk_updated <- update_fields(
              r_blk(), session,
              in_dat(),
-             value = r_value(),
-             expression = mutate_expr(r_value())
+             value = r_value()
            )
 
+           attr(blk_updated,"expr") <- mutate_expr(r_value())
            r_blk(blk_updated)
 
           # 2. Sync UI  (dont think this belongs with update block...)
