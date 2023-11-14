@@ -99,12 +99,12 @@ ace_module_server <- function(id) {
     aceAutocomplete("pl_1_val")
     aceTooltip("pl_1_val")
 
-    r_result <- reactiveVal("init")
+    r_result <- reactiveVal(value = NULL)
     observeEvent(input$i_submit, {
       r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
     })
 
-    # remove pairlist UI on trash click
+    # remove namedchar UI on trash click
     r_rms_previous <- reactiveVal(integer())
     r_rms_garbage <- reactiveVal(character())  # store removed elements (since I cannot find a way to 'flush' input after removing a UI element)
     observe({
@@ -122,10 +122,6 @@ ace_module_server <- function(id) {
     })
 
     observeEvent(input$i_add, {
-
-
-
-
       pl_ints <-
         names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
         gsub("_rm$", "", x = _) |>
@@ -149,10 +145,9 @@ ace_module_server <- function(id) {
 
       aceAutocomplete(paste0(next_pl, "_val"))
       aceTooltip(paste0(next_pl, "_val"))
-
     })
 
-    r_result  # return 'pairlist'
+    r_result  # return 'namedchar'
 
   })
 }
@@ -186,19 +181,19 @@ ace_module_ui <- function(id, exprs_init = NULL) {
 }
 
 
-ui <-  bslib::page_fluid(
-  ace_module_ui("m1", exprs_init = c(a = "bla", b = "blabla")),
-  verbatimTextOutput("o_result")
-)
-server <- function(input, output) {
-  r_result <- ace_module_server("m1")
-  output$o_result <- renderPrint({
-    r_result()
-  })
-}
+# ui <-  bslib::page_fluid(
+#   ace_module_ui("m1", exprs_init = c(a = "bla", b = "blabla")),
+#   verbatimTextOutput("o_result")
+# )
+# server <- function(input, output) {
+#   r_result <- ace_module_server("m1")
+#   output$o_result <- renderPrint({
+#     r_result()
+#   })
+# }
 
-# Run the application
-shinyApp(ui = ui, server = server)
+# # Run the application
+# shinyApp(ui = ui, server = server)
 
 
 

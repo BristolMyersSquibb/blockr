@@ -208,7 +208,7 @@ demo_summarize_block(data, ...)
 
 \method{is_initialized}{field}(x)
 
-new_mutate_block(data, value = c(a = "bla", b = "blabla"), ...)
+new_mutate_block(data, value = NULL, ...)
 
 mutate_block(data, ...)
 }

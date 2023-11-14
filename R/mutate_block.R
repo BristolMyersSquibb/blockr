@@ -2,113 +2,91 @@
 #' @param columns Column(s) to select.
 #' @rdname new_block
 #' @export
-new_mutate_block <- function(data, value = c(a = "bla", b = "blabla"), ...) {
-  # all_cols <- function(data) colnames(data)
-
-  mutate_expr <- function(data, value) {
-
-    parse_one <- function(text) {
-      expr <- try(parse(text = text))
-      if (inherits(expr, "try-error")) {
-        expr <- expression()
-      }
-      expr
-    }
-
-    value = c(a = "bla", b = "blabla")
-
-    exprs <- setNames(parse_one("2 * Time"), "a")
-
-    ans <- bquote(
-      dplyr::mutate(..(exprs)),
-      list(exprs = exprs),
-      splice = TRUE
-    )
-
-    ans
-  }
+new_mutate_block <- function(data, value = NULL, ...) {
 
   fields <- list(
-    # value = new_string_field(value = value),
-    value = new_pairlists_field(value = value),
-    expression = new_hidden_field(mutate_expr)
+    value = new_namedchar_field(value = value),
+    expression = new_hidden_field(mutate_expr(value))
   )
 
   new_block(
     fields = fields,
-    expr = quote(.(expression)),
+    expr = quote(.(expression)),,  # FIXME mutate_expr() to transform value to expr
     ...,
     class = c("mutate_block", "transform_block")
   )
 }
 
 
+# Build mutate expression based on a named character vector
+#
+# mutate_expr(value = c(a = "2.1", b = "4.5"))
+# mutate_expr(value = c(a = '""'))
+# mutate_expr(value = character(0))
+# mutate_expr(value = NULL)
+mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
+  if (is.null(value)) return(quote(dplyr::mutate()))
+  stopifnot(inherits(value, "character"))
+
+  parse_one <- function(text) {
+    expr <- try(parse(text = text))
+    if (inherits(expr, "try-error")) {
+      expr <- expression()
+    }
+    expr
+  }
+
+  # FIXME don't know how to do this with vapply...
+  exprs <- sapply(value, parse_one)
+
+  bquote(
+    dplyr::mutate(..(exprs)),
+    list(exprs = exprs),
+    splice = TRUE
+  )
+}
 
 generate_server.mutate_block <- function(x, in_dat, id, ...) {
-  obs_expr <- function(x) {
-    splice_args(
-      list(in_dat(), ..(args)),
-      args = lapply(unlst(input_ids(x)), quoted_input_entry)
-    )
-  }
-
-  set_expr <- function(x) {
-    splice_args(
-      blk(update_fields(blk(), session, in_dat(), ..(args))),
-      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-    )
-  }
-
   moduleServer(
     id,
     function(input, output, session) {
 
       ns <- session$ns
 
-      r_value <- ace_module_server("value")
+      # not the same as the init value
+      r_value <- ace_module_server("mmmm1")
 
-      blk <- reactiveVal(x)
+      # only update on init! Init value is in x
+      output$value <- renderUI(ace_module_ui(ns("mmmm1"), exprs_init = value(x$value, "value")))
+
+      r_blk <- reactiveVal(x)
 
       # rather than input, I want the fields to be updated on r_value()
       o <- observeEvent(
-        # eval(obs_expr(blk())),
-        # secure(eval(set_expr(blk()))),
-        r_value(),
+        r_value(),  # triggered by module output change
         {
 
-          parse_one <- function(text) {
-            expr <- try(parse(text = text))
-            if (inherits(expr, "try-error")) {
-              expr <- expression()
-            }
-            expr
-          }
+          # 1. Update Block, set field
+           blk_updated <- update_fields(
+             r_blk(), session,
+             in_dat(),
+             value = r_value(),
+             expression = mutate_expr(r_value())
+           )
 
-          # Get error in `vec_size()`: `x` must be a vector, not an expression vector.
-          # exprs <- setNames(lapply(r_value(), \(x) parse(text = x)), names(r_value()))
+           r_blk(blk_updated)
 
+          # 2. Sync UI  (dont think this belongs with update block...)
+          # FIXME where to get 'value' id from
+          # output$value <- renderUI(ace_module_ui(ns("mmmm1"), exprs_init = value))
 
-          exprs <- setNames(parse_one(text = r_value()[1]), names(r_value())[1])
-
-          expr <- bquote(
-            dplyr::mutate(..(exprs)),
-            list(exprs = exprs),
-            splice = TRUE
-          )
-
-          blk(
-            update_fields(
-              blk(), session, in_dat(), value = r_value(),
-              expression = expr
-            )
-          )
         },
-        ignoreInit = TRUE
+        ignoreInit = FALSE
       )
 
       out_dat <- reactive(
-
-        evaluate_block(blk(), data = in_dat())
+        # 3. Update Data
+        evaluate_block(r_blk(), data = in_dat())
       )
 
       output$res <- server_output(x, out_dat, output)
@@ -141,7 +119,26 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
 }
 
 
+update_fields.mutate_block <- function(x, session, data, ...) {
+  args <- list(...)
 
+  stopifnot(setequal(names(args), names(x)))
+
+  for (field in names(x)) {
+    env <- c(
+      list(data = data),
+      args[-which(names(args) == field)]
+    )
+
+    x[[field]] <- update_field(x[[field]], args[[field]], env)
+
+    # 2. Sync UI  (dont think this belongs with update block...)
+    # FIXME think about role of UI sync...
+    # ui_update(x[[field]], session, field, field)
+  }
+
+  x
+}
 
 
 #' @rdname new_block
