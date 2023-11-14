@@ -381,7 +381,7 @@ validate_field.list_field <- function(x) {
   sub <- value(x, "sub_fields")
 
   if (!is.list(val) || length(val) != length(sub) ||
-        !setequal(names(val), names(sub))) {
+    !setequal(names(val), names(sub))) {
     value(x) <- lst_xtr(sub, "value")
   }
 
