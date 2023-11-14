@@ -119,11 +119,13 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         })
       )
     ),
-    # # sortable interferes with shinyAce
-    # sortable::sortable_js(
-    #   body_id,
-    #   options = sortable::sortable_options(draggable = ".block")
-    # ),
+    sortable::sortable_js(
+      body_id,
+      options = sortable::sortable_options(
+        draggable = ".block",
+        handle = ".block-handle"
+      )
+    ),
     blockrDependencies(),
     htmltools::singleton(
       tags$head(
@@ -154,6 +156,7 @@ block_title <- function(block, code_id, output_id, ns, .hidden) {
       div(
         class = "flex-grow-1",
         shiny::p(
+          span(icon("grip-vertical"), class = "block-handle text-muted"),
           title,
           class = "fw-bold"
         )

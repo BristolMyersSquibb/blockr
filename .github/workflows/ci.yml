@@ -59,6 +59,16 @@ jobs:
     uses: ./.github/workflows/lint.yml
 
     secrets: inherit
+  
+  deploy:
+
+    needs: smoke
+
+    if: github.event_name != 'pull_request'
+  
+    uses: ./.github/workflows/deploy-app.yml
+  
+    secrets: inherit
 
   pkgdown:
 
