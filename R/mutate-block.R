@@ -54,10 +54,10 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
       ns <- session$ns
 
       # not the same as the init value
-      r_value <- ace_module_server("mmmm1")
+      r_value <- ace_module_server(id)
 
       # only update on init! Init value is in x
-      output$value <- renderUI(ace_module_ui(ns("mmmm1"), exprs_init = value(x$value, "value")))
+      output$value <- renderUI(ace_module_ui(ns(id), exprs_init = value(x$value, "value")))
 
       r_blk <- reactiveVal(x)
 
