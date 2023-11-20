@@ -35,7 +35,9 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
       style = "width: 20%",
       shinyAce::aceEditor(
         outputId = paste0(id, "_name"),
-        debounce = 300, # default value of 1000 may result in no update when clicking 'submit' too fast.
+        # default value of 1000 may result in no update when clicking 'submit'
+        # too fast.
+        debounce = 300,
         value = value_name,
         mode = "r",
         autoComplete = "disabled",
@@ -121,7 +123,9 @@ ace_module_server <- function(id) {
 
     # remove namedchar UI on trash click
     r_rms_previous <- reactiveVal(integer())
-    r_rms_garbage <- reactiveVal(character()) # store removed elements (since I cannot find a way to 'flush' input after removing a UI element)
+    # store removed elements (since I cannot find a way to 'flush' input after
+    # removing a UI element)
+    r_rms_garbage <- reactiveVal(character())
     observe({
       rms <- get_rms("pl_", input, garbage = character())
       rms_previous <- isolate(r_rms_previous())
@@ -166,7 +170,30 @@ ace_module_server <- function(id) {
 }
 
 
-# exprs_init = c(a = "bla", b = "blabla")
+#' ACE Editor Module UI
+#'
+#' This function creates a user interface for the ACE Editor module in a Shiny application.
+#' It can be used to dynamically add and manage ACE Editor instances.
+#'
+#' @param id A unique identifier for the module's UI.
+#' @param exprs_init Optional initial expression(s) to load into the editor.
+#' @return A Shiny UI element for the ACE Editor module.
+#' @export
+#' @examples
+#' \dontrun{
+#' ui <-  bslib::page_fluid(
+#'   ace_module_ui("m1", exprs_init = c(a = "bla", b = "blabla")),
+#'   verbatimTextOutput("o_result")
+#' )
+#' server <- function(input, output) {
+#'   r_result <- ace_module_server("m1")
+#'   output$o_result <- renderPrint({
+#'     r_result()
+#'   })
+#' }
+#' # Run the application
+#' shinyApp(ui = ui, server = server)
+#' }
 ace_module_ui <- function(id, exprs_init = NULL) {
   ns <- NS(id)
 
@@ -187,24 +214,20 @@ ace_module_ui <- function(id, exprs_init = NULL) {
       div(
         style = "margin: 0px;",
         class = "mb-5",
-        actionButton(ns("i_add"), label = NULL, icon = icon("plus"), class = "btn btn-success", style = "margin-right: 7px"),
-        actionButton(ns("i_submit"), label = "Submit", icon = icon("paper-plane"), class = "btn btn-primary")
+        actionButton(
+          ns("i_add"),
+          label = NULL,
+          icon = icon("plus"),
+          class = "btn btn-success",
+          style = "margin-right: 7px"
+        ),
+        actionButton(
+          ns("i_submit"),
+          label = "Submit",
+          icon = icon("paper-plane"),
+          class = "btn btn-primary"
+        )
       )
     )
   )
 }
-
-
-# ui <-  bslib::page_fluid(
-#   ace_module_ui("m1", exprs_init = c(a = "bla", b = "blabla")),
-#   verbatimTextOutput("o_result")
-# )
-# server <- function(input, output) {
-#   r_result <- ace_module_server("m1")
-#   output$o_result <- renderPrint({
-#     r_result()
-#   })
-# }
-
-# # Run the application
-# shinyApp(ui = ui, server = server)
