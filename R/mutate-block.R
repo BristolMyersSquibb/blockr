@@ -4,7 +4,6 @@
 #' @rdname new_block
 #' @export
 new_mutate_block <- function(data, value = NULL, ...) {
-
   fields <- list(
     value = new_namedchar_field(value = value)
   )
@@ -25,7 +24,9 @@ new_mutate_block <- function(data, value = NULL, ...) {
 # mutate_expr(value = character(0))
 # mutate_expr(value = NULL)
 mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
-  if (is.null(value)) return(quote(dplyr::mutate()))
+  if (is.null(value)) {
+    return(quote(dplyr::mutate()))
+  }
   stopifnot(inherits(value, "character"))
 
   parse_one <- function(text) {
@@ -49,7 +50,6 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
   moduleServer(
     id,
     function(input, output, session) {
-
       ns <- session$ns
 
       # not the same as the init value
@@ -62,23 +62,21 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
 
       # rather than input, I want the fields to be updated on r_value()
       o <- observeEvent(
-        r_value(),  # triggered by module output change
+        r_value(), # triggered by module output change
         {
-
           # 1. Update Block, set field
-           blk_updated <- update_fields(
-             r_blk(), session,
-             in_dat(),
-             value = r_value()
-           )
+          blk_updated <- update_fields(
+            r_blk(), session,
+            in_dat(),
+            value = r_value()
+          )
 
-           attr(blk_updated,"expr") <- mutate_expr(r_value())
-           r_blk(blk_updated)
+          attr(blk_updated, "expr") <- mutate_expr(r_value())
+          r_blk(blk_updated)
 
           # 2. Sync UI  (dont think this belongs with update block...)
           # FIXME where to get 'value' id from
           # output$value <- renderUI(ace_module_ui(ns("mmmm1"), exprs_init = value))
-
         },
         ignoreInit = FALSE
       )

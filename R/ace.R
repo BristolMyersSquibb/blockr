@@ -13,13 +13,17 @@
 #' \dontrun{
 #' library(shiny)
 #' library(shinyAce)
-#' pkgload::load_all("."); shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
+#' shinyApp(
+#'   ui = bslib::page_fluid(
+#'     exprs_ui(value_name = "bla", value_val = "blabla")
+#'   ),
+#'   server = function(input, output) {}
+#' )
 #' }
 exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
-
   div(
     id = id,
-    class="input-group d-flex justify-content-between mt-1 mb-3",
+    class = "input-group d-flex justify-content-between mt-1 mb-3",
     style = "border: 1px solid rgb(206, 212, 218); border-radius: 6px; margin-right: 20px;",
     tags$style(HTML("
       .shiny-ace {
@@ -31,7 +35,7 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
       style = "width: 20%",
       shinyAce::aceEditor(
         outputId = paste0(id, "_name"),
-        debounce = 300,  # default value of 1000 may result in no update when clicking 'submit' too fast.
+        debounce = 300, # default value of 1000 may result in no update when clicking 'submit' too fast.
         value = value_name,
         mode = "r",
         autoComplete = "disabled",
@@ -45,9 +49,7 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         showLineNumbers = FALSE
       )
     ),
-
-    span(class="input-group-text", icon("equals"), style = "margin: -1px;"),
-
+    span(class = "input-group-text", icon("equals"), style = "margin: -1px;"),
     span(
       # class = ""
       style = "width: 70%",
@@ -101,12 +103,11 @@ get_exprs <- function(prefix, input, garbage) {
   ans <- lapply(setNames(input_names, input_names), \(x) input[[x]])
   vals <- unlist(ans[grepl("_val$", names(ans))])
   names <- unlist(ans[grepl("_name$", names(ans))])
-  setNames(vals, names)  # a named character vector
+  setNames(vals, names) # a named character vector
 }
 
 
 ace_module_server <- function(id) {
-
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -120,14 +121,13 @@ ace_module_server <- function(id) {
 
     # remove namedchar UI on trash click
     r_rms_previous <- reactiveVal(integer())
-    r_rms_garbage <- reactiveVal(character())  # store removed elements (since I cannot find a way to 'flush' input after removing a UI element)
+    r_rms_garbage <- reactiveVal(character()) # store removed elements (since I cannot find a way to 'flush' input after removing a UI element)
     observe({
       rms <- get_rms("pl_", input, garbage = character())
       rms_previous <- isolate(r_rms_previous())
       nms_both <- intersect(names(rms), names(rms_previous))
       to_be_rm <- gsub("_rm$", "", nms_both[rms[nms_both] != rms_previous[nms_both]])
       if (length(to_be_rm) > 0) {
-
         removeUI(paste0("#", ns(to_be_rm)))
         # make sure it is not read again in the future
         r_rms_garbage(c(isolate(r_rms_garbage()), to_be_rm))
@@ -161,8 +161,7 @@ ace_module_server <- function(id) {
       aceTooltip(paste0(next_pl, "_val"))
     })
 
-    r_result  # return 'namedchar'
-
+    r_result # return 'namedchar'
   })
 }
 
@@ -179,7 +178,8 @@ ace_module_ui <- function(id, exprs_init = NULL) {
   }
 
   div(
-    div(id = ns("pls"),
+    div(
+      id = ns("pls"),
       init
     ),
     div(
@@ -208,6 +208,3 @@ ace_module_ui <- function(id, exprs_init = NULL) {
 
 # # Run the application
 # shinyApp(ui = ui, server = server)
-
-
-

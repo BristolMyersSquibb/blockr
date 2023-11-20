@@ -24,6 +24,11 @@ It includes two \code{shinyAce::aceEditor} elements for inputting the name and v
 \dontrun{
 library(shiny)
 library(shinyAce)
-pkgload::load_all("."); shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
+shinyApp(
+  ui = bslib::page_fluid(
+    exprs_ui(value_name = "bla", value_val = "blabla")
+  ),
+  server = function(input, output) {}
+)
 }
 }
