@@ -34,18 +34,16 @@ Shiny.addCustomMessageHandler("validate-block", (msg) => {
 });
 
 // Input color feedback (validation)
-Shiny.addCustomMessageHandler("validate-input", (msg) => {
-  // Some inputs are dynamically generated like in filter block.
-  // Adding a delay ensure they're in the DOM.
+const changeInputBorder = (id, state) => {
   let sel;
-  if ($(`#${msg.id}`).hasClass("shiny-input-select")) {
-    sel = $(`#${msg.id}-selectized`).parent(".selectize-input");
+  if ($(`#${id}`).hasClass("shiny-input-select")) {
+    sel = $(`#${id}-selectized`).parent(".selectize-input");
   } else {
-    sel = `#${msg.id}`;
+    sel = `#${id}`;
   }
 
   setTimeout(() => {
-    if (msg.state) {
+    if (state) {
       $(sel)
         .css("border-color", "#ced4da");
     } else {
@@ -53,6 +51,18 @@ Shiny.addCustomMessageHandler("validate-input", (msg) => {
         .css("border-color", "#DC3444");
     }
   }, 500);
+}
+
+Shiny.addCustomMessageHandler("validate-input", (msg) => {
+  // Some inputs are dynamically generated like in filter block.
+  // Adding a delay ensure they're in the DOM.
+  if (typeof msg.id === "string") {
+    changeInputBorder(msg.id, msg.state)
+  } else {
+    msg.id.forEach((id) => {
+      changeInputBorder(id, msg.state)
+    })
+  }
 });
 
 Shiny.addCustomMessageHandler("toggle-submit", (msg) => {

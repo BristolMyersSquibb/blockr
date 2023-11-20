@@ -113,7 +113,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       blk <- reactiveVal(x)
       obs <- list()
       # block and inputs are booleans. message is a character vector.
-      is_valid <- reactiveValues(block = TRUE, message = NULL, error = NULL)
+      is_valid <- reactiveValues(block = TRUE, input = list(), message = NULL, error = NULL)
 
       ns <- session$ns
 
@@ -125,7 +125,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
           is_valid$message <- NULL
           is_valid$block <- TRUE
           secure(eval(set_expr(blk())), is_valid)
-          #if (!is.null(is_valid$error)) create_modal(is_valid$error)
+          if (!is.null(is_valid$error)) create_modal(is_valid$error)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
         ignoreInit = TRUE
@@ -139,30 +139,31 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
         lapply(inputs_to_validate, function(el) {
           if (el == "values") {
-            name <- paste(el, names(value(blk()[[el]])), sep = "_")
-            name_ns <- ns(name)
-            val <- input[[name]]
-          } else {
-            name_ns <- ns(el)
-            val <- input[[el]]
+            el <- paste(el, names(value(blk()[[el]])), sep = "_")
           }
 
-          if (is.null(val) || nchar(val) == 0) {
-            is_valid$message <- c(
-              is_valid$message,
-              sprintf("Error: input '%s' is not valid.", el)
-            )
-            is_valid$block <- FALSE
-          }
+          lapply(el, \(e) {
+            is_valid$input[[e]] <- TRUE
+            val <- input[[e]]
 
-          # Input border is red if invalid
-          session$sendCustomMessage(
-            "validate-input",
-            list(
-              state = is_valid$block,
-              id = name_ns
+            if (length(val) == 0 || (length(val) > 0 && all(nchar(val)) == 0)) {
+              is_valid$message <- c(
+                is_valid$message,
+                sprintf("Error: input '%s' is not valid.", e)
+              )
+              is_valid$input[[e]] <- FALSE
+              is_valid$block <- FALSE
+            }
+
+            # Input border is red if invalid
+            session$sendCustomMessage(
+              "validate-input",
+              list(
+                state = is_valid$input[[e]],
+                id = ns(e)
+              )
             )
-          )
+          })
         })
 
         # Block will have a red border if any nested input is invalid
@@ -196,7 +197,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
             ui = lapply(is_valid$message, function(m) {
               p(m, class = "message text-center", style = "color: red;")
             }),
-            where = "afterEnd"
+            where = "beforeEnd"
           )
         }
       })
