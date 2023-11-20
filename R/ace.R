@@ -1,5 +1,20 @@
-# preview UI only
-# pkgload::load_all("."); shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
+#' Create a UI element for expressions
+#'
+#' This function generates a UI element for inputting expressions in a Shiny application.
+#' It includes two `shinyAce::aceEditor` elements for inputting the name and value of a new column.
+#'
+#' @param id Character string, an identifier for the UI element.
+#' @param value_name Default name for the new column.
+#' @param value_val Default value for the new column.
+#' @return A `div` element containing the UI components.
+#' @importFrom shinyAce aceEditor aceAutocomplete aceTooltip
+#' @export
+#' @examples
+#' \dontrun{
+#' library(shiny)
+#' library(shinyAce)
+#' pkgload::load_all("."); shinyApp(ui = bslib::page_fluid(exprs_ui(value_name = "bla", value_val = "blabla")), server = function(input, output){})
+#' }
 exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
 
   div(
@@ -91,7 +106,6 @@ get_exprs <- function(prefix, input, garbage) {
 
 
 ace_module_server <- function(id) {
-  library(shinyAce)
 
   moduleServer(id, function(input, output, session) {
     ns <- session$ns

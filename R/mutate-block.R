@@ -1,5 +1,6 @@
 #' @param data Tabular data in which to select some columns.
 #' @param columns Column(s) to select.
+#' @param value Intial value for muate block
 #' @rdname new_block
 #' @export
 new_mutate_block <- function(data, value = NULL, ...) {

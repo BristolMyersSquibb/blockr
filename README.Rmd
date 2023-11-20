@@ -50,9 +50,11 @@ library(blockr.data)
 
 stack <- new_stack(
   data_block,
-  filter_block,
+  demo_block,
   plot_block
 )
+
+pkgload::load_all("."); stack <- new_stack(data_block, mutate_block);serve_stack(stack)
 
 serve_stack(stack)
 ```

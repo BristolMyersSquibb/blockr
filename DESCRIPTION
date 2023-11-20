@@ -36,7 +36,8 @@ Imports:
     htmltools,
     sortable,
     bmsui,
-    ggiraph
+    ggiraph,
+    shinyAce
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui,
