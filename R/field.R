@@ -112,18 +112,6 @@ string_field <- function(...) validate_field(new_string_field(...))
 #' @rdname new_field
 #' @export
 validate_field.select_field <- function(x) {
-  val <- value(x)
-  opt <- value(x, "choices")
-  if (isTRUE(value(x, "multiple"))) {
-    len_ok <- length(val) > 0L
-  } else {
-    len_ok <- length(val) == 1L
-  }
-
-  if (!is.character(val) || !len_ok || !all(val %in% opt)) {
-    # ...
-  }
-
   x
 }
 
@@ -247,7 +235,7 @@ values <- function(x, name = names(x)) {
   stopifnot(is_field(x))
 
   if (is.function(x[[name]])) {
-    attr(x[[name]], "result") <- value
+    if (!is.null(value)) attr(x[[name]], "result") <- value
   } else {
     x[[name]] <- value
   }
