@@ -17,6 +17,7 @@
 #' @export
 #' @import blockr.data
 #' @import dplyr
+#' @importFrom stats setNames
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character(),
                       layout = default_layout_fields) {
