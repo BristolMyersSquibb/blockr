@@ -358,7 +358,8 @@ validate_block <- function(blk, is_valid, session) {
   # Cleanup any old message
   removeUI(
     selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
-    multiple = TRUE
+    multiple = TRUE,
+    session = session
   )
 
   # Send validation message
@@ -368,7 +369,8 @@ validate_block <- function(blk, is_valid, session) {
       ui = lapply(is_valid$message, function(m) {
         p(m, class = "message text-center", style = "color: red;")
       }),
-      where = "beforeEnd"
+      where = "beforeEnd",
+      session = session
     )
   }
 }
