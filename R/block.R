@@ -17,6 +17,7 @@
 #' @export
 #' @import blockr.data
 #' @import dplyr
+#' @importFrom stats setNames
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character(),
                       layout = default_layout_fields) {
@@ -149,7 +150,7 @@ evaluate_block.ggiraph_block <- evaluate_block.plot_block
 #' @export
 new_data_block <- function(
     ...,
-    dat = as.environment("package:blockr.data"),
+    dat = as.environment("package:datasets"),
     selected = character()) {
   is_dataset_eligible <- function(x) {
     inherits(

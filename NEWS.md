@@ -1,4 +1,4 @@
-# blockr (development version)
+# blockr 0.0.1.9000
 
 * First prototype:
   - single stacks.
