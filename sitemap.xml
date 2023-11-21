@@ -22,6 +22,9 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/ace_module_ui.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_block.html</loc>
   </url>
   <url>
@@ -38,6 +41,9 @@
   </url>
   <url>
     <loc>/reference/div_card.html</loc>
+  </url>
+  <url>
+    <loc>/reference/exprs_ui.html</loc>
   </url>
   <url>
     <loc>/reference/generate_server.html</loc>

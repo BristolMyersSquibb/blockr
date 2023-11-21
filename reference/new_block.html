@@ -99,7 +99,7 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">new_data_block</span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
-<span>  dat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.environment.html" class="external-link">as.environment</a></span><span class="op">(</span><span class="st">"package:blockr.data"</span><span class="op">)</span>,</span>
+<span>  dat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.environment.html" class="external-link">as.environment</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>,</span>
 <span>  selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -222,7 +222,11 @@ plus some meta data.</p>
 <span><span class="fu">demo_summarize_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for field</span></span>
-<span><span class="fu">is_initialized</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">is_initialized</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_mutate_block</span><span class="op">(</span><span class="va">data</span>, value <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">mutate_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -259,7 +263,7 @@ the list of fields to layout and returns one or more UI tag(s).</p></dd>
 
 
 <dt>data</dt>
-<dd><p>Block input data</p></dd>
+<dd><p>Tabular data in which to select some columns.</p></dd>
 
 
 <dt>dat</dt>
@@ -324,6 +328,10 @@ to join</p></dd>
 
 <dt>column</dt>
 <dd><p>Column to apply the operation on.</p></dd>
+
+
+<dt>value</dt>
+<dd><p>Intial value for muate block</p></dd>
 
 </dl></div>
 
