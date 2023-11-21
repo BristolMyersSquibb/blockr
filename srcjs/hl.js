@@ -11,6 +11,7 @@ $(() => {
 
     $(`#${e.name}`).addClass("language-r");
     setTimeout(() => {
+      delete document.getElementById(e.name).dataset.highlighted;
       hljs.highlightElement(document.getElementById(e.name));
     }, 250);
   });
