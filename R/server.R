@@ -113,7 +113,12 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       blk <- reactiveVal(x)
       obs <- list()
       # block and inputs are booleans. message is a character vector.
-      is_valid <- reactiveValues(block = TRUE, input = list(), message = NULL, error = NULL)
+      is_valid <- reactiveValues(
+        block = TRUE,
+        input = list(),
+        message = NULL,
+        error = NULL
+      )
 
       ns <- session$ns
 
@@ -140,69 +145,12 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         exclude <- which(names(blk()) %in% c("expression", "submit"))
         inputs_to_validate <- names(blk())[-exclude]
 
-        lapply(inputs_to_validate, function(el) {
-          if (el == "values") {
-            el <- paste(el, names(value(blk()[[el]])), sep = "_")
-          }
-
-          lapply(el, \(e) {
-            is_valid$input[[e]] <- TRUE
-            val <- input[[e]]
-
-            if (length(val) == 0 || (length(val) > 0 && all(nchar(val)) == 0)) {
-              is_valid$message <- c(
-                is_valid$message,
-                sprintf("Error: input '%s' is not valid.", e)
-              )
-              is_valid$input[[e]] <- FALSE
-              is_valid$block <- FALSE
-            }
-
-            # Input border is red if invalid
-            session$sendCustomMessage(
-              "validate-input",
-              list(
-                state = is_valid$input[[e]],
-                id = ns(e)
-              )
-            )
-          })
-        })
+        validate_inputs(blk(), inputs_to_validate, is_valid, session)
 
         # Block will have a red border if any nested input is invalid
         # since blocks can be collapsed and people won't see the input
         # elements.
-        session$sendCustomMessage(
-          "validate-block",
-          list(
-            state = is_valid$block,
-            id = ns("block")
-          )
-        )
-
-        # Toggle submit field
-        if ("submit_block" %in% class(x)) {
-          session$sendCustomMessage(
-            "toggle-submit",
-            list(state = is_valid$block, id = ns("submit"))
-          )
-        }
-
-        removeUI(
-          selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
-          multiple = TRUE
-        )
-
-        # Send validation message
-        if (!is_valid$block) {
-          insertUI(
-            selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
-            ui = lapply(is_valid$message, function(m) {
-              p(m, class = "message text-center", style = "color: red;")
-            }),
-            where = "beforeEnd"
-          )
-        }
+        validate_block(blk(), is_valid, session)
       })
 
       # For submit blocks like filter, summarise,

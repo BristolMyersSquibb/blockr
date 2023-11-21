@@ -278,3 +278,97 @@ secure <- function(expr, is_valid) {
     }
   )
 }
+
+#' Validate inputs
+#'
+#' Get input value and determine if they're valid.
+#'
+#' @param blk Block reactive value.
+#' @param inputs Inputs to check.
+#' @param is_valid Block valid status.
+#' @param session Shiny session object.
+#'
+#' @return Side effects.
+#'
+#' @keywords internal
+validate_inputs <- function(blk, inputs, is_valid, session) {
+
+  input <- get("input", parent.frame())
+  ns <- session$ns
+
+  lapply(inputs, function(el) {
+    if (el == "values") {
+      el <- paste(el, names(value(blk[[el]])), sep = "_")
+    }
+
+    lapply(el, \(e) {
+      is_valid$input[[e]] <- TRUE
+      val <- input[[e]]
+      if (length(val) == 0 || (length(val) > 0 && all(nchar(val)) == 0)) {
+        is_valid$message <- c(
+          is_valid$message,
+          sprintf("Error: input '%s' is not valid.", e)
+        )
+        is_valid$input[[e]] <- FALSE
+        is_valid$block <- FALSE
+      }
+
+      # Input border is red if invalid
+      session$sendCustomMessage(
+        "validate-input",
+        list(
+          state = is_valid$input[[e]],
+          id = ns(e)
+        )
+      )
+    })
+  })
+}
+
+#' Validate a entire block
+#'
+#' Depending on whether some inputs are invalid.
+#'
+#' @param blk Block reactive value.
+#' @param is_valid Block valid status.
+#' @param session Shiny session object.
+#'
+#' @return Side effects.
+#'
+#' @keywords internal
+validate_block <- function(blk, is_valid, session) {
+  ns <- session$ns
+
+  session$sendCustomMessage(
+    "validate-block",
+    list(
+      state = is_valid$block,
+      id = ns("block")
+    )
+  )
+
+  # Toggle submit field
+  if ("submit_block" %in% class(blk)) {
+    session$sendCustomMessage(
+      "toggle-submit",
+      list(state = is_valid$block, id = ns("submit"))
+    )
+  }
+
+  # Cleanup any old message
+  removeUI(
+    selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
+    multiple = TRUE
+  )
+
+  # Send validation message
+  if (!is_valid$block) {
+    insertUI(
+      selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
+      ui = lapply(is_valid$message, function(m) {
+        p(m, class = "message text-center", style = "color: red;")
+      }),
+      where = "beforeEnd"
+    )
+  }
+}
