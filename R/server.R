@@ -125,11 +125,14 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
           is_valid$message <- NULL
           is_valid$block <- TRUE
           secure(eval(set_expr(blk())), is_valid)
-          if (!is.null(is_valid$error)) create_modal(is_valid$error)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
         ignoreInit = TRUE
       )
+
+      obs$print_error <- observeEvent(is_valid$error, {
+        create_modal(is_valid$error)
+      })
 
       # Validate block inputs
       obs$validate_inputs <- observeEvent(eval(obs_expr(blk())), {

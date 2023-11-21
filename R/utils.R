@@ -273,8 +273,8 @@ secure <- function(expr, is_valid) {
       expr
     },
     error = function(e) {
-      #is_valid$block <- FALSE
-      is_valid$error <- e$message
+      is_valid$error <- "An error occured within a block, please inspect the
+      red border block(s) and fix the issue(s)."
     }
   )
 }
