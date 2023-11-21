@@ -5,39 +5,41 @@ export const collapse = (stack) => {
 };
 
 export const toggleOutputInput = (stack) => {
-  $(stack).find(".block-output-toggle").each((_index, btn) => {
-    // already has a listener
-    if ($(btn).hasClass("block-bound")) {
-      return;
-    }
-
-    $(btn).addClass("block-bound");
-
-    $(btn).on("click", (event) => {
-      const $block = $(event.target).closest(".block");
-
-      const outputVisible = $block.find(".block-output").is(":visible");
-      const inputVisible = $block.find(".block-input").is(":visible");
-
-      const toggle = outputVisible || inputVisible;
-
-      if (toggle) {
-        $block.find(".block-inputs").addClass("d-none");
-        $block.find(".block-output").addClass("d-none");
-      } else {
-        $block.find(".block-inputs").removeClass("d-none");
-        $block.find(".block-output").removeClass("d-none");
+  $(stack)
+    .find(".block-output-toggle")
+    .each((_index, btn) => {
+      // already has a listener
+      if ($(btn).hasClass("block-bound")) {
+        return;
       }
 
-      let ev = "shown";
-      if ($block.find(".block-output").hasClass("d-none")) {
-        ev = "hidden";
-      }
+      $(btn).addClass("block-bound");
 
-      $block.find(".block-inputs").trigger(ev);
-      $block.find(".block-output").trigger(ev);
+      $(btn).on("click", (event) => {
+        const $block = $(event.target).closest(".block");
+
+        const outputVisible = $block.find(".block-output").is(":visible");
+        const inputVisible = $block.find(".block-input").is(":visible");
+
+        const toggle = outputVisible || inputVisible;
+
+        if (toggle) {
+          $block.find(".block-inputs").addClass("d-none");
+          $block.find(".block-output").addClass("d-none");
+        } else {
+          $block.find(".block-inputs").removeClass("d-none");
+          $block.find(".block-output").removeClass("d-none");
+        }
+
+        let ev = "shown";
+        if ($block.find(".block-output").hasClass("d-none")) {
+          ev = "hidden";
+        }
+
+        $block.find(".block-inputs").trigger(ev);
+        $block.find(".block-output").trigger(ev);
+      });
     });
-  });
 };
 
 const editor = (stack) => {
@@ -63,21 +65,39 @@ const editor = (stack) => {
         $block.removeClass("d-none");
         $block.find(".block-title").removeClass("d-none");
 
-        if (index == ($blocks.length - 1)) {
+        if (index == $blocks.length - 1) {
           $block.find(".block-output").addClass("show");
           $block.find(".block-output").removeClass("d-none");
           $block.find(".block-output").trigger("shown");
+
+          const code = window.bootstrap.Collapse.getOrCreateInstance(
+            $block.find(".block-code")[0],
+            { toggle: false },
+          );
+          code.hide();
+
+          $block.find(".block-inputs").addClass("d-none");
+          $block.find(".block-inputs").trigger("hidden");
         }
         return;
       }
 
       $block.find(".block-title").addClass("d-none");
-      if (index == ($blocks.length - 1)) {
+      if (index == $blocks.length - 1) {
         $block.removeClass("d-none");
 
         $block.find(".block-output").addClass("show");
         $block.find(".block-output").removeClass("d-none");
         $block.find(".block-output").trigger("shown");
+
+        const code = window.bootstrap.Collapse.getOrCreateInstance(
+          $block.find(".block-code")[0],
+          { toggle: false },
+        );
+        code.hide();
+
+        $block.find(".block-inputs").addClass("d-none");
+        $block.find(".block-inputs").trigger("hidden");
         return;
       }
 
