@@ -295,38 +295,32 @@ validate_inputs <- function(blk, is_valid, session) {
   input <- get("input", parent.frame())
   ns <- session$ns
 
-  exclude <- which(names(blk) %in% c("expression", "submit"))
-  inputs_to_validate <- names(blk)
-  if (length(exclude) > 0) {
-    inputs_to_validate <- inputs_to_validate[-exclude]
+  inputs_to_validate <- unlst(input_ids(blk))
+  to_exclude <- which(inputs_to_validate %in% c("expression", "submit"))
+  if (length(to_exclude) > 0) {
+    inputs_to_validate <- inputs_to_validate[-to_exclude]
   }
 
   lapply(inputs_to_validate, function(el) {
-    if (el == "values") {
-      el <- paste(el, names(value(blk[[el]])), sep = "_")
+    is_valid$input[[el]] <- TRUE
+    val <- input[[el]]
+    if (length(val) == 0 || (length(val) > 0 && all(nchar(val)) == 0)) {
+      is_valid$message <- c(
+        is_valid$message,
+        sprintf("Error: input '%s' is not valid.", el)
+      )
+      is_valid$input[[el]] <- FALSE
+      is_valid$block <- FALSE
     }
 
-    lapply(el, \(e) {
-      is_valid$input[[e]] <- TRUE
-      val <- input[[e]]
-      if (length(val) == 0 || (length(val) > 0 && all(nchar(val)) == 0)) {
-        is_valid$message <- c(
-          is_valid$message,
-          sprintf("Error: input '%s' is not valid.", e)
-        )
-        is_valid$input[[e]] <- FALSE
-        is_valid$block <- FALSE
-      }
-
-      # Input border is red if invalid
-      session$sendCustomMessage(
-        "validate-input",
-        list(
-          state = is_valid$input[[e]],
-          id = ns(e)
-        )
+    # Input border is red if invalid
+    session$sendCustomMessage(
+      "validate-input",
+      list(
+        state = is_valid$input[[el]],
+        id = ns(el)
       )
-    })
+    )
   })
 }
 
