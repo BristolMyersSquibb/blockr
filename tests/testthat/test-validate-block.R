@@ -34,7 +34,6 @@ session <- as.environment(
 
 test_that("validate block works", {
   # Init values
-  inputs <- "columns"
   data <- iris
   input <- list("columns" = colnames(data)[[1]])
   blk <- select_block(data)
@@ -46,13 +45,13 @@ test_that("validate block works", {
   )
 
   # We just check the function sends a consistent message to JS ...
-  invisible(validate_inputs(blk, inputs, is_valid, session))
+  invisible(validate_inputs(blk, is_valid, session))
   res <- session$lastCustomMessage
 
   expect_type(res, "list")
   expect_equal(res$type, "validate-input")
   expect_true(res$message$state)
-  expect_equal(res$message$id, session$ns(inputs[[1]]))
+  expect_equal(res$message$id, session$ns(names(input)[[1]]))
 
   # Reset session
   validate_block(blk, is_valid, session)
@@ -73,7 +72,7 @@ test_that("validate block works", {
 
   # Invalidate block to manually test for extra UI messages
   input <- list("columns" = "")
-  invisible(validate_inputs(blk, inputs, is_valid, session))
+  invisible(validate_inputs(blk, is_valid, session))
   res <- session$lastCustomMessage
   expect_false(res$message$state)
 
