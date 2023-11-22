@@ -129,6 +129,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         {
           is_valid$message <- NULL
           is_valid$block <- TRUE
+          is_valid$inputs <- list()
           secure(eval(set_expr(blk())), is_valid)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
@@ -142,11 +143,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # Validate block inputs
       obs$validate_inputs <- observeEvent(eval(obs_expr(blk())), {
         message(sprintf("Validating block %s", class(x)[[1]]))
-        exclude <- which(names(blk()) %in% c("expression", "submit"))
-        inputs_to_validate <- names(blk())[-exclude]
-
-        validate_inputs(blk(), inputs_to_validate, is_valid, session)
-
+        validate_inputs(blk(), is_valid, session)
         # Block will have a red border if any nested input is invalid
         # since blocks can be collapsed and people won't see the input
         # elements.

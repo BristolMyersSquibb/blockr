@@ -4,12 +4,10 @@
 \alias{validate_inputs}
 \title{Validate inputs}
 \usage{
-validate_inputs(blk, inputs, is_valid, session)
+validate_inputs(blk, is_valid, session)
 }
 \arguments{
 \item{blk}{Block reactive value.}
-
-\item{inputs}{Inputs to check.}
 
 \item{is_valid}{Block valid status.}
 

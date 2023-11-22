@@ -284,19 +284,24 @@ secure <- function(expr, is_valid) {
 #' Get input value and determine if they're valid.
 #'
 #' @param blk Block reactive value.
-#' @param inputs Inputs to check.
 #' @param is_valid Block valid status.
 #' @param session Shiny session object.
 #'
 #' @return Side effects.
 #'
 #' @keywords internal
-validate_inputs <- function(blk, inputs, is_valid, session) {
+validate_inputs <- function(blk, is_valid, session) {
 
   input <- get("input", parent.frame())
   ns <- session$ns
 
-  lapply(inputs, function(el) {
+  exclude <- which(names(blk) %in% c("expression", "submit"))
+  inputs_to_validate <- names(blk)
+  if (length(exclude) > 0) {
+    inputs_to_validate <- inputs_to_validate[-exclude]
+  }
+
+  lapply(inputs_to_validate, function(el) {
     if (el == "values") {
       el <- paste(el, names(value(blk[[el]])), sep = "_")
     }
