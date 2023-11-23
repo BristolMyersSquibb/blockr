@@ -42,6 +42,10 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
   }
 
   layout <- attr(x, "layout")
+  loading_class <- ""
+  if(!.hidden) {
+    loading_class <- "d-none"
+  }
 
   div(
     class = block_class,
@@ -69,7 +73,10 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
           id = output_id,
           uiOutputBlock(x, ns),
           div(
-            class = "block-loading d-flex justify-content-center",
+            class = sprintf(
+              "block-loading d-flex justify-content-center %s",
+              loading_class
+            ),
             div(
               class = "spinner-border text-primary",
               role = "status",
