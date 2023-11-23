@@ -78,7 +78,10 @@ const editor = (stack) => {
 
           $block.find(".block-inputs").addClass("d-none");
           $block.find(".block-inputs").trigger("hidden");
+          return;
         }
+
+        $block.find(".block-loading").addClass("d-none");
         return;
       }
 
