@@ -52,17 +52,7 @@ update_field <- function(x, new, env = list()) {
 update_field.field <- function(x, new, env = list()) {
   x <- eval_set_field_value(x, env)
 
-  # Boolean need a special care because
-  # when new is FALSE, then is_truthy()
-  # will always be FALSE and the value
-  # never updated ...
-  if (inherits(x, "switch_field")) {
-    value(x) <- new
-  } else {
-    if (is_truthy(new)) {
-      value(x) <- new
-    }
-  }
+  value(x) <- new
 
   validate_field(x)
 }
@@ -122,19 +112,6 @@ string_field <- function(...) validate_field(new_string_field(...))
 #' @rdname new_field
 #' @export
 validate_field.select_field <- function(x) {
-  val <- value(x)
-  opt <- value(x, "choices")
-
-  if (isTRUE(value(x, "multiple"))) {
-    len_ok <- length(val) > 0L
-  } else {
-    len_ok <- length(val) == 1L
-  }
-
-  if (!is.character(val) || !len_ok || !all(val %in% opt)) {
-    value(x) <- opt[1L]
-  }
-
   x
 }
 
@@ -258,7 +235,7 @@ values <- function(x, name = names(x)) {
   stopifnot(is_field(x))
 
   if (is.function(x[[name]])) {
-    attr(x[[name]], "result") <- value
+    if (!is.null(value)) attr(x[[name]], "result") <- value
   } else {
     x[[name]] <- value
   }

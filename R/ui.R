@@ -53,6 +53,9 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
         class = "card-body p-1",
         header,
         div(
+          class = "block-validation"
+        ),
+        div(
           class = sprintf("block-inputs %s", inputs_hidden),
           layout(fields)
         ),

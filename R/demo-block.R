@@ -85,6 +85,7 @@ demo_data_block <- function(...) {
   initialize_block(
     new_data_block(
       ...,
+      dat = as.environment("package:blockr.data"),
       selected = "lab"
     )
   )

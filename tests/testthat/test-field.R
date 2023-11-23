@@ -23,13 +23,13 @@ test_that("select fields", {
 
   expect_s3_class(field, "select_field")
   expect_type(field, "list")
-  expect_identical(value(field), "a")
+  expect_identical(value(field), "aa")
 
   field <- select_field(1, letters)
 
   expect_s3_class(field, "select_field")
   expect_type(field, "list")
-  expect_identical(value(field), "a")
+  expect_identical(value(field), 1)
 })
 
 test_that("range fields", {

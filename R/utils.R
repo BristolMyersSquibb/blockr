@@ -262,17 +262,113 @@ create_modal <- function(...) {
 #' tryCatch wrapper.
 #'
 #' @param expr Expression to evaluate.
+#' @param is_valid Block valid status.
 #'
 #' @return Result or error message.
 #'
 #' @keywords internal
-secure <- function(expr) {
+secure <- function(expr, is_valid) {
   tryCatch(
     {
       expr
     },
     error = function(e) {
-      create_modal(e$message)
+      is_valid$error <- "An error occured within a block, please inspect the
+      red border block(s) and fix the issue(s)."
     }
   )
+}
+
+#' Validate inputs
+#'
+#' Get input value and determine if they're valid.
+#'
+#' @param blk Block reactive value.
+#' @param is_valid Block valid status.
+#' @param session Shiny session object.
+#'
+#' @return Side effects.
+#'
+#' @keywords internal
+validate_inputs <- function(blk, is_valid, session) {
+  input <- get("input", parent.frame())
+  ns <- session$ns
+
+  inputs_to_validate <- unlst(input_ids(blk))
+  to_exclude <- which(inputs_to_validate %in% c("expression", "submit"))
+  if (length(to_exclude) > 0) {
+    inputs_to_validate <- inputs_to_validate[-to_exclude]
+  }
+
+  lapply(inputs_to_validate, function(el) {
+    is_valid$input[[el]] <- TRUE
+    val <- input[[el]]
+    if (length(val) == 0 || (length(val) > 0 && all(nchar(val)) == 0)) {
+      is_valid$message <- c(
+        is_valid$message,
+        sprintf("Error: input '%s' is not valid.", el)
+      )
+      is_valid$input[[el]] <- FALSE
+      is_valid$block <- FALSE
+    }
+
+    # Input border is red if invalid
+    session$sendCustomMessage(
+      "validate-input",
+      list(
+        state = is_valid$input[[el]],
+        id = ns(el)
+      )
+    )
+  })
+}
+
+#' Validate a entire block
+#'
+#' Depending on whether some inputs are invalid.
+#'
+#' @param blk Block reactive value.
+#' @param is_valid Block valid status.
+#' @param session Shiny session object.
+#'
+#' @return Side effects.
+#'
+#' @keywords internal
+validate_block <- function(blk, is_valid, session) {
+  ns <- session$ns
+
+  session$sendCustomMessage(
+    "validate-block",
+    list(
+      state = is_valid$block,
+      id = ns("block")
+    )
+  )
+
+  # Toggle submit field
+  if ("submit_block" %in% class(blk)) {
+    session$sendCustomMessage(
+      "toggle-submit",
+      list(state = is_valid$block, id = ns("submit"))
+    )
+  }
+
+  # Cleanup any old message
+  removeUI(
+    selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
+    multiple = TRUE,
+    session = session
+  )
+
+  # Send validation message
+  if (!is_valid$block) {
+    insertUI(
+      selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
+      ui = lapply(is_valid$message, function(m) {
+        p(m, class = "message text-center", style = "color: red;")
+      }),
+      where = "beforeEnd",
+      session = session
+    )
+  }
 }
