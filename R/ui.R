@@ -65,7 +65,17 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
           class = sprintf("%s block-output", inputs_hidden),
           id = output_id,
           uiOutputBlock(x, ns),
-          span(class = "block-loading", "Loading...")
+          div(
+            class = "block-loading d-flex justify-content-center",
+            div(
+              class = "spinner-border text-primary",
+              role = "status",
+              span(
+                class = "visually-hidden",
+                "Loading..."
+              )
+            )
+          )
         )
       )
     )
