@@ -37,15 +37,13 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
   }
 
   inputs_hidden <- ""
+  loading_class <- "d-none"
   if (.hidden) {
     inputs_hidden <- "d-none"
+    loading_class <- ""
   }
 
   layout <- attr(x, "layout")
-  loading_class <- ""
-  if(!.hidden) {
-    loading_class <- "d-none"
-  }
 
   div(
     class = block_class,
