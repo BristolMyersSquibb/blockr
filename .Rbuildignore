@@ -20,3 +20,4 @@ webpack.prod.js
 ^pkgdown$
 ^deploy$
 ^renv\.lock$
+^\.eslintrc\.js$

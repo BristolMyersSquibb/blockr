@@ -291,7 +291,6 @@ secure <- function(expr, is_valid) {
 #'
 #' @keywords internal
 validate_inputs <- function(blk, is_valid, session) {
-
   input <- get("input", parent.frame())
   ns <- session$ns
 
