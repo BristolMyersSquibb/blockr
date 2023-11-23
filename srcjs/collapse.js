@@ -116,6 +116,18 @@ export const showLastOutput = (el) => {
   $lastTitle.addClass("d-none");
   $lastOutput.removeClass("d-none");
   $lastOutput.trigger("shown");
+
+  // we have a loading state
+  // because some block validations have no last output
+  const tableId = $lastOutput.find(".datatables").first().attr("id");
+
+  $(document).on("shiny:value", (event) => {
+    if (event.name !== tableId) {
+      return;
+    }
+
+    $lastOutput.find(".block-loading").addClass("d-none");
+  });
 };
 
 const showLastOutputs = (stack) => {

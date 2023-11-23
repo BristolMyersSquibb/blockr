@@ -20,7 +20,7 @@ It can be used to dynamically add and manage ACE Editor instances.
 }
 \examples{
 \dontrun{
-ui <-  bslib::page_fluid(
+ui <- bslib::page_fluid(
   ace_module_ui("m1", exprs_init = c(a = "bla", b = "blabla")),
   verbatimTextOutput("o_result")
 )

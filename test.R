@@ -4,7 +4,7 @@ library(shiny)
 
 stack <- new_stack(
   demo_data_block,
-  select_block
+  filter_block
 )
 
 ui <- fluidPage(
@@ -13,7 +13,7 @@ ui <- fluidPage(
   generate_ui(stack)
 )
 
-server <- function(input, output){
+server <- function(input, output) {
   x <- generate_server(stack)
 
   observe({

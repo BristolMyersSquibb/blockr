@@ -19,6 +19,6 @@ sass: style
 style:
 	Rscript -e "styler::style_pkg()"
 
-run: bundle_dev 
+dev: bundle_dev 
 	Rscript test.R
 
