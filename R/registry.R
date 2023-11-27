@@ -4,22 +4,7 @@
 #'
 #' @export
 available_blocks <- function() {
-	
-  Map(
-    new_block_descr,
-    c(new_data_block, new_filter_block, new_select_block, new_summarize_block),
-    c("data block", "filter block", "select block", "summarize block"),
-    c("choose a dataset", "filter rows in a table",
-      "select columns in a table", "summarize data groups"),
-    list(
-      c("dataset_block", "data_block"),
-      c("filter_block", "transform_block", "submit_block"),
-      c("select_block", "transform_block"),
-      c("summarize_block", "transform_block", "submit_block")
-    ),
-    c(NA_character_, "data.frame", "data.frame", "data.frame"),
-    c("data.frame", "data.frame", "data.frame", "data.frame")
-  )
+	lapply(list_blocks(), get_block_descr)
 }
 
 block_descr_getter <- function(field) {
@@ -51,4 +36,36 @@ new_block_descr <- function(ctor, name, description, classes, input, output) {
     ctor, name = name, description = description, classes = classes,
     input = input, output = output, class = "block_descr"
   )
+}
+
+block_registry <- new.env()
+
+#' @param constructor Block constructor
+#' @param name,description Metadata describing the block
+#' @param classes Block classes
+#' @param input,output Object types the block consumes and produces
+#'
+#' @rdname available_blocks
+#' @export
+register_block <- function(constructor, name, description, classes, input,
+                           output) {
+
+  descr <- new_block_descr(constructor, name, description, classes, input,
+                           output)
+
+  id <- classes[1L]
+
+  if (id %in% list_blocks()) {
+    warning("block ", id, " already exists and will be overwritten.")
+  }
+
+  assign(id, descr, envir = block_registry)
+}
+
+list_blocks <- function() {
+  ls(envir = block_registry)
+}
+
+get_block_descr <- function(id) {
+  get(id, envir = block_registry)
 }

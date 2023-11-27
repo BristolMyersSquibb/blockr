@@ -4,6 +4,7 @@
 \alias{available_blocks}
 \alias{block_name}
 \alias{block_descr}
+\alias{register_block}
 \title{Block registry}
 \usage{
 available_blocks()
@@ -11,9 +12,19 @@ available_blocks()
 block_name(x)
 
 block_descr(x)
+
+register_block(constructor, name, description, classes, input, output)
 }
 \arguments{
 \item{x}{Block descriptino object}
+
+\item{constructor}{Block constructor}
+
+\item{name, description}{Metadata describing the block}
+
+\item{classes}{Block classes}
+
+\item{input, output}{Object types the block consumes and produces}
 }
 \description{
 List available blocks.
