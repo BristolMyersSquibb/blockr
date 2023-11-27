@@ -22,9 +22,10 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(blockr)
 library(test.registry)
-stack <- blockr::new_stack(
-  blockr::data_block,
+stack <- new_stack(
+  data_block,
   new_head_block
 )
+serve_stack(stack)
 ```
 
