@@ -117,7 +117,7 @@ new_select_block(data, columns = colnames(data)[1], ...)
 
 new_summarize_block(
   data,
-  func = character(),
+  func = c("mean", "se"),
   default_columns = character(),
   ...
 )

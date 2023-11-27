@@ -343,7 +343,7 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 #' @export
 new_summarize_block <- function(
     data,
-    func = character(),
+    func = c("mean", "se"),
     default_columns = character(),
     ...) {
   if (length(default_columns) > 0) {
