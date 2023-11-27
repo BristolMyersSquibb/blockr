@@ -161,7 +161,6 @@ demo_summarize_block <- function(data, ...) {
   initialize_block(
     new_summarize_block(
       data,
-      func = c("mean", "se"),
       default_columns = c("LBSTRESN", "LBSTRESN"),
       ...
     ),
