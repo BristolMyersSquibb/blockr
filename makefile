@@ -13,12 +13,9 @@ bundle_dev: sass
 install: check
 	Rscript -e "devtools::install()"
 
-sass: style
+sass:
 	Rscript dev/sass.R
 
-style:
-	Rscript -e "styler::style_pkg()"
-
-run: bundle_dev 
+dev: bundle_dev 
 	Rscript test.R
 

@@ -14,7 +14,7 @@ generate_ui <- function(x, ...) {
 #' @param id UI IDs
 #' @rdname generate_ui
 #' @export
-generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
+generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE)) {
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
@@ -37,8 +37,10 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
   }
 
   inputs_hidden <- ""
+  loading_class <- "d-none"
   if (.hidden) {
     inputs_hidden <- "d-none"
+    loading_class <- ""
   }
 
   layout <- attr(x, "layout")
@@ -53,6 +55,9 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
         class = "card-body p-1",
         header,
         div(
+          class = "block-validation"
+        ),
+        div(
           class = sprintf("block-inputs %s", inputs_hidden),
           layout(fields)
         ),
@@ -64,7 +69,21 @@ generate_ui.block <- function(x, id, ..., .hidden = TRUE) {
         div(
           class = sprintf("%s block-output", inputs_hidden),
           id = output_id,
-          uiOutputBlock(x, ns)
+          uiOutputBlock(x, ns),
+          div(
+            class = sprintf(
+              "block-loading d-flex justify-content-center %s",
+              loading_class
+            ),
+            div(
+              class = "spinner-border text-primary",
+              role = "status",
+              span(
+                class = "visually-hidden",
+                "Loading..."
+              )
+            )
+          )
         )
       )
     )
