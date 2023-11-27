@@ -4,7 +4,7 @@
 #'
 #' @export
 available_blocks <- function() {
-	lapply(list_blocks(), get_block_descr)
+  lapply(list_blocks(), get_block_descr)
 }
 
 block_descr_getter <- function(field) {
