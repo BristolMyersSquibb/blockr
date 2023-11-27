@@ -26,9 +26,11 @@ test_that("available blocks", {
 
   register_blockr_blocks()
 
+  nme_getter <- block_descrs_getter(block_descr_getter("name"))
+
   expect_setequal(
-    block_name(blocks),
-    block_name(available_blocks())
+    nme_getter(blocks),
+    nme_getter(available_blocks())
   )
 })
 
@@ -69,6 +71,13 @@ test_that("3rd party blocks can be registrerd (script)", {
   )
 
   expect_true("head_block" %in% list_blocks())
+
+  expect_warning(
+    register_block(
+      new_head_block, "head block", "return first n rows",
+      c("head_block", "transform_block"), "data.frame", "data.frame"
+    )
+  )
 
   unregister_blocks("head_block")
 
