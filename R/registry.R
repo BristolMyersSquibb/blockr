@@ -8,21 +8,39 @@ available_blocks <- function() {
 }
 
 block_descr_getter <- function(field) {
+
   field <- force(field)
+
   function(x) {
+
     stopifnot(inherits(x, "block_descr"))
+
     attr(x, field)
   }
 }
 
-#' @param x Block descriptino object
+block_descrs_getter <- function(descr_getter, ptype = character(1L)) {
+
+  getter <- force(descr_getter)
+
+  function(blocks = available_blocks()) {
+
+    if (inherits(blocks, "block_descr")) {
+      blocks <- list(blocks)
+    }
+
+    vapply(blocks, descr_getter, ptype)
+  }
+}
+
+#' @param blocks Block descriptino object
 #' @rdname available_blocks
 #' @export
-block_name <- block_descr_getter("name")
+block_name <- block_descrs_getter(block_descr_getter("name"))
 
 #' @rdname available_blocks
 #' @export
-block_descr <- block_descr_getter("description")
+block_descr <- block_descrs_getter(block_descr_getter("description"))
 
 new_block_descr <- function(ctor, name, description, classes, input, output,
                             pkg) {
@@ -62,6 +80,13 @@ register_block <- function(constructor, name, description, classes, input,
   }
 
   assign(id, descr, envir = block_registry)
+}
+
+#' @param ... Forwarded to `register_block()`
+#' @rdname available_blocks
+#' @export
+register_blocks <- function(...) {
+  Map(register_block, ...)
 }
 
 list_blocks <- function() {
@@ -105,8 +130,7 @@ register_blockr_blocks <- function(pkg) {
     pkg <- pkg_name()
   }
 
-  Map(
-    register_block,
+  register_blocks(
     c(new_data_block, new_filter_block, new_select_block, new_summarize_block),
     c("data block", "filter block", "select block", "summarize block"),
     c("choose a dataset", "filter rows in a table",

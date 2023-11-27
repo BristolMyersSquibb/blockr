@@ -27,8 +27,8 @@ test_that("available blocks", {
   register_blockr_blocks()
 
   expect_setequal(
-    chr_ply(blocks, block_name),
-    chr_ply(available_blocks(), block_name)
+    block_name(blocks),
+    block_name(available_blocks())
   )
 })
 

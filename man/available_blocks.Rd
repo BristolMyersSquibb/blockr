@@ -5,14 +5,15 @@
 \alias{block_name}
 \alias{block_descr}
 \alias{register_block}
+\alias{register_blocks}
 \alias{unregister_blocks}
 \title{Block registry}
 \usage{
 available_blocks()
 
-block_name(x)
+block_name(blocks = available_blocks())
 
-block_descr(x)
+block_descr(blocks = available_blocks())
 
 register_block(
   constructor,
@@ -24,10 +25,12 @@ register_block(
   package = NA_character_
 )
 
+register_blocks(...)
+
 unregister_blocks(ids = NULL, package = NULL)
 }
 \arguments{
-\item{x}{Block descriptino object}
+\item{blocks}{Block descriptino object}
 
 \item{constructor}{Block constructor}
 
@@ -38,6 +41,8 @@ unregister_blocks(ids = NULL, package = NULL)
 \item{input, output}{Object types the block consumes and produces}
 
 \item{package}{Package where block is defined}
+
+\item{...}{Forwarded to \code{register_block()}}
 
 \item{ids}{Character vector of block IDs (first entry in class attribute)}
 }
