@@ -5,6 +5,7 @@
 \alias{block_name}
 \alias{block_descr}
 \alias{register_block}
+\alias{unregister_blocks}
 \title{Block registry}
 \usage{
 available_blocks()
@@ -13,7 +14,17 @@ block_name(x)
 
 block_descr(x)
 
-register_block(constructor, name, description, classes, input, output)
+register_block(
+  constructor,
+  name,
+  description,
+  classes,
+  input,
+  output,
+  package = NA_character_
+)
+
+unregister_blocks(ids = NULL, package = NULL)
 }
 \arguments{
 \item{x}{Block descriptino object}
@@ -25,6 +36,10 @@ register_block(constructor, name, description, classes, input, output)
 \item{classes}{Block classes}
 
 \item{input, output}{Object types the block consumes and produces}
+
+\item{package}{Package where block is defined}
+
+\item{ids}{Character vector of block IDs (first entry in class attribute)}
 }
 \description{
 List available blocks.

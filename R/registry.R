@@ -24,17 +24,18 @@ block_name <- block_descr_getter("name")
 #' @export
 block_descr <- block_descr_getter("description")
 
-new_block_descr <- function(ctor, name, description, classes, input, output) {
+new_block_descr <- function(ctor, name, description, classes, input, output,
+                            pkg) {
 
   stopifnot(
     is.function(ctor), is_string(name), is_string(description),
     is.character(classes), length(classes) >= 1L,
-    is_string(input), is_string(output)
+    is_string(input), is_string(output), is_string(pkg)
   )
 
   structure(
     ctor, name = name, description = description, classes = classes,
-    input = input, output = output, class = "block_descr"
+    input = input, output = output, package = pkg, class = "block_descr"
   )
 }
 
@@ -44,14 +45,15 @@ block_registry <- new.env()
 #' @param name,description Metadata describing the block
 #' @param classes Block classes
 #' @param input,output Object types the block consumes and produces
+#' @param package Package where block is defined
 #'
 #' @rdname available_blocks
 #' @export
 register_block <- function(constructor, name, description, classes, input,
-                           output) {
+                           output, package = NA_character_) {
 
   descr <- new_block_descr(constructor, name, description, classes, input,
-                           output)
+                           output, package)
 
   id <- classes[1L]
 
@@ -67,5 +69,56 @@ list_blocks <- function() {
 }
 
 get_block_descr <- function(id) {
-  get(id, envir = block_registry)
+  res <- get(id, envir = block_registry, inherits = FALSE)
+  stopifnot(inherits(res, "block_descr"))
+  res
+}
+
+#' @param ids Character vector of block IDs (first entry in class attribute)
+#' @rdname available_blocks
+#' @export
+unregister_blocks <- function(ids = NULL, package = NULL) {
+
+  if (is.null(ids) && is.null(package)) {
+
+    ids <- list_blocks()
+
+  } else if (not_null(package)) {
+
+    stopifnot(is_string(package))
+
+    pkgs <- eapply(block_registry, `attr`, "package")
+
+    if (not_null(ids)) {
+      pkgs <- pkgs[ids]
+    }
+
+    ids <- names(pkgs)[lgl_ply(pkgs, identical, package)]
+  }
+
+  rm(list = ids, envir = block_registry, inherits = FALSE)
+}
+
+register_blockr_blocks <- function(pkg) {
+
+  if (missing(pkg)) {
+    pkg <- pkg_name()
+  }
+
+  Map(
+    register_block,
+    c(new_data_block, new_filter_block, new_select_block, new_summarize_block),
+    c("data block", "filter block", "select block", "summarize block"),
+    c("choose a dataset", "filter rows in a table",
+      "select columns in a table", "summarize data groups"),
+    list(
+      c("dataset_block", "data_block"),
+      c("filter_block", "transform_block", "submit_block"),
+      c("select_block", "transform_block"),
+      c("summarize_block", "transform_block", "submit_block")
+    ),
+    c(NA_character_, "data.frame", "data.frame", "data.frame"),
+    c("data.frame", "data.frame", "data.frame", "data.frame"),
+    pkg
+  )
 }

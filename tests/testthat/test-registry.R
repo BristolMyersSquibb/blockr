@@ -19,6 +19,17 @@ test_that("available blocks", {
     expect_type(dsc, "character")
     expect_length(dsc, 1L)
   }
+
+  unregister_blocks()
+
+  expect_length(available_blocks(), 0L)
+
+  register_blockr_blocks()
+
+  expect_setequal(
+    chr_ply(blocks, block_name),
+    chr_ply(available_blocks(), block_name)
+  )
 })
 
 test_that("3rd party blocks can be registrerd (pkg)", {
@@ -35,4 +46,31 @@ test_that("3rd party blocks can be registrerd (pkg)", {
   withr::local_envvar(TESTTHAT_PKG = pkg_nme)
 
   expect_true("head_block" %in% list_blocks())
+})
+
+test_that("3rd party blocks can be registrerd (script)", {
+
+  expect_false("head_block" %in% list_blocks())
+
+  new_head_block <- function(data, n_rows = numeric()) {
+
+    new_block(
+      fields = list(
+        n_rows = new_numeric_field(n_rows, 1L, 100L)
+      ),
+      expr = quote(head(n = .(n_rows))),
+      class = c("head_block", "transform_block")
+    )
+  }
+
+  register_block(
+    new_head_block, "head block", "return first n rows",
+    c("head_block", "transform_block"), "data.frame", "data.frame"
+  )
+
+  expect_true("head_block" %in% list_blocks())
+
+  unregister_blocks("head_block")
+
+  expect_false("head_block" %in% list_blocks())
 })
