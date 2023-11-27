@@ -20,3 +20,19 @@ test_that("available blocks", {
     expect_length(dsc, 1L)
   }
 })
+
+test_that("3rd party blocks can be registrerd (pkg)", {
+
+  pkg_dir <- system.file("testdata", "test.registry", package = "blockr")
+  pkg_nme <- pkgload::pkg_name(pkg_dir)
+
+  expect_false("head_block" %in% list_blocks())
+
+  pkgload::load_all(pkg_dir, attach = FALSE, export_all = FALSE,
+                    attach_testthat = FALSE)
+
+  withr::defer(pkgload::unload(pkg_nme))
+  withr::local_envvar(TESTTHAT_PKG = pkg_nme)
+
+  expect_true("head_block" %in% list_blocks())
+})
