@@ -21,3 +21,4 @@ webpack.prod.js
 ^deploy$
 ^renv\.lock$
 ^\.eslintrc\.js$
+^CODEOWNERS$
