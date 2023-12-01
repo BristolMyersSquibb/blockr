@@ -37,7 +37,8 @@ Imports:
     sortable,
     bmsui,
     ggiraph,
-    shinyAce
+    shinyAce,
+    jsonlite
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui,

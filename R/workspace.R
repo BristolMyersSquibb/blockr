@@ -153,6 +153,7 @@ get_workspace_stack <- function(name) {
   res
 }
 
+#' @param names Stack names
 #' @rdname set_workspace
 #' @export
 get_workspace_stacks <- function(names = list_workspace_stacks()) {

@@ -48,6 +48,8 @@ get_workspace_settings()
 \item{name}{Stack name}
 
 \item{stack}{A single stack}
+
+\item{names}{Stack names}
 }
 \description{
 Stacks all live in a singleton workspace.
