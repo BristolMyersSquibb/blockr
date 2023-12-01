@@ -26,7 +26,15 @@ register_block(
   package = NA_character_
 )
 
-register_blocks(...)
+register_blocks(
+  constructor,
+  name,
+  description,
+  classes,
+  input,
+  output,
+  package = NA_character_
+)
 
 unregister_blocks(ids = NULL, package = NULL)
 
@@ -45,11 +53,11 @@ construct_block(block, ...)
 
 \item{package}{Package where block is defined}
 
-\item{...}{Forwarded to \code{register_block()}}
-
 \item{ids}{Character vector of block IDs (first entry in class attribute)}
 
 \item{block}{Block name or description object}
+
+\item{...}{Forwarded to \code{register_block()}}
 }
 \description{
 List available blocks.

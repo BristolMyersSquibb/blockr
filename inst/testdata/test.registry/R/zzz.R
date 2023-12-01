@@ -1,8 +1,13 @@
 .onLoad <- function(libname, pkgname) {
 
   blockr::register_block(
-    new_head_block, "head block", "return first n rows",
-    c("head_block", "transform_block"), "data.frame", "data.frame", pkgname
+    constructor = new_head_block,
+    name = "head block",
+    description = "return first n rows",
+    classes = c("head_block", "transform_block"),
+    input = "data.frame",
+    output = "data.frame",
+    package = pkgname
   )
 
   invisible(NULL)

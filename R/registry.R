@@ -42,17 +42,17 @@ block_name <- block_descrs_getter(block_descr_getter("name"))
 #' @export
 block_descr <- block_descrs_getter(block_descr_getter("description"))
 
-new_block_descr <- function(ctor, name, description, classes, input, output,
-                            pkg) {
+new_block_descr <- function(constructor, name, description, classes, input,
+                            output, pkg) {
 
   stopifnot(
-    is.function(ctor), is_string(name), is_string(description),
+    is.function(constructor), is_string(name), is_string(description),
     is.character(classes), length(classes) >= 1L,
     is_string(input), is_string(output), is_string(pkg)
   )
 
   structure(
-    ctor, name = name, description = description, classes = classes,
+    constructor, name = name, description = description, classes = classes,
     input = input, output = output, package = pkg, class = "block_descr"
   )
 }
@@ -85,8 +85,23 @@ register_block <- function(constructor, name, description, classes, input,
 #' @param ... Forwarded to `register_block()`
 #' @rdname available_blocks
 #' @export
-register_blocks <- function(...) {
-  Map(register_block, ...)
+register_blocks <- function(constructor, name, description, classes, input,
+                            output, package = NA_character_) {
+
+  if (length(constructor) == 1L && !is.list(classes)) {
+    classes <- list(classes)
+  }
+
+  Map(
+    register_block,
+    constructor = constructor,
+    name = name,
+    description = description,
+    classes = classes,
+    input = input,
+    output = output,
+    package = package
+  )
 }
 
 list_blocks <- function() {
@@ -131,19 +146,27 @@ register_blockr_blocks <- function(pkg) {
   }
 
   register_blocks(
-    c(new_data_block, new_filter_block, new_select_block, new_summarize_block),
-    c("data block", "filter block", "select block", "summarize block"),
-    c("choose a dataset", "filter rows in a table",
-      "select columns in a table", "summarize data groups"),
-    list(
+    constructor = c(
+      new_data_block, new_filter_block, new_select_block, new_summarize_block
+    ),
+    name = c(
+      "data block", "filter block", "select block", "summarize block"
+    ),
+    description = c(
+      "choose a dataset",
+      "filter rows in a table",
+      "select columns in a table",
+      "summarize data groups"
+    ),
+    classes = list(
       c("dataset_block", "data_block"),
       c("filter_block", "transform_block", "submit_block"),
       c("select_block", "transform_block"),
       c("summarize_block", "transform_block", "submit_block")
     ),
-    c(NA_character_, "data.frame", "data.frame", "data.frame"),
-    c("data.frame", "data.frame", "data.frame", "data.frame"),
-    pkg
+    input = c(NA_character_, "data.frame", "data.frame", "data.frame"),
+    output = c("data.frame", "data.frame", "data.frame", "data.frame"),
+    package = pkg
   )
 }
 
