@@ -4,7 +4,7 @@
 #'
 #' @export
 available_blocks <- function() {
-  lapply(list_blocks(), get_block_descr)
+  lapply(set_names(nm = list_blocks()), get_block_descr)
 }
 
 block_descr_getter <- function(field) {
@@ -33,7 +33,7 @@ block_descrs_getter <- function(descr_getter, ptype = character(1L)) {
   }
 }
 
-#' @param blocks Block descriptino object
+#' @param blocks Block description object(s)
 #' @rdname available_blocks
 #' @export
 block_name <- block_descrs_getter(block_descr_getter("name"))
@@ -145,4 +145,18 @@ register_blockr_blocks <- function(pkg) {
     c("data.frame", "data.frame", "data.frame", "data.frame"),
     pkg
   )
+}
+
+#' @param block Block name or description object
+#' @rdname available_blocks
+#' @export
+construct_block <- function(block, ...) {
+
+  if (is_string(block)) {
+    block <- get_block_descr(block)
+  }
+
+  stopifnot(inherits(block, "block_descr"))
+
+  block(...)
 }

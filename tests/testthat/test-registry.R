@@ -20,6 +20,10 @@ test_that("available blocks", {
     expect_length(dsc, 1L)
   }
 
+  blk <- construct_block(names(blocks)[1L])
+
+  expect_s3_class(blk, "block")
+
   unregister_blocks()
 
   expect_length(available_blocks(), 0L)

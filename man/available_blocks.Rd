@@ -7,6 +7,7 @@
 \alias{register_block}
 \alias{register_blocks}
 \alias{unregister_blocks}
+\alias{construct_block}
 \title{Block registry}
 \usage{
 available_blocks()
@@ -28,9 +29,11 @@ register_block(
 register_blocks(...)
 
 unregister_blocks(ids = NULL, package = NULL)
+
+construct_block(block, ...)
 }
 \arguments{
-\item{blocks}{Block descriptino object}
+\item{blocks}{Block description object(s)}
 
 \item{constructor}{Block constructor}
 
@@ -45,6 +48,8 @@ unregister_blocks(ids = NULL, package = NULL)
 \item{...}{Forwarded to \code{register_block()}}
 
 \item{ids}{Character vector of block IDs (first entry in class attribute)}
+
+\item{block}{Block name or description object}
 }
 \description{
 List available blocks.
