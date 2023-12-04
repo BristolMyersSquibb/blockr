@@ -6,6 +6,9 @@ test_that("stacks", {
 
   expect_s3_class(stack, "stack")
   expect_type(stack, "list")
+
+  app <- serve_stack(stack)
+  expect_s3_class(app, "shiny.appobj")
 })
 
 test_that("serve stacks", {
