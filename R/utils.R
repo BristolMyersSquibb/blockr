@@ -303,7 +303,7 @@ validate_inputs <- function(blk, is_valid, session) {
   lapply(inputs_to_validate, function(el) {
     is_valid$input[[el]] <- TRUE
     val <- input[[el]]
-    if (is.na(val) || length(val) == 0 || (length(val) > 0 && all(nchar(val) == 0))) {
+    if (length(val) == 0 || (length(val) > 0 && (all(nchar(val) == 0) || any(is.na(val))))) {
       is_valid$message <- c(
         is_valid$message,
         sprintf("Error: input '%s' is not valid.", el)
