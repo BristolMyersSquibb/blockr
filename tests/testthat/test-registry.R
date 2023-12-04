@@ -32,7 +32,7 @@ test_that("available blocks", {
 
   nme_getter <- block_descrs_getter(block_descr_getter("name"))
 
-  expect_setequal(
+  expect_mapequal(
     nme_getter(blocks),
     nme_getter(available_blocks())
   )

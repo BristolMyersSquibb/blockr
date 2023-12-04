@@ -5,5 +5,6 @@ linters: linters_with_defaults(
   commented_code_linter = NULL  # When code is WIP this is annoying ...
   )
 exclusions: list(
+    "inst/examples/cdisc-plot/example.R",
     "inst/sandbox"
   )
