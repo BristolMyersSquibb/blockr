@@ -294,6 +294,11 @@ validate_inputs <- function(blk, is_valid, session) {
   input <- get("input", parent.frame())
   ns <- session$ns
 
+  # Reset
+  is_valid$block <- TRUE
+  is_valid$inputs <- list()
+  is_valid$message <- NULL
+
   inputs_to_validate <- unlst(input_ids(blk))
   to_exclude <- which(inputs_to_validate %in% c("expression", "submit"))
   if (length(to_exclude) > 0) {
