@@ -173,12 +173,16 @@ numeric_field <- function(...) {
 validate_field.numeric_field <- function(x) {
   val <- value(x)
 
-  if (!is.numeric(val) || length(val) == 0) {
+  if (length(val) == 0) {
     value(x) <- value(x, "min")
-  } else if (val < value(x, "min")) {
-    value(x) <- value(x, "min")
-  } else if (val > value(x, "max")) {
-    value(x) <- value(x, "max")
+  } else {
+    if (!is.numeric(val) && !is.na(val)) {
+      value(x) <- value(x, "min")
+    } else if (val < value(x, "min")) {
+      value(x) <- value(x, "min")
+    } else if (val > value(x, "max")) {
+      value(x) <- value(x, "max")
+    }
   }
 
   x
