@@ -2,20 +2,21 @@
 % Please edit documentation in R/server.R
 \name{cleanup_block}
 \alias{cleanup_block}
-\title{Cleanup module inputs}
+\title{Cleanup module inputs, outputs and observers}
 \usage{
-cleanup_block(x, input, output, obs)
+cleanup_block(id, input, output, obs)
 }
 \arguments{
-\item{x}{Block.}
+\item{id}{Block id.}
 
 \item{input}{Shiny input object.}
 
 \item{output}{Shiny output object.}
 
-\item{obs}{Module observer list.}
+\item{obs}{Module observer list. All modules observers
+must be registered in a list containing them.}
 }
 \description{
-Cleanup module inputs
+Cleanup module inputs, outputs and observers
 }
 \keyword{internal}
