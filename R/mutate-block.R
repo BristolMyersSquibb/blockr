@@ -105,7 +105,7 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
       # and observer
       observeEvent(input$remove, {
         message(sprintf("CLEANING UP BLOCK %s", id))
-        remove_shiny_inputs(id = id, input)
+        remove_shiny_inputs(input)
         o$destroy()
         session$userData$is_cleaned(TRUE)
       })
