@@ -40,7 +40,7 @@ generate_server.data_block <- function(x, id, ...) {
       ns <- session$ns
       blk <- reactiveVal(x)
 
-      o <- observeEvent(
+      obs$update_block <- observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
@@ -59,6 +59,19 @@ generate_server.data_block <- function(x, id, ...) {
 
       output$ncol <- renderText({
         prettyNum(ncol(out_dat()), big.mark = ",")
+      })
+
+      obs$cleanup_block <- observeEvent(req(input$remove > 0), {
+        message(sprintf("Cleaning up %s", class(x)[[1]]))
+        # Cleanup outputs
+        outs <- names(outputOptions(output))
+        lapply(grep(attr(x, "name"), outs, value = TRUE), \(out) {
+          output[[out]] <- NULL
+        })
+        # Remove inputs
+        remove_shiny_inputs(input)
+        # Destroy observers
+        lapply(obs, \(o) o$destroy())
       })
 
       list(
@@ -165,6 +178,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       })
 
       obs$cleanup_block <- observeEvent(req(input$remove > 0), {
+        message(sprintf("Cleaning up %s", class(x)[[1]]))
         # Cleanup outputs
         outs <- names(outputOptions(output))
         lapply(grep(attr(x, "name"), outs, value = TRUE), \(out) {
@@ -213,7 +227,7 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
     function(input, output, session) {
       blk <- shiny::reactiveVal(x)
 
-      o <- shiny::observeEvent(
+      obs$update_block <- shiny::observeEvent(
         eval(obs_expr(blk())),
         eval(set_expr(blk())),
         ignoreInit = TRUE
@@ -233,6 +247,30 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
       output$ncol <- renderText({
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
+
+      obs$cleanup_block <- observeEvent(req(input$remove > 0), {
+        message(sprintf("Cleaning up %s", class(x)[[1]]))
+        # Cleanup outputs
+        outs <- names(outputOptions(output))
+        lapply(grep(attr(x, "name"), outs, value = TRUE), \(out) {
+          output[[out]] <- NULL
+        })
+        # Remove inputs
+        remove_shiny_inputs(input)
+        # Destroy observers
+        lapply(obs, \(o) o$destroy())
+      })
+
+      list(
+        data = out_dat,
+        remove = reactive({
+          if (input$remove > 0) {
+            attr(x, "name")
+          } else {
+            NULL
+          }
+        })
+      )
     }
   )
 }
@@ -412,10 +450,10 @@ init_block <- function(i, vals) {
 
 #' Cleanup module inputs
 #' @keywords internal
-remove_shiny_inputs <- function(.input) {
+remove_shiny_inputs <- function(.input, session = getDefaultReactiveDomain()) {
   invisible(
     lapply(names(.input), function(i) {
-      .subset2(.input, "impl")$.values$remove(i)
+      .subset2(.input, "impl")$.values$remove(session$ns(i))
     })
   )
 }

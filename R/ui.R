@@ -101,31 +101,6 @@ generate_ui.stack <- function(x, id = NULL, ...) {
   ns <- NS(id)
 
   tagList(
-    tags$script(
-      HTML(
-        sprintf(
-          "$(function() {
-            $(document).on(
-              'shiny:inputchanged',
-              function(event) {
-                if (event.name.match('(last_changed|clientdata)') === null) {
-                  Shiny.setInputValue(
-                    '%s',
-                    {
-                      name: event.name,
-                      value: event.value,
-                      type: event.inputType,
-                      binding: event.binding !== null ? event.binding.name : ''
-                    }
-                  );
-                }
-            });
-          });
-          ",
-          ns("last_changed")
-        )
-      )
-    ),
     shiny::div(
       class = "card stack border",
       id = id,
