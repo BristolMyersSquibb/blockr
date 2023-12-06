@@ -4,11 +4,9 @@
 \alias{cleanup_block}
 \title{Cleanup module inputs, outputs and observers}
 \usage{
-cleanup_block(id, input, output, obs)
+cleanup_block(input, output, obs)
 }
 \arguments{
-\item{id}{Block id.}
-
 \item{input}{Shiny input object.}
 
 \item{output}{Shiny output object.}

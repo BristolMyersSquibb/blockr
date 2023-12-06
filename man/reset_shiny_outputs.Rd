@@ -4,12 +4,12 @@
 \alias{reset_shiny_outputs}
 \title{Cleanup module outputs}
 \usage{
-reset_shiny_outputs(.output, id)
+reset_shiny_outputs(.output, session = getDefaultReactiveDomain())
 }
 \arguments{
 \item{.output}{Shiny output object.}
 
-\item{id}{Module id.}
+\item{session}{Shiny session object.}
 }
 \description{
 Cleanup module outputs

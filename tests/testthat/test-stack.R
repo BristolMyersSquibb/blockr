@@ -34,7 +34,7 @@ testMod <- function(id) {
 
     output$res <- renderText(txt())
 
-    obs$cleanup <- cleanup_block(id, input, output, obs)
+    obs$cleanup <- cleanup_block(input, output, obs)
   })
 }
 
@@ -48,7 +48,7 @@ testServer(testMod, {
   expect_equal(output$res, "INIT")
 
   # Trigger cleanup
-  expect_message(session$setInputs(remove = 1))
+  session$setInputs(remove = 1)
   # Check cleanup worked
   expect_error(output$res)
   invisible(lapply(names(input), \(n) {

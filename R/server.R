@@ -62,7 +62,7 @@ generate_server.data_block <- function(x, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      obs$cleanup_block <- cleanup_block(id, input, output, obs)
+      obs$cleanup_block <- cleanup_block(input, output, obs)
 
       list(
         data = out_dat,
@@ -163,7 +163,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      obs$cleanup_block <- cleanup_block(id, input, output, obs)
+      obs$cleanup_block <- cleanup_block(input, output, obs)
 
       list(
         data = out_dat,
@@ -220,7 +220,7 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      obs$cleanup_block <- cleanup_block(id, input, output, obs)
+      obs$cleanup_block <- cleanup_block(input, output, obs)
 
       list(
         data = out_dat,
@@ -406,17 +406,15 @@ init_block <- function(i, vals) {
 }
 
 #' Cleanup module inputs, outputs and observers
-#' @param id Block id.
 #' @param input Shiny input object.
 #' @param output Shiny output object.
 #' @param obs Module observer list. All modules observers
 #' must be registered in a list containing them.
 #' @keywords internal
-cleanup_block <- function(id, input, output, obs) {
+cleanup_block <- function(input, output, obs) {
   observeEvent(req(input$remove > 0), {
-    message(sprintf("Cleaning up %s", id))
     # Cleanup outputs
-    reset_shiny_outputs(output, id)
+    reset_shiny_outputs(output)
     # Remove inputs
     remove_shiny_inputs(input)
     # Destroy observers
@@ -426,9 +424,9 @@ cleanup_block <- function(id, input, output, obs) {
 
 #' Cleanup module outputs
 #' @param .output Shiny output object.
-#' @param id Module id.
+#' @param session Shiny session object.
 #' @keywords internal
-reset_shiny_outputs <- function(.output, id, session = getDefaultReactiveDomain()) {
+reset_shiny_outputs <- function(.output, session = getDefaultReactiveDomain()) {
   # See https://github.com/rstudio/shiny/issues/1989
   # Diff between shiny server test and shiny
   src <- if (identical(Sys.getenv("TESTTHAT"), "true")) {
