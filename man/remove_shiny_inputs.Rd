@@ -4,7 +4,12 @@
 \alias{remove_shiny_inputs}
 \title{Cleanup module inputs}
 \usage{
-remove_shiny_inputs(.input)
+remove_shiny_inputs(.input, session = getDefaultReactiveDomain())
+}
+\arguments{
+\item{.input}{Shiny input object.}
+
+\item{session}{Shiny session object.}
 }
 \description{
 Cleanup module inputs
