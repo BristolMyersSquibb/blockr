@@ -63,7 +63,13 @@ generate_server.data_block <- function(x, id, ...) {
 
       list(
         data = out_dat,
-        remove = reactive(input$remove)
+        remove = reactive({
+          if (input$remove > 0) {
+            attr(x, "name")
+          } else {
+            NULL
+          }
+        })
       )
     }
   )
@@ -158,9 +164,27 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
+      obs$cleanup_block <- observeEvent(req(input$remove > 0), {
+        # Cleanup outputs
+        outs <- names(outputOptions(output))
+        lapply(grep(attr(x, "name"), outs, value = TRUE), \(out) {
+          output[[out]] <- NULL
+        })
+        # Remove inputs
+        remove_shiny_inputs(input)
+        # Destroy observers
+        lapply(obs, \(o) o$destroy())
+      })
+
       list(
         data = out_dat,
-        remove = reactive(input$remove)
+        remove = reactive({
+          if (input$remove > 0) {
+            attr(x, "name")
+          } else {
+            NULL
+          }
+        })
       )
     }
   )
@@ -243,36 +267,19 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       })
 
       # Remove block
-      to_remove_cache <- reactiveVal(NULL)
       observeEvent({
-        int_ply(seq_along(vals$blocks), function(i) {
+        lapply(seq_along(vals$blocks), function(i) {
           vals$blocks[[i]]$remove()
         })
       }, {
-        tmp <- int_ply(seq_along(vals$blocks), function(i) {
+        tmp <- unlist(lapply(seq_along(vals$blocks), function(i) {
           vals$blocks[[i]]$remove()
-        })
-        req(any(tmp) > 0)
-        # When cache is null to_remove is the first value > 0
-        if (is.null(to_remove_cache())) {
-          to_remove_cache(tmp)
-          vals$to_remove <- which(to_remove_cache() > 0)
-        } else {
-          # If a block is removed, we have to update the cache
-          # to compare what is comparable. This observe triggers
-          # each time the blocks list changes. The diff will return
-          # nothing in this situation and nothing will be removed.
-          if (length(tmp) != length(to_remove_cache())) {
-            to_remove_cache(tmp)
-            vals$to_remove <- NULL
-          }
-          diff <- which(tmp != to_remove_cache())
-          to_remove_cache(tmp)
-          if (length(diff) > 0) {
-            vals$to_remove <- diff
-          }
-        }
+        }), use.names = FALSE)
 
+        req(length(tmp) > 0)
+
+        names <- chr_ply(vals$stack, \(block) attr(block, "name"))
+        vals$to_remove <- which(names == tmp)
         req(vals$to_remove)
 
         # We can't remove the data block if there are downstream consumers...
@@ -296,7 +303,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           )
 
           # TO DO: create remove_block function
-
           vals$stack[[to_remove]] <- NULL
           vals$blocks[[to_remove]] <- NULL
           # Reinitialize all the downstream stack blocks with new data ...
@@ -308,8 +314,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           }
 
           # TO DO: cleanup existing shiny inputs + modules observers ...
-
           session$userData$stack <- vals$stack
+          vals$to_remove <- NULL
         }
       })
 
@@ -406,9 +412,9 @@ init_block <- function(i, vals) {
 
 #' Cleanup module inputs
 #' @keywords internal
-remove_shiny_inputs <- function(id, .input) {
+remove_shiny_inputs <- function(.input) {
   invisible(
-    lapply(grep(id, names(.input), value = TRUE), function(i) {
+    lapply(names(.input), function(i) {
       .subset2(.input, "impl")$.values$remove(i)
     })
   )

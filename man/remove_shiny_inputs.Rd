@@ -4,7 +4,7 @@
 \alias{remove_shiny_inputs}
 \title{Cleanup module inputs}
 \usage{
-remove_shiny_inputs(id, .input)
+remove_shiny_inputs(.input)
 }
 \description{
 Cleanup module inputs
