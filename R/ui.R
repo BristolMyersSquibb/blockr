@@ -146,14 +146,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
       )
     ),
     blockrDependencies(),
-    htmltools::singleton(
-      tags$head(
-        tags$link(
-          rel = "stylesheet",
-          href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
-        )
-      )
-    )
+    highlightDependencies()
   )
 }
 
