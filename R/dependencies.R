@@ -9,3 +9,14 @@ blockrDependencies <- function() {
     stylesheet = "style.min.css"
   )
 }
+
+#' @importFrom htmltools htmlDependency
+highlightDependencies <- function() {
+  htmlDependency(
+    "highlight",
+    version = utils::packageVersion("blockr"),
+    src = "assets",
+    package = "blockr",
+    stylesheet = "highlight.min.css",
+  )
+}
