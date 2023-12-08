@@ -89,23 +89,16 @@ generate_code.block <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.arrange_block <- function(x) {
-  where <- lapply(x, function(b) {
-    res <- value(b)
-    lapply(res, as.name)
-  })
-
   do.call(
     bquote,
     list(
       attr(x, "expr"),
-      where = where,
+      where = lapply(x, type_trans),
       splice = TRUE
     )
   )
 }
 
-#' @rdname new_block
-#' @export
 generate_code.group_by_block <- generate_code.arrange_block
 
 #' @rdname new_block
