@@ -46,6 +46,15 @@ testServer(
     session$setInputs("n_rows" = 1)
     expect_true(is_valid$block)
     expect_identical(nrow(out_dat()), 1L)
+
+    # Invalid input: check that no data are propagated ...
+    session$setInputs("n_rows" = NA)
+    expect_false(is_valid$block)
+    expect_identical(is_valid$message, "Error: input 'n_rows' is not valid.")
+    expect_error(out_dat())
+    expect_error(output$res)
+    expect_error(output$nrow)
+    expect_error(output$ncol)
   }
 )
 
