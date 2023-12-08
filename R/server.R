@@ -67,7 +67,12 @@ generate_server.data_block <- function(x, id, ...) {
       list(
         data = out_dat,
         remove = reactive({
-          if (input$remove > 0) id else NULL
+          if (input$remove > 0) {
+            session$userData$can_remove_block <- TRUE
+            id
+          } else {
+            NULL
+          }
         })
       )
     }
@@ -168,7 +173,12 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       list(
         data = out_dat,
         remove = reactive({
-          if (input$remove > 0) id else NULL
+          if (input$remove > 0) {
+            session$userData$can_remove_block <- TRUE
+            id
+          } else {
+            NULL
+          }
         })
       )
     }
@@ -225,7 +235,12 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
       list(
         data = out_dat,
         remove = reactive({
-          if (input$remove > 0) id else NULL
+          if (input$remove > 0) {
+            session$userData$can_remove_block <- TRUE
+            id
+          } else {
+            NULL
+          }
         })
       )
     }
@@ -252,7 +267,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       vals <- reactiveValues(
         stack = x,
         blocks = vector("list", length(x)),
-        to_remove = NULL,
         remove = FALSE
       )
       init_blocks(x, vals, session)
@@ -266,6 +280,9 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         lapply(seq_along(vals$blocks), function(i) {
           vals$blocks[[i]]$remove()
         })
+        # Prevents this event from triggering only when vals$blocks
+        # size changes as a result of a module removal
+        req(session$userData$can_remove_block)
       }, {
         tmp <- unlist(lapply(seq_along(vals$blocks), function(i) {
           vals$blocks[[i]]$remove()
@@ -274,21 +291,21 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         req(length(tmp) > 0)
 
         names <- chr_ply(vals$stack, \(block) attr(block, "name"))
-        vals$to_remove <- which(names == tmp)
-        req(vals$to_remove)
+        # If people press the remove data button first, length(names) can be > 1
+        # so we need to take the max.
+        to_remove <- max(which(names == tmp))
 
-        # We can't remove the data block if there are downstream consumers...
-        if (vals$to_remove == 1 && length(vals$stack) > 1) {
+        # Prevents from removing data block if there are downstream consumers
+        if (to_remove == 1  && length(vals$stack) > 1L) {
           showModal(
             modalDialog(
               title = h3(icon("xmark"), "Error"),
               "Can't remove a datablock whenever there are
-            downstream data block consumers."
+              downstream data block consumers."
             )
           )
         } else {
-          to_remove <- vals$to_remove
-          message(sprintf("REMOVING BLOCK %s", vals$to_remove))
+          message(sprintf("REMOVING BLOCK %s", to_remove))
           removeUI(
             selector = sprintf(
               "[data-value='%s%s-block']",
@@ -297,20 +314,16 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             )
           )
 
-          # TO DO: create remove_block function
           vals$stack[[to_remove]] <- NULL
           vals$blocks[[to_remove]] <- NULL
           # Reinitialize all the downstream stack blocks with new data ...
-          if (to_remove < length(vals$stack)) {
+          if (to_remove <= length(vals$stack)) {
             for (i in to_remove:length(vals$stack)) {
               attr(vals$stack[[i]], "position") <- i
               vals$blocks[[i]] <- init_block(i, vals)
             }
           }
-
-          # TO DO: cleanup existing shiny inputs + modules observers ...
-          session$userData$stack <- vals$stack
-          vals$to_remove <- NULL
+          session$userData$can_remove_block <- FALSE
         }
       })
 
@@ -348,9 +361,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             )
           )
 
-          # Necessary to communicate with downstream modules
-          session$userData$stack <- vals$stack
-
           # trigger javascript-ui functionalities on add
           session$sendCustomMessage(
             "blockr-add-block",
@@ -375,7 +385,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 #' @keywords internal
 init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
-    session$userData$stack <- vals$stack
     for (i in seq_along(x)) {
       vals$blocks[[i]] <- init_block(i, vals)
     }
