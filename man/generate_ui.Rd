@@ -11,6 +11,7 @@
 \alias{generate_ui}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
+\alias{generate_ui.workspace}
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
@@ -62,6 +63,8 @@ generate_ui(x, ...)
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
+
+\method{generate_ui}{workspace}(x, id = NULL, ...)
 
 ui_input(x, id, name)
 

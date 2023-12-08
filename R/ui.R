@@ -150,6 +150,41 @@ generate_ui.stack <- function(x, id = NULL, ...) {
   )
 }
 
+#' @rdname generate_ui
+#' @export
+generate_ui.workspace <- function(x, id = NULL, ...) {
+  stopifnot(...length() == 0L)
+
+  id <- if (is.null(id)) attr(x, "name") else id
+
+  ns <- NS(id)
+
+  stacks <- get_workspace_stacks()
+
+  tagList(
+    div(
+      class = "d-flex justify-content-between",
+      actionButton(
+        ns("add_stack"),
+        label = "Add stack",
+        icon = icon("plus"),
+        width = NULL,
+        span(class = "badge bg-secondary", textOutput(ns("n_stacks")))
+      ),
+      actionButton(ns("clear_stacks"), "Clear all", icon("trash"), class = "bg-danger")
+    ),
+    div(
+      class = "workspace",
+      div(
+        class = "d-flex justify-content-between stacks",
+        lapply(seq_along(stacks), \(i) {
+          generate_ui(stacks[[i]], id = ns(sprintf("mystack-%s", i)))
+        })
+      )
+    )
+  )
+}
+
 #' @importFrom shiny tags div
 block_title <- function(block, code_id, output_id, ns, .hidden) {
   hidden_class <- ""

@@ -395,6 +395,104 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
   )
 }
 
+#' @rdname generate_server
+#' @param id Unique module id. Useful when the workspace is called as a module.
+#' @export
+generate_server.workspace <- function(x, id = NULL, ...) {
+  stopifnot(...length() == 0L)
+
+  id <- if (is.null(id)) attr(x, "name") else id
+
+  moduleServer(
+    id = id,
+    function(input, output, session) {
+      vals <- reactiveValues(added = NULL, stacks = list())
+
+      output$n_stacks <- renderText(length(vals$stacks))
+
+      # Re-render modules
+      observeEvent(vals$added, {
+        stacks <- get_workspace_stacks()
+        # Initial invoke: all
+        if (is.null(vals$added)) {
+          lapply(seq_along(stacks), \(i) {
+            vals$stacks[[i]] <- generate_server(
+              stacks[[i]],
+              id = sprintf("mystack-%s", i),
+              new_blocks = reactive(NULL) # TO DO LATER ...
+            )
+          })
+        } else {
+          # Only invoke last added element
+          el <- stacks[[length(stacks)]]
+          vals$stacks[[length(vals$stack) + 1]] <- generate_server(
+            el,
+            id = sprintf("mystack-%s", length(stacks)),
+            new_blocks = reactive(NULL) # TO DO LATER ...
+          )
+        }
+      }, ignoreNULL = FALSE)
+
+      observeEvent(input$add_stack, {
+        vals$added <- FALSE
+        message("ADD STACK")
+        add_workpace_stack(
+          sprintf("stack-%s", length(get_workspace_stacks()) + 1),
+          new_stack(data_block)
+        )
+        stacks <- get_workspace_stacks()
+        stack_ui <- generate_ui(
+          stacks[[length(stacks)]],
+          id = session$ns(sprintf("mystack-%s", length(stacks)))
+        )
+        insertUI(
+          selector = if (length(vals$stacks) == 0) {
+            ".workspace"
+          } else {
+            ".stacks"
+          },
+          ui = if (length(vals$stacks) == 0) {
+            div(
+              class = "d-flex justify-content-between stacks",
+              stack_ui
+            )
+          } else {
+            stack_ui
+          }
+        )
+        vals$added <- TRUE
+      })
+
+      to_remove <- reactive({
+        req(length(vals$stacks) > 0)
+        tmp <- lgl_ply(vals$stacks, \(stack) {
+          stack$remove
+        })
+        res <- which(tmp == TRUE)
+        req(length(res) > 0)
+        max(res)
+      })
+
+      # Remove stack
+      observeEvent({
+        to_remove()
+      }, {
+        message(sprintf("REMOVE STACK %s", to_remove()))
+        stacks <- get_workspace_stacks()
+        vals$stacks[[to_remove()]] <- NULL
+        rm_workspace_stack(names(stacks)[[to_remove()]])
+      })
+
+      # Clear all stacks
+      observeEvent(input$clear_stacks, {
+        clear_workspace_stacks()
+        vals$stacks <- NULL
+        removeUI(".stacks")
+      })
+    }
+  )
+}
+
 #' Init blocks server
 #' @keywords internal
 init_blocks <- function(x, vals, session) {

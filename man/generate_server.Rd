@@ -8,6 +8,7 @@
 \alias{generate_server.plot_block}
 \alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
+\alias{generate_server.workspace}
 \title{Server}
 \usage{
 generate_server(x, ...)
@@ -23,13 +24,15 @@ generate_server(x, ...)
 \method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
 
 \method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
+
+\method{generate_server}{workspace}(x, id = NULL, ...)
 }
 \arguments{
 \item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
 
 \item{...}{Generic consistency}
 
-\item{id}{Unique module id. Useful when the stack is called as a module.}
+\item{id}{Unique module id. Useful when the workspace is called as a module.}
 
 \item{in_dat}{Reactive input data}
 
