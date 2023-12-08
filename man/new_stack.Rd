@@ -2,10 +2,13 @@
 % Please edit documentation in R/stack.R
 \name{new_stack}
 \alias{new_stack}
+\alias{is_stack}
 \alias{serve_stack}
 \title{Stacks}
 \usage{
 new_stack(..., name = rand_names())
+
+is_stack(x)
 
 serve_stack(stack)
 }
@@ -14,6 +17,8 @@ serve_stack(stack)
 from \code{"block"})}
 
 \item{name}{Stack name}
+
+\item{x}{An object inheriting form \code{"stack"}}
 
 \item{stack}{An object inheriting form \code{"stack"}}
 }

@@ -118,9 +118,6 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       obs$update_block <- observeEvent(
         eval(obs_expr(blk())),
         {
-          is_valid$message <- NULL
-          is_valid$block <- TRUE
-          is_valid$inputs <- list()
           secure(eval(set_expr(blk())), is_valid)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
