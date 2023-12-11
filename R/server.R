@@ -406,40 +406,32 @@ generate_server.workspace <- function(x, id = NULL, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-      vals <- reactiveValues(added = NULL, stacks = list())
+      vals <- reactiveValues(init = TRUE, stacks = list())
 
       output$n_stacks <- renderText(length(vals$stacks))
 
-      # Re-render modules
-      observeEvent(vals$added, {
+      # Init existing stack modules
+      observeEvent(req(vals$init), {
+        print(input)
         stacks <- get_workspace_stacks()
-        # Initial invoke: all
-        if (is.null(vals$added)) {
-          lapply(seq_along(stacks), \(i) {
-            vals$stacks[[i]] <- generate_server(
-              stacks[[i]],
-              id = sprintf("mystack-%s", i),
-              new_blocks = reactive(NULL) # TO DO LATER ...
-            )
-          })
-        } else {
-          # Only invoke last added element
-          el <- stacks[[length(stacks)]]
-          vals$stacks[[length(vals$stack) + 1]] <- generate_server(
-            el,
-            id = sprintf("mystack-%s", length(stacks)),
+        lapply(seq_along(stacks), \(i) {
+          vals$stacks[[i]] <- generate_server(
+            stacks[[i]],
+            id = sprintf("mystack-%s", i),
             new_blocks = reactive(NULL) # TO DO LATER ...
           )
-        }
-      }, ignoreNULL = FALSE)
+        })
+        vals$init <- FALSE
+      })
 
+      # Add stack
       observeEvent(input$add_stack, {
-        vals$added <- FALSE
         message("ADD STACK")
         add_workpace_stack(
-          sprintf("stack-%s", length(get_workspace_stacks()) + 1),
+          sprintf("stack-%s", length(vals$stacks) + 1),
           new_stack(data_block)
         )
+
         stacks <- get_workspace_stacks()
         stack_ui <- generate_ui(
           stacks[[length(stacks)]],
@@ -460,7 +452,14 @@ generate_server.workspace <- function(x, id = NULL, ...) {
             stack_ui
           }
         )
-        vals$added <- TRUE
+
+        # Invoke server
+        el <- stacks[[length(stacks)]]
+        vals$stacks[[length(stacks)]] <- generate_server(
+          el,
+          id = sprintf("mystack-%s", length(stacks)),
+          new_blocks = reactive(NULL) # TO DO LATER ...
+        )
       })
 
       to_remove <- reactive({
