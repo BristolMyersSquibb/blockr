@@ -12,7 +12,6 @@ test_that("ace_module_ui creates correct UI structure", {
   # we are limited to checking the existence and basic structure of UI elements.
 })
 
-
 test_that("ace_module_server handles input correctly", {
   shiny::testServer(ace_module_server, {
     # Simulate input to the ACE Editor fields
@@ -28,4 +27,3 @@ test_that("ace_module_server handles input correctly", {
     expect_equal(r_result(), c(a = "bla", b = "blabla"))
   }, args = list(id = "test"))
 })
-
