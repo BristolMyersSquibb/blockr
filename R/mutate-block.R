@@ -87,7 +87,7 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
       )
 
       output$res <- server_output(x, out_dat, output)
-      output$code <- server_code(x, blk, output)
+      output$code <- server_code(x, r_blk, output)
 
       output$debug <- renderPrint({
         r_value()
