@@ -46,7 +46,13 @@ mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
   )
 }
 
+
 generate_server.mutate_block <- function(x, in_dat, id, ...) {
+  mutate_module_server(id, x = x, in_dat = in_dat, ...)
+}
+
+# id as first argument, so I can test via shiny::testSever
+mutate_module_server <- function(id, x, in_dat, ...) {
   moduleServer(
     id,
     function(input, output, session) {
