@@ -56,4 +56,13 @@ test_that("workspace", {
 
   set_workspace_settings("{\"foo\": \"bar\"}")
   expect_identical(get_workspace_settings(), list(foo = "bar"))
+
+  clear_workspace_stacks(TRUE)
+
+  set_workspace(stack1, stack2)
+
+  nms <- list_workspace_stacks()
+
+  expect_type(nms, "character")
+  expect_length(nms, 2L)
 })

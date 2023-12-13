@@ -30,6 +30,10 @@ set_workpsace_stacks <- function(stacks, force = FALSE) {
     stacks <- list(stacks)
   }
 
+  if (is.null(names(stacks))) {
+    names(stacks) <- rand_names(n = length(stacks))
+  }
+
   nms <- names(stacks)
 
   stopifnot(
