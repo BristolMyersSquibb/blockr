@@ -11,6 +11,121 @@ generate_ui <- function(x, ...) {
   UseMethod("generate_ui")
 }
 
+#' @rdname generate_ui
+#' @export
+ui_fields <- function(x, ...) {
+  UseMethod("ui_fields")
+}
+
+#' @rdname generate_ui
+#' @export
+ui_fields.block <- function(x, ns, inputs_hidden, ...) {
+  fields <- Map(
+    ui_input,
+    x,
+    id = chr_ply(names(x), ns),
+    name = names(x)
+  )
+
+  layout <- attr(x, "layout")
+
+  div(
+    class = sprintf("block-inputs %s", inputs_hidden),
+    layout(fields)
+  )
+}
+
+#' @rdname generate_ui
+ui_result_block <- function(x, ns, result_id, inputs_hidden) {
+  loading_class <- "d-none"
+  if (inputs_hidden != "") {
+    loading_class <- ""
+  }
+
+  div(
+    class = sprintf("%s block-output", inputs_hidden),
+    id = result_id,
+    uiOutputBlock(x, ns),
+    div(
+      class = sprintf(
+        "block-loading d-flex justify-content-center %s",
+        loading_class
+      ),
+      div(
+        class = "spinner-border text-primary",
+        role = "status",
+        span(
+          class = "visually-hidden",
+          "Loading..."
+        )
+      )
+    )
+  )
+}
+
+#' @rdname generate_ui
+ui_collapse_block <- function(x, ns, code_id) {
+  div(
+    class = "collapse block-code",
+    id = code_id,
+    uiCode(x, ns)
+  )
+}
+
+#' @importFrom shiny tags div
+block_title <- function(block, ns, code_id, result_id, hidden_class) {
+  title <- class(block)[1] |>
+    (\(.) gsub("_.*$", "", .))() |>
+    tools::toTitleCase()
+
+  div(
+    class = sprintf("m-0 card-title block-title %s", hidden_class),
+    div(
+      class = "d-flex",
+      div(
+        class = "flex-grow-1",
+        shiny::p(
+          span(icon("grip-vertical"), class = "block-handle text-muted"),
+          title,
+          class = "fw-bold"
+        )
+      ),
+      div(
+        class = "flex-grow-1",
+        span(
+          class = "block-feedback text-muted",
+          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
+          "rows |",
+          class = "block-feedback text-muted",
+          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
+          "cols"
+        )
+      ),
+      div(
+        class = "flex-shrink-1",
+        actionLink(
+          ns("remove"),
+          icon("trash"),
+          class = "text-decoration-none block-remove",
+        ),
+        tags$a(
+          class = "text-decoration-none block-code-toggle",
+          `data-bs-toggle` = "collapse",
+          href = sprintf("#%s", code_id),
+          `aria-expanded` = "false",
+          `aria-controls` = code_id,
+          iconCode()
+        ),
+        tags$a(
+          class = "text-decoration-none block-output-toggle",
+          href = sprintf("#%s", result_id),
+          iconOutput()
+        )
+      )
+    )
+  )
+}
+
 #' @param id UI IDs
 #' @rdname generate_ui
 #' @export
@@ -19,31 +134,19 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 
   ns <- NS(id)
 
-  fields <- Map(
-    ui_input,
-    x,
-    id = chr_ply(names(x), ns),
-    name = names(x)
-  )
-
   code_id <- ns("codeCollapse")
-  output_id <- ns("outputCollapse")
-
-  header <- block_title(x, code_id, output_id, ns, .hidden)
+  result_id <- ns("outputCollapse")
 
   block_class <- "block"
+  inputs_hidden <- ""
+  hidden_class <- ""
   if (.hidden) {
+    hidden_class <- "d-none"
+    inputs_hidden <- hidden_class
     block_class <- sprintf("%s d-none", block_class)
   }
 
-  inputs_hidden <- ""
-  loading_class <- "d-none"
-  if (.hidden) {
-    inputs_hidden <- "d-none"
-    loading_class <- ""
-  }
-
-  layout <- attr(x, "layout")
+  header <- block_title(x, ns, code_id, result_id, hidden_class)
 
   div(
     class = block_class,
@@ -57,34 +160,9 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
         div(
           class = "block-validation"
         ),
-        div(
-          class = sprintf("block-inputs %s", inputs_hidden),
-          layout(fields)
-        ),
-        div(
-          class = "collapse block-code",
-          id = code_id,
-          uiCode(x, ns)
-        ),
-        div(
-          class = sprintf("%s block-output", inputs_hidden),
-          id = output_id,
-          uiOutputBlock(x, ns),
-          div(
-            class = sprintf(
-              "block-loading d-flex justify-content-center %s",
-              loading_class
-            ),
-            div(
-              class = "spinner-border text-primary",
-              role = "status",
-              span(
-                class = "visually-hidden",
-                "Loading..."
-              )
-            )
-          )
-        )
+        ui_fields(x, ns, inputs_hidden),
+        ui_collapse_block(x, ns, code_id),
+        ui_result_block(x, ns, result_id, inputs_hidden)
       )
     )
   )
@@ -147,65 +225,6 @@ generate_ui.stack <- function(x, id = NULL, ...) {
     ),
     blockrDependencies(),
     highlightDependencies()
-  )
-}
-
-#' @importFrom shiny tags div
-block_title <- function(block, code_id, output_id, ns, .hidden) {
-  hidden_class <- ""
-  if (.hidden) {
-    hidden_class <- "d-none"
-  }
-
-  title <- class(block)[1] |>
-    (\(.) gsub("_.*$", "", .))() |>
-    tools::toTitleCase()
-
-  div(
-    class = sprintf("m-0 card-title block-title %s", hidden_class),
-    div(
-      class = "d-flex",
-      div(
-        class = "flex-grow-1",
-        shiny::p(
-          span(icon("grip-vertical"), class = "block-handle text-muted"),
-          title,
-          class = "fw-bold"
-        )
-      ),
-      div(
-        class = "flex-grow-1",
-        span(
-          class = "block-feedback text-muted",
-          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
-          "rows |",
-          class = "block-feedback text-muted",
-          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
-          "cols"
-        )
-      ),
-      div(
-        class = "flex-shrink-1",
-        actionLink(
-          ns("remove"),
-          icon("trash"),
-          class = "text-decoration-none block-remove",
-        ),
-        tags$a(
-          class = "text-decoration-none block-code-toggle",
-          `data-bs-toggle` = "collapse",
-          href = sprintf("#%s", code_id),
-          `aria-expanded` = "false",
-          `aria-controls` = code_id,
-          iconCode()
-        ),
-        tags$a(
-          class = "text-decoration-none block-output-toggle",
-          href = sprintf("#%s", output_id),
-          iconOutput()
-        )
-      )
-    )
   )
 }
 

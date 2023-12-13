@@ -9,6 +9,10 @@
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
+\alias{ui_fields}
+\alias{ui_fields.block}
+\alias{ui_result_block}
+\alias{ui_collapse_block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
 \alias{ui_input}
@@ -58,6 +62,14 @@ server_code(x, state, output)
 \method{server_code}{block}(x, state, output)
 
 generate_ui(x, ...)
+
+ui_fields(x, ...)
+
+\method{ui_fields}{block}(x, ns, inputs_hidden, ...)
+
+ui_result_block(x, ns, result_id, inputs_hidden)
+
+ui_collapse_block(x, ns, code_id)
 
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
@@ -138,11 +150,11 @@ uiCode(x, ns)
 
 \item{...}{Generic consistency}
 
+\item{ns}{Output namespace}
+
 \item{.hidden}{Whether to initialise the block hidden.}
 
 \item{session}{Shiny session}
-
-\item{ns}{Output namespace}
 }
 \description{
 Generic for UI generation
