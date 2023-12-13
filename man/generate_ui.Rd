@@ -11,8 +11,6 @@
 \alias{generate_ui}
 \alias{ui_fields}
 \alias{ui_fields.block}
-\alias{ui_result_block}
-\alias{ui_collapse_block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
 \alias{ui_input}
@@ -66,10 +64,6 @@ generate_ui(x, ...)
 ui_fields(x, ...)
 
 \method{ui_fields}{block}(x, ns, inputs_hidden, ...)
-
-ui_result_block(x, ns, result_id, inputs_hidden)
-
-ui_collapse_block(x, ns, code_id)
 
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 

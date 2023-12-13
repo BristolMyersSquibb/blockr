@@ -18,8 +18,10 @@ generate_server.block <- function(x, ...) {
 }
 
 #' @rdname generate_server
+#' @param remove Callback to remove block. Necessary for internal
+#' cleanup.
 #' @export
-generate_server.data_block <- function(x, id, ...) {
+generate_server.data_block <- function(x, id, remove, ...) {
   obs_expr <- function(x) {
     splice_args(
       list(..(args)),
@@ -63,7 +65,7 @@ generate_server.data_block <- function(x, id, ...) {
 
       # Cleanup module inputs (UI and server side)
       # and observer
-      observeEvent(input$remove,
+      observeEvent(remove(),
         {
           # Trick to be able to tell the stack to wait
           # for this event to run.
@@ -263,15 +265,57 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
     function(input, output, session) {
       vals <- reactiveValues(
         stack = x,
-        blocks = vector("list", length(x)),
-        remove = FALSE
+        blocks = vector("list", length(x))
       )
       init_blocks(x, vals, session)
 
-      observeEvent(input$remove, {
-        vals$remove <- TRUE
+      # Remove block from stack (can't be done within the block)
+      session$userData$is_cleaned <- reactiveVal(FALSE)
+      lapply(x, \(b) {
+        id <- attr(b, "name")
+        observeEvent({
+          input[[sprintf("remove-block-%s", id)]]
+          req(session$userData$is_cleaned())
+        }, {
+          # We can't remove the data block if there are downstream consumers...
+          to_remove <- which(chr_ply(x, \(b) attr(b, "name")) == id)
+          if (to_remove == 1 && length(vals$stack) > 1) {
+            showModal(
+              modalDialog(
+                title = h3(icon("xmark"), "Error"),
+                "Can't remove a datablock whenever there are
+              downstream data block consumers."
+              )
+            )
+          } else {
+            if (session$userData$is_cleaned()) {
+              message(sprintf("REMOVING BLOCK %s", to_remove))
+              removeUI(
+                selector = sprintf(
+                  "[data-value='%s%s-block']",
+                  session$ns(""),
+                  attr(vals$stack[[to_remove]], "name")
+                )
+              )
+
+              vals$stack[[to_remove]] <- NULL
+              vals$blocks[[to_remove]] <- NULL
+              # Reinitialize all the downstream stack blocks with new data ...
+              if (to_remove < length(vals$stack)) {
+                for (i in to_remove:length(vals$stack)) {
+                  attr(vals$stack[[i]], "position") <- i
+                  vals$blocks[[i]] <- init_block(i, vals)
+                }
+              }
+
+              session$userData$stack <- vals$stack
+              session$userData$is_cleaned(FALSE)
+            }
+          }
+        })
       })
 
+      # Add new block
       observeEvent(
         {
           req(new_blocks)
@@ -317,72 +361,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         }
       )
 
-      # Remove block from stack (can't be done within the block)
-      to_remove <- reactive({
-        req(input$last_changed)
-        if (grepl("remove", input$last_changed$name)) {
-          req(input$last_changed$value > 0)
-        }
-
-        # Retrieve index of block to remove
-        blocks_ids <- paste0(
-          session$ns(""),
-          vapply(vals$stack, \(x) attr(x, "name"), FUN.VALUE = character(1))
-        )
-        block_id <- strsplit(input$last_changed$name, "-remove")[[1]][1]
-        tmp <- which(blocks_ids == block_id)
-        req(length(tmp) > 0)
-        tmp
-      })
-
-      session$userData$is_cleaned <- reactiveVal(FALSE)
-
-      observeEvent(
-        {
-          c(
-            to_remove(),
-            session$userData$is_cleaned()
-          )
-        },
-        {
-          # We can't remove the data block if there are downstream consumers...
-          if (to_remove() == 1 && length(vals$stack) > 1) {
-            showModal(
-              modalDialog(
-                title = h3(icon("xmark"), "Error"),
-                "Can't remove a datablock whenever there are
-              downstream data block consumers."
-              )
-            )
-          } else {
-            if (session$userData$is_cleaned()) {
-              to_remove <- to_remove()
-              message(sprintf("REMOVING BLOCK %s", to_remove()))
-              removeUI(
-                selector = sprintf(
-                  "[data-value='%s%s-block']",
-                  session$ns(""),
-                  attr(vals$stack[[to_remove]], "name")
-                )
-              )
-
-              vals$stack[[to_remove]] <- NULL
-              vals$blocks[[to_remove]] <- NULL
-              # Reinitialize all the downstream stack blocks with new data ...
-              if (to_remove < length(vals$stack)) {
-                for (i in to_remove:length(vals$stack)) {
-                  attr(vals$stack[[i]], "position") <- i
-                  vals$blocks[[i]] <- init_block(i, vals)
-                }
-              }
-
-              session$userData$stack <- vals$stack
-              session$userData$is_cleaned(FALSE)
-            }
-          }
-        }
-      )
-
       observe({
         session$sendCustomMessage(
           "blockr-bind-stack",
@@ -401,7 +379,7 @@ init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
     session$userData$stack <- vals$stack
     for (i in seq_along(x)) {
-      vals$blocks[[i]] <- init_block(i, vals)
+      vals$blocks[[i]] <- init_block(i, vals, session)
     }
   })
 }
@@ -413,9 +391,11 @@ init_blocks <- function(x, vals, session) {
 #'
 #' @param i Block position
 #' @param vals Reactive values containing the stack.
+#' @param session Shiny session object.
 #'
 #' @keywords internal
-init_block <- function(i, vals) {
+init_block <- function(i, vals, session) {
+  id <- attr(vals$stack[[i]], "name")
   generate_server(
     vals$stack[[i]],
     in_dat = if (i == 1) {
@@ -425,7 +405,8 @@ init_block <- function(i, vals) {
       # Data from previous block
       vals$blocks[[i - 1]]
     },
-    id = attr(vals$stack[[i]], "name")
+    id = id,
+    remove = reactive(session$input[[sprintf("remove-block-%s", id)]])
   )
 }
 

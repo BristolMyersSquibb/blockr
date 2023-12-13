@@ -35,7 +35,6 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   )
 }
 
-#' @rdname generate_ui
 ui_result_block <- function(x, ns, result_id, inputs_hidden) {
   loading_class <- "d-none"
   if (inputs_hidden != "") {
@@ -63,7 +62,6 @@ ui_result_block <- function(x, ns, result_id, inputs_hidden) {
   )
 }
 
-#' @rdname generate_ui
 ui_collapse_block <- function(x, ns, code_id) {
   div(
     class = "collapse block-code",
@@ -125,9 +123,9 @@ block_tools <- function(code_id, result_id) {
   )
 }
 
-block_remove <- function(ns) {
+block_remove <- function(id) {
   actionLink(
-    ns("remove"),
+    id,
     icon("trash"),
     class = "text-decoration-none block-remove",
   )
@@ -184,31 +182,6 @@ generate_ui.stack <- function(x, id = NULL, ...) {
   ns <- NS(id)
 
   tagList(
-    tags$script(
-      HTML(
-        sprintf(
-          "$(function() {
-            $(document).on(
-              'shiny:inputchanged',
-              function(event) {
-                if (event.name.match('(last_changed|clientdata)') === null) {
-                  Shiny.setInputValue(
-                    '%s',
-                    {
-                      name: event.name,
-                      value: event.value,
-                      type: event.inputType,
-                      binding: event.binding !== null ? event.binding.name : ''
-                    }
-                  );
-                }
-            });
-          });
-          ",
-          ns("last_changed")
-        )
-      )
-    ),
     shiny::div(
       class = "card stack border",
       id = id,
@@ -217,11 +190,12 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         class = "card-body p-1",
         id = body_id,
         lapply(x, \(b) {
-          tmp <- generate_ui(b, id = ns(attr(b, "name")))
+          block_id <- attr(b, "name")
+          tmp <- generate_ui(b, id = ns(block_id))
           # Remove button now belongs to the stack namespace!
           htmltools::tagQuery(tmp)$
             find(".block-tools")$
-            prepend(block_remove(ns))$
+            prepend(block_remove(ns(sprintf("remove-block-%s", block_id))))$
             allTags()
         })
       )
@@ -260,12 +234,12 @@ stack_header <- function(stack, ns) {
         class = "flex-shrink-1",
         div(
           class = "ps-1 py-2",
-          actionLink(
-            ns("remove"),
-            "",
-            class = "text-decoration-none stack-remove",
-            iconTrash()
-          ),
+          #actionLink(
+          #  ns("remove"),
+          #  "",
+          #  class = "text-decoration-none stack-remove",
+          #  iconTrash()
+          #),
           tags$a(
             class = "text-decoration-none stack-copy-code",
             iconCode()

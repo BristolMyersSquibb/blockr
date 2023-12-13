@@ -4,12 +4,14 @@
 \alias{init_block}
 \title{Init a single block}
 \usage{
-init_block(i, vals)
+init_block(i, vals, session)
 }
 \arguments{
 \item{i}{Block position}
 
 \item{vals}{Reactive values containing the stack.}
+
+\item{session}{Shiny session object.}
 }
 \description{
 Useful for \link{init_blocks} but also
