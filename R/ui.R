@@ -101,28 +101,35 @@ block_title <- function(block, ns, code_id, result_id, hidden_class) {
           "cols"
         )
       ),
-      div(
-        class = "flex-shrink-1",
-        actionLink(
-          ns("remove"),
-          icon("trash"),
-          class = "text-decoration-none block-remove",
-        ),
-        tags$a(
-          class = "text-decoration-none block-code-toggle",
-          `data-bs-toggle` = "collapse",
-          href = sprintf("#%s", code_id),
-          `aria-expanded` = "false",
-          `aria-controls` = code_id,
-          iconCode()
-        ),
-        tags$a(
-          class = "text-decoration-none block-output-toggle",
-          href = sprintf("#%s", result_id),
-          iconOutput()
-        )
-      )
+      block_tools(code_id, result_id)
     )
+  )
+}
+
+block_tools <- function(code_id, result_id) {
+  div(
+    class = "block-tools flex-shrink-1",
+    tags$a(
+      class = "text-decoration-none block-code-toggle",
+      `data-bs-toggle` = "collapse",
+      href = sprintf("#%s", code_id),
+      `aria-expanded` = "false",
+      `aria-controls` = code_id,
+      iconCode()
+    ),
+    tags$a(
+      class = "text-decoration-none block-output-toggle",
+      href = sprintf("#%s", result_id),
+      iconOutput()
+    )
+  )
+}
+
+block_remove <- function(ns) {
+  actionLink(
+    ns("remove"),
+    icon("trash"),
+    class = "text-decoration-none block-remove",
   )
 }
 
@@ -146,8 +153,6 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
     block_class <- sprintf("%s d-none", block_class)
   }
 
-  header <- block_title(x, ns, code_id, result_id, hidden_class)
-
   div(
     class = block_class,
     `data-block-type` = paste0(class(x), collapse = ","),
@@ -156,7 +161,7 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
       class = "card shadow-sm p-2 mb-2 border",
       shiny::div(
         class = "card-body p-1",
-        header,
+        block_title(x, ns, code_id, result_id, hidden_class),
         div(
           class = "block-validation"
         ),
@@ -212,7 +217,12 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         class = "card-body p-1",
         id = body_id,
         lapply(x, \(b) {
-          generate_ui(b, id = ns(attr(b, "name")))
+          tmp <- generate_ui(b, id = ns(attr(b, "name")))
+          # Remove button now belongs to the stack namespace!
+          htmltools::tagQuery(tmp)$
+            find(".block-tools")$
+            prepend(block_remove(ns))$
+            allTags()
         })
       )
     ),
