@@ -1,4 +1,5 @@
 test_that("stacks", {
+
   stack <- new_stack(
     new_data_block,
     new_filter_block
@@ -9,6 +10,24 @@ test_that("stacks", {
 
   app <- serve_stack(stack)
   expect_s3_class(app, "shiny.appobj")
+
+  code <- generate_code(
+    new_stack(new_data_block)
+  )
+
+  expect_type(code, "language")
+
+  code <- generate_code(
+    new_stack(new_data_block, new_filter_block)
+  )
+
+  expect_type(code, "language")
+
+  code <- generate_code(
+    new_stack(new_data_block, new_filter_block, new_select_block)
+  )
+
+  expect_type(code, "language")
 })
 
 test_that("serve stacks", {
