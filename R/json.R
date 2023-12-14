@@ -7,7 +7,7 @@
 #'
 #' @export
 to_json <- function(x, ...) {
-	UseMethod("to_json")
+  UseMethod("to_json")
 }
 
 #' @rdname to_json
