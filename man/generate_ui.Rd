@@ -146,6 +146,9 @@ uiCode(x, ns)
 
 \item{ns}{Output namespace}
 
+\item{inputs_hidden}{For styling purposes: CSS class to apply
+when the block is collapsed.}
+
 \item{.hidden}{Whether to initialise the block hidden.}
 
 \item{session}{Shiny session}
