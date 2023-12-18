@@ -64,7 +64,7 @@ mutate_module_server <- function(id, x, in_dat, ...) {
       # only update on init! Init value is in x
       output$value <- renderUI(ace_module_ui(ns(id), exprs_init = value(x$value, "value")))
 
-      r_blk <- reactiveVal(x)
+      blk <- reactiveVal(x)
 
       # rather than input, I want the fields to be updated on r_value()
       o <- observeEvent(
@@ -72,13 +72,13 @@ mutate_module_server <- function(id, x, in_dat, ...) {
         {
           # 1. Update Block, set field
           blk_updated <- update_fields(
-            r_blk(), session,
+            blk(), session,
             in_dat(),
             value = r_value()
           )
 
           attr(blk_updated, "expr") <- mutate_expr(r_value())
-          r_blk(blk_updated)
+          blk(blk_updated)
 
           # 2. Sync UI  (dont think this belongs with update block...)
           # FIXME where to get 'value' id from
@@ -89,11 +89,11 @@ mutate_module_server <- function(id, x, in_dat, ...) {
 
       out_dat <- reactive(
         # 3. Update Data
-        evaluate_block(r_blk(), data = in_dat())
+        evaluate_block(blk(), data = in_dat())
       )
 
       output$res <- server_output(x, out_dat, output)
-      output$code <- server_code(x, r_blk, output)
+      output$code <- server_code(x, blk, output)
 
       output$debug <- renderPrint({
         r_value()
