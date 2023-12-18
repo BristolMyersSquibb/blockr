@@ -52,6 +52,20 @@ generate_server.transform2_block <- function(x, in_dat, id, ...) {
     function(input, output, session) {
       ns <- session$ns
 
+      #
+
+
+      # 1. for all fields in block, run generic module_server
+
+      # store in a list of reactive values
+      # e.g.,
+      # r_values <- reactiveValues()
+
+
+
+
+
+
       # not the same as the init value
       r_value <- ace_module_server(id)
 

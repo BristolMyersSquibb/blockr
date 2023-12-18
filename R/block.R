@@ -273,7 +273,7 @@ new_filter_block <- function(
   col_choices <- function(data) colnames(data)
 
   fields <- list(
-    columns = new_select_field(columns, col_choices, multiple = TRUE),
+    columns = new_select_field(columns, col_choices, multiple = TRUE, type = "name"),
     values = new_list_field(values, sub_fields),
     filter_func = new_select_field(
       filter_fun,
