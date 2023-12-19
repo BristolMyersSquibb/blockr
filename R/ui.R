@@ -14,7 +14,7 @@ generate_ui <- function(x, ...) {
 #' @rdname generate_ui
 #' @export
 ui_fields <- function(x, ...) {
-  UseMethod("ui_fields")
+  UseMethod("ui_fields", x)
 }
 
 #' @rdname generate_ui
@@ -37,7 +37,15 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   )
 }
 
-block_body <- function(x, ns, inputs_hidden) {
+#' @rdname generate_ui
+#' @export
+block_body <- function(x, ...) {
+  UseMethod("block_body", x)
+}
+
+#' @rdname generate_ui
+#' @export
+block_body.block <- function(x, ns, inputs_hidden, ...) {
 
   result_id <- ns("outputCollapse")
 
@@ -75,7 +83,15 @@ block_body <- function(x, ns, inputs_hidden) {
   )
 }
 
-block_code <- function(x, ns, inputs_hidden) {
+#' @rdname generate_ui
+#' @export
+block_code <- function(x, ...) {
+  UseMethod("block_code", x)
+}
+
+#' @rdname generate_ui
+#' @export
+block_code.block <- function(x, ns, inputs_hidden, ...) {
 
   code_id <- ns("codeCollapse")
 
@@ -97,9 +113,16 @@ block_code <- function(x, ns, inputs_hidden) {
   )
 }
 
+#' @rdname generate_ui
+#' @export
+block_header <- function(x, ...) {
+  UseMethod("block_header", x)
+}
+
 #' @importFrom shiny tags div p
-block_title <- function(block, ns, hidden_class) {
-  title <- class(block)[1] |>
+#' @export
+block_header.block <- function(x, ns, hidden_class, ...) {
+  title <- class(x)[1] |>
     (\(.) gsub("_.*$", "", .))() |>
     tools::toTitleCase()
 
@@ -133,7 +156,15 @@ block_title <- function(block, ns, hidden_class) {
   )
 }
 
-block_remove <- function(id) {
+#' @rdname generate_ui
+#' @export
+block_remove <- function(x, ...) {
+  UseMethod("block_remove", x)
+}
+
+#' @rdname generate_ui
+#' @export
+block_remove.block <- function(x, id, ...) {
   actionLink(
     id,
     icon("trash"),
@@ -166,7 +197,7 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
       class = "card shadow-sm p-2 mb-2 border",
       div(
         class = "card-body p-1",
-        block_title(x, ns, hidden_class),
+        block_header(x, ns, hidden_class),
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
         block_code(x, ns, inputs_hidden)
@@ -191,7 +222,7 @@ generate_ui.stack <- function(
     div(
       class = "card stack border",
       id = id,
-      stack_header(id),
+      stack_header(x, id),
       div(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
@@ -201,7 +232,7 @@ generate_ui.stack <- function(
           # Remove button now belongs to the stack namespace!
           htmltools::tagQuery(tmp)$
             find(".block-tools")$
-            prepend(block_remove(ns(sprintf("remove-block-%s", block_id))))$
+            prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
           allTags()
         })
       )
@@ -210,8 +241,14 @@ generate_ui.stack <- function(
   )
 }
 
+#' @rdname generate_ui
+#' @export
+stack_header <- function(x, ...) {
+  UseMethod("stack_header", x)
+}
+
 #' @importFrom shiny icon tags div
-stack_header <- function(title) {
+stack_header.stack <- function(x, title, ...) {
   div(
     class = "card-header",
     div(

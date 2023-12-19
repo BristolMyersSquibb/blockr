@@ -11,8 +11,16 @@
 \alias{generate_ui}
 \alias{ui_fields}
 \alias{ui_fields.block}
+\alias{block_body}
+\alias{block_body.block}
+\alias{block_code}
+\alias{block_code.block}
+\alias{block_header}
+\alias{block_remove}
+\alias{block_remove.block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
+\alias{stack_header}
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
@@ -65,9 +73,25 @@ ui_fields(x, ...)
 
 \method{ui_fields}{block}(x, ns, inputs_hidden, ...)
 
+block_body(x, ...)
+
+\method{block_body}{block}(x, ns, inputs_hidden, ...)
+
+block_code(x, ...)
+
+\method{block_code}{block}(x, ns, inputs_hidden, ...)
+
+block_header(x, ...)
+
+block_remove(x, ...)
+
+\method{block_remove}{block}(x, id, ...)
+
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
+
+stack_header(x, ...)
 
 ui_input(x, id, name)
 

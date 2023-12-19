@@ -18,10 +18,8 @@ generate_server.block <- function(x, ...) {
 }
 
 #' @rdname generate_server
-#' @param remove Callback to remove block. Necessary for internal
-#' cleanup.
 #' @export
-generate_server.data_block <- function(x, id, remove, ...) {
+generate_server.data_block <- function(x, id, ...) {
   obs_expr <- function(x) {
     splice_args(
       list(..(args)),
@@ -63,27 +61,8 @@ generate_server.data_block <- function(x, id, remove, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      # Cleanup module inputs (UI and server side)
-      # and observer
-      observeEvent(remove(),
-        {
-          # Trick to be able to tell the stack to wait
-          # for this event to run.
-          session$userData$is_cleaned(FALSE)
-          # Can only remove when it is the last stack block
-          if (length(session$userData$stack) == 1) {
-            message(sprintf("CLEANING UP BLOCK %s", id))
-            remove_shiny_inputs(id = id, input)
-            o$destroy()
-            session$userData$is_cleaned(TRUE)
-          }
-          # We have to set high priority so this event
-          # executes before the one in the stack which
-          # updates the stack. If we don't, this will
-          # never execute because the stack will be empty :)
-        },
-        priority = 500
-      )
+      # TO DO: cleanup module inputs (UI and server side)
+      # and observers. PR 119
 
       out_dat
     }
@@ -176,14 +155,8 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      # Cleanup module inputs (UI and server side)
-      # and observer
-      observeEvent(input$remove, {
-        message(sprintf("CLEANING UP BLOCK %s", id))
-        remove_shiny_inputs(id = id, input)
-        lapply(obs, \(o) o$destroy())
-        session$userData$is_cleaned(TRUE)
-      })
+      # TO DO: cleanup module inputs (UI and server side)
+      # and observers. PR 119
 
       out_dat
     }
@@ -234,14 +207,8 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      # Cleanup module inputs (UI and server side)
-      # and observer
-      observeEvent(input$remove, {
-        message(sprintf("CLEANING UP BLOCK %s", id))
-        remove_shiny_inputs(id = id, input)
-        o$destroy()
-        session$userData$is_cleaned(TRUE)
-      })
+      # TO DO: cleanup module inputs (UI and server side)
+      # and observers. PR 119
     }
   )
 }
@@ -275,43 +242,29 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         id <- attr(b, "name")
         observeEvent({
           input[[sprintf("remove-block-%s", id)]]
-          req(session$userData$is_cleaned())
         }, {
           # We can't remove the data block if there are downstream consumers...
           to_remove <- which(chr_ply(x, \(b) attr(b, "name")) == id)
-          if (to_remove == 1 && length(vals$stack) > 1) {
-            showModal(
-              modalDialog(
-                title = h3(icon("xmark"), "Error"),
-                "Can't remove a datablock whenever there are
-              downstream data block consumers."
-              )
+          message(sprintf("REMOVING BLOCK %s", to_remove))
+          removeUI(
+            selector = sprintf(
+              "[data-value='%s%s-block']",
+              session$ns(""),
+              attr(vals$stack[[to_remove]], "name")
             )
-          } else {
-            if (session$userData$is_cleaned()) {
-              message(sprintf("REMOVING BLOCK %s", to_remove))
-              removeUI(
-                selector = sprintf(
-                  "[data-value='%s%s-block']",
-                  session$ns(""),
-                  attr(vals$stack[[to_remove]], "name")
-                )
-              )
+          )
 
-              vals$stack[[to_remove]] <- NULL
-              vals$blocks[[to_remove]] <- NULL
-              # Reinitialize all the downstream stack blocks with new data ...
-              if (to_remove < length(vals$stack)) {
-                for (i in to_remove:length(vals$stack)) {
-                  attr(vals$stack[[i]], "position") <- i
-                  vals$blocks[[i]] <- init_block(i, vals)
-                }
-              }
-
-              session$userData$stack <- vals$stack
-              session$userData$is_cleaned(FALSE)
+          vals$stack[[to_remove]] <- NULL
+          vals$blocks[[to_remove]] <- NULL
+          # Reinitialize all the downstream stack blocks with new data ...
+          if (to_remove < length(vals$stack)) {
+            for (i in to_remove:length(vals$stack)) {
+              attr(vals$stack[[i]], "position") <- i
+              vals$blocks[[i]] <- init_block(i, vals)
             }
           }
+
+          session$userData$stack <- vals$stack
         })
       })
 

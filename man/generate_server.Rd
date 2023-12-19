@@ -14,7 +14,7 @@ generate_server(x, ...)
 
 \method{generate_server}{block}(x, ...)
 
-\method{generate_server}{data_block}(x, id, remove, ...)
+\method{generate_server}{data_block}(x, id, ...)
 
 \method{generate_server}{transform_block}(x, in_dat, id, ...)
 
@@ -30,9 +30,6 @@ generate_server(x, ...)
 \item{...}{Generic consistency}
 
 \item{id}{Unique module id. Useful when the stack is called as a module.}
-
-\item{remove}{Callback to remove block. Necessary for internal
-cleanup.}
 
 \item{in_dat}{Reactive input data}
 
