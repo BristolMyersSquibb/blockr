@@ -3,12 +3,15 @@
 \name{new_stack}
 \alias{new_stack}
 \alias{is_stack}
+\alias{generate_code.stack}
 \alias{serve_stack}
 \title{Stacks}
 \usage{
 new_stack(..., name = rand_names())
 
 is_stack(x)
+
+\method{generate_code}{stack}(x)
 
 serve_stack(stack)
 }
