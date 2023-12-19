@@ -22,4 +22,3 @@ webpack.prod.js
 ^renv\.lock$
 ^\.eslintrc\.js$
 ^CODEOWNERS$
-packages

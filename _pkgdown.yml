@@ -1,4 +1,19 @@
 url: ~
 template:
   bootstrap: 5
+  bslib:
+    info: "#E6F2FD"
+    pkgdown-nav-height: 100px
+  includes:
+    in_header: >
+      <link href ="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css">
 
+navbar:
+  type: light
+  structure:
+    right: [reference, news, github, dark-mode]
+  components:
+    home: ~
+    dark-mode:
+      href: "#dark-mode"
