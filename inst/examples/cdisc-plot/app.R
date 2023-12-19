@@ -1,6 +1,8 @@
 # Basic example
-pkgload::load_all()
+library(shiny)
+library(blockr)
 library(blockr.data)
+library(ggiraph)
 
 # Note: sometimes memories issue due to the join block
 # can be solved by restarting R between each run.

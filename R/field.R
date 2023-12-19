@@ -173,12 +173,35 @@ numeric_field <- function(...) {
 validate_field.numeric_field <- function(x) {
   val <- value(x)
 
-  if (!is.numeric(val) || length(val) == 0) {
+  # Shiny does not care much about min and max
+  # Let's be more strict.
+  # Inf and -Inf are allowed
+  stopifnot(
+    is_truthy(value(x, "min")),
+    is_truthy(value(x, "max")),
+    value(x, "min") < value(x, "max"),
+    length(value(x, "min")) == 1L,
+    length(value(x, "max")) == 1L
+  )
+
+  if (length(val) == 0) {
     value(x) <- value(x, "min")
-  } else if (val < value(x, "min")) {
-    value(x) <- value(x, "min")
-  } else if (val > value(x, "max")) {
-    value(x) <- value(x, "max")
+  } else {
+    if (length(val) > 1L) {
+      value(x) <- value(x, "min")
+    } else {
+      # NA is allowed to return validation
+      # error on the client
+      if (!is.na(val)) {
+        if (!is.numeric(val) || is.nan(val) || is.infinite(val)) {
+          value(x) <- value(x, "min")
+        } else if (val < value(x, "min")) {
+          value(x) <- value(x, "min")
+        } else if (val > value(x, "max")) {
+          value(x) <- value(x, "max")
+        }
+      }
+    }
   }
 
   x

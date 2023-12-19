@@ -30,6 +30,24 @@ new_stack <- function(..., name = rand_names()) {
   structure(blocks, name = name, class = "stack")
 }
 
+#' @param x An object inheriting form `"stack"`
+#' @rdname new_stack
+#' @export
+is_stack <- function(x) {
+  inherits(x, "stack")
+}
+
+#' @rdname new_stack
+#' @export
+generate_code.stack <- function(x) {
+
+  binary_substitute <- function(x, y) {
+    substitute(x %>% y, list(x = x, y = y))
+  }
+
+  Reduce(binary_substitute, lapply(x, generate_code))
+}
+
 #' Add block to a stack
 #'
 #' This is to be called oustide the stack by
