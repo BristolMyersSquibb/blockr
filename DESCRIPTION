@@ -34,8 +34,6 @@ Imports:
     DT,
     blockr.data,
     htmltools,
-    sortable,
-    bmsui,
     ggiraph,
     shinyAce,
     jsonlite
