@@ -10,6 +10,7 @@ template:
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css">
 
 navbar:
+  bg: info
   type: light
   structure:
     right: [reference, news, github, dark-mode]
