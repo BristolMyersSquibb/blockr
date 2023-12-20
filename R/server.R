@@ -76,7 +76,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
   obs_expr <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
-      args = lapply(unlst(input_ids(x)), quoted_input_entry)
+      args = lapply(setNames(unlst(input_ids(x)), unlst(input_ids(x))), quoted_input_entry)
     )
   }
 
@@ -84,6 +84,13 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
     splice_args(
       blk(update_fields(blk(), session, in_dat(), ..(args))),
       args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+    )
+  }
+
+  set_expr2 <- function(x, values) {
+    splice_args(
+      blk(update_fields(blk(), session, in_dat(), ..(args))),
+      args = values
     )
   }
 
@@ -103,12 +110,50 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
       ns <- session$ns
 
+      # Idea:
+      # - If a field has a generate_server() method, initialize it and use
+      #   its return value.
+      # - If not, use existing code
+      # - combine both to r_values()
+
+      # has_server(x)
+      has_server <- function(x) {
+        # Bad implementation
+        ans <- lapply(x, \(x) try(generate_server(x), silent = TRUE))
+        !vapply(ans, inherits, TRUE, "try-error")
+      }
+
+      # initialize server modules (if fields have generate_server)
+      x_server <- x[has_server(x)]
+      r_values_module <- list()
+      for (name in names(x_server)) {
+        r_values_module[[name]] <- generate_server(x_server[[name]])(name)
+      }
+
+      # proceed in standard fashion (if fields have no generate_server)
+      # New: a named list (?)
+      r_values_default <- reactive({
+        # why do we need in_dta() here? To trigger the update?
+        blk_no_server <- blk()
+        blk_no_server[has_server(blk_no_server)] <- NULL  # to keep class etc
+        eval(obs_expr(blk_no_server))
+      })
+
+      # combine them
+      r_values <- reactive({
+        values_default <- r_values_default()[names(r_values_default()) != ""]  # no in_dta() ???
+        values_module <- lapply(r_values_module, \(x) x())
+        c(values_module, values_default)
+      })
+
+
       # Validate block expression.
       # Requires to validate inputs first
       obs$update_block <- observeEvent(
-        eval(obs_expr(blk())),
+        r_values(),  # if anything changes
         {
-          secure(eval(set_expr(blk())), is_valid)
+          secure(eval(set_expr2(blk(), r_values())), is_valid)
+          # secure(eval(set_expr(blk())), is_valid)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
         ignoreInit = TRUE
@@ -121,7 +166,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # Validate block inputs
       obs$validate_inputs <- observeEvent(eval(obs_expr(blk())), {
         message(sprintf("Validating block %s", class(x)[[1]]))
-        validate_inputs(blk(), is_valid, session)
+        # validate_inputs(blk(), is_valid, session)  # FIXME should not rely on input$
         # Block will have a red border if any nested input is invalid
         # since blocks can be collapsed and people won't see the input
         # elements.
@@ -161,6 +206,19 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       out_dat
     }
   )
+}
+
+#' @rdname generate_server
+#' @export
+generate_server.numeric_field <- function(x) {
+  function(id) {
+    moduleServer(id, function(input, output, session) {
+      r_result <- reactive({
+        input[["num_field"]]
+      })
+      r_result
+    })
+  }
 }
 
 #' @param in_dat Reactive input data

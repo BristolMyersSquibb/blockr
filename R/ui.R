@@ -317,8 +317,9 @@ ui_input.switch_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.numeric_field <- function(x, id, name) {
+  ns <- NS(input_ids(x, id))
   numericInput(
-    input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
+    ns("num_field"), name, value(x), value(x, "min"), value(x, "max")
   )
 }
 
