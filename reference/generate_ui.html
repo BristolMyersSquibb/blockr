@@ -81,11 +81,35 @@
 <span></span>
 <span><span class="fu">generate_ui</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">ui_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for block</span></span>
+<span><span class="fu">ui_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span>, <span class="va">inputs_hidden</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">block_body</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for block</span></span>
+<span><span class="fu">block_body</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span>, <span class="va">inputs_hidden</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">block_code</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for block</span></span>
+<span><span class="fu">block_code</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span>, <span class="va">inputs_hidden</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">block_header</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">block_remove</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for block</span></span>
+<span><span class="fu">block_remove</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for block</span></span>
 <span><span class="fu">generate_ui</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">...</span>, .hidden <span class="op">=</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"BLOCKR_DEV"</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stack</span></span>
 <span><span class="fu">generate_ui</span><span class="op">(</span><span class="va">x</span>, id <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">stack_header</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ui_input</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span></span>
 <span></span>
@@ -203,16 +227,21 @@
 <dd><p>Generic consistency</p></dd>
 
 
+<dt>ns</dt>
+<dd><p>Output namespace</p></dd>
+
+
+<dt>inputs_hidden</dt>
+<dd><p>For styling purposes: CSS class to apply
+when the block is collapsed.</p></dd>
+
+
 <dt>.hidden</dt>
 <dd><p>Whether to initialise the block hidden.</p></dd>
 
 
 <dt>session</dt>
 <dd><p>Shiny session</p></dd>
-
-
-<dt>ns</dt>
-<dd><p>Output namespace</p></dd>
 
 </dl></div>
 
