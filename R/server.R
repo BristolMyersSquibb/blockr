@@ -215,21 +215,6 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
   )
 }
 
-#' @rdname generate_server
-#' @export
-generate_server.numeric_field <- function(x) {
-  function(id, init = NULL, data = NULL) {
-    moduleServer(id, function(input, output, session) {
-      r_result <- reactive({
-        message("init")
-        print(init())
-        input[["num_field"]]
-      })
-      r_result
-    })
-  }
-}
-
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
