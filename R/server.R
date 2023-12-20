@@ -80,13 +80,6 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
     )
   }
 
-  set_expr <- function(x) {
-    splice_args(
-      blk(update_fields(blk(), session, in_dat(), ..(args))),
-      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-    )
-  }
-
   set_expr2 <- function(x, values) {
     splice_args(
       blk(update_fields(blk(), session, in_dat(), ..(args))),
@@ -124,6 +117,14 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
       # a list with reactive values (module server input)
       l_init <- lapply(x_server, \(x) reactiveVal(x))
+
+      observe({
+        print(l_init)
+      })
+
+      observe({
+        print(r_values())
+      })
 
       l_values_module <- list()  # a list with reactive values (module server output)
       for (name in names(x_server)) {
