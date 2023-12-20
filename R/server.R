@@ -115,14 +115,19 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       #   its return value.
       # - If not, use existing code
       # - combine both to r_values()
+      # - to update ui, use ui_update(), or update module init reactive value
 
       is_srv <- vapply(x, has_method, TRUE, generic = "generate_server")
 
       # initialize server modules (if fields have generate_server)
       x_server <- x[is_srv]
-      r_values_module <- list()
+
+      # a list with reactive values (module server input)
+      l_init <- lapply(x_server, \(x) reactiveVal(x))
+
+      l_values_module <- list()  # a list with reactive values (module server output)
       for (name in names(x_server)) {
-        r_values_module[[name]] <- generate_server(x_server[[name]])(name)
+        l_values_module[[name]] <- generate_server(x_server[[name]])(name, init = l_init[[name]], data = in_dat)
       }
 
       # proceed in standard fashion (if fields have no generate_server)
@@ -134,18 +139,28 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
       r_values <- reactive({
         values_default <- r_values_default()[names(r_values_default()) != ""]  # no in_dta() ???
-        values_module <- lapply(r_values_module, \(x) x())
-        c(values_module, values_default)
+        values_module <- lapply(l_values_module, \(x) x())
+        # keep sort order of x
+        c(values_module, values_default)[names(x)]
       })
 
-
-      # Validate block expression.
-      # Requires to validate inputs first
       obs$update_block <- observeEvent(
-        r_values(),  # if anything changes
+        r_values(),  # if any value changes   # FIXME also in_dat()
         {
+          # 1. update blk ()
           secure(eval(set_expr2(blk(), r_values())), is_valid)
-          # secure(eval(set_expr(blk())), is_valid)
+
+          # 2. update ui, based on blk()
+          # instead of running update_fields.transform_block()
+          for (name in names(blk())) {
+            if (name %in% names(is_srv)[is_srv]) {
+              # update reactive value that tiggers module server update
+              l_init[[name]](r_values()[[name]])
+            } else {
+              ui_update(blk()[[name]], session, name, name)
+            }
+          }
+
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
         ignoreInit = TRUE
@@ -202,10 +217,12 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
 #' @rdname generate_server
 #' @export
-generate_server.numeric_field <- function(x, value = NULL) {
-  function(id) {
+generate_server.numeric_field <- function(x) {
+  function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
       r_result <- reactive({
+        message("init")
+        print(init())
         input[["num_field"]]
       })
       r_result
