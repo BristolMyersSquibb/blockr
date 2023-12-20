@@ -76,7 +76,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
   obs_expr <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
-      args = lapply(setNames(unlst(input_ids(x)), unlst(input_ids(x))), quoted_input_entry)
+      args = lapply(setNames(nm = unlst(input_ids(x))), quoted_input_entry)
     )
   }
 
@@ -116,30 +116,22 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # - If not, use existing code
       # - combine both to r_values()
 
-      # has_server(x)
-      has_server <- function(x) {
-        # Bad implementation
-        ans <- lapply(x, \(x) try(generate_server(x), silent = TRUE))
-        !vapply(ans, inherits, TRUE, "try-error")
-      }
+      is_srv <- vapply(x, has_method, TRUE, generic = "generate_server")
 
       # initialize server modules (if fields have generate_server)
-      x_server <- x[has_server(x)]
+      x_server <- x[is_srv]
       r_values_module <- list()
       for (name in names(x_server)) {
         r_values_module[[name]] <- generate_server(x_server[[name]])(name)
       }
 
       # proceed in standard fashion (if fields have no generate_server)
-      # New: a named list (?)
       r_values_default <- reactive({
-        # why do we need in_dta() here? To trigger the update?
         blk_no_server <- blk()
-        blk_no_server[has_server(blk_no_server)] <- NULL  # to keep class etc
+        blk_no_server[is_srv] <- NULL  # to keep class etc
         eval(obs_expr(blk_no_server))
       })
 
-      # combine them
       r_values <- reactive({
         values_default <- r_values_default()[names(r_values_default()) != ""]  # no in_dta() ???
         values_module <- lapply(r_values_module, \(x) x())
@@ -210,7 +202,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
 #' @rdname generate_server
 #' @export
-generate_server.numeric_field <- function(x) {
+generate_server.numeric_field <- function(x, value = NULL) {
   function(id) {
     moduleServer(id, function(input, output, session) {
       r_result <- reactive({
