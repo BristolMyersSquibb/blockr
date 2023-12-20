@@ -88,6 +88,14 @@ stack <- new_stack(
 )
 
 serve_stack(stack)
+
+
+pkgload::load_all("."); stack <- new_stack(data_block, filter_block);serve_stack(stack)
+
+pkgload::load_all("."); stack <- new_stack(data_block, head_block);serve_stack(stack)
+
+
+
 ```
 
 ### Modify a stack
