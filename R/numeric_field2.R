@@ -47,3 +47,40 @@ validate_field.numeric_field2 <- function(x) {
 }
 
 
+
+
+#' @rdname new_block
+#' @param n_rows Number of rows to return.
+#' @param n_rows_min Minimum number of rows.
+#' @export
+new_head_block2 <- function(
+    data,
+    n_rows = numeric(),
+    n_rows_min = 1L,
+    ...) {
+  tmp_expr <- function(n_rows) {
+    bquote(
+      head(n = .(n_rows)),
+      list(n_rows = n_rows)
+    )
+  }
+
+  fields <- list(
+    n_rows = new_numeric_field2(n_rows, n_rows_min, nrow(data)),
+    expression = new_hidden_field(tmp_expr)
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(expression)),
+    ...,
+    class = c("head_block2", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+head_block2 <- function(data, ...) {
+  initialize_block(new_head_block2(data, ...), data)
+}
+
