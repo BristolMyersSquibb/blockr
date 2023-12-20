@@ -73,12 +73,24 @@ generate_server.data_block <- function(x, id, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.transform_block <- function(x, in_dat, id, ...) {
+
+  # still used for validation, FIXME
   obs_expr <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
       args = lapply(setNames(nm = unlst(input_ids(x))), quoted_input_entry)
     )
   }
+
+  obs_expr2 <- function(x) {
+    splice_args(
+      list(in_dat(), ..(args)),
+      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+    )
+  }
+
+
+  # rapply(input_ids(x), quoted_input_entries, how = "replace")
 
   set_expr2 <- function(x, values) {
     splice_args(
@@ -113,29 +125,21 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       is_srv <- vapply(x, has_method, TRUE, generic = "generate_server")
 
       # initialize server modules (if fields have generate_server)
-      x_server <- x[is_srv]
+      x_srv <- x[is_srv]
 
       # a list with reactive values (module server input)
-      l_init <- lapply(x_server, \(x) reactiveVal(x))
-
-      observe({
-        print(l_init)
-      })
-
-      observe({
-        print(r_values())
-      })
+      l_init <- lapply(x_srv, \(x) reactiveVal(x))
 
       l_values_module <- list()  # a list with reactive values (module server output)
-      for (name in names(x_server)) {
-        l_values_module[[name]] <- generate_server(x_server[[name]])(name, init = l_init[[name]], data = in_dat)
+      for (name in names(x_srv)) {
+        l_values_module[[name]] <- generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
       }
 
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
-        blk_no_server <- blk()
-        blk_no_server[is_srv] <- NULL  # to keep class etc
-        eval(obs_expr(blk_no_server))
+        blk_no_srv <- blk()
+        blk_no_srv[is_srv] <- NULL  # to keep class etc
+        eval(obs_expr2(blk_no_srv))   # extract list fields, too
       })
 
       r_values <- reactive({
@@ -145,27 +149,45 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         c(values_module, values_default)[names(x)]
       })
 
-      obs$update_block <- observeEvent(
-        r_values(),  # if any value changes   # FIXME also in_dat()
+      # Does it make sense to separate these processes?
+      #
+      obs$update_blk <- observeEvent(
         {
-          # 1. update blk ()
-          secure(eval(set_expr2(blk(), r_values())), is_valid)
-
-          # 2. update ui, based on blk()
-          # instead of running update_fields.transform_block()
-          for (name in names(blk())) {
-            if (name %in% names(is_srv)[is_srv]) {
-              # update reactive value that tiggers module server update
-              l_init[[name]](r_values()[[name]])
+          r_values()
+          in_dat()
+        },
+        {
+          # 1. upd blk,
+          b <- blk()
+          for (field in names(b)) {
+            if (field %in% names(is_srv)[is_srv]) {
+              b[[field]] <- update_field(b[[field]], r_values()[[field]])
             } else {
-              ui_update(blk()[[name]], session, name, name)
+              env <- c(
+                list(data = in_dat()),
+                r_values()[-which(names(r_values()) == field)]
+              )
+              b[[field]] <- update_field(b[[field]], r_values()[[field]], env)
+              if (identical(input[[field]], value(b[[field]]))) skip
             }
           }
-
+          blk(b)  # update block
           message(sprintf("Updating block %s", class(x)[[1]]))
+
+          # 2. Update UI
+          for (field in names(b)) {
+            if (field %in% names(is_srv)[is_srv]) {
+              # update reactive value that tiggers module server update
+              l_init[[field]](b[[field]])
+            } else {
+              ui_update(b[[field]], session, field, field)
+            }
+          }
+          message(sprintf("Updating UI of block %s", class(x)[[1]]))
         },
         ignoreInit = TRUE
       )
+
 
       obs$print_error <- observeEvent(is_valid$error, {
         create_modal(is_valid$error)
