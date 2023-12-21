@@ -99,6 +99,9 @@ pkgload::load_all("."); stack <- new_stack(data_block, head_block, head_block2);
 
 pkgload::load_all("."); stack <- new_stack(data_block, mutate_block2);serve_stack(stack)
 
+pkgload::load_all("."); stack <- new_stack(data_block, summarize_block2);serve_stack(stack)
+
+
 ```
 
 ### Modify a stack
