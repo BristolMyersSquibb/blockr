@@ -15,11 +15,6 @@ generate_server.keyvalue_field <- function(x) {
         r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
       })
 
-      observe({
-        print(r_result())
-
-      })
-
       # remove namedchar UI on trash click
       r_rms_previous <- reactiveVal(integer())
       # store removed elements (since I cannot find a way to 'flush' input after
