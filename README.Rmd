@@ -95,7 +95,9 @@ pkgload::load_all("."); stack <- new_stack(data_block, filter_block);serve_stack
 
 pkgload::load_all("."); stack <- new_stack(data_block, head_block);serve_stack(stack)
 
-pkgload::load_all("."); stack <- new_stack(data_block, head_block2);serve_stack(stack)
+pkgload::load_all("."); stack <- new_stack(data_block, head_block, head_block2);serve_stack(stack)
+
+pkgload::load_all("."); stack <- new_stack(data_block, mutate_block2);serve_stack(stack)
 
 ```
 
