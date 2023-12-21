@@ -168,3 +168,64 @@ mutate_block2 <- function(data, ...) {
   initialize_block(new_mutate_block2(data, ...), data)
 }
 
+
+
+
+
+
+
+
+
+
+# reimplement mutate_block using keyvalue_field
+summarize_expr <- function(columns = NULL, value = c(a = "2.1", b = "4.5")) {
+  if (is.null(value)) {
+    return(quote(dplyr::summarize()))
+  }
+  if (is.null(columns)) {
+    return(quote(dplyr::summarize()))
+  }
+  stopifnot(inherits(value, "character"))
+
+  parse_one <- function(text) {
+    expr <- try(parse(text = text))
+    if (inherits(expr, "try-error")) {
+      expr <- expression()
+    }
+    expr
+  }
+
+  exprs <- do.call(c, lapply(value, parse_one))
+  scolumns = as.name(columns)
+  bquote(
+    dplyr::summarize(.by = .(scolumns), ..(exprs)),
+    list(exprs = exprs, scolumns = scolumns),
+    splice = TRUE
+  )
+}
+
+
+new_summarize_block2 <- function(data, columns = NULL, value = NULL, ...) {
+  all_cols <- function(data) colnames(data)
+
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE),
+    value = new_keyvalue_field(value = value),
+    expression = new_hidden_field(summarize_expr)
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(expression)),
+    ...,
+    class = c("summarize_block2", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+summarize_block2 <- function(data, ...) {
+  initialize_block(new_summarize_block2(data, ...), data)
+}
+
+

@@ -55,6 +55,7 @@
 \alias{demo_summarize_block}
 \alias{is_initialized.field}
 \alias{mutate_block2}
+\alias{summarize_block2}
 \alias{new_mutate_block}
 \alias{mutate_block}
 \alias{new_head_block2}
@@ -212,6 +213,8 @@ demo_summarize_block(data, ...)
 \method{is_initialized}{field}(x)
 
 mutate_block2(data, ...)
+
+summarize_block2(data, ...)
 
 new_mutate_block(data, value = NULL, ...)
 
