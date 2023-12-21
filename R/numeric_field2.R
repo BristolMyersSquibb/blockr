@@ -5,10 +5,18 @@
 generate_server.numeric_field2 <- function(x) {
   function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
+      ns <- session$ns
+
+      output$num_field <- renderUI({
+        div(
+          paste(colnames(data()), collapse = ", "),
+          numericInput(ns("num_field_output"), value = init()$value, label = NULL, min = 1, max = 6)
+        )
+      })
+
       r_result <- reactive({
-        message("init")
-        print(init())
-        input[["num_field"]]
+        n <- input[["num_field_output"]]
+        coalesce(as.numeric(n), 1)
       })
       r_result
     })
@@ -19,8 +27,8 @@ generate_server.numeric_field2 <- function(x) {
 #' @export
 ui_input.numeric_field2 <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
-  numericInput(
-    ns("num_field"), name, value(x), value(x, "min"), value(x, "max")
+  uiOutput(
+    ns("num_field")
   )
 }
 
