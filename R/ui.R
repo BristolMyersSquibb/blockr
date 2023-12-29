@@ -47,23 +47,16 @@ block_body <- function(x, ...) {
 #' @export
 block_body.block <- function(x, ns, inputs_hidden, ...) {
 
-  result_id <- ns("outputCollapse")
-
   loading_class <- "d-none"
   if (inputs_hidden != "") {
     loading_class <- ""
   }
 
   tagList(
-    tags$a(
-      class = "text-decoration-none block-output-toggle",
-      href = sprintf("#%s", result_id),
-      iconOutput()
-    ),
     ui_fields(x, ns, inputs_hidden),
     div(
       class = sprintf("%s block-output", inputs_hidden),
-      id = result_id,
+      id = ns("outputCollapse"),
       uiOutputBlock(x, ns),
       div(
         class = sprintf(
@@ -232,7 +225,16 @@ generate_ui.stack <- function(
           # Remove button now belongs to the stack namespace!
           htmltools::tagQuery(tmp)$
             find(".block-tools")$
-            prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+            prepend(
+              list(
+                block_remove(b, ns(sprintf("remove-block-%s", block_id))),
+                tags$a(
+                  class = "text-decoration-none block-output-toggle",
+                  href = sprintf("#%s", ns("outputCollapse")),
+                  iconOutput()
+                )
+              )
+          )$
           allTags()
         })
       )
