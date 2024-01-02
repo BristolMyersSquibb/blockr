@@ -73,16 +73,10 @@ generate_server.data_block <- function(x, id, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.transform_block <- function(x, in_dat, id, ...) {
-  obs_expr <- function(x) {
+
+  obs_expr2 <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
-      args = lapply(unlst(input_ids(x)), quoted_input_entry)
-    )
-  }
-
-  set_expr <- function(x) {
-    splice_args(
-      blk(update_fields(blk(), session, in_dat(), ..(args))),
       args = rapply(input_ids(x), quoted_input_entries, how = "replace")
     )
   }
@@ -103,13 +97,75 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
       ns <- session$ns
 
-      # Validate block expression.
-      # Requires to validate inputs first
-      obs$update_block <- observeEvent(
-        eval(obs_expr(blk())),
+      # Idea:
+      # - If a field has a generate_server() method, initialize it and use
+      #   its return value.
+      # - If not, use existing code
+      # - combine both to r_values()
+      # - to update ui, use ui_update(), or update module init reactive value
+
+      is_srv <- vapply(x, has_method, TRUE, generic = "generate_server")
+
+      # initialize server modules (if fields have generate_server)
+      x_srv <- x[is_srv]
+
+      # a list with reactive values (module server input)
+      l_init <- lapply(x_srv, \(x) reactiveVal(x))
+
+      l_values_module <- list()  # a list with reactive values (module server output)
+      for (name in names(x_srv)) {
+        l_values_module[[name]] <- generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
+      }
+
+      # proceed in standard fashion (if fields have no generate_server)
+      r_values_default <- reactive({
+        blk_no_srv <- blk()
+        blk_no_srv[is_srv] <- NULL    # to keep class etc
+        eval(obs_expr2(blk_no_srv))
+      })
+
+      r_values <- reactive({
+        values_default <- r_values_default()[names(r_values_default()) != ""]  # no in_dta() ???
+        values_module <- lapply(l_values_module, \(x) x())
+        # keep sort order of x
+        c(values_module, values_default)[names(x)]
+      })
+
+      # Does it make sense to separate these processes?
+      # 1. Upd blk, 2.Update UI
+      obs$update_blk <- observeEvent(
         {
-          secure(eval(set_expr(blk())), is_valid)
+          r_values()
+          in_dat()
+        },
+        {
+          # 1. upd blk,
+          b <- blk()
+          for (field in names(b)) {
+            if (field %in% names(is_srv)[is_srv]) {
+              b[[field]] <- update_field(b[[field]], r_values()[[field]])
+            } else {
+              env <- c(
+                list(data = in_dat()),
+                r_values()[-which(names(r_values()) == field)]
+              )
+              b[[field]] <- update_field(b[[field]], r_values()[[field]], env)
+              if (identical(input[[field]], value(b[[field]]))) next
+            }
+          }
+          blk(b)  # update block
           message(sprintf("Updating block %s", class(x)[[1]]))
+
+          # 2. Update UI
+          for (field in names(b)) {
+            if (field %in% names(is_srv)[is_srv]) {
+              # update reactive value that tiggers module server update
+              l_init[[field]](b[[field]])
+            } else {
+              ui_update(b[[field]], session, field, field)
+            }
+          }
+          message(sprintf("Updating UI of block %s", class(x)[[1]]))
         },
         ignoreInit = TRUE
       )
@@ -119,9 +175,9 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       })
 
       # Validate block inputs
-      obs$validate_inputs <- observeEvent(eval(obs_expr(blk())), {
+      obs$validate_inputs <- observeEvent(r_values(), {
         message(sprintf("Validating block %s", class(x)[[1]]))
-        validate_inputs(blk(), is_valid, session)
+        # validate_inputs(blk(), is_valid, session)  # FIXME should not rely on input$
         # Block will have a red border if any nested input is invalid
         # since blocks can be collapsed and people won't see the input
         # elements.
