@@ -84,9 +84,10 @@ library(blockr.data)
 
 stack <- new_stack(
   data_block,
-  filter_block
+  head_block2
 )
 
+options("BLOCKR_DEV" = T)
 serve_stack(stack)
 ```
 
