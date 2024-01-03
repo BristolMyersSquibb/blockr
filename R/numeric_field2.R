@@ -1,8 +1,8 @@
 #' Re-implement numeric_field, using server module
 #'
-#' @rdname numeric_field2
+#' @rdname generate_server
 #' @export
-generate_server.numeric_field2 <- function(x) {
+generate_server.numeric_field2 <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
       ns <- session$ns
@@ -23,7 +23,7 @@ generate_server.numeric_field2 <- function(x) {
   }
 }
 
-#' @rdname numeric_field2
+#' @rdname generate_ui
 #' @export
 ui_input.numeric_field2 <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
@@ -32,7 +32,7 @@ ui_input.numeric_field2 <- function(x, id, name) {
   )
 }
 
-#' @rdname numeric_field2
+#' @rdname new_field
 #' @export
 new_numeric_field2 <- function(
     value = numeric(),
@@ -42,24 +42,19 @@ new_numeric_field2 <- function(
   new_field(value, min = min, max = max, ..., class = "numeric_field2")
 }
 
-#' @rdname numeric_field2
+#' @rdname new_field
 #' @export
 numeric_field2 <- function(...) {
   validate_field(new_numeric_field2(...))
 }
 
-#' @rdname numeric_field2
+#' @rdname new_field
 #' @export
 validate_field.numeric_field2 <- function(x) {
   x
 }
 
-
-
-
 #' @rdname new_block
-#' @param n_rows Number of rows to return.
-#' @param n_rows_min Minimum number of rows.
 #' @export
 new_head_block2 <- function(
     data,
@@ -91,4 +86,3 @@ new_head_block2 <- function(
 head_block2 <- function(data, ...) {
   initialize_block(new_head_block2(data, ...), data)
 }
-
