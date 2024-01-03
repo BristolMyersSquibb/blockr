@@ -28,7 +28,7 @@ generate_server(x, ...)
 
 handle_remove_block(x, ...)
 
-\method{handle_remove_block}{block}(x, vals, session = getDefaultReactiveDomain())
+\method{handle_remove_block}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
 }
 \arguments{
 \item{x}{Block element.}

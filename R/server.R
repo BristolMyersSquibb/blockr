@@ -315,7 +315,7 @@ handle_remove_block <- function(x, ...) {
 #' @param session Shiny session object.
 #' @export
 #' @rdname generate_server
-handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomain()) {
+handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomain(), ...) {
   input <- session$input
   id <- attr(x, "name")
   observeEvent({
