@@ -4,6 +4,16 @@ const copyText = (txt) => {
 
 window.Shiny.addCustomMessageHandler("blockr-copy-code", (msg) => {
   // todo notify user
-  if (!msg.code) return;
+  if (!msg.code) {
+    window.Shiny.notifications.show({
+      html: "<span>Failed to copy code to clipboard</span>",
+      type: "error",
+    });
+    return;
+  }
   copyText(msg.code.map((code) => code.trim()).join("\n\t"));
+  window.Shiny.notifications.show({
+    html: "<span>Code copied to clipboard</span>",
+    type: "message",
+  });
 });
