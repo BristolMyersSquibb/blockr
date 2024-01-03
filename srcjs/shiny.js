@@ -24,47 +24,41 @@ Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
 // Block color feedback (validation)
 Shiny.addCustomMessageHandler("validate-block", (msg) => {
   if (msg.state) {
-    $(`[data-value="${msg.id}"] .card`)
-      .addClass("border");
-  } else {
-    $(`[data-value="${msg.id}"] .card`)
-      .removeClass("border")
-      .css("border-color", "#DC3444");
+    $(`[data-value="${msg.id}"] .card`).removeClass("border-danger");
+    return;
   }
+
+  $(`[data-value="${msg.id}"] .card`).addClass("border-danger");
 });
 
 // Input color feedback (validation)
-const changeInputBorder = (id, state) => {
+const changeInputBorder = (args) => {
   let sel;
-  if ($(`#${id}`).hasClass("shiny-input-select")) {
-    sel = $(`#${id}-selectized`).parent(".selectize-input");
+  if ($(`#${args.id}`).hasClass("shiny-input-select")) {
+    // border is on parent div
+    sel = $(`#${args.id}-selectized`).parent(".selectize-input").closest("div");
   } else {
-    sel = `#${id}`;
+    sel = `#${args.id}`;
   }
 
-  setTimeout(() => {
-    if (state) {
-      $(sel)
-        .css("border-color", "#ced4da");
-    } else {
-      $(sel)
-        .css("border-color", "#DC3444");
-    }
-  }, 500);
-}
-
-Shiny.addCustomMessageHandler("validate-input", (msg) => {
   // Some inputs are dynamically generated like in filter block.
   // Adding a delay ensure they're in the DOM.
-  if (typeof msg.id === "string") {
-    changeInputBorder(msg.id, msg.state)
-  } else {
-    msg.id.forEach((id) => {
-      changeInputBorder(id, msg.state)
-    })
-  }
+  setTimeout(() => {
+    if (state) {
+      $(sel).addClass("is-invalid");
+      return;
+    }
+
+    $(sel).addClass("is-valid");
+  }, 500);
+};
+
+Shiny.addCustomMessageHandler("validate-input", (msg) => {
+  msg.id.forEach((id) => {
+    changeInputBorder(id, msg.state);
+  });
 });
 
 Shiny.addCustomMessageHandler("toggle-submit", (msg) => {
-  $(`#${msg.id}`).prop('disabled', !msg.state)
+  $(`#${msg.id}`).prop("disabled", !msg.state);
 });

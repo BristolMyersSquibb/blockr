@@ -317,12 +317,12 @@ validate_inputs <- function(blk, is_valid, session) {
       is_valid$block <- FALSE
     }
 
-    # Input border is red if invalid
+    # Input border is red (danger) if invalid
     session$sendCustomMessage(
       "validate-input",
       list(
         state = is_valid$input[[el]],
-        id = ns(el)
+        id = as.list(ns(el)) # we force a list so we can consistently map over ids
       )
     )
   })
@@ -370,7 +370,7 @@ validate_block <- function(blk, is_valid, session) {
     insertUI(
       selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
       ui = lapply(is_valid$message, function(m) {
-        p(m, class = "message text-center", style = "color: red;")
+        p(m, class = "message text-center text-danger")
       }),
       where = "beforeEnd",
       session = session
