@@ -302,6 +302,7 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 #' @param ... Generic consistency.
 #'
 #' @export
+#' @rdname generate_server
 handle_remove_block <- function(x, ...) {
   UseMethod("handle_remove_block")
 }
@@ -313,6 +314,7 @@ handle_remove_block <- function(x, ...) {
 #' @param vals Internal stack reactive values.
 #' @param session Shiny session object.
 #' @export
+#' @rdname generate_server
 handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomain()) {
   input <- session$input
   id <- attr(x, "name")
