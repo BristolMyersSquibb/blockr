@@ -51,7 +51,7 @@ test_that("validate block works", {
   expect_type(res, "list")
   expect_equal(res$type, "validate-input")
   expect_true(res$message$state)
-  expect_equal(res$message$id, list(session$ns(names(input)[[1]])))
+  expect_equal(res$message$id, session$ns(names(input)[[1]]))
 
   # Reset session
   validate_block(blk, is_valid, session)

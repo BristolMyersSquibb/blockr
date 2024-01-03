@@ -322,7 +322,7 @@ validate_inputs <- function(blk, is_valid, session) {
       "validate-input",
       list(
         state = is_valid$input[[el]],
-        id = as.list(ns(el)) # we force a list so we can consistently map over ids
+        id = ns(el)
       )
     )
   })

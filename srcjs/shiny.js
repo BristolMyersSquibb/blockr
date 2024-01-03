@@ -54,9 +54,7 @@ const changeInputBorder = (args) => {
 };
 
 Shiny.addCustomMessageHandler("validate-input", (msg) => {
-  msg.id.forEach((id) => {
-    changeInputBorder(id, msg.state);
-  });
+  changeInputBorder(msg.id, msg.state);
 });
 
 Shiny.addCustomMessageHandler("toggle-submit", (msg) => {
