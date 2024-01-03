@@ -21,4 +21,4 @@ server <- function(input, output) {
   })
 }
 
-shinyApp(ui, server, options = list(port = 3000L))
+shinyApp(ui, server)
