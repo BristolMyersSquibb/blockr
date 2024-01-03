@@ -61,6 +61,18 @@ generate_server.data_block <- function(x, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
+      observeEvent(input$copy, {
+        session$sendCustomMessage(
+          "blockr-copy-code",
+          list(
+            code = generate_code(blk()) |>
+              deparse() |>
+              as.character() |>
+              as.list()
+          )
+        )
+      })
+
       # TO DO: cleanup module inputs (UI and server side)
       # and observers. PR 119
 
@@ -155,6 +167,18 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
+      observeEvent(input$copy, {
+        session$sendCustomMessage(
+          "blockr-copy-code",
+          list(
+            code = generate_code(blk()) |>
+              deparse() |>
+              as.character() |>
+              as.list()
+          )
+        )
+      })
+
       # TO DO: cleanup module inputs (UI and server side)
       # and observers. PR 119
 
@@ -205,6 +229,18 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 
       output$ncol <- renderText({
         prettyNum(ncol(out_dat()), big.mark = ",")
+      })
+
+      observeEvent(input$copy, {
+        session$sendCustomMessage(
+          "blockr-copy-code",
+          list(
+            code = generate_code(blk()) |>
+              deparse() |>
+              as.character() |>
+              as.list()
+          )
+        )
       })
 
       # TO DO: cleanup module inputs (UI and server side)
@@ -323,11 +359,12 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 
       observeEvent(input$copy, {
         session$sendCustomMessage(
-          "blockr-copy-code-stack",
+          "blockr-copy-code",
           list(
             code = generate_code(vals$stack) |>
               deparse() |>
-              as.character()
+              as.character() |>
+              as.list()
           )
         )
       })

@@ -1,35 +1,35 @@
 import { collapse, toggleOutputInput } from "./collapse.js";
 import { remove } from "./remove-stack.js";
-import { copyCode } from "./copy.js";
 
-Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
+window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
   const stack = `#${msg.stack}`;
   setTimeout(() => {
     remove(stack);
     collapse(stack);
-    copyCode();
   }, 750);
 });
 
-Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
+window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   const stack = `#${msg.stack}`;
   // TODO remove this
   // be event based/async instead of timeout
   setTimeout(() => {
-    copyCode();
     toggleOutputInput(stack);
   }, 500);
 });
 
 // Block color feedback (validation)
-Shiny.addCustomMessageHandler("validate-block", (msg) => {
-  if (msg.state) {
-    $(`[data-value="${msg.id}"] .card`).removeClass("border-danger");
-    return;
-  }
+window.window.window.window.window.window.window.window.window.Shiny.addCustomMessageHandler(
+  "validate-block",
+  (msg) => {
+    if (msg.state) {
+      $(`[data-value="${msg.id}"] .card`).removeClass("border-danger");
+      return;
+    }
 
-  $(`[data-value="${msg.id}"] .card`).addClass("border-danger");
-});
+    $(`[data-value="${msg.id}"] .card`).addClass("border-danger");
+  },
+);
 
 // Input color feedback (validation)
 const changeInputBorder = (args) => {
@@ -53,10 +53,10 @@ const changeInputBorder = (args) => {
   }, 500);
 };
 
-Shiny.addCustomMessageHandler("validate-input", (msg) => {
+window.Shiny.addCustomMessageHandler("validate-input", (msg) => {
   changeInputBorder(msg);
 });
 
-Shiny.addCustomMessageHandler("toggle-submit", (msg) => {
+window.Shiny.addCustomMessageHandler("toggle-submit", (msg) => {
   $(`#${msg.id}`).prop("disabled", !msg.state);
 });

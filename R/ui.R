@@ -569,9 +569,11 @@ uiCode <- function(x, ns) {
 uiCode.block <- function(x, ns) {
   div(
     class = "position-relative",
-    tags$a(
-      class = "btn btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
-      icon("copy")
+    actionButton(
+      ns("copy"),
+      class = "btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
+      "",
+      icon = icon("copy")
     ),
     shiny::verbatimTextOutput(ns("code"))
   )
