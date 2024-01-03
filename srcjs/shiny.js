@@ -44,7 +44,7 @@ const changeInputBorder = (args) => {
   // Some inputs are dynamically generated like in filter block.
   // Adding a delay ensure they're in the DOM.
   setTimeout(() => {
-    if (args.state) {
+    if (!args.state) {
       $(sel).addClass("is-invalid");
       return;
     }
