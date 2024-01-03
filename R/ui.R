@@ -227,18 +227,33 @@ generate_ui.stack <- function(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(x, \(b) {
-          block_id <- attr(b, "name")
-          tmp <- generate_ui(b, id = ns(block_id))
-          # Remove button now belongs to the stack namespace!
-          htmltools::tagQuery(tmp)$
-            find(".block-tools")$
-            prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
-          allTags()
+          inject_remove_button(ns, b)
         })
       )
     ),
     blockrDeps()
   )
+}
+
+#' Inject remove button into block header
+#'
+#' This has to be called from the stack parent
+#' namespace. This can also be called dynamically when
+#' inserting a new block within a stack.
+#'
+#' @param ns Stack namespace.
+#' @param b Current block.
+#' @param .hidden Internal parameter. Default to FALSE
+#'
+#' @keywords internal
+inject_remove_button <- function(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+  block_id <- attr(b, "name")
+  tmp <- generate_ui(b, id = ns(block_id))
+  # Remove button now belongs to the stack namespace!
+  htmltools::tagQuery(tmp)$
+    find(".block-tools")$
+    prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+  allTags()
 }
 
 #' @rdname generate_ui
