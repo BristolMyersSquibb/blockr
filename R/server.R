@@ -321,6 +321,17 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         )
       })
 
+      observeEvent(input$copy, {
+        session$sendCustomMessage(
+          "blockr-copy-code-stack",
+          list(
+            code = generate_code(vals$stack) |>
+              deparse() |>
+              as.character()
+          )
+        )
+      })
+
       vals
     }
   )

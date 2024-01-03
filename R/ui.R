@@ -222,7 +222,7 @@ generate_ui.stack <- function(
     div(
       class = "card stack border",
       id = id,
-      stack_header(x, id),
+      stack_header(x, id, ns),
       div(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
@@ -248,7 +248,7 @@ stack_header <- function(x, ...) {
 }
 
 #' @importFrom shiny icon tags div
-stack_header.stack <- function(x, title, ...) {
+stack_header.stack <- function(x, title, ns, ...) {
   div(
     class = "card-header",
     div(
@@ -269,7 +269,8 @@ stack_header.stack <- function(x, title, ...) {
           #  class = "text-decoration-none stack-remove",
           #  iconTrash()
           #),
-          tags$a(
+          actionLink(
+            ns("copy"),
             class = "text-decoration-none stack-copy-code",
             iconCode()
           ),
