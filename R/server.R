@@ -309,6 +309,9 @@ handle_remove_block <- function(x, ...) {
 #' Attach an observeEvent to the given block
 #'
 #' Necessary to be able to remove the block from the stack.
+#'
+#' @param vals Internal stack reactive values.
+#' @param session Shiny session object.
 #' @export
 handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomain()) {
   input <- session$input

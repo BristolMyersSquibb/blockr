@@ -6,6 +6,11 @@
 \usage{
 \method{handle_remove_block}{block}(x, vals, session = getDefaultReactiveDomain())
 }
+\arguments{
+\item{vals}{Internal stack reactive values.}
+
+\item{session}{Shiny session object.}
+}
 \description{
 Necessary to be able to remove the block from the stack.
 }
