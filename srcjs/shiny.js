@@ -44,7 +44,7 @@ const changeInputBorder = (args) => {
   // Some inputs are dynamically generated like in filter block.
   // Adding a delay ensure they're in the DOM.
   setTimeout(() => {
-    if (state) {
+    if (args.state) {
       $(sel).addClass("is-invalid");
       return;
     }
@@ -54,7 +54,7 @@ const changeInputBorder = (args) => {
 };
 
 Shiny.addCustomMessageHandler("validate-input", (msg) => {
-  changeInputBorder(msg.id, msg.state);
+  changeInputBorder(msg);
 });
 
 Shiny.addCustomMessageHandler("toggle-submit", (msg) => {

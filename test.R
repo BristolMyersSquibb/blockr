@@ -3,7 +3,7 @@ library(blockr.data)
 library(shiny)
 
 stack <- new_stack(
-  demo_data_block,
+  data_block,
   filter_block
 )
 
