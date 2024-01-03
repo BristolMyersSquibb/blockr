@@ -19,17 +19,14 @@ window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
 });
 
 // Block color feedback (validation)
-window.window.window.window.window.window.window.window.window.Shiny.addCustomMessageHandler(
-  "validate-block",
-  (msg) => {
-    if (msg.state) {
-      $(`[data-value="${msg.id}"] .card`).removeClass("border-danger");
-      return;
-    }
+window.Shiny.addCustomMessageHandler("validate-block", (msg) => {
+  if (msg.state) {
+    $(`[data-value="${msg.id}"] .card`).removeClass("border-danger");
+    return;
+  }
 
-    $(`[data-value="${msg.id}"] .card`).addClass("border-danger");
-  },
-);
+  $(`[data-value="${msg.id}"] .card`).addClass("border-danger");
+});
 
 // Input color feedback (validation)
 const changeInputBorder = (args) => {
