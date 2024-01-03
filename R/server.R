@@ -114,7 +114,8 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
 
       l_values_module <- list()  # a list with reactive values (module server output)
       for (name in names(x_srv)) {
-        l_values_module[[name]] <- generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
+        l_values_module[[name]] <-
+          generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
       }
 
       # proceed in standard fashion (if fields have no generate_server)
@@ -125,7 +126,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       })
 
       r_values <- reactive({
-        values_default <- r_values_default()[names(r_values_default()) != ""]  # no in_dta() ???
+        values_default <- r_values_default()[names(r_values_default()) != ""]
         values_module <- lapply(l_values_module, \(x) x())
         # keep sort order of x
         c(values_module, values_default)[names(x)]
