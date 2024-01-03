@@ -1,30 +1,19 @@
-const copy = (el) => {
-  navigator.clipboard.writeText($(el).text());
+const copyText = (txt) => {
+  navigator.clipboard.writeText(txt);
 };
 
-export const copyCode = () => {
-  $(".block-copy-code").each((_index, btn) => {
-    // TODO bind selectively instead of reset
-    $(btn).off("click");
-
-    $(btn).on("click", (event) => {
-      const code = $(event.target).closest("div").find("pre");
-      copy(code);
+window.Shiny.addCustomMessageHandler("blockr-copy-code", (msg) => {
+  // todo notify user
+  if (!msg.code) {
+    window.Shiny.notifications.show({
+      html: "<span>Failed to copy code to clipboard</span>",
+      type: "error",
     });
+    return;
+  }
+  copyText(msg.code.map((code) => code.trim()).join("\n\t"));
+  window.Shiny.notifications.show({
+    html: "<span>Code copied to clipboard</span>",
+    type: "message",
   });
-
-  $(".stack-copy-code").each((_index, btn) => {
-    // TODO bind selectively instead of reset
-    $(btn).off("click");
-
-    $(btn).on("click", (event) => {
-      const $codes = $(event.target).closest(".stack").find("pre");
-      let code = [];
-      $codes.each((_index, c) => {
-        code.push($(c).text());
-      });
-      code = code.join(" |>\n");
-      navigator.clipboard.writeText(code);
-    });
-  });
-};
+});
