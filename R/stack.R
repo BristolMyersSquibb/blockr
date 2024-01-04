@@ -7,7 +7,7 @@
 #' @param title Stack title
 #'
 #' @export
-new_stack <- function(..., title = rand_names()) {
+new_stack <- function(..., title = "Stack") {
   ctors <- c(...)
   names <- names(ctors)
 

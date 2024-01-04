@@ -7,7 +7,7 @@
 \alias{serve_stack}
 \title{Stacks}
 \usage{
-new_stack(..., title = rand_names())
+new_stack(..., title = "Stack")
 
 is_stack(x)
 
