@@ -272,6 +272,8 @@ stack_header.stack <- function(x, title, ns, ...) {
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
+            `data-bs-toggle` = "tooltip",
+            `data-bs-title` = "Copy code",
             iconCode()
           ),
           tags$a(
