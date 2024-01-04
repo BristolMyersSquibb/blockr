@@ -7,7 +7,7 @@
 \alias{serve_stack}
 \title{Stacks}
 \usage{
-new_stack(..., name = rand_names())
+new_stack(..., title = rand_names())
 
 is_stack(x)
 
@@ -19,7 +19,7 @@ serve_stack(stack)
 \item{...}{An ordered set of blocks (each argument is required to inherit
 from \code{"block"})}
 
-\item{name}{Stack name}
+\item{title}{Stack title}
 
 \item{x}{An object inheriting form \code{"stack"}}
 

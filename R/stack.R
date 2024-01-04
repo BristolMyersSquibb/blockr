@@ -4,10 +4,10 @@
 #'
 #' @param ... An ordered set of blocks (each argument is required to inherit
 #' from `"block"`)
-#' @param name Stack name
+#' @param title Stack title
 #'
 #' @export
-new_stack <- function(..., name = rand_names()) {
+new_stack <- function(..., title = rand_names()) {
   ctors <- c(...)
   names <- names(ctors)
 
@@ -27,7 +27,7 @@ new_stack <- function(..., name = rand_names()) {
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
   )
 
-  structure(blocks, title = name, name = rand_names(), class = "stack")
+  structure(blocks, title = title, name = rand_names(), class = "stack")
 }
 
 #' @param x An object inheriting form `"stack"`
