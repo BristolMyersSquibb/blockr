@@ -116,3 +116,115 @@ keyvalue_field <- function(...) {
 validate_field.keyvalue_field <- function(x) {
   x
 }
+
+
+get_input_names <- function(prefix, input, garbage, regex) {
+  input_names <- grep(paste0("^", prefix), names(input), value = TRUE)
+  input_names <- grep(regex, input_names, value = TRUE)
+
+  # see comment r_rms_garbage
+  is_garbage <- gsub(regex, "", input_names) %in% garbage
+  input_names[!is_garbage]
+}
+
+get_rms <- function(prefix, input, garbage) {
+  input_names <- get_input_names(prefix, input, garbage, "_rm$")
+  vapply(setNames(input_names, input_names), \(x) input[[x]], 0L)
+}
+
+get_exprs <- function(prefix, input, garbage) {
+  input_names <- get_input_names(prefix, input, garbage, "_name$|_val$")
+  ans <- lapply(setNames(input_names, input_names), \(x) input[[x]])
+  vals <- unlist(ans[grepl("_val$", names(ans))])
+  names <- unlist(ans[grepl("_name$", names(ans))])
+  setNames(vals, names) # a named character vector
+}
+
+
+#' Create a UI element for expressions
+#'
+#' This function generates a UI element for inputting expressions in a Shiny application.
+#' It includes two `shinyAce::aceEditor` elements for inputting the name and value of a new column.
+#'
+#' @param id Character string, an identifier for the UI element.
+#' @param value_name Default name for the new column.
+#' @param value_val Default value for the new column.
+#' @return A `div` element containing the UI components.
+#' @importFrom shinyAce aceEditor aceAutocomplete aceTooltip
+#' @export
+#' @examples
+#' \dontrun{
+#' library(shiny)
+#' library(shinyAce)
+#' shinyApp(
+#'   ui = bslib::page_fluid(
+#'     exprs_ui(value_name = "bla", value_val = "blabla")
+#'   ),
+#'   server = function(input, output) {}
+#' )
+#' }
+exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
+  div(
+    id = id,
+    class = "input-group d-flex justify-content-between mt-1 mb-3",
+    style = "border: 1px solid rgb(206, 212, 218); border-radius: 6px; margin-right: 20px;",
+    tags$style(HTML("
+      .shiny-ace {
+        border: none;
+        margin: 10px;
+      }
+    ")),
+    span(
+      style = "width: 20%",
+      shinyAce::aceEditor(
+        outputId = paste0(id, "_name"),
+        # default value of 1000 may result in no update when clicking 'submit'
+        # too fast.
+        debounce = 300,
+        value = value_name,
+        mode = "r",
+        autoComplete = "disabled",
+        height = "20px",
+        showPrintMargin = FALSE,
+        highlightActiveLine = FALSE,
+        tabSize = 2,
+        theme = "tomorrow",
+        maxLines = 1,
+        fontSize = 14,
+        showLineNumbers = FALSE
+      )
+    ),
+    span(class = "input-group-text", icon("equals"), style = "margin: -1px;"),
+    span(
+      # class = ""
+      style = "width: 70%",
+      shinyAce::aceEditor(
+        outputId = paste0(id, "_val"),
+        debounce = 300,
+        value = value_val,
+        mode = "r",
+        autoComplete = "live",
+        autoCompleters = c("rlang", "static"),
+        autoCompleteList = list(columns = c("demand", "Time")),
+        height = "20px",
+        showPrintMargin = FALSE,
+        highlightActiveLine = FALSE,
+        tabSize = 2,
+        theme = "tomorrow",
+        maxLines = 1,
+        fontSize = 14,
+        showLineNumbers = FALSE
+        # placeholder = "type expression, e.g., `col1 + col2`"
+      )
+    ),
+    tags$button(
+      id = paste0(id, "_rm"),
+      style = "margin: -1px;",
+      type = "button",
+      class = "btn btn-default action-button",
+      icon("trash-can")
+    )
+  )
+}
+
+
