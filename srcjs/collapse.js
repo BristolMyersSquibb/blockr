@@ -2,6 +2,25 @@ export const collapse = (stack) => {
   editor(stack);
   showLastOutputs(stack);
   toggleOutputInput(stack);
+  handleIcons(stack);
+};
+
+const handleIcons = (stack) => {
+  $(stack)
+    .find(".stack-edit-toggle")
+    .on("click", (event) => {
+      $(event.currentTarget)
+        .find("i")
+        .toggleClass("fa-chevron-up fa-chevron-down");
+    });
+
+  $(stack)
+    .find(".block-output-toggle")
+    .on("click", (event) => {
+      $(event.currentTarget)
+        .find("i")
+        .toggleClass("fa-chevron-up fa-chevron-down");
+    });
 };
 
 export const toggleOutputInput = (stack) => {

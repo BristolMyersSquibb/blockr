@@ -586,12 +586,12 @@ iconCode <- function() {
 
 #' @importFrom shiny icon
 iconEdit <- function() {
-  icon("edit")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon
 iconOutput <- function() {
-  icon("arrow-right-from-bracket")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon
