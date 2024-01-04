@@ -116,5 +116,3 @@ keyvalue_field <- function(...) {
 validate_field.keyvalue_field <- function(x) {
   x
 }
-
-

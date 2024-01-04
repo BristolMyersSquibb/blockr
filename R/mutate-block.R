@@ -40,4 +40,3 @@ new_mutate_block <- function(data, value = NULL, ...) {
 mutate_block <- function(data, ...) {
   initialize_block(new_mutate_block(data, ...), data)
 }
-
