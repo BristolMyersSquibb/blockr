@@ -84,7 +84,7 @@ library(blockr.data)
 
 stack <- new_stack(
   data_block,
-  head_block2
+  mutate_block
 )
 
 options("BLOCKR_DEV" = T)
