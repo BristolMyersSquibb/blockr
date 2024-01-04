@@ -1,8 +1,8 @@
 #' Re-implement numeric_field, using server module
 #'
-#' @rdname keyvalue_field
+#' @rdname generate_server
 #' @export
-generate_server.keyvalue_field <- function(x) {
+generate_server.keyvalue_field <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
       ns <- session$ns
@@ -64,7 +64,7 @@ generate_server.keyvalue_field <- function(x) {
   }
 }
 
-#' @rdname keyvalue_field
+#' @rdname generate_ui
 #' @export
 ui_input.keyvalue_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
@@ -97,7 +97,7 @@ ui_input.keyvalue_field <- function(x, id, name) {
   )
 }
 
-#' @rdname keyvalue_field
+#' @rdname new_field
 #' @export
 new_keyvalue_field <- function(
     value = numeric(),
@@ -105,13 +105,13 @@ new_keyvalue_field <- function(
   new_field(value, class = "keyvalue_field")
 }
 
-#' @rdname keyvalue_field
+#' @rdname new_field
 #' @export
 keyvalue_field <- function(...) {
   validate_field(new_keyvalue_field(...))
 }
 
-#' @rdname keyvalue_field
+#' @rdname new_field
 #' @export
 validate_field.keyvalue_field <- function(x) {
   x
