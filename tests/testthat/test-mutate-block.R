@@ -7,6 +7,9 @@ test_that("mutate-block", {
 
   res <- evaluate_block(block, data)
   expect_true(all(c("newcol", "newcol2") %in% colnames(res)))
+
+  res_ui <- generate_ui(mutate_block(data = datasets::iris), id = "test")
+  expect_s3_class(res_ui, "shiny.tag")
 })
 
 test_that("mutate_module_server handles input correctly", {
