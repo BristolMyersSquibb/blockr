@@ -1,8 +1,7 @@
 export const title = (stack, ns) => {
   const $title = $(stack).find(".stack-title");
 
-  $title.on("click", (e) => {
-    console.log(e);
+  $title.on("click", () => {
     $title.replaceWith(
       `<input type="text" class="stack-title-input form-control form-control-sm mx-1" value="${$title.text()}">`,
     );
