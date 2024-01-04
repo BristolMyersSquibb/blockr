@@ -363,7 +363,7 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       })
 
       observeEvent(input$newTitle, {
-        attr(vals$stack, "title") <- input$newTitle
+        set_title(vals$stack, input$newTitle)
       })
 
       observe({

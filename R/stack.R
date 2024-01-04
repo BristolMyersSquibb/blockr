@@ -142,3 +142,19 @@ serve_stack <- function(stack) {
 
   shinyApp(ui, server)
 }
+
+#' Title
+#' Ge and set title.
+#' @param stack A stack.
+#' @param title Title to set.
+#' @name title
+#' @keywords internal
+set_title <- function(stack, title) {
+  attr(stack, "title") <- title
+  stack
+}
+
+#' @rdname title
+get_title <- function(stack) {
+  attr(stack, "title")
+}

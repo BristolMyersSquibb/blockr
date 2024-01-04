@@ -5,8 +5,7 @@ library(shiny)
 stack <- new_stack(
   data_block,
   select_block,
-  filter_block,
-  name = "test"
+  filter_block
 )
 
 ui <- fluidPage(
