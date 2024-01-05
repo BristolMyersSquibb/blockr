@@ -52,7 +52,19 @@ const changeInputBorder = (args) => {
   }, 500);
 };
 
+const showInputsOnError = (opts) => {
+  // input is valid - we skip
+  if (opts.state) return;
+
+  // input is invalid
+  // we show the parent input block
+  // this is because if the error occurs in the
+  // last block then the inputs are hidden by default
+  $(`#${opts.id}`).closest(".block-inputs").removeClass("d-none");
+};
+
 window.Shiny.addCustomMessageHandler("validate-input", (msg) => {
+  showInputsOnError(msg);
   changeInputBorder(msg);
 });
 
