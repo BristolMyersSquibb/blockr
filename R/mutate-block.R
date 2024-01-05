@@ -24,6 +24,7 @@ mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
 new_mutate_block <- function(data, value = NULL, ...) {
   fields <- list(
     value = new_keyvalue_field(value = value),
+    # value = new_keyvalue_field(value = value, submit = FALSE, multiple = FALSE),
     expression = new_hidden_field(mutate_expr)
   )
 

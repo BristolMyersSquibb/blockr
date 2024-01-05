@@ -10,10 +10,20 @@ generate_server.keyvalue_field <- function(x, ...) {
       aceAutocomplete("pl_1_val")
       aceTooltip("pl_1_val")
 
+      submit <- isTRUE(x$submit)
+      multiple <- isTRUE(x$multiple)
+
       r_result <- reactiveVal(value = NULL)
-      observeEvent(input$i_submit, {
-        r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
-      })
+
+      if (submit) {
+        observeEvent(input$i_submit, {
+          r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
+        })
+      } else {
+        observe({
+          r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
+        })
+      }
 
       # remove namedchar UI on trash click
       r_rms_previous <- reactiveVal(integer())
@@ -33,31 +43,34 @@ generate_server.keyvalue_field <- function(x, ...) {
         r_rms_previous(rms)
       })
 
-      observeEvent(input$i_add, {
-        pl_ints <-
-          names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
-          gsub("_rm$", "", x = _) |>
-          gsub("^pl_", "", x = _) |>
-          as.integer()
+      if (multiple) {
+        observeEvent(input$i_add, {
+          pl_ints <-
+            names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
+            gsub("_rm$", "", x = _) |>
+            gsub("^pl_", "", x = _) |>
+            as.integer()
 
-        if (length(pl_ints) == 0) {
-          # if everything is in garbage
-          last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())))
-        } else {
-          last_pl_int <- max(pl_ints)
-        }
+          if (length(pl_ints) == 0) {
+            # if everything is in garbage
+            last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())))
+          } else {
+            last_pl_int <- max(pl_ints)
+          }
 
-        next_pl <- paste0("pl_", last_pl_int + 1L)
-        insertUI(
-          paste0("#", ns("pls")),
-          ui = exprs_ui(ns(next_pl)),
-          where = "beforeEnd",
-          session = session
-        )
+          next_pl <- paste0("pl_", last_pl_int + 1L)
+          insertUI(
+            paste0("#", ns("pls")),
+            ui = exprs_ui(ns(next_pl)),
+            where = "beforeEnd",
+            session = session
+          )
 
-        aceAutocomplete(paste0(next_pl, "_val"))
-        aceTooltip(paste0(next_pl, "_val"))
-      })
+          aceAutocomplete(paste0(next_pl, "_val"))
+          aceTooltip(paste0(next_pl, "_val"))
+        })
+      }
+
 
       r_result # return 'namedchar'
     })
@@ -68,7 +81,11 @@ generate_server.keyvalue_field <- function(x, ...) {
 #' @export
 ui_input.keyvalue_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
-  init <- exprs_ui(ns("pl_1"))
+
+  submit <- isTRUE(x$submit)
+  multiple <- isTRUE(x$multiple)
+
+  init <- exprs_ui(ns("pl_1"), delete_button = multiple)
   div(
     div(
       id = ns("pls"),
@@ -79,19 +96,23 @@ ui_input.keyvalue_field <- function(x, id, name) {
       div(
         style = "margin: 0px;",
         class = "mb-5",
-        actionButton(
-          ns("i_add"),
-          label = NULL,
-          icon = icon("plus"),
-          class = "btn btn-success",
-          style = "margin-right: 7px"
-        ),
-        actionButton(
-          ns("i_submit"),
-          label = "Submit",
-          icon = icon("paper-plane"),
-          class = "btn btn-primary"
-        )
+        if (multiple) {
+          actionButton(
+            ns("i_add"),
+            label = NULL,
+            icon = icon("plus"),
+            class = "btn btn-success",
+            style = "margin-right: 7px"
+          )
+        },
+        if (submit) {
+          actionButton(
+            ns("i_submit"),
+            label = "Submit",
+            icon = icon("paper-plane"),
+            class = "btn btn-primary"
+          )
+        }
       )
     )
   )
@@ -101,8 +122,17 @@ ui_input.keyvalue_field <- function(x, id, name) {
 #' @export
 new_keyvalue_field <- function(
     value = numeric(),
+    multiple = TRUE,
+    submit = TRUE,
+    key = c("suggest", "empty", "none"),
     ...) {
-  new_field(value, class = "keyvalue_field")
+  new_field(
+    value,
+    multiple = multiple,
+    submit = submit,
+    key = key,
+    class = "keyvalue_field"
+  )
 }
 
 #' @rdname new_field
@@ -163,7 +193,10 @@ get_exprs <- function(prefix, input, garbage) {
 #'   server = function(input, output) {}
 #' )
 #' }
-exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
+exprs_ui <- function(id = "",
+                     value_name = "newcol",
+                     value_val = NULL,
+                     delete_button = TRUE) {
   div(
     id = id,
     class = "input-group d-flex justify-content-between mt-1 mb-3",
@@ -217,12 +250,14 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         # placeholder = "type expression, e.g., `col1 + col2`"
       )
     ),
-    tags$button(
-      id = paste0(id, "_rm"),
-      style = "margin: -1px;",
-      type = "button",
-      class = "btn btn-default action-button",
-      icon("trash-can")
-    )
+    if (delete_button) {
+      tags$button(
+        id = paste0(id, "_rm"),
+        style = "margin: -1px;",
+        type = "button",
+        class = "btn btn-default action-button",
+        icon("trash-can")
+      )
+    }
   )
 }
