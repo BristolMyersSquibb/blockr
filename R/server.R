@@ -163,10 +163,12 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       }
 
       if (display == "plot") {
-        output$code <- server_code(x, blk, output)
+        output$plot <- server_output(x, out_dat, output)
       } else {
         output$res <- server_output(x, out_dat, output)
       }
+
+      output$code <- server_code(x, blk, output)
 
       output$nrow <- renderText({
         prettyNum(nrow(out_dat()), big.mark = ",")
