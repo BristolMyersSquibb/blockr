@@ -254,9 +254,9 @@ stack_header.stack <- function(x, title, ns, ...) {
     div(
       class = "d-flex",
       div(
-        class = "flex-grow-1",
+        class = "flex-grow-1 d-inline-flex",
         span(icon("cubes"), class = "text-muted"),
-        title
+        span(get_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",

@@ -1,11 +1,13 @@
 import { collapse, toggleOutputInput } from "./collapse.js";
 import { remove } from "./remove-stack.js";
+import { title } from "./stack-title.js";
 
 window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
   const stack = `#${msg.stack}`;
   setTimeout(() => {
     remove(stack);
     collapse(stack);
+    title(stack, msg.stack);
   }, 750);
 });
 
