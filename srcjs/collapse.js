@@ -124,6 +124,11 @@ export const showLastOutput = (el) => {
   // because some block validations have no last output
   const tableId = $lastOutput.find(".datatables").first().attr("id");
 
+  if (!tableId) {
+    $lastOutput.find(".block-loading").addClass("d-none");
+    return;
+  }
+
   $(document).on("shiny:value", (event) => {
     if (event.name !== tableId) {
       return;

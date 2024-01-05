@@ -461,7 +461,7 @@ server_output.plot_block <- function(x, result, output) {
 #' @rdname generate_ui
 #' @export
 server_output.html_block <- function(x, result, output) {
-  shiny::renderHtml(result())
+  shiny::renderUI(result())
 }
 
 #' @rdname generate_ui

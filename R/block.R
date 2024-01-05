@@ -753,6 +753,7 @@ new_html_block <- function(
 ) {
   # For plot blocks, fields will create input to style the plot ...
   fields <- list(
+    tag = new_string_field("strong"),
     prefix = new_string_field(""),
     suffix = new_string_field("")
   )
@@ -760,9 +761,10 @@ new_html_block <- function(
   new_block(
     fields = fields,
     expr = quote({
-      sprintf("%s %s %s", .(prefix), data, .(suffix)) |> trimws()
+      do.call(.(tag), list(sprintf("%s%s%s", .(prefix), data, .(suffix))))
     }),
     ...,
+    layout = html_layout_fields,
     class = c("html_block")
   )
 }
@@ -998,3 +1000,8 @@ update_fields.plot_block <- update_fields.transform_block
 #' @rdname new_block
 #' @export
 update_fields.ggiraph_block <- update_fields.transform_block
+
+#' @param data Block input data
+#' @rdname new_block
+#' @export
+update_fields.html_block <- update_fields.transform_block

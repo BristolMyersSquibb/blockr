@@ -45,6 +45,7 @@
 \alias{update_fields.transform_block}
 \alias{update_fields.plot_block}
 \alias{update_fields.ggiraph_block}
+\alias{update_fields.html_block}
 \alias{new_cheat_block}
 \alias{cheat_block}
 \alias{new_asfactor_block}
@@ -192,6 +193,8 @@ update_fields(x, ...)
 \method{update_fields}{plot_block}(x, session, data, ...)
 
 \method{update_fields}{ggiraph_block}(x, session, data, ...)
+
+\method{update_fields}{html_block}(x, session, data, ...)
 
 new_cheat_block(data, ...)
 
