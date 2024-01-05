@@ -252,6 +252,11 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
+generate_server.html_block <- generate_server.plot_block
+
+#' @param in_dat Reactive input data
+#' @rdname generate_server
+#' @export
 generate_server.ggiraph_block <- generate_server.plot_block
 
 #' @rdname generate_server
@@ -451,6 +456,12 @@ server_output.block <- function(x, result, output) {
 #' @export
 server_output.plot_block <- function(x, result, output) {
   shiny::renderPlot(result())
+}
+
+#' @rdname generate_ui
+#' @export
+server_output.html_block <- function(x, result, output) {
+  shiny::renderHtml(result())
 }
 
 #' @rdname generate_ui

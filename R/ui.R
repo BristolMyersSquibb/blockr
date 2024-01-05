@@ -554,6 +554,12 @@ uiOutputBlock.plot_block <- function(x, ns) {
 
 #' @rdname generate_ui
 #' @export
+uiOutputBlock.html_block <- function(x, ns) {
+  shiny::htmlOutput(ns("html"))
+}
+
+#' @rdname generate_ui
+#' @export
 uiOutputBlock.ggiraph_block <- function(x, ns) {
   ggiraph::girafeOutput(ns("plot"))
 }

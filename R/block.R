@@ -144,6 +144,11 @@ evaluate_block.plot_block <- function(x, data, ...) {
 #' @export
 evaluate_block.ggiraph_block <- evaluate_block.plot_block
 
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evaluate_block.html_block <- evaluate_block.plot_block
+
 #' @rdname new_block
 #' @param dat Multiple datasets.
 #' @param selected Selected dataset.
@@ -728,6 +733,38 @@ new_plot_block <- function(
 #' @export
 plot_block <- function(data, ...) {
   initialize_block(new_plot_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+html_block <- function(data, ...) {
+  initialize_block(new_html_block(data, ...), data)
+}
+
+#' @param data Tabular data in which to select some columns.
+#' @param plot_opts List containing options for ggplot (color, ...).
+#' @param ... Any other params. TO DO
+#' @rdname new_block
+#' @import ggplot2
+#' @export
+new_html_block <- function(
+  data,
+  ...
+) {
+  # For plot blocks, fields will create input to style the plot ...
+  fields <- list(
+    prefix = new_string_field(""),
+    suffix = new_string_field("")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote({
+      sprintf("%s %s %s", .(prefix), data, .(suffix)) |> trimws()
+    }),
+    ...,
+    class = c("html_block")
+  )
 }
 
 #' @param data Tabular data in which to select some columns.

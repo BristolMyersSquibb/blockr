@@ -15,6 +15,7 @@
 \alias{evaluate_block.transform_block}
 \alias{evaluate_block.plot_block}
 \alias{evaluate_block.ggiraph_block}
+\alias{evaluate_block.html_block}
 \alias{new_data_block}
 \alias{data_block}
 \alias{initialize_block.data_block}
@@ -32,6 +33,8 @@
 \alias{head_block}
 \alias{new_plot_block}
 \alias{plot_block}
+\alias{html_block}
+\alias{new_html_block}
 \alias{new_ggiraph_block}
 \alias{ggiraph_block}
 \alias{initialize_block.transform_block}
@@ -90,6 +93,8 @@ evaluate_block(x, ...)
 \method{evaluate_block}{plot_block}(x, data, ...)
 
 \method{evaluate_block}{ggiraph_block}(x, data, ...)
+
+\method{evaluate_block}{html_block}(x, data, ...)
 
 new_data_block(
   ...,
@@ -155,6 +160,10 @@ new_plot_block(
 )
 
 plot_block(data, ...)
+
+html_block(data, ...)
+
+new_html_block(data, ...)
 
 new_ggiraph_block(
   data,

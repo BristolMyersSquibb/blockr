@@ -5,6 +5,7 @@
 \alias{server_output}
 \alias{server_output.block}
 \alias{server_output.plot_block}
+\alias{server_output.html_block}
 \alias{server_output.ggiraph_block}
 \alias{server_code}
 \alias{server_code.block}
@@ -48,6 +49,7 @@
 \alias{uiOutputBlock}
 \alias{uiOutputBlock.block}
 \alias{uiOutputBlock.plot_block}
+\alias{uiOutputBlock.html_block}
 \alias{uiOutputBlock.ggiraph_block}
 \alias{uiCode}
 \alias{uiCode.block}
@@ -60,6 +62,8 @@ server_output(x, result, output)
 \method{server_output}{block}(x, result, output)
 
 \method{server_output}{plot_block}(x, result, output)
+
+\method{server_output}{html_block}(x, result, output)
 
 \method{server_output}{ggiraph_block}(x, result, output)
 
@@ -146,6 +150,8 @@ uiOutputBlock(x, ns)
 \method{uiOutputBlock}{block}(x, ns)
 
 \method{uiOutputBlock}{plot_block}(x, ns)
+
+\method{uiOutputBlock}{html_block}(x, ns)
 
 \method{uiOutputBlock}{ggiraph_block}(x, ns)
 
