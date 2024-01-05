@@ -179,7 +179,8 @@ feature. Default to FALSE. Not yet used.}
 
 \item{submit}{Logical, whether the field includes a submit button. Default is TRUE.}
 
-\item{key}{Character vector, options for autocompletion in the key field. Can be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").}
+\item{key}{Character vector, options for autocompletion in the key field. Can
+be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

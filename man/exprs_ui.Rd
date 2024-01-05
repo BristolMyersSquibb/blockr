@@ -19,9 +19,11 @@ exprs_ui(
 
 \item{value_val}{Default value for the new column.}
 
-\item{delete_button}{Logical, whether to include a delete button for the expression. Default is TRUE.}
+\item{delete_button}{Logical, whether to include a delete button for the
+expression. Default is TRUE.}
 
-\item{key}{Character vector, options for autocompletion. Can be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").}
+\item{key}{Character vector, options for autocompletion. Can be "suggest",
+"empty", or "none". Default is c("suggest", "empty", "none").}
 }
 \value{
 A \code{div} element containing the UI components.
