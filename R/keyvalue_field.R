@@ -121,7 +121,9 @@ ui_input.keyvalue_field <- function(x, id, name) {
 }
 
 #' @rdname new_field
-#' @export
+#'
+#' @param submit Logical, whether the field includes a submit button. Default is TRUE.
+#' @param key Character vector, options for autocompletion in the key field. Can be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").
 new_keyvalue_field <- function(
     value = numeric(),
     multiple = TRUE,
@@ -177,10 +179,13 @@ get_exprs <- function(prefix, input, garbage) {
 #'
 #' This function generates a UI element for inputting expressions in a Shiny application.
 #' It includes two `shinyAce::aceEditor` elements for inputting the name and value of a new column.
+#' Additionally, it can include a delete button and allow customization of autocompletion settings.
 #'
 #' @param id Character string, an identifier for the UI element.
 #' @param value_name Default name for the new column.
 #' @param value_val Default value for the new column.
+#' @param delete_button Logical, whether to include a delete button for the expression. Default is TRUE.
+#' @param key Character vector, options for autocompletion. Can be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").
 #' @return A `div` element containing the UI components.
 #' @importFrom shinyAce aceEditor aceAutocomplete aceTooltip
 #' @export

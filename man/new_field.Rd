@@ -133,7 +133,13 @@ list_field(...)
 
 \method{validate_field}{list_field}(x)
 
-new_keyvalue_field(value = numeric(), ...)
+new_keyvalue_field(
+  value = numeric(),
+  multiple = TRUE,
+  submit = TRUE,
+  key = c("suggest", "empty", "none"),
+  ...
+)
 
 keyvalue_field(...)
 
@@ -170,6 +176,10 @@ feature. Default to FALSE. Not yet used.}
 \item{components}{Variable list of field components}
 
 \item{sub_fields}{Fields contained in \code{list_field}}
+
+\item{submit}{Logical, whether the field includes a submit button. Default is TRUE.}
+
+\item{key}{Character vector, options for autocompletion in the key field. Can be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

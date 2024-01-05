@@ -4,7 +4,13 @@
 \alias{exprs_ui}
 \title{Create a UI element for expressions}
 \usage{
-exprs_ui(id = "", value_name = "newcol", value_val = NULL)
+exprs_ui(
+  id = "",
+  value_name = "newcol",
+  value_val = NULL,
+  delete_button = TRUE,
+  key = c("suggest", "empty", "none")
+)
 }
 \arguments{
 \item{id}{Character string, an identifier for the UI element.}
@@ -12,6 +18,10 @@ exprs_ui(id = "", value_name = "newcol", value_val = NULL)
 \item{value_name}{Default name for the new column.}
 
 \item{value_val}{Default value for the new column.}
+
+\item{delete_button}{Logical, whether to include a delete button for the expression. Default is TRUE.}
+
+\item{key}{Character vector, options for autocompletion. Can be "suggest", "empty", or "none". Default is c("suggest", "empty", "none").}
 }
 \value{
 A \code{div} element containing the UI components.
@@ -19,6 +29,7 @@ A \code{div} element containing the UI components.
 \description{
 This function generates a UI element for inputting expressions in a Shiny application.
 It includes two \code{shinyAce::aceEditor} elements for inputting the name and value of a new column.
+Additionally, it can include a delete button and allow customization of autocompletion settings.
 }
 \examples{
 \dontrun{
