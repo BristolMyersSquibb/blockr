@@ -76,26 +76,30 @@ generate_code <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.block <- function(x) {
-  if (class(x)[[1]] %in% c("arrange_block", "group_by_block")) {
-    where_tmp <- lapply(x, function(b) {
-      res <- value(b)
-      lapply(res, as.name)
-    })
-    splice <- TRUE
-  } else {
-    where_tmp <- lapply(x, type_trans)
-    splice <- FALSE
-  }
-
   do.call(
     bquote,
     list(
       attr(x, "expr"),
-      where = where_tmp,
-      splice = splice
+      where = lapply(x, type_trans),
+      splice = FALSE
     )
   )
 }
+
+#' @rdname new_block
+#' @export
+generate_code.arrange_block <- function(x) {
+  do.call(
+    bquote,
+    list(
+      attr(x, "expr"),
+      where = lapply(x, type_trans),
+      splice = TRUE
+    )
+  )
+}
+
+generate_code.group_by_block <- generate_code.arrange_block
 
 #' @rdname new_block
 #' @export

@@ -46,7 +46,13 @@ mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
   )
 }
 
+
 generate_server.mutate_block <- function(x, in_dat, id, ...) {
+  mutate_module_server(id, x = x, in_dat = in_dat, ...)
+}
+
+# id as first argument, so I can test via shiny::testSever
+mutate_module_server <- function(id, x, in_dat, ...) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -58,7 +64,7 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
       # only update on init! Init value is in x
       output$value <- renderUI(ace_module_ui(ns(id), exprs_init = value(x$value, "value")))
 
-      r_blk <- reactiveVal(x)
+      blk <- reactiveVal(x)
 
       # rather than input, I want the fields to be updated on r_value()
       o <- observeEvent(
@@ -66,13 +72,13 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
         {
           # 1. Update Block, set field
           blk_updated <- update_fields(
-            r_blk(), session,
+            blk(), session,
             in_dat(),
             value = r_value()
           )
 
           attr(blk_updated, "expr") <- mutate_expr(r_value())
-          r_blk(blk_updated)
+          blk(blk_updated)
 
           # 2. Sync UI  (dont think this belongs with update block...)
           # FIXME where to get 'value' id from
@@ -83,7 +89,7 @@ generate_server.mutate_block <- function(x, in_dat, id, ...) {
 
       out_dat <- reactive(
         # 3. Update Data
-        evaluate_block(r_blk(), data = in_dat())
+        evaluate_block(blk(), data = in_dat())
       )
 
       output$res <- server_output(x, out_dat, output)

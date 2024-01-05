@@ -3,12 +3,15 @@
 \name{new_stack}
 \alias{new_stack}
 \alias{is_stack}
+\alias{generate_code.stack}
 \alias{serve_stack}
 \title{Stacks}
 \usage{
-new_stack(..., name = rand_names())
+new_stack(..., title = "Stack")
 
 is_stack(x)
+
+\method{generate_code}{stack}(x)
 
 serve_stack(stack)
 }
@@ -16,7 +19,7 @@ serve_stack(stack)
 \item{...}{An ordered set of blocks (each argument is required to inherit
 from \code{"block"})}
 
-\item{name}{Stack name}
+\item{title}{Stack title}
 
 \item{x}{An object inheriting form \code{"stack"}}
 

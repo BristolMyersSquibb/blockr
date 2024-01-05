@@ -11,14 +11,17 @@ generate_ui <- function(x, ...) {
   UseMethod("generate_ui")
 }
 
-#' @param id UI IDs
 #' @rdname generate_ui
 #' @export
-generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE)) {
-  stopifnot(...length() == 0L)
+ui_fields <- function(x, ...) {
+  UseMethod("ui_fields", x)
+}
 
-  ns <- NS(id)
-
+#' @rdname generate_ui
+#' @param inputs_hidden For styling purposes: CSS class to apply
+#' when the block is collapsed.
+#' @export
+ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   fields <- Map(
     ui_input,
     x,
@@ -26,63 +29,53 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
     name = names(x)
   )
 
-  code_id <- ns("codeCollapse")
-  output_id <- ns("outputCollapse")
-
-  header <- block_title(x, code_id, output_id, ns, .hidden)
-
-  block_class <- "block"
-  if (.hidden) {
-    block_class <- sprintf("%s d-none", block_class)
-  }
-
-  inputs_hidden <- ""
-  loading_class <- "d-none"
-  if (.hidden) {
-    inputs_hidden <- "d-none"
-    loading_class <- ""
-  }
-
   layout <- attr(x, "layout")
 
   div(
-    class = block_class,
-    `data-block-type` = paste0(class(x), collapse = ","),
-    `data-value` = ns("block"),
-    shiny::div(
-      class = "card shadow-sm p-2 mb-2 border",
-      shiny::div(
-        class = "card-body p-1",
-        header,
-        div(
-          class = "block-validation"
+    class = sprintf("block-inputs %s", inputs_hidden),
+    layout(fields)
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+block_body <- function(x, ...) {
+  UseMethod("block_body", x)
+}
+
+#' @rdname generate_ui
+#' @export
+block_body.block <- function(x, ns, inputs_hidden, ...) {
+
+  result_id <- ns("outputCollapse")
+
+  loading_class <- "d-none"
+  if (inputs_hidden != "") {
+    loading_class <- ""
+  }
+
+  tagList(
+    tags$a(
+      class = "text-decoration-none block-output-toggle",
+      href = sprintf("#%s", result_id),
+      iconOutput()
+    ),
+    ui_fields(x, ns, inputs_hidden),
+    div(
+      class = sprintf("%s block-output", inputs_hidden),
+      id = result_id,
+      uiOutputBlock(x, ns),
+      div(
+        class = sprintf(
+          "block-loading d-flex justify-content-center %s",
+          loading_class
         ),
         div(
-          class = sprintf("block-inputs %s", inputs_hidden),
-          layout(fields)
-        ),
-        div(
-          class = "collapse block-code",
-          id = code_id,
-          uiCode(x, ns)
-        ),
-        div(
-          class = sprintf("%s block-output", inputs_hidden),
-          id = output_id,
-          uiOutputBlock(x, ns),
-          div(
-            class = sprintf(
-              "block-loading d-flex justify-content-center %s",
-              loading_class
-            ),
-            div(
-              class = "spinner-border text-primary",
-              role = "status",
-              span(
-                class = "visually-hidden",
-                "Loading..."
-              )
-            )
+          class = "spinner-border text-primary",
+          role = "status",
+          span(
+            class = "visually-hidden",
+            "Loading..."
           )
         )
       )
@@ -92,61 +85,204 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, id = NULL, ...) {
-  stopifnot(...length() == 0L)
+block_code <- function(x, ...) {
+  UseMethod("block_code", x)
+}
 
-  id <- if (is.null(id)) attr(x, "name") else id
-  body_id <- sprintf("%s-body", id)
+#' @rdname generate_ui
+#' @export
+block_code.block <- function(x, ns, inputs_hidden, ...) {
+
+  code_id <- ns("codeCollapse")
+
+  div(
+    class = sprintf("%s block-output", inputs_hidden),
+    tags$a(
+      class = "text-decoration-none block-code-toggle",
+      `data-bs-toggle` = "collapse",
+      href = sprintf("#%s", code_id),
+      `aria-expanded` = "false",
+      `aria-controls` = code_id,
+      iconCode()
+    ),
+    div(
+      class = "collapse block-code",
+      id = code_id,
+      uiCode(x, ns)
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+block_header <- function(x, ...) {
+  UseMethod("block_header", x)
+}
+
+#' @importFrom shiny tags div p
+#' @export
+block_header.block <- function(x, ns, hidden_class, ...) {
+  title <- class(x)[1] |>
+    (\(.) gsub("_.*$", "", .))() |>
+    tools::toTitleCase()
+
+  div(
+    class = sprintf("m-0 card-title block-title %s", hidden_class),
+    div(
+      class = "d-flex",
+      div(
+        class = "flex-grow-1",
+        p(
+          span(icon("cube"), class = "text-muted"),
+          title,
+          class = "fw-bold"
+        )
+      ),
+      div(
+        class = "flex-grow-1",
+        span(
+          class = "block-feedback text-muted",
+          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
+          "rows |",
+          class = "block-feedback text-muted",
+          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
+          "cols"
+        )
+      ),
+      div(
+        class = "block-tools flex-shrink-1"
+      )
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+block_remove <- function(x, ...) {
+  UseMethod("block_remove", x)
+}
+
+#' @rdname generate_ui
+#' @export
+block_remove.block <- function(x, id, ...) {
+  actionLink(
+    id,
+    icon("trash"),
+    class = "text-decoration-none block-remove",
+  )
+}
+
+#' @param id UI IDs
+#' @rdname generate_ui
+#' @export
+generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+  stopifnot(...length() == 0L)
 
   ns <- NS(id)
 
-  tagList(
-    tags$script(
-      HTML(
-        sprintf(
-          "$(function() {
-            $(document).on(
-              'shiny:inputchanged',
-              function(event) {
-                if (event.name.match('(last_changed|clientdata)') === null) {
-                  Shiny.setInputValue(
-                    '%s',
-                    {
-                      name: event.name,
-                      value: event.value,
-                      type: event.inputType,
-                      binding: event.binding !== null ? event.binding.name : ''
-                    }
-                  );
-                }
-            });
-          });
-          ",
-          ns("last_changed")
-        )
+  block_class <- "block"
+  inputs_hidden <- ""
+  hidden_class <- ""
+  if (.hidden) {
+    hidden_class <- "d-none"
+    inputs_hidden <- hidden_class
+    block_class <- sprintf("%s d-none", block_class)
+  }
+
+  div(
+    class = block_class,
+    `data-block-type` = paste0(class(x), collapse = ","),
+    `data-value` = ns("block"),
+    div(
+      class = "card shadow-sm p-2 mb-2 border",
+      div(
+        class = "card-body p-1",
+        block_header(x, ns, hidden_class),
+        div(class = "block-validation"),
+        block_body(x, ns, inputs_hidden),
+        block_code(x, ns, inputs_hidden)
       )
-    ),
-    shiny::div(
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+generate_ui.stack <- function(
+  x,
+  id = NULL,
+  ...
+) {
+  stopifnot(...length() == 0L)
+
+  id <- if (is.null(id)) attr(x, "name") else id
+  ns <- NS(id)
+
+  tagList(
+    div(
       class = "card stack border",
       id = id,
-      stack_header(x, ns),
-      shiny::div(
+      stack_header(x, id, ns),
+      div(
         class = "card-body p-1",
-        id = body_id,
+        id = sprintf("%s-body", id),
         lapply(x, \(b) {
-          generate_ui(b, id = ns(attr(b, "name")))
+          block_id <- attr(b, "name")
+          tmp <- generate_ui(b, id = ns(block_id))
+          # Remove button now belongs to the stack namespace!
+          htmltools::tagQuery(tmp)$
+            find(".block-tools")$
+            prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+          allTags()
         })
       )
     ),
-    sortable::sortable_js(
-      body_id,
-      options = sortable::sortable_options(
-        draggable = ".block",
-        handle = ".block-handle"
+    blockrDeps()
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+stack_header <- function(x, ...) {
+  UseMethod("stack_header", x)
+}
+
+#' @importFrom shiny icon tags div
+stack_header.stack <- function(x, title, ns, ...) {
+  div(
+    class = "card-header",
+    div(
+      class = "d-flex",
+      div(
+        class = "flex-grow-1 d-inline-flex",
+        span(icon("cubes"), class = "text-muted"),
+        span(get_title(x), class = "stack-title cursor-pointer")
+      ),
+      div(
+        class = "flex-shrink-1",
+        div(
+          class = "ps-1 py-2",
+          # TO DO: move it to workspace (needs other PR).
+          #actionLink(
+          #  ns("remove"),
+          #  "",
+          #  class = "text-decoration-none stack-remove",
+          #  iconTrash()
+          #),
+          actionLink(
+            ns("copy"),
+            class = "text-decoration-none stack-copy-code",
+            `data-bs-toggle` = "tooltip",
+            `data-bs-title` = "Copy code",
+            iconCode()
+          ),
+          tags$a(
+            class = "text-decoration-none stack-edit-toggle",
+            iconEdit()
+          )
+        )
       )
-    ),
-    blockrDependencies(),
-    highlightDependencies()
+    )
   )
 }
 
@@ -180,107 +316,6 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
         lapply(seq_along(stacks), \(i) {
           generate_ui(stacks[[i]], id = ns(sprintf("mystack-%s", i)))
         })
-      )
-    )
-  )
-}
-
-#' @importFrom shiny tags div
-block_title <- function(block, code_id, output_id, ns, .hidden) {
-  hidden_class <- ""
-  if (.hidden) {
-    hidden_class <- "d-none"
-  }
-
-  title <- class(block)[1] |>
-    (\(.) gsub("_.*$", "", .))() |>
-    tools::toTitleCase()
-
-  div(
-    class = sprintf("m-0 card-title block-title %s", hidden_class),
-    div(
-      class = "d-flex",
-      div(
-        class = "flex-grow-1",
-        shiny::p(
-          span(icon("grip-vertical"), class = "block-handle text-muted"),
-          title,
-          class = "fw-bold"
-        )
-      ),
-      div(
-        class = "flex-grow-1",
-        span(
-          class = "block-feedback text-muted",
-          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
-          "rows |",
-          class = "block-feedback text-muted",
-          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
-          "cols"
-        )
-      ),
-      div(
-        class = "flex-shrink-1",
-        actionLink(
-          ns("remove"),
-          icon("trash"),
-          class = "text-decoration-none block-remove",
-        ),
-        tags$a(
-          class = "text-decoration-none block-code-toggle",
-          `data-bs-toggle` = "collapse",
-          href = sprintf("#%s", code_id),
-          `aria-expanded` = "false",
-          `aria-controls` = code_id,
-          iconCode()
-        ),
-        tags$a(
-          class = "text-decoration-none block-output-toggle",
-          href = sprintf("#%s", output_id),
-          iconOutput()
-        )
-      )
-    )
-  )
-}
-
-#' @importFrom shiny icon tags div
-stack_header <- function(stack, ns) {
-  title <- attr(stack, "name")
-
-  div(
-    class = "card-header",
-    div(
-      class = "d-flex",
-      if (not_null(title)) {
-        div(
-          class = "flex-grow-1",
-          bmsui::togglerTextInput(
-            ns("title"),
-            title,
-            restore = TRUE
-          )
-        )
-      },
-      div(
-        class = "flex-shrink-1",
-        div(
-          class = "ps-1 py-2",
-          actionLink(
-            ns("remove"),
-            "",
-            class = "text-decoration-none stack-remove",
-            iconTrash()
-          ),
-          tags$a(
-            class = "text-decoration-none stack-copy-code",
-            iconCode()
-          ),
-          tags$a(
-            class = "text-decoration-none stack-edit-toggle",
-            iconEdit()
-          )
-        )
       )
     )
   )
@@ -571,9 +606,11 @@ uiCode <- function(x, ns) {
 uiCode.block <- function(x, ns) {
   div(
     class = "position-relative",
-    tags$a(
-      class = "btn btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
-      icon("copy")
+    actionButton(
+      ns("copy"),
+      class = "btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
+      "",
+      icon = icon("copy")
     ),
     shiny::verbatimTextOutput(ns("code"))
   )
@@ -586,12 +623,12 @@ iconCode <- function() {
 
 #' @importFrom shiny icon
 iconEdit <- function() {
-  icon("edit")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon
 iconOutput <- function() {
-  icon("arrow-right-from-bracket")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon

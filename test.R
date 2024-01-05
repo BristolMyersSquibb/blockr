@@ -3,8 +3,10 @@ library(blockr.data)
 library(shiny)
 
 stack <- new_stack(
-  demo_data_block,
-  filter_block
+  data_block,
+  select_block,
+  filter_block,
+  title = "test"
 )
 
 ui <- fluidPage(
@@ -21,4 +23,4 @@ server <- function(input, output) {
   })
 }
 
-shinyApp(ui, server, options = list(port = 3000L))
+shinyApp(ui, server)

@@ -9,8 +9,18 @@
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
+\alias{ui_fields}
+\alias{ui_fields.block}
+\alias{block_body}
+\alias{block_body.block}
+\alias{block_code}
+\alias{block_code.block}
+\alias{block_header}
+\alias{block_remove}
+\alias{block_remove.block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
+\alias{stack_header}
 \alias{generate_ui.workspace}
 \alias{ui_input}
 \alias{ui_input.string_field}
@@ -60,9 +70,29 @@ server_code(x, state, output)
 
 generate_ui(x, ...)
 
+ui_fields(x, ...)
+
+\method{ui_fields}{block}(x, ns, inputs_hidden, ...)
+
+block_body(x, ...)
+
+\method{block_body}{block}(x, ns, inputs_hidden, ...)
+
+block_code(x, ...)
+
+\method{block_code}{block}(x, ns, inputs_hidden, ...)
+
+block_header(x, ...)
+
+block_remove(x, ...)
+
+\method{block_remove}{block}(x, id, ...)
+
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
+
+stack_header(x, ...)
 
 \method{generate_ui}{workspace}(x, id = NULL, ...)
 
@@ -141,11 +171,14 @@ uiCode(x, ns)
 
 \item{...}{Generic consistency}
 
+\item{ns}{Output namespace}
+
+\item{inputs_hidden}{For styling purposes: CSS class to apply
+when the block is collapsed.}
+
 \item{.hidden}{Whether to initialise the block hidden.}
 
 \item{session}{Shiny session}
-
-\item{ns}{Output namespace}
 }
 \description{
 Generic for UI generation

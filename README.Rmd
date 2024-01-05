@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -11,6 +12,35 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+library(shiny)
+library(bslib)
+
+create_app_link <- function(mode = c("app", "editor"), header = TRUE) {
+  mode <- match.arg(mode)
+
+  app_code <- "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC5M6PFcQKKZMIYoCEs4CtEJQLjA9jgGADcWnLzB8T8wAF8AXSA"
+
+  app_url <- sprintf(
+    "https://shinylive.io/r/%s/#code=%s", mode, app_code
+  )
+
+  if (!header) {
+    app_url <- paste0(app_url, "&h=0")
+  }
+
+  tags$iframe(
+    # To allow the content to fill the full screen card
+    class = "html-fill-item",
+    src = app_url,
+    height = "700",
+    width = "100%",
+    style = "border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;",
+    allowfullscreen = "",
+    allow = "autoplay",
+    `data-external` = "1"
+  )
+}
 ```
 
 # blockr
@@ -40,6 +70,10 @@ Easiest is to run `make`, otherwise:
 
 ## Examples
 
+```{r, eval=TRUE, echo=FALSE}
+card(create_app_link("editor", FALSE), full_screen = TRUE)
+```
+
 ### Create a stack
 
 A simple stack of blocks providing a dataset selector and a filter operation:
@@ -50,11 +84,8 @@ library(blockr.data)
 
 stack <- new_stack(
   data_block,
-  demo_block,
-  plot_block
+  filter_block
 )
-
-pkgload::load_all("."); stack <- new_stack(data_block, mutate_block);serve_stack(stack)
 
 serve_stack(stack)
 ```

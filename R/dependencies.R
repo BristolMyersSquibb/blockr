@@ -1,5 +1,5 @@
 #' @importFrom htmltools htmlDependency
-blockrDependencies <- function() {
+coreDeps <- function() {
   htmlDependency(
     "blockr",
     version = utils::packageVersion("blockr"),
@@ -11,7 +11,7 @@ blockrDependencies <- function() {
 }
 
 #' @importFrom htmltools htmlDependency
-highlightDependencies <- function() {
+highlightDeps <- function() {
   htmlDependency(
     "highlight",
     version = utils::packageVersion("blockr"),
@@ -19,4 +19,8 @@ highlightDependencies <- function() {
     package = "blockr",
     stylesheet = "highlight.min.css",
   )
+}
+
+blockrDeps <- function() {
+  tagList(coreDeps(), highlightDeps())
 }
