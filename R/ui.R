@@ -272,6 +272,8 @@ stack_header.stack <- function(x, title, ns, ...) {
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
+            `data-bs-toggle` = "tooltip",
+            `data-bs-title` = "Copy code",
             iconCode()
           ),
           tags$a(
@@ -586,12 +588,12 @@ iconCode <- function() {
 
 #' @importFrom shiny icon
 iconEdit <- function() {
-  icon("edit")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon
 iconOutput <- function() {
-  icon("arrow-right-from-bracket")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon

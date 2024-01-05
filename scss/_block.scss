@@ -18,6 +18,9 @@ html {
 
     .block-output-toggle {
       color: var(--bs-gray);
+      position: absolute;
+      top: .75rem;
+      right: 2rem;
       &:hover {
         color: var(--bs-success);
       }
@@ -25,6 +28,9 @@ html {
 
     .block-code-toggle {
       color: var(--bs-gray);
+      position: absolute;
+      top: .75rem;
+      right: 3.5rem;
       &:hover {
         color: var(--bs-info);
       }
