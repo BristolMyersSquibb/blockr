@@ -12,6 +12,7 @@ generate_server.keyvalue_field <- function(x, ...) {
 
       submit <- isTRUE(x$submit)
       multiple <- isTRUE(x$multiple)
+      key <- x$key
 
       r_result <- reactiveVal(value = NULL)
 
@@ -61,7 +62,7 @@ generate_server.keyvalue_field <- function(x, ...) {
           next_pl <- paste0("pl_", last_pl_int + 1L)
           insertUI(
             paste0("#", ns("pls")),
-            ui = exprs_ui(ns(next_pl)),
+            ui = exprs_ui(ns(next_pl), key = key),
             where = "beforeEnd",
             session = session
           )
@@ -84,8 +85,9 @@ ui_input.keyvalue_field <- function(x, id, name) {
 
   submit <- isTRUE(x$submit)
   multiple <- isTRUE(x$multiple)
+  key <- x$key
 
-  init <- exprs_ui(ns("pl_1"), delete_button = multiple)
+  init <- exprs_ui(ns("pl_1"), delete_button = multiple, key = key)
   div(
     div(
       id = ns("pls"),
@@ -196,7 +198,12 @@ get_exprs <- function(prefix, input, garbage) {
 exprs_ui <- function(id = "",
                      value_name = "newcol",
                      value_val = NULL,
-                     delete_button = TRUE) {
+                     delete_button = TRUE,
+                     key = c("suggest", "empty", "none")) {
+
+
+  key <- match.arg(key)
+
   div(
     id = id,
     class = "input-group d-flex justify-content-between mt-1 mb-3",
@@ -207,27 +214,31 @@ exprs_ui <- function(id = "",
         margin: 10px;
       }
     ")),
-    span(
-      style = "width: 20%",
-      shinyAce::aceEditor(
-        outputId = paste0(id, "_name"),
-        # default value of 1000 may result in no update when clicking 'submit'
-        # too fast.
-        debounce = 300,
-        value = value_name,
-        mode = "r",
-        autoComplete = "disabled",
-        height = "20px",
-        showPrintMargin = FALSE,
-        highlightActiveLine = FALSE,
-        tabSize = 2,
-        theme = "tomorrow",
-        maxLines = 1,
-        fontSize = 14,
-        showLineNumbers = FALSE
+    if (key != "none") {
+      span(
+        style = "width: 20%",
+        shinyAce::aceEditor(
+          outputId = paste0(id, "_name"),
+          # default value of 1000 may result in no update when clicking 'submit'
+          # too fast.
+          debounce = 300,
+          value = value_name,
+          mode = "r",
+          autoComplete = "disabled",
+          height = "20px",
+          showPrintMargin = FALSE,
+          highlightActiveLine = FALSE,
+          tabSize = 2,
+          theme = "tomorrow",
+          maxLines = 1,
+          fontSize = 14,
+          showLineNumbers = FALSE
+        )
       )
-    ),
-    span(class = "input-group-text", icon("equals"), style = "margin: -1px;"),
+    },
+    if (key != "none") {
+      span(class = "input-group-text", icon("equals"), style = "margin: -1px;")
+    },
     span(
       # class = ""
       style = "width: 70%",
