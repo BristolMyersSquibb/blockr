@@ -137,7 +137,7 @@ type_trans <- function(x) {
 
   switch(attr(x, "type"),
     literal = res,
-    name = as.name(res)
+    name = unlst(lapply(res, as.name))
   )
 }
 
@@ -186,6 +186,8 @@ dropNulls <- function(x) {
 convert_block <- function(from = new_select_block, to, data, ...) {
   block <- initialize_block(from(data, ...), data)
   class(block)[[1]] <- sprintf("%s_block", deparse(substitute(to)))
+  # Change type to name since arrange/group_by don't work with literals
+  attr(block$columns, "type") <- "name"
   attr(block, "expr") <- substitute(
     to(..(columns))
   )
