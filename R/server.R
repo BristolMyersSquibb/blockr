@@ -17,68 +17,21 @@ generate_server.block <- function(x, ...) {
   stop("no base-class server for blocks available")
 }
 
-#' @rdname generate_server
-#' @export
-generate_server.data_block <- function(x, id, ...) {
-  obs_expr <- function(x) {
-    splice_args(
-      list(..(args)),
-      args = lapply(unlst(input_ids(x)), quoted_input_entry)
-    )
-  }
+generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "plot")) {
 
-  set_expr <- function(x) {
-    splice_args(
-      blk(update_fields(blk(), session, ..(args))),
-      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-    )
-  }
-
-  moduleServer(
-    id,
-    function(input, output, session) {
-      ns <- session$ns
-      blk <- reactiveVal(x)
-
-      o <- observeEvent(
-        eval(obs_expr(blk())),
-        eval(set_expr(blk())),
-        ignoreInit = TRUE
-      )
-
-      out_dat <- reactive(
-        evaluate_block(blk())
-      )
-
-      output$res <- server_output(x, out_dat, output)
-      output$code <- server_code(x, blk, output)
-
-      output$nrow <- renderText({
-        prettyNum(nrow(out_dat()), big.mark = ",")
-      })
-
-      output$ncol <- renderText({
-        prettyNum(ncol(out_dat()), big.mark = ",")
-      })
-
-      # TO DO: cleanup module inputs (UI and server side)
-      # and observers. PR 119
-
-      out_dat
-    }
-  )
-}
-
-#' @param in_dat Reactive input data
-#' @rdname generate_server
-#' @export
-generate_server.transform_block <- function(x, in_dat, id, ...) {
+  display <- match.arg(display)
 
   obs_expr2 <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
       args = rapply(input_ids(x), quoted_input_entries, how = "replace")
     )
+  }
+
+  # if in_dat is NULL (data block), turn it into a reactive expression that
+  # returns NULL
+  if (is.null(in_dat)) {
+    in_dat <- reactive(NULL)
   }
 
   moduleServer(
@@ -192,17 +145,28 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       out_dat <- if ("submit_block" %in% class(x)) {
         eventReactive(input$submit, {
           req(is_valid$block)
-          evaluate_block(blk(), data = in_dat())
+          if (is.null(in_dat())) {
+            evaluate_block(blk())
+          } else {
+            evaluate_block(blk(), data = in_dat())
+          }
         })
       } else {
         reactive({
           req(is_valid$block)
-          evaluate_block(blk(), data = in_dat())
+          if (is.null(in_dat())) {
+            evaluate_block(blk())
+          } else {
+            evaluate_block(blk(), data = in_dat())
+          }
         })
       }
 
-      output$res <- server_output(x, out_dat, output)
-      output$code <- server_code(x, blk, output)
+      if (display == "plot") {
+        output$code <- server_code(x, blk, output)
+      } else {
+        output$res <- server_output(x, out_dat, output)
+      }
 
       output$nrow <- renderText({
         prettyNum(nrow(out_dat()), big.mark = ",")
@@ -220,55 +184,27 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
   )
 }
 
+
+#' @rdname generate_server
+#' @export
+generate_server.data_block <- function(x, id, ...) {
+  generate_server_block(x = x, in_dat = NULL, id = id)
+}
+
+#' @param in_dat Reactive input data
+#' @rdname generate_server
+#' @export
+generate_server.transform_block <- function(x, in_dat, id, ...) {
+  generate_server_block(x = x, in_dat = in_dat, id = id)
+}
+
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
 generate_server.plot_block <- function(x, in_dat, id, ...) {
-  obs_expr <- function(x) {
-    splice_args(
-      list(in_dat(), ..(args)),
-      args = lapply(unlst(input_ids(x)), quoted_input_entry)
-    )
-  }
-
-  set_expr <- function(x) {
-    splice_args(
-      blk(update_fields(blk(), session, in_dat(), ..(args))),
-      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-    )
-  }
-
-  shiny::moduleServer(
-    id,
-    function(input, output, session) {
-      blk <- shiny::reactiveVal(x)
-
-      o <- shiny::observeEvent(
-        eval(obs_expr(blk())),
-        eval(set_expr(blk())),
-        ignoreInit = TRUE
-      )
-
-      out_dat <- shiny::reactive({
-        evaluate_block(blk(), data = in_dat())
-      })
-
-      output$plot <- server_output(x, out_dat, output)
-      output$code <- server_code(x, blk, output)
-
-      output$nrow <- renderText({
-        prettyNum(nrow(out_dat()), big.mark = ",")
-      })
-
-      output$ncol <- renderText({
-        prettyNum(ncol(out_dat()), big.mark = ",")
-      })
-
-      # TO DO: cleanup module inputs (UI and server side)
-      # and observers. PR 119
-    }
-  )
+  generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot")
 }
+
 
 #' @param in_dat Reactive input data
 #' @rdname generate_server
