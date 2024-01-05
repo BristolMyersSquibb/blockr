@@ -135,6 +135,10 @@ export const showLastOutput = (el) => {
   const $lastOutput = $block.find(".block-output");
   const $lastTitle = $block.find(".block-title");
 
+  $block
+    .find(".block-output-toggle i")
+    .toggleClass("fa-chevron-up fa-chevron-down");
+
   $lastTitle.addClass("d-none");
   $lastOutput.removeClass("d-none");
   $lastOutput.trigger("shown");
