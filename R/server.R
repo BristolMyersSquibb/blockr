@@ -87,12 +87,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       # Does it make sense to separate these processes?
       # 1. Upd blk, 2.Update UI
-      obs$update_blk <- observeEvent(
-        {
-          r_values()
-          in_dat()
-        },
-        {
+      obs$update_blk <- observe({
           # 1. upd blk,
           b <- blk()
           for (field in names(b)) {
@@ -120,9 +115,9 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
             }
           }
           message(sprintf("Updating UI of block %s", class(x)[[1]]))
-        },
-        ignoreInit = TRUE
-      )
+        }
+      ) |>
+      bindEvent(r_values(), in_dat(), ignoreInit = TRUE)
 
       obs$print_error <- observeEvent(is_valid$error, {
         create_modal(is_valid$error)
