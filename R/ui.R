@@ -353,6 +353,28 @@ ui_input.submit_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.expression_field <- function(x, id, name) {
+
+  shinyAce::aceEditor(
+    input_ids(x, id),
+    mode = "r",
+    value = value(x),
+    height = "20px",
+    showPrintMargin = FALSE,
+    highlightActiveLine = FALSE,
+    tabSize = 2,
+    theme = "tomorrow",
+    maxLines = 1,
+    fontSize = 14,
+    showLineNumbers = FALSE,
+    autoComplete = "live",
+    autoCompleters = c("rlang", "static"),
+    autoCompleteList = list(extra_values = value(x, "autocomplete"))
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -529,6 +551,36 @@ ui_update.list_field <- function(x, session, id, name) {
       )
     ),
     session = session
+  )
+}
+
+ace_observer_env <- new.env()
+
+#' @rdname generate_ui
+#' @export
+ui_update.expression_field <- function(x, session, id, name) {
+
+  ns <- session$ns
+  ns_id <- ns(id)
+
+  iids <- input_ids(x, ns_id)
+
+  if (!exists(iids, envir = ace_observer_env, inherits = FALSE)) {
+
+    observers <- list(
+      autocomplete = shinyAce::aceAutocomplete(input_ids(x, id), session),
+      tooltip = shinyAce::aceTooltip(input_ids(x, id), session)
+    )
+
+    assign(iids, observers, envir = ace_observer_env)
+  }
+
+  shinyAce::updateAceEditor(
+    session,
+    input_ids(x, id),
+    # value(x), value updates currently reset the cursor due to value state
+    #           changes triggering an update
+    autoCompleteList = list(extra_values = value(x, "autocomplete"))
   )
 }
 

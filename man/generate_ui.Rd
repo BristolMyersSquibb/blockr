@@ -27,6 +27,7 @@
 \alias{ui_input.switch_field}
 \alias{ui_input.numeric_field}
 \alias{ui_input.submit_field}
+\alias{ui_input.expression_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -45,6 +46,7 @@
 \alias{ui_update.submit_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
+\alias{ui_update.expression_field}
 \alias{uiOutputBlock}
 \alias{uiOutputBlock.block}
 \alias{uiOutputBlock.plot_block}
@@ -105,6 +107,8 @@ ui_input(x, id, name)
 
 \method{ui_input}{submit_field}(x, id, name)
 
+\method{ui_input}{expression_field}(x, id, name)
+
 input_ids(x, ...)
 
 \method{input_ids}{block}(x, ...)
@@ -140,6 +144,8 @@ ui_update(x, session, id, name)
 \method{ui_update}{hidden_field}(x, session, id, name)
 
 \method{ui_update}{list_field}(x, session, id, name)
+
+\method{ui_update}{expression_field}(x, session, id, name)
 
 uiOutputBlock(x, ns)
 

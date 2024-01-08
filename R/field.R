@@ -405,3 +405,37 @@ update_sub_fields <- function(sub, val) {
 
   sub
 }
+
+#' @param autocomplete Additional autocomplete options
+#' @rdname new_field
+#' @export
+new_expression_field <- function(value = "",
+                                 autocomplete = character(),
+                                 ...) {
+
+  new_field(value, autocomplete = autocomplete, ...,
+            class = "expression_field")
+}
+
+#' @rdname new_field
+#' @export
+expression_field <- function(...) validate_field(new_expression_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.expression_field <- function(x) {
+
+  val <- value(x)
+
+  if (!is_string(val)) {
+    value(x) <- ""
+  }
+
+  x
+}
+
+#' @rdname new_block
+#' @export
+is_initialized.expression_field <- function(x) {
+  nchar(value(x)) > 0
+}

@@ -39,6 +39,9 @@
 \alias{new_list_field}
 \alias{list_field}
 \alias{validate_field.list_field}
+\alias{new_expression_field}
+\alias{expression_field}
+\alias{validate_field.expression_field}
 \title{Fields}
 \usage{
 new_namedchar_field(value = character(), ...)
@@ -132,6 +135,12 @@ new_list_field(value = list(), sub_fields = list(), ...)
 list_field(...)
 
 \method{validate_field}{list_field}(x)
+
+new_expression_field(value = "", autocomplete = character(), ...)
+
+expression_field(...)
+
+\method{validate_field}{expression_field}(x)
 }
 \arguments{
 \item{value}{Field value}
@@ -164,6 +173,8 @@ feature. Default to FALSE. Not yet used.}
 \item{components}{Variable list of field components}
 
 \item{sub_fields}{Fields contained in \code{list_field}}
+
+\item{autocomplete}{Additional autocomplete options}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

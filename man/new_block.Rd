@@ -55,6 +55,7 @@
 \alias{demo_filter_block_2}
 \alias{demo_summarize_block}
 \alias{is_initialized.field}
+\alias{is_initialized.expression_field}
 \alias{new_mutate_block}
 \alias{mutate_block}
 \title{Blocks}
@@ -210,6 +211,8 @@ demo_filter_block_2(data, ...)
 demo_summarize_block(data, ...)
 
 \method{is_initialized}{field}(x)
+
+\method{is_initialized}{expression_field}(x)
 
 new_mutate_block(data, value = NULL, ...)
 
