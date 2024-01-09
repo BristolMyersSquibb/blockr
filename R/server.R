@@ -88,35 +88,34 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # Does it make sense to separate these processes?
       # 1. Upd blk, 2.Update UI
       obs$update_blk <- observe({
-          # 1. upd blk,
-          b <- blk()
-          for (field in names(b)) {
-            if (field %in% names(is_srv)[is_srv]) {
-              b[[field]] <- update_field(b[[field]], r_values()[[field]])
-            } else {
-              env <- c(
-                list(data = in_dat()),
-                r_values()[-which(names(r_values()) == field)]
-              )
-              b[[field]] <- update_field(b[[field]], r_values()[[field]], env)
-              if (identical(input[[field]], value(b[[field]]))) next
-            }
+        # 1. upd blk,
+        b <- blk()
+        for (field in names(b)) {
+          if (field %in% names(is_srv)[is_srv]) {
+            b[[field]] <- update_field(b[[field]], r_values()[[field]])
+          } else {
+            env <- c(
+              list(data = in_dat()),
+              r_values()[-which(names(r_values()) == field)]
+            )
+            b[[field]] <- update_field(b[[field]], r_values()[[field]], env)
+            if (identical(input[[field]], value(b[[field]]))) next
           }
-          blk(b)  # update block
-          message(sprintf("Updating block %s", class(x)[[1]]))
-
-          # 2. Update UI
-          for (field in names(b)) {
-            if (field %in% names(is_srv)[is_srv]) {
-              # update reactive value that tiggers module server update
-              l_init[[field]](b[[field]])
-            } else {
-              ui_update(b[[field]], session, field, field)
-            }
-          }
-          message(sprintf("Updating UI of block %s", class(x)[[1]]))
         }
-      ) |>
+        blk(b)  # update block
+        message(sprintf("Updating block %s", class(x)[[1]]))
+
+        # 2. Update UI
+        for (field in names(b)) {
+          if (field %in% names(is_srv)[is_srv]) {
+            # update reactive value that tiggers module server update
+            l_init[[field]](b[[field]])
+          } else {
+            ui_update(b[[field]], session, field, field)
+          }
+        }
+        message(sprintf("Updating UI of block %s", class(x)[[1]]))
+      }) |>
       bindEvent(r_values(), in_dat(), ignoreInit = TRUE)
 
       obs$print_error <- observeEvent(is_valid$error, {
