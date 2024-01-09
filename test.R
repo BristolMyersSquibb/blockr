@@ -10,7 +10,6 @@ stack <- new_stack(
 )
 
 ui <- fluidPage(
-  "test",
   theme = bslib::bs_theme(5L),
   generate_ui(stack)
 )
