@@ -175,6 +175,17 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       # TO DO: cleanup module inputs (UI and server side)
       # and observers. PR 119
+      observeEvent(input$copy, {
+        session$sendCustomMessage(
+          "blockr-copy-code",
+          list(
+            code = generate_code(blk()) |>
+              deparse() |>
+              as.character() |>
+              as.list()
+          )
+        )
+      })
 
       out_dat
     }

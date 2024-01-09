@@ -222,23 +222,38 @@ generate_ui.stack <- function(
     div(
       class = "card stack border",
       id = id,
-      stack_header(x, id),
+      stack_header(x, id, ns),
       div(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(x, \(b) {
-          block_id <- attr(b, "name")
-          tmp <- generate_ui(b, id = ns(block_id))
-          # Remove button now belongs to the stack namespace!
-          htmltools::tagQuery(tmp)$
-            find(".block-tools")$
-            prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
-          allTags()
+          inject_remove_button(ns, b)
         })
       )
     ),
     blockrDeps()
   )
+}
+
+#' Inject remove button into block header
+#'
+#' This has to be called from the stack parent
+#' namespace. This can also be called dynamically when
+#' inserting a new block within a stack.
+#'
+#' @param ns Stack namespace.
+#' @param b Current block.
+#' @param .hidden Internal parameter. Default to FALSE
+#'
+#' @keywords internal
+inject_remove_button <- function(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+  block_id <- attr(b, "name")
+  tmp <- generate_ui(b, id = ns(block_id), .hidden = FALSE)
+  # Remove button now belongs to the stack namespace!
+  htmltools::tagQuery(tmp)$
+    find(".block-tools")$
+    prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+  allTags()
 }
 
 #' @rdname generate_ui
@@ -248,15 +263,15 @@ stack_header <- function(x, ...) {
 }
 
 #' @importFrom shiny icon tags div
-stack_header.stack <- function(x, title, ...) {
+stack_header.stack <- function(x, title, ns, ...) {
   div(
     class = "card-header",
     div(
       class = "d-flex",
       div(
-        class = "flex-grow-1",
+        class = "flex-grow-1 d-inline-flex",
         span(icon("cubes"), class = "text-muted"),
-        title
+        span(get_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",
@@ -269,8 +284,11 @@ stack_header.stack <- function(x, title, ...) {
           #  class = "text-decoration-none stack-remove",
           #  iconTrash()
           #),
-          tags$a(
+          actionLink(
+            ns("copy"),
             class = "text-decoration-none stack-copy-code",
+            `data-bs-toggle` = "tooltip",
+            `data-bs-title` = "Copy code",
             iconCode()
           ),
           tags$a(
@@ -568,9 +586,11 @@ uiCode <- function(x, ns) {
 uiCode.block <- function(x, ns) {
   div(
     class = "position-relative",
-    tags$a(
-      class = "btn btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
-      icon("copy")
+    actionButton(
+      ns("copy"),
+      class = "btn-sm btn-info position-absolute top-0 end-0 block-copy-code",
+      "",
+      icon = icon("copy")
     ),
     shiny::verbatimTextOutput(ns("code"))
   )
@@ -583,12 +603,12 @@ iconCode <- function() {
 
 #' @importFrom shiny icon
 iconEdit <- function() {
-  icon("edit")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon
 iconOutput <- function() {
-  icon("arrow-right-from-bracket")
+  icon("chevron-up")
 }
 
 #' @importFrom shiny icon

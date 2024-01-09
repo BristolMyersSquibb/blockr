@@ -2,6 +2,28 @@ export const collapse = (stack) => {
   editor(stack);
   showLastOutputs(stack);
   toggleOutputInput(stack);
+  handleIcons(stack);
+};
+
+export const handleIcons = (stack) => {
+  $(stack)
+    .find(".stack-edit-toggle:not(.blockr-bound)")
+    .on("click", (event) => {
+      $(event.currentTarget)
+        .find("i")
+        .toggleClass("fa-chevron-up fa-chevron-down");
+    });
+
+  $(stack)
+    .find(".block-output-toggle:not(.blockr-bound)")
+    .on("click", (event) => {
+      $(event.currentTarget)
+        .find("i")
+        .toggleClass("fa-chevron-up fa-chevron-down");
+    });
+
+  $(stack).find(".stack-edit-toggle").addClass("blockr-bound");
+  $(stack).find(".block-output-toggle").addClass("blockr-bound");
 };
 
 export const toggleOutputInput = (stack) => {
@@ -51,6 +73,7 @@ const editor = (stack) => {
   }
 
   $(editBtn).addClass("block-bound");
+
   $(editBtn).on("click", (event) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
@@ -115,6 +138,10 @@ export const showLastOutput = (el) => {
   $block.removeClass("d-none");
   const $lastOutput = $block.find(".block-output");
   const $lastTitle = $block.find(".block-title");
+
+  $block
+    .find(".block-output-toggle i")
+    .toggleClass("fa-chevron-up fa-chevron-down");
 
   $lastTitle.addClass("d-none");
   $lastOutput.removeClass("d-none");

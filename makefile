@@ -13,6 +13,9 @@ bundle_dev: sass
 install: check
 	Rscript -e "devtools::install()"
 
+test:
+	Rscript -e "devtools::test()"
+
 sass:
 	Rscript dev/sass.R
 

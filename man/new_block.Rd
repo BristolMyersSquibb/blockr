@@ -9,6 +9,7 @@
 \alias{initialize_block}
 \alias{generate_code}
 \alias{generate_code.block}
+\alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
@@ -77,6 +78,8 @@ initialize_block(x, ...)
 generate_code(x)
 
 \method{generate_code}{block}(x)
+
+\method{generate_code}{arrange_block}(x)
 
 \method{generate_code}{transform_block}(x)
 
