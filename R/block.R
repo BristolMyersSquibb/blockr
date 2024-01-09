@@ -757,15 +757,29 @@ new_html_block <- function(
 ) {
   # For plot blocks, fields will create input to style the plot ...
   fields <- list(
-    tag = new_string_field("strong"),
     prefix = new_string_field(""),
-    suffix = new_string_field("")
+    suffix = new_string_field(""),
+    content = new_string_field(""),
+    main_tag = new_string_field("strong"),
+    prefix_tag = new_string_field("span"),
+    suffix_tag = new_string_field("span")
   )
 
   new_block(
     fields = fields,
     expr = quote({
-      do.call(.(tag), list(sprintf("%s%s%s", .(prefix), data, .(suffix))))
+      prefix_tag <- do.call(.(prefix_tag), list(.(prefix), .noWS = "after"))
+      suffix_tag <- do.call(.(suffix_tag), list(.(suffix), .noWS = "before"))
+
+      do.call(
+        .(main_tag),
+        list(
+          prefix_tag,
+          .(content),
+          suffix_tag,
+          .noWS = "after"
+        )
+      )
     }),
     ...,
     layout = html_layout_fields,
