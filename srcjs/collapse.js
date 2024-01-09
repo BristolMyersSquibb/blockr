@@ -73,6 +73,7 @@ const editor = (stack) => {
   }
 
   $(editBtn).addClass("block-bound");
+
   $(editBtn).on("click", (event) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
