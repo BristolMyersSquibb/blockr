@@ -64,7 +64,13 @@
     <loc>/reference/init_blocks.html</loc>
   </url>
   <url>
+    <loc>/reference/init_lock.html</loc>
+  </url>
+  <url>
     <loc>/reference/inject_remove_button.html</loc>
+  </url>
+  <url>
+    <loc>/reference/lock.html</loc>
   </url>
   <url>
     <loc>/reference/move_block.html</loc>
