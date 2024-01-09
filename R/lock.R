@@ -33,11 +33,8 @@ unlock <- function(
 toggle_lock <- function(
   session = shiny::getDefaultReactiveDomain()
 ) {
-  init_lock(session)
-  session$userData$locked(
-    !session$userData$locked(),
-    ignore_init = TRUE
-  )
+  init_lock(session, ignore_init = TRUE)
+  session$userData$locked(!session$userData$locked())
 }
 
 #' @rdname lock
