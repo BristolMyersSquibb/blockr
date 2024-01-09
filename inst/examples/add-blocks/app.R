@@ -50,7 +50,7 @@ shinyApp(
   ),
   server = function(input, output, session) {
     vals <- reactiveValues(new_blocks = NULL)
-    generate_server(
+    stack <- generate_server(
       stack,
       id = "mystack",
       new_blocks = reactive(vals$new_blocks)
@@ -59,7 +59,7 @@ shinyApp(
     observeEvent(input$add, {
       vals$new_blocks <- NULL
       # Always append to stack
-      loc <- input$add
+      loc <- length(stack$blocks)
       block <- blocks[[as.numeric(input$selected_block)]]
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will
@@ -68,7 +68,6 @@ shinyApp(
         block = block,
         position = loc
       )
-      print(vals$new_blocks)
     })
   }
 )
