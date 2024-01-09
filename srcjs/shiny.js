@@ -15,6 +15,7 @@ window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   const stack = `#${msg.stack}`;
   // TODO remove this
   // be event based/async instead of timeout
+  $(stack).removeClass("d-none");
   setTimeout(() => {
     toggleOutputInput(stack);
     handleIcons(stack);

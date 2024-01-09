@@ -248,7 +248,7 @@ generate_ui.stack <- function(
 #' @keywords internal
 inject_remove_button <- function(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
   block_id <- attr(b, "name")
-  tmp <- generate_ui(b, id = ns(block_id))
+  tmp <- generate_ui(b, id = ns(block_id), .hidden = FALSE)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
     find(".block-tools")$
