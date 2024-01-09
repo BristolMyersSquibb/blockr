@@ -41,7 +41,7 @@ generate_server.data_block <- function(x, id, ...) {
       blk <- reactiveVal(x)
 
       o <- observeEvent(
-        eval(obs_expr(blk())),
+        eval(obs_expr(isolate(blk()))),
         eval(set_expr(blk())),
         ignoreInit = TRUE
       )
@@ -118,7 +118,7 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
       # Validate block expression.
       # Requires to validate inputs first
       obs$update_block <- observeEvent(
-        eval(obs_expr(blk())),
+        eval(obs_expr(isolate(blk()))),
         {
           secure(eval(set_expr(blk())), is_valid)
           message(sprintf("Updating block %s", class(x)[[1]]))
@@ -211,7 +211,7 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
       blk <- shiny::reactiveVal(x)
 
       o <- shiny::observeEvent(
-        eval(obs_expr(blk())),
+        eval(obs_expr(isolate(blk()))),
         eval(set_expr(blk())),
         ignoreInit = TRUE
       )
