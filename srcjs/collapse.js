@@ -5,9 +5,9 @@ export const collapse = (stack) => {
   handleIcons(stack);
 };
 
-const handleIcons = (stack) => {
+export const handleIcons = (stack) => {
   $(stack)
-    .find(".stack-edit-toggle")
+    .find(".stack-edit-toggle:not(.blockr-bound)")
     .on("click", (event) => {
       $(event.currentTarget)
         .find("i")
@@ -15,12 +15,15 @@ const handleIcons = (stack) => {
     });
 
   $(stack)
-    .find(".block-output-toggle")
+    .find(".block-output-toggle:not(.blockr-bound)")
     .on("click", (event) => {
       $(event.currentTarget)
         .find("i")
         .toggleClass("fa-chevron-up fa-chevron-down");
     });
+
+  $(stack).find(".stack-edit-toggle").addClass("blockr-bound");
+  $(stack).find(".block-output-toggle").addClass("blockr-bound");
 };
 
 export const toggleOutputInput = (stack) => {

@@ -1,4 +1,4 @@
-import { collapse, toggleOutputInput } from "./collapse.js";
+import { collapse, toggleOutputInput, handleIcons } from "./collapse.js";
 import { remove } from "./remove-stack.js";
 import { title } from "./stack-title.js";
 
@@ -17,6 +17,7 @@ window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   // be event based/async instead of timeout
   setTimeout(() => {
     toggleOutputInput(stack);
+    handleIcons(stack);
   }, 500);
 });
 
