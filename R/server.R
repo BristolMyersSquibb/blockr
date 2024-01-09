@@ -465,9 +465,9 @@ generate_server.workspace <- function(x, id = NULL, ...) {
 
       to_remove <- reactive({
         req(length(vals$stacks) > 0)
-        tmp <- lgl_ply(vals$stacks, \(stack) {
+        tmp <- unlist(lapply(vals$stacks, \(stack) {
           stack$remove
-        })
+        }))
         res <- which(tmp == TRUE)
         req(length(res) > 0)
         max(res)
