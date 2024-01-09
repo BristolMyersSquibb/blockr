@@ -355,13 +355,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         }
       )
 
-      observe({
-        session$sendCustomMessage(
-          "blockr-bind-stack",
-          list(stack = session$ns(NULL))
-        )
-      })
-
       observeEvent(input$copy, {
         session$sendCustomMessage(
           "blockr-copy-code",
@@ -371,6 +364,17 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
               as.character() |>
               as.list()
           )
+        )
+      })
+
+      observeEvent(input$newTitle, {
+        set_title(vals$stack, input$newTitle)
+      })
+
+      observe({
+        session$sendCustomMessage(
+          "blockr-bind-stack",
+          list(stack = session$ns(NULL))
         )
       })
 

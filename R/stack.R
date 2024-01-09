@@ -4,10 +4,10 @@
 #'
 #' @param ... An ordered set of blocks (each argument is required to inherit
 #' from `"block"`)
-#' @param name Stack name
+#' @param title Stack title
 #'
 #' @export
-new_stack <- function(..., name = rand_names()) {
+new_stack <- function(..., title = "Stack") {
   ctors <- c(...)
   names <- names(ctors)
 
@@ -27,7 +27,7 @@ new_stack <- function(..., name = rand_names()) {
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
   )
 
-  structure(blocks, name = name, class = "stack")
+  structure(blocks, title = title, name = rand_names(), class = "stack")
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -141,4 +141,20 @@ serve_stack <- function(stack) {
   }
 
   shinyApp(ui, server)
+}
+
+#' Title
+#' Ge and set title.
+#' @param stack A stack.
+#' @param title Title to set.
+#' @name title
+#' @keywords internal
+set_title <- function(stack, title) {
+  attr(stack, "title") <- title
+  stack
+}
+
+#' @rdname title
+get_title <- function(stack) {
+  attr(stack, "title")
 }
