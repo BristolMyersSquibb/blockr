@@ -13,7 +13,7 @@ ui <- fluidPage(
   "test",
   theme = bslib::bs_theme(5L),
   generate_ui(stack),
-  actionButton("lock", "Toggle Lock")
+  uiOutput("lock")
 )
 
 server <- function(input, output, session) {
@@ -23,12 +23,16 @@ server <- function(input, output, session) {
     print(x$remove)
   })
 
-  observeEvent(input$lock, {
-    toggle_lock()
+  locked <- reactiveVal(FALSE)
+  output$lock <- renderUI({
+    if (locked()) return()
+    actionButton("lock", "Lock")
   })
 
-  observe_lock(function(x) {
-    print(x)
+  observeEvent(input$lock, {
+    lock()
+    print("lock")
+    locked(TRUE)
   })
 }
 

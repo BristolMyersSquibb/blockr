@@ -34,7 +34,10 @@ toggle_lock <- function(
   session = shiny::getDefaultReactiveDomain()
 ) {
   init_lock(session)
-  session$userData$locked(!session$userData$locked())
+  session$userData$locked(
+    !session$userData$locked(),
+    ignore_init = TRUE
+  )
 }
 
 #' @rdname lock
@@ -62,8 +65,15 @@ observe_lock <- function(
   )
 }
 
+#' Initialise Lock
+#' Initialises the lock reactive value.
+#' @param session Shiny session.
+#' @param ignore_init Whether to ignore the initialisation.
+#' this is only used when we need to initialise the lock from `toggle_lock()`.
+#' @export
 init_lock <- function(
-  session = shiny::getDefaultReactiveDomain()
+  session = shiny::getDefaultReactiveDomain(),
+  ignore_init = FALSE
 ) {
   if ("locked" %in% names(session$userData))
     return()
@@ -71,5 +81,5 @@ init_lock <- function(
   session$userData$locked <- reactiveVal(FALSE)
   observeEvent(session$userData$locked(), {
     session$sendCustomMessage("lock", list(locked = session$userData$locked()))
-  }, ignoreInit = TRUE)
+  }, ignoreInit = ignore_init)
 }
