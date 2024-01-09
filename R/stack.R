@@ -11,6 +11,10 @@ new_stack <- function(..., title = "Stack") {
   ctors <- c(...)
   names <- names(ctors)
 
+  if (!length(ctors)) {
+    return(structure(list(), title = title, name = rand_names(), class = "stack"))
+  }
+
   blocks <- vector("list", length(ctors))
 
   blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
@@ -61,32 +65,40 @@ generate_code.stack <- function(x) {
 #' @return Invisibly returns the stack.
 #' @export
 add_block <- function(stack, block, position = NULL) {
-  stopifnot(length(stack) > 0)
   if (is.null(position)) stopifnot(position >= 1)
   if (length(stack) == 0) {
-    block_name <- deparse(substitute(block))
-    if (!grepl("data", block_name)) {
+    # we can't check check inherit because
+    # this comes from the registry which is of class
+    # block_descr
+    if (!"data_block" %in% attr(block, "classes")) {
       stop("The first block must be a data block.")
     }
   }
 
-  last <- stack[[length(stack)]]
-  # For now, we won't be able to insert a block
-  # after a plot block. In a later version, we may imagine
-  # have multiple block plot per stack so we'll have to revisit
-  # this ...
-  if (inherits(last, "plot_block")) {
-    stop("Can't insert a block below a plot block.")
+  if (length(stack) > 0L) {
+    last <- stack[[length(stack)]]
+    # For now, we won't be able to insert a block
+    # after a plot block. In a later version, we may imagine
+    # have multiple block plot per stack so we'll have to revisit
+    # this ...
+    if (inherits(last, "plot_block")) {
+      stop("Can't insert a block below a plot block.")
+    }
   }
+
   if (is.null(position)) {
     # inject new block + pass in data from previous block
     position <- length(stack)
   }
 
+  if (position < 1L) {
+    position <- 1L
+  }
+
   # get data from the previous block
   if (length(stack) == 1) {
     data <- evaluate_block(stack[[position]])
-  } else {
+  } else if (length(stack) > 1L) {
     data <- evaluate_block(stack[[1]])
     for (i in seq_along(stack)[-1L]) {
       data <- evaluate_block(
@@ -96,7 +108,11 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  tmp <- do.call(block, list(data = data, position = position))
+  if (!length(stack))
+    tmp <- do.call(block, list())
+  else
+    tmp <- do.call(block, list(data = data, position = position))
+
   stack <- append(stack, list(tmp), position)
   invisible(stack)
 }

@@ -291,6 +291,10 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           } else {
             position + 1
           }
+
+          if (p < 0L)
+            p <- 1L
+
           vals$blocks[[p]] <- init_block(p, vals)
 
           # Insert UI
