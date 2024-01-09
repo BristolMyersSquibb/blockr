@@ -8,6 +8,8 @@
 \alias{generate_server.plot_block}
 \alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
+\alias{handle_remove_block}
+\alias{handle_remove_block.block}
 \alias{generate_server.workspace}
 \title{Server}
 \usage{
@@ -25,19 +27,31 @@ generate_server(x, ...)
 
 \method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
 
+handle_remove_block(x, ...)
+
+\method{handle_remove_block}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
+
 \method{generate_server}{workspace}(x, id = NULL, ...)
 }
 \arguments{
-\item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
+\item{x}{Block element.}
 
-\item{...}{Generic consistency}
+\item{...}{Generic consistency.}
 
 \item{id}{Unique module id. Useful when the workspace is called as a module.}
 
 \item{in_dat}{Reactive input data}
 
 \item{new_blocks}{For dynamically inserted blocks.}
+
+\item{vals}{Internal stack reactive values.}
+
+\item{session}{Shiny session object.}
 }
 \description{
 Generic for server generation
+
+Generic for block removal
+
+Necessary to be able to remove the block from the stack.
 }
