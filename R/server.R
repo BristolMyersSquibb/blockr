@@ -43,7 +43,6 @@ generate_server.data_block <- function(x, id, ...) {
       o <- observeEvent(
         eval(obs_expr(isolate(blk()))),
         eval(set_expr(blk())),
-        ignoreInit = TRUE
       )
 
       out_dat <- reactive(
@@ -123,7 +122,6 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
           secure(eval(set_expr(blk())), is_valid)
           message(sprintf("Updating block %s", class(x)[[1]]))
         },
-        ignoreInit = TRUE
       )
 
       obs$print_error <- observeEvent(is_valid$error, {
@@ -213,7 +211,6 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
       o <- shiny::observeEvent(
         eval(obs_expr(isolate(blk()))),
         eval(set_expr(blk())),
-        ignoreInit = TRUE
       )
 
       out_dat <- shiny::reactive({
