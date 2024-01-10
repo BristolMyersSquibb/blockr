@@ -41,7 +41,7 @@ handle_remove(x, ...)
 
 init(x, ...)
 
-\method{init}{workspace}(x, stacks, vals, ...)
+\method{init}{workspace}(x, stacks, vals, session, ...)
 
 \method{init}{stack}(x, vals, session, ...)
 }

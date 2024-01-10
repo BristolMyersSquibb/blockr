@@ -435,12 +435,14 @@ generate_server.workspace <- function(x, id = NULL, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-      vals <- reactiveValues(stacks = list())
+      vals <- reactiveValues(stacks = list(), new_blocks = list())
 
       output$n_stacks <- renderText(length(vals$stacks))
 
       # Init existing stack modules
-      init(x, get_workspace_stacks(), vals)
+      init(x, get_workspace_stacks(), vals, session)
+
+      # Standalone: when called from our generate_server.workspace
 
       # Add stack
       observeEvent(input$add_stack, {
@@ -481,7 +483,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         vals$stacks[[length(stacks)]] <- generate_server(
           el,
           id = attr(el, "name"),
-          new_blocks = reactive(NULL) # TO DO LATER ...
+          standalone = TRUE # so that stacks are able to insert block from a registry
         )
       })
 
@@ -513,15 +515,32 @@ init <- function(x, ...) {
 #' @param stacks List of workspace stacks.
 #' @export
 #' @rdname generate_server
-init.workspace <- function(x, stacks, vals, ...) {
+init.workspace <- function(x, stacks, vals, session, ...) {
+  input <- session$input
+
   observeEvent(TRUE, {
     lapply(seq_along(stacks), \(i) {
+      id <- attr(stacks[[i]], "name")
       vals$stacks[[i]] <- generate_server(
         stacks[[i]],
-        id = attr(stacks[[i]], "name"),
-        new_blocks = reactive(NULL) # TO DO LATER ...
+        id = id,
+        new_blocks = reactive(vals$new_blocks[[id]])
       )
       handle_remove(stacks[[i]], vals)
+
+      # To dynamically insert blocks
+      observeEvent(input[[sprintf("%s-add", id)]], {
+        # Always append to stack
+        loc <- length(stacks[[i]])
+        block <- list_blocks()[[as.numeric(input[[sprintf("%s-selected_block", id)]])]]
+        # add_block expect the current stack, the block to add and its position
+        # (NULL is fine for the position, in that case the block will
+        # go at the end)
+        vals$new_blocks[[id]] <- list(
+          block = block,
+          position = loc
+        )
+      })
     })
   })
 }
@@ -564,16 +583,6 @@ init_block <- function(i, vals, session) {
       vals$blocks[[i - 1]]
     },
     id = id
-  )
-}
-
-#' Cleanup module inputs
-#' @keywords internal
-remove_shiny_inputs <- function(id, .input) {
-  invisible(
-    lapply(grep(id, names(.input), value = TRUE), function(i) {
-      .subset2(.input, "impl")$.values$remove(i)
-    })
   )
 }
 

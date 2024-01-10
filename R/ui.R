@@ -204,6 +204,39 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
   )
 }
 
+#' Add block UI interface
+#'
+#' Useful to allow stack to add blocks to them.
+#'
+#' @param ns Stack namespace.
+#'
+#' @keywords internal
+add_block_ui <- function(ns) {
+  tagList(
+    tags$button(
+      type = "button",
+      "Add a new block",
+      class = "btn btn-primary",
+      class = "my-2",
+      `data-bs-toggle` = "offcanvas",
+      `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
+      `aria-controls` = ns("addBlockCanvas")
+    ),
+    off_canvas(
+      id = ns("addBlockCanvas"),
+      title = "My blocks",
+      position = "bottom",
+      radioButtons(
+        ns("selected_block"),
+        "Choose a block",
+        choices = setNames(seq_len(length(list_blocks())), list_blocks()),
+        inline = TRUE
+      ),
+      actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")
+    )
+  )
+}
+
 #' @rdname generate_ui
 #' @export
 generate_ui.stack <- function(
@@ -330,7 +363,12 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
       div(
         class = "d-flex justify-content-between stacks",
         lapply(seq_along(stacks), \(i) {
-          inject_remove_button(ns, stacks[[i]])
+          tmp <- inject_remove_button(ns, stacks[[i]])
+          div(
+            class = "d-flex flex-column m-4",
+            tmp,
+            add_block_ui(NS(ns(attr(stacks[[i]], "name"))))
+          )
         })
       )
     )
