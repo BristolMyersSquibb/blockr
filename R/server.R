@@ -17,16 +17,44 @@ generate_server.block <- function(x, ...) {
   stop("no base-class server for blocks available")
 }
 
+
+obs_expr2 <- function(x) {
+  splice_args(
+    list(in_dat(), ..(args)),
+    args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+  )
+}
+
+update_blk <- function(b, value, is_srv, input, data) {
+  for (field in names(b)) {
+    if (field %in% names(is_srv)[is_srv]) {
+      b[[field]] <- update_field(b[[field]], value[[field]])
+    } else {
+      env <- c(
+        list(data = data),
+        value[-which(names(value) == field)]
+      )
+      b[[field]] <- update_field(b[[field]], value[[field]], env)
+      if (identical(input[[field]], value(b[[field]]))) next
+    }
+  }
+  b
+}
+
+update_ui <-  function(b, is_srv, session, l_init) {
+  for (field in names(b)) {
+    if (field %in% names(is_srv)[is_srv]) {
+      # update reactive value that tiggers module server update
+      l_init[[field]](b[[field]])
+    } else {
+      ui_update(b[[field]], session, field, field)
+    }
+  }
+}
+
 generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "plot")) {
 
   display <- match.arg(display)
-
-  obs_expr2 <- function(x) {
-    splice_args(
-      list(in_dat(), ..(args)),
-      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-    )
-  }
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
   # returns NULL
@@ -85,35 +113,14 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         c(values_module, values_default)[names(x)]
       })
 
-      # Does it make sense to separate these processes?
-      # 1. Upd blk, 2.Update UI
       obs$update_blk <- observe({
         # 1. upd blk,
-        b <- blk()
-        for (field in names(b)) {
-          if (field %in% names(is_srv)[is_srv]) {
-            b[[field]] <- update_field(b[[field]], r_values()[[field]])
-          } else {
-            env <- c(
-              list(data = in_dat()),
-              r_values()[-which(names(r_values()) == field)]
-            )
-            b[[field]] <- update_field(b[[field]], r_values()[[field]], env)
-            if (identical(input[[field]], value(b[[field]]))) next
-          }
-        }
-        blk(b)  # update block
+        b <- update_blk(b = blk(), value = r_values(), is_srv = is_srv, input = input, data = in_dat())
+        blk(b)
         message(sprintf("Updating block %s", class(x)[[1]]))
 
         # 2. Update UI
-        for (field in names(b)) {
-          if (field %in% names(is_srv)[is_srv]) {
-            # update reactive value that tiggers module server update
-            l_init[[field]](b[[field]])
-          } else {
-            ui_update(b[[field]], session, field, field)
-          }
-        }
+        update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
         message(sprintf("Updating UI of block %s", class(x)[[1]]))
       }) |>
       bindEvent(r_values(), in_dat(), ignoreInit = TRUE)
