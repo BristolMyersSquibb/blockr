@@ -156,15 +156,13 @@ block_header.block <- function(x, ns, hidden_class, ...) {
   )
 }
 
-#' @rdname generate_ui
-#' @export
-block_remove <- function(x, ...) {
-  UseMethod("block_remove", x)
+remove_button <- function(x, ...) {
+  UseMethod("remove_button", x)
 }
 
 #' @rdname generate_ui
 #' @export
-block_remove.block <- function(x, id, ...) {
+remove_button.block <- function(x, id, ...) {
   actionLink(
     id,
     icon("trash"),
@@ -235,25 +233,37 @@ generate_ui.stack <- function(
   )
 }
 
-#' Inject remove button into block header
+#' Inject remove button into stack/block header
 #'
-#' This has to be called from the stack parent
+#' This has to be called from the workspace/stack parent
 #' namespace. This can also be called dynamically when
-#' inserting a new block within a stack.
+#' inserting a new stack/block within a workspace/stack.
 #'
-#' @param ns Stack namespace.
-#' @param b Current block.
+#' @param ns Parent namespace.
+#' @param el Current block or stack.
 #' @param .hidden Internal parameter. Default to FALSE
 #'
 #' @keywords internal
-inject_remove_button <- function(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
-  block_id <- attr(b, "name")
-  tmp <- generate_ui(b, id = ns(block_id), .hidden = FALSE)
+inject_remove_button <- function(ns, el, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+  id <- attr(el, "name")
+  # Will break if we change the class order ...
+  cl <- tail(attr(el, "class"), n = 1)
+  tmp <- generate_ui(el, id = ns(id), .hidden = FALSE)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
-    find(".block-tools")$
-    prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+    find(sprintf(".%s-tools", cl))$
+    prepend(remove_button(el, ns(sprintf("remove-%s-%s", cl, id))))$
   allTags()
+}
+
+#' @rdname generate_ui
+#' @export
+remove_button.stack <- function(x, id, ...) {
+  actionLink(
+    id,
+    icon("trash"),
+    class = "text-decoration-none stack-remove",
+  )
 }
 
 #' @rdname generate_ui
@@ -276,14 +286,7 @@ stack_header.stack <- function(x, title, ns, ...) {
       div(
         class = "flex-shrink-1",
         div(
-          class = "ps-1 py-2",
-          # TO DO: move it to workspace (needs other PR).
-          #actionLink(
-          #  ns("remove"),
-          #  "",
-          #  class = "text-decoration-none stack-remove",
-          #  iconTrash()
-          #),
+          class = "stack-tools ps-1 py-2",
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",

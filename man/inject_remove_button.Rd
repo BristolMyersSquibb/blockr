@@ -2,20 +2,20 @@
 % Please edit documentation in R/ui.R
 \name{inject_remove_button}
 \alias{inject_remove_button}
-\title{Inject remove button into block header}
+\title{Inject remove button into stack/block header}
 \usage{
-inject_remove_button(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE))
+inject_remove_button(ns, el, .hidden = !getOption("BLOCKR_DEV", FALSE))
 }
 \arguments{
-\item{ns}{Stack namespace.}
+\item{ns}{Parent namespace.}
 
-\item{b}{Current block.}
+\item{el}{Current block or stack.}
 
 \item{.hidden}{Internal parameter. Default to FALSE}
 }
 \description{
-This has to be called from the stack parent
+This has to be called from the workspace/stack parent
 namespace. This can also be called dynamically when
-inserting a new block within a stack.
+inserting a new stack/block within a workspace/stack.
 }
 \keyword{internal}

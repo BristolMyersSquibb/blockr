@@ -16,10 +16,10 @@
 \alias{block_code}
 \alias{block_code.block}
 \alias{block_header}
-\alias{block_remove}
-\alias{block_remove.block}
+\alias{remove_button.block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
+\alias{remove_button.stack}
 \alias{stack_header}
 \alias{generate_ui.workspace}
 \alias{ui_input}
@@ -84,13 +84,13 @@ block_code(x, ...)
 
 block_header(x, ...)
 
-block_remove(x, ...)
-
-\method{block_remove}{block}(x, id, ...)
+\method{remove_button}{block}(x, id, ...)
 
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
+
+\method{remove_button}{stack}(x, id, ...)
 
 stack_header(x, ...)
 
