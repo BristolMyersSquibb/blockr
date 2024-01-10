@@ -3,19 +3,26 @@
 \name{to_json}
 \alias{to_json}
 \alias{to_json.field}
+\alias{to_json.block}
+\alias{to_json.stack}
+\alias{to_json.workspace}
 \alias{from_json}
 \title{JSON serialization}
 \usage{
-to_json(x, ...)
+to_json(x)
 
-\method{to_json}{field}(x, ...)
+\method{to_json}{field}(x)
 
-from_json(x, ...)
+\method{to_json}{block}(x)
+
+\method{to_json}{stack}(x)
+
+\method{to_json}{workspace}(x)
+
+from_json(x)
 }
 \arguments{
 \item{x}{Object to (de)serialize}
-
-\item{...}{Forwarded to \code{\link[jsonlite:fromJSON]{jsonlite::toJSON()}}}
 }
 \description{
 Object serialization as JSON.

@@ -36,7 +36,8 @@ Imports:
     htmltools,
     ggiraph,
     shinyAce,
-    jsonlite
+    jsonlite,
+    constructive
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui,
