@@ -411,15 +411,14 @@ handle_remove.stack <- function(x, vals, session = getDefaultReactiveDomain(), .
     input[[sprintf("remove-stack-%s", id)]]
   }, {
     # We can't remove the data block if there are downstream consumers...
-    to_remove <- which(chr_ply(vals$stacks, \(x) attr(x, "name")) == id)
+    stacks <- get_workspace_stacks()
+    to_remove <- which(chr_ply(stacks, \(x) attr(x, "name")) == id)
     message(sprintf("REMOVING STACK %s", to_remove))
     # Remove UI is done from JS
     # TO DO: this isn't very consistent with what we have for blocks
     # Remove stack UI is handled on the JS side and not on the R side.
     # To be consistent and align between block and stacks we should choose
     # only 1 way to remove elements.
-
-    stacks <- get_workspace_stacks()
     vals$stacks[[to_remove]] <- NULL
     rm_workspace_stack(names(stacks)[[to_remove]])
   })
