@@ -65,7 +65,6 @@ generate_code.stack <- function(x) {
 #' @return Invisibly returns the stack.
 #' @export
 add_block <- function(stack, block, position = NULL) {
-  if (is.null(position)) stopifnot(position >= 1)
   if (length(stack) == 0) {
     # we can't check check inherit because
     # this comes from the registry which is of class
