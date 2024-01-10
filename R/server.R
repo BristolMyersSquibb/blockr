@@ -268,17 +268,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
     function(input, output, session) {
       vals <- reactiveValues(
         stack = x,
-        blocks = vector("list", length(x)),
-        remove = FALSE
+        blocks = vector("list", length(x))
       )
-
-      # TO DO: this isn't very consistent with what we have for blocks
-      # Remove stack UI is handled on the JS side and not on the R side.
-      # To be consistent and align between block and stacks we should choose
-      # only 1 way to remove elements.
-      observeEvent(input[[sprintf("remove-stack-%s", id)]], {
-        vals$remove <- TRUE
-      })
 
       init(x, vals, session)
 
