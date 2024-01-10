@@ -107,15 +107,6 @@ mutate_module_server <- function(id, x, in_dat, ...) {
         prettyNum(ncol(out_dat()), big.mark = ",")
       })
 
-      # Cleanup module inputs (UI and server side)
-      # and observer
-      observeEvent(input$remove, {
-        message(sprintf("CLEANING UP BLOCK %s", id))
-        remove_shiny_inputs(id = id, input)
-        o$destroy()
-        session$userData$is_cleaned(TRUE)
-      })
-
       out_dat
     }
   )

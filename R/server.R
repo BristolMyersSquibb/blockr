@@ -302,8 +302,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
             ),
             where = "afterEnd",
             inject_remove_button(
-              session$ns,
-              vals$stack[[p]]
+              vals$stack[[p]],
+              session$ns
             )
           )
 
@@ -456,8 +456,8 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         el <- stacks[[length(stacks)]]
 
         stack_ui <- inject_remove_button(
-          session$ns,
-          el
+          el,
+          session$ns
         )
 
         insertUI(
@@ -468,7 +468,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
           },
           ui = if (length(vals$stacks) == 0) {
             div(
-              class = "d-flex justify-content-between stacks",
+              class = "row stacks",
               stack_ui
             )
           } else {
@@ -483,8 +483,11 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         vals$stacks[[length(stacks)]] <- generate_server(
           el,
           id = attr(el, "name"),
-          standalone = TRUE # so that stacks are able to insert block from a registry
+          new_blocks = reactive(vals$new_blocks[[attr(el, "name")]])
         )
+
+        # Handle new block injection
+        inject_block(input, vals, id = attr(el, "name"))
       })
 
       # Clear all stacks
@@ -529,21 +532,25 @@ init.workspace <- function(x, stacks, vals, session, ...) {
       handle_remove(stacks[[i]], vals)
 
       # To dynamically insert blocks
-      observeEvent(input[[sprintf("%s-add", id)]], {
-        # Reset to avoid re-adding existing blocks to stacks
-        vals$new_blocks <- NULL
-        # Always append to stack
-        loc <- length(vals$stacks[[i]]$blocks)
-        block <- list_blocks()[[as.numeric(input[[sprintf("%s-selected_block", id)]])]]
-        # add_block expect the current stack, the block to add and its position
-        # (NULL is fine for the position, in that case the block will
-        # go at the end)
-        vals$new_blocks[[id]] <- list(
-          block = block,
-          position = loc
-        )
-      })
+      inject_block(input, vals, id)
     })
+  })
+}
+
+#' Inject block into stack
+#'
+#' Called by workspace.
+#'
+#' @keywords internal
+inject_block <- function(input, vals, id) {
+  observeEvent(input[[sprintf("%s-add", id)]], {
+    # Reset to avoid re-adding existing blocks to stacks
+    vals$new_blocks <- NULL
+    block <- list_blocks()[[as.numeric(input[[sprintf("%s-selected_block", id)]])]]
+    # add_block expect the current stack, the block to add and its position
+    # (NULL is fine for the position, in that case the block will
+    # go at the end)
+    vals$new_blocks[[id]] <- list(block = block)
   })
 }
 

@@ -156,6 +156,8 @@ block_header.block <- function(x, ns, hidden_class, ...) {
   )
 }
 
+#' @rdname generate_ui
+#' @export
 remove_button <- function(x, ...) {
   UseMethod("remove_button", x)
 }
@@ -212,7 +214,8 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 #'
 #' @keywords internal
 add_block_ui <- function(ns) {
-  tagList(
+  div(
+    class = "d-flex justify-content-center",
     tags$button(
       type = "button",
       "Add a new block",
@@ -244,6 +247,7 @@ generate_ui.stack <- function(
   id = NULL,
   ...
 ) {
+  stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
   ns <- NS(id)
@@ -257,7 +261,7 @@ generate_ui.stack <- function(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(x, \(b) {
-          inject_remove_button(ns, b)
+          inject_remove_button(b, ns)
         })
       )
     ),
@@ -265,26 +269,54 @@ generate_ui.stack <- function(
   )
 }
 
-#' Inject remove button into stack/block header
+#' @rdname generate_ui
+#' @export
+inject_remove_button <- function(x, ...) {
+  UseMethod("inject_remove_button")
+}
+
+#' Inject remove button into block header
 #'
-#' This has to be called from the workspace/stack parent
+#' This has to be called from the stack parent
 #' namespace. This can also be called dynamically when
-#' inserting a new stack/block within a workspace/stack.
+#' inserting a new block within a stack.
 #'
 #' @param ns Parent namespace.
-#' @param el Current block or stack.
 #'
-#' @keywords internal
-inject_remove_button <- function(ns, el) {
-  id <- attr(el, "name")
-  # Will break if we change the class order ...
-  cl <- utils::tail(attr(el, "class"), n = 1)
-  tmp <- generate_ui(el, id = ns(id), .hidden = FALSE)
+#' @export
+#' @rdname generate_ui
+inject_remove_button.block <- function(x, ns, ...) {
+  id <- attr(x, "name")
+  tmp <- generate_ui(x, id = ns(id), .hidden = FALSE)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
-    find(sprintf(".%s-tools", cl))$
-    prepend(remove_button(el, ns(sprintf("remove-%s-%s", cl, id))))$
+    find(".block-tools")$
+    prepend(remove_button(x, ns(sprintf("remove-block-%s", id))))$
   allTags()
+}
+
+#' Inject remove button into stack header
+#'
+#' This has to be called from the workspace parent
+#' namespace. This can also be called dynamically when
+#' inserting a new stack within a workspace.
+#'
+#' @param ns Parent namespace.
+#'
+#' @export
+#' @rdname generate_ui
+inject_remove_button.stack <- function(x, ns, ...) {
+  id <- attr(x, "name")
+  tmp <- htmltools::tagQuery(generate_ui(x, id = ns(id)))$
+    find(".stack-tools")$
+    prepend(remove_button(x, ns(sprintf("remove-stack-%s", id))))$
+  allTags()
+
+  tmp[[1]] <- tagAppendChildren(
+    tmp[[1]],
+    add_block_ui(NS(ns(attr(x, "name"))))
+  )
+  div(class = "col m-1", tmp)
 }
 
 #' @rdname generate_ui
@@ -348,27 +380,29 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
 
   tagList(
     div(
-      class = "d-flex justify-content-between",
+      class = "d-flex justify-content-center",
       actionButton(
         ns("add_stack"),
         label = "Add stack",
         icon = icon("plus"),
         width = NULL,
-        span(class = "badge bg-secondary", textOutput(ns("n_stacks")))
+        span(class = "badge bg-secondary", textOutput(ns("n_stacks"))),
+        class = "mx-2"
       ),
-      actionButton(ns("clear_stacks"), "Clear all", icon("trash"), class = "bg-danger")
+      actionButton(
+        ns("clear_stacks"),
+        "Clear all",
+        icon("trash"),
+        class = "bg-danger",
+        class = "mx-2"
+      )
     ),
     div(
-      class = "workspace",
+      class = "m-2 workspace",
       div(
-        class = "d-flex justify-content-between stacks",
+        class = "row stacks",
         lapply(seq_along(stacks), \(i) {
-          tmp <- inject_remove_button(ns, stacks[[i]])
-          div(
-            class = "d-flex flex-column m-4",
-            tmp,
-            add_block_ui(NS(ns(attr(stacks[[i]], "name"))))
-          )
+          inject_remove_button(stacks[[i]], ns)
         })
       )
     )
