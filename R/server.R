@@ -510,7 +510,9 @@ init <- function(x, ...) {
 
 #' Init stacks server
 #'
+#' @param stacks List of workspace stacks.
 #' @export
+#' @rdname generate_server
 init.workspace <- function(x, stacks, vals, ...) {
   observeEvent(TRUE, {
     lapply(seq_along(stacks), \(i) {
@@ -525,7 +527,9 @@ init.workspace <- function(x, stacks, vals, ...) {
 }
 
 #' Init blocks server
+#'
 #' @export
+#' @rdname generate_server
 init.stack <- function(x, vals, session, ...) {
   observeEvent(TRUE, {
     for (i in seq_along(x)) {
@@ -540,7 +544,7 @@ init.stack <- function(x, vals, session, ...) {
 
 #' Init a single block
 #'
-#' Useful for \link{init_blocks} but also
+#' Useful for init.blocks but also
 #' to be called after \link{add_block}.
 #'
 #' @param i Block position

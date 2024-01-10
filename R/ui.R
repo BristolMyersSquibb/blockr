@@ -245,7 +245,7 @@ generate_ui.stack <- function(
 inject_remove_button <- function(ns, el) {
   id <- attr(el, "name")
   # Will break if we change the class order ...
-  cl <- tail(attr(el, "class"), n = 1)
+  cl <- utils::tail(attr(el, "class"), n = 1)
   tmp <- generate_ui(el, id = ns(id), .hidden = FALSE)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$

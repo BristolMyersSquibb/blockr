@@ -13,6 +13,8 @@
 \alias{handle_remove.stack}
 \alias{generate_server.workspace}
 \alias{init}
+\alias{init.workspace}
+\alias{init.stack}
 \title{Server}
 \usage{
 generate_server(x, ...)
@@ -38,6 +40,10 @@ handle_remove(x, ...)
 \method{generate_server}{workspace}(x, id = NULL, ...)
 
 init(x, ...)
+
+\method{init}{workspace}(x, stacks, vals, ...)
+
+\method{init}{stack}(x, vals, session, ...)
 }
 \arguments{
 \item{x}{Element.}
@@ -53,6 +59,8 @@ init(x, ...)
 \item{vals}{Internal reactive values.}
 
 \item{session}{Shiny session object.}
+
+\item{stacks}{List of workspace stacks.}
 }
 \description{
 Generic for server generation
