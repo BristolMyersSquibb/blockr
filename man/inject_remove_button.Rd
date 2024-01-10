@@ -4,14 +4,12 @@
 \alias{inject_remove_button}
 \title{Inject remove button into stack/block header}
 \usage{
-inject_remove_button(ns, el, .hidden = !getOption("BLOCKR_DEV", FALSE))
+inject_remove_button(ns, el)
 }
 \arguments{
 \item{ns}{Parent namespace.}
 
 \item{el}{Current block or stack.}
-
-\item{.hidden}{Internal parameter. Default to FALSE}
 }
 \description{
 This has to be called from the workspace/stack parent

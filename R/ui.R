@@ -211,7 +211,6 @@ generate_ui.stack <- function(
   id = NULL,
   ...
 ) {
-  stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
   ns <- NS(id)
@@ -241,10 +240,9 @@ generate_ui.stack <- function(
 #'
 #' @param ns Parent namespace.
 #' @param el Current block or stack.
-#' @param .hidden Internal parameter. Default to FALSE
 #'
 #' @keywords internal
-inject_remove_button <- function(ns, el, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+inject_remove_button <- function(ns, el) {
   id <- attr(el, "name")
   # Will break if we change the class order ...
   cl <- tail(attr(el, "class"), n = 1)
@@ -332,7 +330,7 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
       div(
         class = "d-flex justify-content-between stacks",
         lapply(seq_along(stacks), \(i) {
-          generate_ui(stacks[[i]], id = ns(sprintf("mystack-%s", i)))
+          inject_remove_button(ns, stacks[[i]])
         })
       )
     )
