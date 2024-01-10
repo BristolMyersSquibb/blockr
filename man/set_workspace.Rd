@@ -2,6 +2,7 @@
 % Please edit documentation in R/workspace.R
 \name{set_workspace}
 \alias{set_workspace}
+\alias{restore_workspace}
 \alias{add_workpace_stack}
 \alias{rm_workspace_stack}
 \alias{set_workspace_title}
@@ -15,6 +16,8 @@
 \title{Workspace}
 \usage{
 set_workspace(..., title = "", settings = NULL, force = FALSE)
+
+restore_workspace(workspace)
 
 add_workpace_stack(name, stack, force = FALSE)
 
@@ -44,6 +47,9 @@ get_workspace_settings()
 \item{settings}{An (optional) list of settings (a string ist parsed as JSON)}
 
 \item{force}{Force overwrite existing stacks (otherwise may throw warning)}
+
+\item{workspace}{Either a string (forwarded to \code{from_json()}) or a list
+with names that is used to construct a call to \code{set_workspace()}}
 
 \item{name}{Stack name}
 

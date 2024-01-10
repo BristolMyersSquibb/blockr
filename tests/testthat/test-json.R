@@ -23,5 +23,30 @@ test_that("json ser/deser for stacks", {
     new_filter_block
   )
 
-  expect_identical(from_json(to_json(x)), x)
+  expect_identical(from_json(to_json(x)), x, ignore_function_env = TRUE)
+})
+
+test_that("json ser/deser for the workspace", {
+
+  withr::defer(clear_workspace_stacks())
+
+  x <- new_stack(
+    new_data_block,
+    new_filter_block
+  )
+
+  set_workspace(stack = x)
+  set_workspace_title("foo")
+  set_workspace_settings("{\"foo\": \"bar\"}")
+
+  res <- from_json(to_json())
+
+  expect_type(res, "list")
+  expect_named(res, c("stack", "title", "settings"))
+
+  expect_identical(res[["stack"]], x, ignore_function_env = TRUE)
+
+  restore_workspace(res, force = TRUE)
+
+  expect_identical(list_workspace_stacks(), "stack", ignore_function_env = TRUE)
 })

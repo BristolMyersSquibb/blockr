@@ -6,10 +6,11 @@
 \alias{to_json.block}
 \alias{to_json.stack}
 \alias{to_json.workspace}
+\alias{to_json.NULL}
 \alias{from_json}
 \title{JSON serialization}
 \usage{
-to_json(x)
+to_json(x = NULL)
 
 \method{to_json}{field}(x)
 
@@ -18,6 +19,8 @@ to_json(x)
 \method{to_json}{stack}(x)
 
 \method{to_json}{workspace}(x)
+
+\method{to_json}{`NULL`}(x)
 
 from_json(x)
 }
