@@ -298,18 +298,33 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           vals$blocks[[p]] <- init_block(p, vals)
 
           # Insert UI
-          insertUI(
-            selector = sprintf(
-              "[data-value='%s-block']",
-              session$ns(attr(vals$stack[[p - 1]], "name"))
-            ),
-            where = "afterEnd",
-            inject_remove_button(
-              session$ns,
-              vals$stack[[p]],
-              .hidden = FALSE
+          if (p > 1L) {
+            insertUI(
+              selector = sprintf(
+                "[data-value='%s-block']",
+                session$ns(attr(vals$stack[[p - 1]], "name"))
+              ),
+              where = "afterEnd",
+              inject_remove_button(
+                session$ns,
+                vals$stack[[p]],
+                .hidden = FALSE
+              )
             )
-          )
+          } else {
+            insertUI(
+              selector = sprintf(
+                "#%s-body",
+                session$ns(attr(vals$stack, "name"))
+              ),
+              where = "afterBegin",
+              inject_remove_button(
+                session$ns,
+                vals$stack[[p]],
+                .hidden = FALSE
+              )
+            )
+          }
 
           # Dynamically handle remove block event
           handle_remove_block(vals$stack[[p]], vals)
