@@ -55,7 +55,7 @@ test_that("simple data_block with keyvalue field", {
       # You need to simulate that action here
       session$setInputs(`columns-i_submit` = 1)
 
-      session$setInputs(`columns-pl_1_i_add` = 1)
+      session$setInputs(`columns-i_add` = 1)
       # Test if the reactive value is updated correctly
       # This will depend on how your module processes these inputs
       expect_identical(out_dat()$col1, rep(1, 5))

@@ -42,7 +42,7 @@ generate_server.keyvalue_field <- function(x, ...) {
 
         if (length(pl_ints) == 0) {
           # if everything is in garbage
-          last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())))
+          last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())), 0)
         } else {
           last_pl_int <- max(pl_ints)
         }
