@@ -41,12 +41,14 @@ test_that("json ser/deser for the workspace", {
 
   res <- from_json(to_json())
 
+  clear_workspace_stacks()
+
   expect_type(res, "list")
   expect_named(res, c("stack", "title", "settings"))
 
   expect_identical(res[["stack"]], x, ignore_function_env = TRUE)
 
-  restore_workspace(res, force = TRUE)
+  restore_workspace(res)
 
   expect_identical(list_workspace_stacks(), "stack", ignore_function_env = TRUE)
 })
