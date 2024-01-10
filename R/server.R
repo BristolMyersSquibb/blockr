@@ -530,8 +530,10 @@ init.workspace <- function(x, stacks, vals, session, ...) {
 
       # To dynamically insert blocks
       observeEvent(input[[sprintf("%s-add", id)]], {
+        # Reset to avoid re-adding existing blocks to stacks
+        vals$new_blocks <- NULL
         # Always append to stack
-        loc <- length(stacks[[i]])
+        loc <- length(vals$stacks[[i]]$blocks)
         block <- list_blocks()[[as.numeric(input[[sprintf("%s-selected_block", id)]])]]
         # add_block expect the current stack, the block to add and its position
         # (NULL is fine for the position, in that case the block will
