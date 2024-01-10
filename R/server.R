@@ -249,38 +249,6 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       )
       init_blocks(x, vals, session)
 
-      # Remove block from stack (can't be done within the block)
-      session$userData$is_cleaned <- reactiveVal(FALSE)
-      lapply(x, \(b) {
-        id <- attr(b, "name")
-        observeEvent({
-          input[[sprintf("remove-block-%s", id)]]
-        }, {
-          # We can't remove the data block if there are downstream consumers...
-          to_remove <- which(chr_ply(x, \(b) attr(b, "name")) == id)
-          message(sprintf("REMOVING BLOCK %s", to_remove))
-          removeUI(
-            selector = sprintf(
-              "[data-value='%s%s-block']",
-              session$ns(""),
-              attr(vals$stack[[to_remove]], "name")
-            )
-          )
-
-          vals$stack[[to_remove]] <- NULL
-          vals$blocks[[to_remove]] <- NULL
-          # Reinitialize all the downstream stack blocks with new data ...
-          if (to_remove < length(vals$stack)) {
-            for (i in to_remove:length(vals$stack)) {
-              attr(vals$stack[[i]], "position") <- i
-              vals$blocks[[i]] <- init_block(i, vals)
-            }
-          }
-
-          session$userData$stack <- vals$stack
-        })
-      })
-
       # Add new block
       observeEvent(
         {
@@ -309,15 +277,15 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
               session$ns(attr(vals$stack[[p - 1]], "name"))
             ),
             where = "afterEnd",
-            generate_ui(
+            inject_remove_button(
+              session$ns,
               vals$stack[[p]],
-              id = session$ns(attr(vals$stack[[p]], "name")),
               .hidden = FALSE
             )
           )
 
-          # Necessary to communicate with downstream modules
-          session$userData$stack <- vals$stack
+          # Dynamically handle remove block event
+          handle_remove_block(vals$stack[[p]], vals)
 
           # trigger javascript-ui functionalities on add
           session$sendCustomMessage(
@@ -326,6 +294,22 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
           )
         }
       )
+
+      observeEvent(input$copy, {
+        session$sendCustomMessage(
+          "blockr-copy-code",
+          list(
+            code = generate_code(vals$stack) |>
+              deparse() |>
+              as.character() |>
+              as.list()
+          )
+        )
+      })
+
+      observeEvent(input$newTitle, {
+        set_title(vals$stack, input$newTitle)
+      })
 
       observe({
         session$sendCustomMessage(
