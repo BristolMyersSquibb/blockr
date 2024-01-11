@@ -138,7 +138,10 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # Validate block inputs
       obs$validate_inputs <- observeEvent(r_values(), {
         message(sprintf("Validating block %s", class(x)[[1]]))
-        # validate_inputs(blk(), is_valid, session)  # FIXME should not rely on input$
+        blk_no_srv <- blk()
+        blk_no_srv[is_srv] <- NULL    # to keep class etc
+        validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
+
         # Block will have a red border if any nested input is invalid
         # since blocks can be collapsed and people won't see the input
         # elements.
