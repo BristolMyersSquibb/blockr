@@ -2,13 +2,17 @@ let locked = false;
 window.Shiny.addCustomMessageHandler("lock", (msg) => {
   locked = msg.locked;
   handleLock();
+  emitEvent(msg.locked);
+});
+
+const emitEvent = (locked) => {
   const event = new CustomEvent("blockr:lock", {
     detail: {
-      locked: msg.locked,
+      locked: locked,
     },
   });
   document.dispatchEvent(event);
-});
+};
 
 const handleLock = () => {
   $(".stack-remove").toggle();
