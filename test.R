@@ -15,7 +15,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  #observe(lock())
+  observe(lock())
   output$stack <- renderUI({
     generate_ui(stack)
   })
