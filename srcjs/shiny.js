@@ -9,7 +9,7 @@ window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
     remove(stack);
     collapse(stack);
     title(stack, msg.stack);
-    renderLocked(stack);
+    renderLocked(stack, msg.locked);
     const event = new CustomEvent("blockr:stack-render", { detail: msg });
     document.dispatchEvent(event);
   }, 750);

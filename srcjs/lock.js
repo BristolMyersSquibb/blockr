@@ -30,7 +30,8 @@ const handleLock = () => {
   });
 };
 
-export const renderLocked = (stack) => {
+export const renderLocked = (stack, state) => {
+  locked = state;
   if (!locked) return;
 
   lock(stack);

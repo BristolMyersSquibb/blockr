@@ -24,3 +24,8 @@ highlightDeps <- function() {
 blockrDeps <- function() {
   tagList(coreDeps(), highlightDeps())
 }
+
+#' Use Blockr
+#' Imports blockr dependencies
+#' @export
+useBlockr <- blockrDeps
