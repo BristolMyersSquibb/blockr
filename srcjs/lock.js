@@ -19,14 +19,14 @@ const emitEvent = (locked) => {
 };
 
 const handleLock = () => {
+  if (!locked) return;
+
   $(".stack-remove").toggle();
   $(".stack-edit-toggle").toggle();
   $(".stack-copy-code").toggle();
   $(".block-code-toggle").toggle();
   $(".block-output-toggle").toggle();
   $(".block-remove").toggle();
-
-  if (!locked) return;
 
   $(".stack-title").off();
 
