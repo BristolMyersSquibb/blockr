@@ -5,7 +5,6 @@ library(shiny)
 stack <- new_stack(
   data_block,
   select_block,
-  filter_block,
   title = "test"
 )
 
@@ -16,7 +15,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  observe(lock())
+  #observe(lock())
   output$stack <- renderUI({
     generate_ui(stack)
   })

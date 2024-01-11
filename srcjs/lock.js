@@ -20,6 +20,8 @@ const handleLock = () => {
 
   if (!locked) return;
 
+  $(".stack-title").off();
+
   $(".stack").each((_index, el) => {
     const $editor = $(el).find(".stack-edit-toggle");
     const isClosed = $editor.find("i").hasClass("fa-chevron-up");
@@ -47,9 +49,11 @@ const lock = (stack) => {
   $stack.find(".block-code-toggle").hide();
   $stack.find(".block-output-toggle").hide();
   $stack.find(".block-remove").hide();
+  $(".stack-title").off();
 
   const $editor = $stack.find(".stack-edit-toggle");
   const isClosed = $editor.find("i").hasClass("fa-chevron-up");
+  console.log(isClosed);
 
   if (isClosed) return;
 
