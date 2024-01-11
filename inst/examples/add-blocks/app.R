@@ -2,15 +2,6 @@ library(shiny)
 library(blockr.data)
 library(blockr)
 
-blocks <- list(
-  filter_block,
-  select_block,
-  arrange_block,
-  group_by_block,
-  summarize_block,
-  cheat_block,
-  plot_block
-)
 stack <- new_stack(data_block)
 shinyApp(
   ui = bslib::page_fluid(
@@ -34,15 +25,7 @@ shinyApp(
       radioButtons(
         "selected_block",
         "Choose a block",
-        choices = c(
-          "filter_block" = 1,
-          "select_block" = 2,
-          "arrange block" = 3,
-          "group_by block" = 4,
-          "summarize block" = 5,
-          "cheat block" = 6,
-          "plot block" = 7
-        ),
+        choices = names(available_blocks()),
         inline = TRUE
       ),
       actionButton("add", icon("plus"), `data-bs-dismiss` = "offcanvas")
@@ -60,7 +43,7 @@ shinyApp(
       vals$new_blocks <- NULL
       # Always append to stack
       loc <- length(stack$blocks)
-      block <- blocks[[as.numeric(input$selected_block)]]
+      block <- available_blocks()[[input$selected_block]]
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will
       # go at the end)
