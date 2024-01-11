@@ -5,6 +5,10 @@ window.Shiny.addCustomMessageHandler("lock", (msg) => {
   emitEvent(msg.locked);
 });
 
+export const isLocked = () => {
+  return locked;
+};
+
 const emitEvent = (locked) => {
   const event = new CustomEvent("blockr:lock", {
     detail: {
