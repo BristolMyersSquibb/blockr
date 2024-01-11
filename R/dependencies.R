@@ -21,24 +21,6 @@ highlightDeps <- function() {
   )
 }
 
-#' @importFrom htmltools htmlDependency
-lockDeps <- function() {
-  htmlDependency(
-    "lock",
-    version = utils::packageVersion("blockr"),
-    src = "assets",
-    package = "blockr",
-    script = "lock.js"
-  )
-}
-
-#' Lock Dependencies
-#'
-#' Dependencies for locking functionalities.
-#'
-#' @export
-useLock <- lockDeps
-
 blockrDeps <- function() {
-  tagList(coreDeps(), highlightDeps(), lockDeps())
+  tagList(coreDeps(), highlightDeps())
 }
