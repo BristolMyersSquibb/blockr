@@ -461,6 +461,15 @@ ui_input.submit_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.upload_field <- function(x, id, name) {
+  fileInput(
+    input_ids(x, id),
+    name
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -603,6 +612,12 @@ ui_update.submit_field <- function(x, session, id, name) {
     input_ids(x, id),
     name
   )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.upload_field <- function(x, session, id, name) {
+  NULL
 }
 
 #' @rdname generate_ui

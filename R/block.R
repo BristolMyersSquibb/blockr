@@ -185,15 +185,40 @@ new_data_block <- function(
   )
 }
 
-#' @param data Result from previous block
-#' @rdname new_block
-#' @export
-evaluate_block.plot_block <- evaluate_block.ggiraph_block
-
 #' @rdname new_block
 #' @export
 data_block <- function(...) {
   initialize_block(new_data_block(...))
+}
+
+#' @rdname new_block
+#' @export
+new_upload_block <- function(...) {
+
+  read_data <- function(dat) {
+    if (is.null(dat)) return(data.frame())
+    data_func <- utils::read.csv # TO DO switch
+    bquote(
+      .(read_func)(.(path)),
+      list(read_func = data_func, path = dat$datapath)
+    )
+  }
+
+  new_block(
+    fields = list(
+      dat = new_upload_field(),
+      expression = new_hidden_field(read_data)
+    ),
+    expr = quote(.(expression)),
+    ...,
+    class = c("upload_block", "data_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+upload_block <- function(...) {
+  initialize_block(new_upload_block(...))
 }
 
 #' @rdname new_block

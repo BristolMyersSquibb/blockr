@@ -23,6 +23,9 @@
 \alias{new_submit_field}
 \alias{submit_field}
 \alias{validate_field.submit_field}
+\alias{new_upload_field}
+\alias{upload_field}
+\alias{validate_field.upload_field}
 \alias{value}
 \alias{values}
 \alias{value<-}
@@ -97,6 +100,12 @@ new_submit_field(...)
 submit_field(...)
 
 \method{validate_field}{submit_field}(x)
+
+new_upload_field(...)
+
+upload_field(...)
+
+\method{validate_field}{upload_field}(x)
 
 value(x, name = "value")
 

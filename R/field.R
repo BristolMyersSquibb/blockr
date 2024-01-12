@@ -226,6 +226,29 @@ validate_field.submit_field <- function(x) {
   x
 }
 
+#' @rdname new_field
+#' @export
+new_upload_field <- function(...) {
+  new_field(
+    value = NULL,
+    ...,
+    label = "Choose a file",
+    class = "upload_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+upload_field <- function(...) {
+  validate_field(new_upload_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.upload_field <- function(x) {
+  x
+}
+
 #' @param name Field component name
 #' @rdname new_field
 #' @export

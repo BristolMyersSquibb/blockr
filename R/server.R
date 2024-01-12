@@ -214,6 +214,10 @@ generate_server.data_block <- function(x, id, ...) {
   generate_server_block(x = x, in_dat = NULL, id = id)
 }
 
+#' @rdname generate_server
+#' @export
+generate_server.upload_block <- generate_server.data_block
+
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export

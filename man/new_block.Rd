@@ -18,6 +18,8 @@
 \alias{evaluate_block.ggiraph_block}
 \alias{new_data_block}
 \alias{data_block}
+\alias{new_upload_block}
+\alias{upload_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -99,9 +101,11 @@ new_data_block(
   selected = character()
 )
 
-\method{evaluate_block}{plot_block}(x, data, ...)
-
 data_block(...)
+
+new_upload_block(...)
+
+upload_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 

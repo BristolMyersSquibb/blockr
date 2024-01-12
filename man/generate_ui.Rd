@@ -32,6 +32,7 @@
 \alias{ui_input.switch_field}
 \alias{ui_input.numeric_field}
 \alias{ui_input.submit_field}
+\alias{ui_input.upload_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -48,6 +49,7 @@
 \alias{ui_update.range_field}
 \alias{ui_update.numeric_field}
 \alias{ui_update.submit_field}
+\alias{ui_update.upload_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
 \alias{uiOutputBlock}
@@ -120,6 +122,8 @@ ui_input(x, id, name)
 
 \method{ui_input}{submit_field}(x, id, name)
 
+\method{ui_input}{upload_field}(x, id, name)
+
 input_ids(x, ...)
 
 \method{input_ids}{block}(x, ...)
@@ -151,6 +155,8 @@ ui_update(x, session, id, name)
 \method{ui_update}{numeric_field}(x, session, id, name)
 
 \method{ui_update}{submit_field}(x, session, id, name)
+
+\method{ui_update}{upload_field}(x, session, id, name)
 
 \method{ui_update}{hidden_field}(x, session, id, name)
 
