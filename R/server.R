@@ -138,7 +138,10 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # Validate block inputs
       obs$validate_inputs <- observeEvent(r_values(), {
         message(sprintf("Validating block %s", class(x)[[1]]))
-        # validate_inputs(blk(), is_valid, session)  # FIXME should not rely on input$
+        blk_no_srv <- blk()
+        blk_no_srv[is_srv] <- NULL    # to keep class etc
+        validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
+
         # Block will have a red border if any nested input is invalid
         # since blocks can be collapsed and people won't see the input
         # elements.
@@ -342,15 +345,69 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
   )
 }
 
+
+#' Handle block generic
+#'
+#' Generic for block removal
+#'
+#' @param x Block element.
+#' @param ... Generic consistency.
+#'
+#' @export
+#' @rdname generate_server
+handle_remove_block <- function(x, ...) {
+  UseMethod("handle_remove_block")
+}
+
+#' Attach an observeEvent to the given block
+#'
+#' Necessary to be able to remove the block from the stack.
+#'
+#' @param vals Internal stack reactive values.
+#' @param session Shiny session object.
+#' @export
+#' @rdname generate_server
+handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomain(), ...) {
+  input <- session$input
+  id <- attr(x, "name")
+  observeEvent({
+    input[[sprintf("remove-block-%s", id)]]
+  }, {
+    # We can't remove the data block if there are downstream consumers...
+    to_remove <- which(chr_ply(vals$stack, \(x) attr(x, "name")) == id)
+    message(sprintf("REMOVING BLOCK %s", to_remove))
+    removeUI(
+      selector = sprintf(
+        "[data-value='%s%s-block']",
+        session$ns(""),
+        attr(vals$stack[[to_remove]], "name")
+      )
+    )
+
+    vals$stack[[to_remove]] <- NULL
+    vals$blocks[[to_remove]] <- NULL
+    # Reinitialize all the downstream stack blocks with new data ...
+    if (to_remove < length(vals$stack)) {
+      for (i in to_remove:length(vals$stack)) {
+        attr(vals$stack[[i]], "position") <- i
+        vals$blocks[[i]] <- init_block(i, vals)
+      }
+    }
+  })
+}
+
 #' Init blocks server
 #' @keywords internal
 init_blocks <- function(x, vals, session) {
   observeEvent(TRUE, {
-    session$userData$stack <- vals$stack
     for (i in seq_along(x)) {
       vals$blocks[[i]] <- init_block(i, vals, session)
     }
   })
+  # Remove block from stack (can't be done within the block)
+  # This works for extisting blocks. Newly added blocks need
+  # to be handled separately.
+  lapply(x, handle_remove_block, vals = vals)
 }
 
 #' Init a single block
