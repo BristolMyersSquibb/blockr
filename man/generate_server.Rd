@@ -29,7 +29,7 @@ generate_server(x, ...)
 
 \method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
+\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
 
 handle_remove(x, ...)
 
@@ -54,7 +54,7 @@ init(x, ...)
 
 \item{in_dat}{Reactive input data}
 
-\item{new_blocks}{For dynamically inserted blocks.}
+\item{new_block}{For dynamically inserted blocks.}
 
 \item{vals}{Internal reactive values.}
 

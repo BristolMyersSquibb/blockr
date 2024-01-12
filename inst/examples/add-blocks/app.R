@@ -9,22 +9,22 @@ shinyApp(
     generate_ui(stack, id = "mystack")
   ),
   server = function(input, output, session) {
-    vals <- reactiveValues(new_blocks = NULL)
+    vals <- reactiveValues(new_block = NULL)
     stack <- generate_server(
       stack,
       id = "mystack",
-      new_blocks = reactive(vals$new_blocks)
+      new_block = reactive(vals$new_block)
     )
 
     observeEvent(input$add, {
-      vals$new_blocks <- NULL
+      vals$new_block <- NULL
       # Always append to stack
       loc <- length(stack$blocks)
-      block <- blocks[[as.numeric(input$selected_block)]]
+      block <- available_blocks()[[input$selected_block]]
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will
       # go at the end)
-      vals$new_blocks <- list(
+      vals$new_block <- list(
         block = block,
         position = loc
       )

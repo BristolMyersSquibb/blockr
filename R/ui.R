@@ -232,7 +232,7 @@ add_block_ui <- function(ns) {
       radioButtons(
         ns("selected_block"),
         "Choose a block",
-        choices = setNames(seq_len(length(list_blocks())), list_blocks()),
+        choices = names(available_blocks()),
         inline = TRUE
       ),
       actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")

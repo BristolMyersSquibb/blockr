@@ -256,9 +256,9 @@ generate_server.ggiraph_block <- generate_server.plot_block
 
 #' @rdname generate_server
 #' @param id Unique module id. Useful when the stack is called as a module.
-#' @param new_blocks For dynamically inserted blocks.
+#' @param new_block For dynamically inserted blocks.
 #' @export
-generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
+generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
   stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
@@ -276,13 +276,13 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       # Add new block
       observeEvent(
         {
-          req(new_blocks)
-          new_blocks()
+          req(new_block)
+          new_block()
         },
         {
           # Update stack
-          block_to_add <- new_blocks()$block
-          position <- new_blocks()$position
+          block_to_add <- new_block()$block
+          position <- new_block()$position
 
           vals$stack <- add_block(vals$stack, block_to_add, position)
 
@@ -435,7 +435,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-      vals <- reactiveValues(stacks = list(), new_blocks = list())
+      vals <- reactiveValues(stacks = list(), new_block = list())
 
       output$n_stacks <- renderText(length(vals$stacks))
 
@@ -483,7 +483,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         vals$stacks[[length(stacks)]] <- generate_server(
           el,
           id = attr(el, "name"),
-          new_blocks = reactive(vals$new_blocks[[attr(el, "name")]])
+          new_block = reactive(vals$new_block[[attr(el, "name")]])
         )
 
         # Handle new block injection
@@ -527,7 +527,7 @@ init.workspace <- function(x, stacks, vals, session, ...) {
       vals$stacks[[i]] <- generate_server(
         stacks[[i]],
         id = id,
-        new_blocks = reactive(vals$new_blocks[[id]])
+        new_block = reactive(vals$new_block[[id]])
       )
       handle_remove(stacks[[i]], vals)
 
@@ -545,12 +545,12 @@ init.workspace <- function(x, stacks, vals, session, ...) {
 inject_block <- function(input, vals, id) {
   observeEvent(input[[sprintf("%s-add", id)]], {
     # Reset to avoid re-adding existing blocks to stacks
-    vals$new_blocks <- NULL
+    vals$new_block <- NULL
     block <- list_blocks()[[as.numeric(input[[sprintf("%s-selected_block", id)]])]]
     # add_block expect the current stack, the block to add and its position
     # (NULL is fine for the position, in that case the block will
     # go at the end)
-    vals$new_blocks[[id]] <- list(block = block)
+    vals$new_block[[id]] <- list(block = block)
   })
 }
 
