@@ -55,7 +55,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
     in_dat <- reactive(NULL)
   }
 
-  obs_expr2 <- function(x) {
+  obs_expr <- function(x) {
     splice_args(
       list(in_dat(), ..(args)),
       args = rapply(input_ids(x), quoted_input_entries, how = "replace")
@@ -103,7 +103,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       r_values_default <- reactive({
         blk_no_srv <- blk()
         blk_no_srv[is_srv] <- NULL    # to keep class etc
-        eval(obs_expr2(blk_no_srv))
+        eval(obs_expr(blk_no_srv))
       })
 
       r_values <- reactive({
