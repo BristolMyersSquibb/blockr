@@ -1,15 +1,15 @@
-#' JSON serialization
+#' Serialization
 #'
-#' Object serialization as JSON.
+#' Object (de)serialization.
 #'
 #' @param x Object to (de)serialize
 #'
 #' @export
-to_json <- function(x = NULL) {
-  UseMethod("to_json")
+blockr_serialize <- function(x) {
+  UseMethod("blockr_serialize")
 }
 
-to_json_impl <- function(x) {
+serialize_impl <- function(x) {
 
   cns <- constructive::construct(
     x,
@@ -17,70 +17,70 @@ to_json_impl <- function(x) {
     compare = constructive::compare_options(ignore_function_env = TRUE)
   )
 
-  jsonlite::toJSON(
-    list(
-      class = class(x),
-      payload = paste0(cns[["code"]], collapse = "\n"),
-      blockr = as.character(utils::packageVersion("blockr"))
-    )
+  list(
+    class = class(x),
+    payload = paste0(cns[["code"]], collapse = "\n"),
+    blockr = as.character(utils::packageVersion("blockr"))
   )
 }
 
-#' @rdname to_json
+#' @rdname blockr_serialize
 #' @export
-to_json.field <- to_json_impl
+blockr_serialize.field <- serialize_impl
 
-#' @rdname to_json
+#' @rdname blockr_serialize
 #' @export
-to_json.block <- to_json_impl
+blockr_serialize.block <- serialize_impl
 
-#' @rdname to_json
+#' @rdname blockr_serialize
 #' @export
-to_json.stack <- to_json_impl
+blockr_serialize.stack <- serialize_impl
 
-#' @rdname to_json
+#' @rdname blockr_serialize
 #' @export
-to_json.workspace <- function(x) {
+blockr_serialize.workspace <- function(x) {
 
   payload <- list(
-    stacks = eapply(x, to_json),
+    stacks = eapply(x, blockr_serialize),
     title = attr(x, "title"),
     settings = attr(x, "settings")
   )
 
-  jsonlite::toJSON(
-    list(
-      class = class(x),
-      payload = payload,
-      blockr = as.character(utils::packageVersion("blockr"))
-    )
+  list(
+    class = class(x),
+    payload = payload,
+    blockr = as.character(utils::packageVersion("blockr"))
   )
 }
 
-#' @rdname to_json
+#' @rdname blockr_serialize
 #' @export
-to_json.NULL <- function(x) {
-  to_json(get_workspace())
-}
+blockr_deserialize <- function(x) {
 
-#' @rdname to_json
-#' @export
-from_json <- function(x) {
+  stopifnot(setequal(names(x), c("class", "payload", "blockr")))
 
-  res <- jsonlite::fromJSON(x)
-
-  stopifnot(setequal(names(res), c("class", "payload", "blockr")))
-
-  if (identical(res[["class"]], "workspace")) {
+  if (identical(x[["class"]], "workspace")) {
 
     c(
-      lapply(res[["payload"]][["stacks"]], from_json),
-      title = res[["payload"]][["title"]],
-      settings = jsonlite::toJSON(res[["payload"]][["settings"]])
+      lapply(x[["payload"]][["stacks"]], blockr_deserialize),
+      title = x[["payload"]][["title"]],
+      settings = jsonlite::toJSON(x[["payload"]][["settings"]])
     )
 
   } else {
 
-    eval(parse(text = res[["payload"]]))
+    eval(parse(text = x[["payload"]]))
   }
+}
+
+#' @rdname blockr_serialize
+#' @export
+from_json <- function(x) {
+  blockr_deserialize(jsonlite::fromJSON(x))
+}
+
+#' @rdname blockr_serialize
+#' @export
+to_json <- function(x = get_workspace()) {
+  jsonlite::toJSON(blockr_serialize(x))
 }
