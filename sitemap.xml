@@ -25,6 +25,9 @@
     <loc>/reference/add_block.html</loc>
   </url>
   <url>
+    <loc>/reference/add_block_ui.html</loc>
+  </url>
+  <url>
     <loc>/reference/available_blocks.html</loc>
   </url>
   <url>
@@ -58,13 +61,10 @@
     <loc>/reference/init_block.html</loc>
   </url>
   <url>
-    <loc>/reference/init_blocks.html</loc>
-  </url>
-  <url>
     <loc>/reference/init_lock.html</loc>
   </url>
   <url>
-    <loc>/reference/inject_remove_button.html</loc>
+    <loc>/reference/inject_block.html</loc>
   </url>
   <url>
     <loc>/reference/lock.html</loc>
@@ -86,9 +86,6 @@
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/remove_shiny_inputs.html</loc>
   </url>
   <url>
     <loc>/reference/secure.html</loc>
