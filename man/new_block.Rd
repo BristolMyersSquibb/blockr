@@ -55,7 +55,6 @@
 \alias{demo_filter_block_2}
 \alias{demo_summarize_block}
 \alias{is_initialized.field}
-\alias{new_mutate_block}
 \alias{mutate_block}
 \title{Blocks}
 \usage{
@@ -211,8 +210,6 @@ demo_summarize_block(data, ...)
 
 \method{is_initialized}{field}(x)
 
-new_mutate_block(data, value = NULL, ...)
-
 mutate_block(data, ...)
 }
 \arguments{
@@ -233,7 +230,7 @@ the list of fields to layout and returns one or more UI tag(s).}
 
 \item{x}{An object inheriting form \code{"block"}}
 
-\item{data}{Tabular data in which to select some columns.}
+\item{data}{Block input data}
 
 \item{dat}{Multiple datasets.}
 
@@ -268,8 +265,6 @@ to join}
 \item{session}{Shiny session}
 
 \item{column}{Column to apply the operation on.}
-
-\item{value}{Intial value for muate block}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block

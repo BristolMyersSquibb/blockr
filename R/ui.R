@@ -265,7 +265,7 @@ generate_ui.stack <- function(
         })
       )
     ),
-    blockrDeps()
+    useBlockr()
   )
 }
 

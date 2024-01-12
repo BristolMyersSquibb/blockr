@@ -379,3 +379,11 @@ validate_block <- function(blk, is_valid, session) {
     )
   }
 }
+
+# has_method(character(), "generate_server")
+has_method <- function(x, generic) {
+  mts0 <- utils::methods(generic = generic)
+  mts1 <- gsub(paste0("^", generic, "\\."), "", as.character(mts0))
+  mts <- gsub(paste0("*$"), "", mts1)
+  any(class(x) %in% mts)
+}
