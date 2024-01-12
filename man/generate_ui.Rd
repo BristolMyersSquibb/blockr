@@ -16,11 +16,16 @@
 \alias{block_code}
 \alias{block_code.block}
 \alias{block_header}
-\alias{block_remove}
-\alias{block_remove.block}
+\alias{remove_button}
+\alias{remove_button.block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
+\alias{inject_remove_button}
+\alias{inject_remove_button.block}
+\alias{inject_remove_button.stack}
+\alias{remove_button.stack}
 \alias{stack_header}
+\alias{generate_ui.workspace}
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
@@ -83,15 +88,25 @@ block_code(x, ...)
 
 block_header(x, ...)
 
-block_remove(x, ...)
+remove_button(x, ...)
 
-\method{block_remove}{block}(x, id, ...)
+\method{remove_button}{block}(x, id, ...)
 
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
 
+inject_remove_button(x, ...)
+
+\method{inject_remove_button}{block}(x, ns, ...)
+
+\method{inject_remove_button}{stack}(x, ns, ...)
+
+\method{remove_button}{stack}(x, id, ...)
+
 stack_header(x, ...)
+
+\method{generate_ui}{workspace}(x, id = NULL, ...)
 
 ui_input(x, id, name)
 
@@ -179,4 +194,12 @@ when the block is collapsed.}
 }
 \description{
 Generic for UI generation
+
+This has to be called from the stack parent
+namespace. This can also be called dynamically when
+inserting a new block within a stack.
+
+This has to be called from the workspace parent
+namespace. This can also be called dynamically when
+inserting a new stack within a workspace.
 }

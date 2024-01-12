@@ -158,13 +158,13 @@ block_header.block <- function(x, ns, hidden_class, ...) {
 
 #' @rdname generate_ui
 #' @export
-block_remove <- function(x, ...) {
-  UseMethod("block_remove", x)
+remove_button <- function(x, ...) {
+  UseMethod("remove_button", x)
 }
 
 #' @rdname generate_ui
 #' @export
-block_remove.block <- function(x, id, ...) {
+remove_button.block <- function(x, id, ...) {
   actionLink(
     id,
     icon("trash"),
@@ -206,6 +206,40 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
   )
 }
 
+#' Add block UI interface
+#'
+#' Useful to allow stack to add blocks to them.
+#'
+#' @param ns Stack namespace.
+#'
+#' @keywords internal
+add_block_ui <- function(ns) {
+  div(
+    class = "d-flex justify-content-center",
+    tags$button(
+      type = "button",
+      "Add a new block",
+      class = "btn btn-primary",
+      class = "my-2",
+      `data-bs-toggle` = "offcanvas",
+      `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
+      `aria-controls` = ns("addBlockCanvas")
+    ),
+    off_canvas(
+      id = ns("addBlockCanvas"),
+      title = "My blocks",
+      position = "bottom",
+      radioButtons(
+        ns("selected_block"),
+        "Choose a block",
+        choices = names(available_blocks()),
+        inline = TRUE
+      ),
+      actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")
+    )
+  )
+}
+
 #' @rdname generate_ui
 #' @export
 generate_ui.stack <- function(
@@ -227,12 +261,18 @@ generate_ui.stack <- function(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(x, \(b) {
-          inject_remove_button(ns, b)
+          inject_remove_button(b, ns)
         })
       )
     ),
     useBlockr()
   )
+}
+
+#' @rdname generate_ui
+#' @export
+inject_remove_button <- function(x, ...) {
+  UseMethod("inject_remove_button")
 }
 
 #' Inject remove button into block header
@@ -241,19 +281,52 @@ generate_ui.stack <- function(
 #' namespace. This can also be called dynamically when
 #' inserting a new block within a stack.
 #'
-#' @param ns Stack namespace.
-#' @param b Current block.
-#' @param .hidden Internal parameter. Default to FALSE
+#' @param ns Parent namespace.
 #'
-#' @keywords internal
-inject_remove_button <- function(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
-  block_id <- attr(b, "name")
-  tmp <- generate_ui(b, id = ns(block_id), .hidden = FALSE)
+#' @export
+#' @rdname generate_ui
+inject_remove_button.block <- function(x, ns, ...) {
+  id <- attr(x, "name")
+  tmp <- generate_ui(x, id = ns(id), .hidden = FALSE)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
     find(".block-tools")$
-    prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+    prepend(remove_button(x, ns(sprintf("remove-block-%s", id))))$
   allTags()
+}
+
+#' Inject remove button into stack header
+#'
+#' This has to be called from the workspace parent
+#' namespace. This can also be called dynamically when
+#' inserting a new stack within a workspace.
+#'
+#' @param ns Parent namespace.
+#'
+#' @export
+#' @rdname generate_ui
+inject_remove_button.stack <- function(x, ns, ...) {
+  id <- attr(x, "name")
+  tmp <- htmltools::tagQuery(generate_ui(x, id = ns(id)))$
+    find(".stack-tools")$
+    prepend(remove_button(x, ns(sprintf("remove-stack-%s", id))))$
+  allTags()
+
+  tmp[[1]] <- tagAppendChildren(
+    tmp[[1]],
+    add_block_ui(NS(ns(attr(x, "name"))))
+  )
+  div(class = "col m-1", tmp)
+}
+
+#' @rdname generate_ui
+#' @export
+remove_button.stack <- function(x, id, ...) {
+  actionLink(
+    id,
+    icon("trash"),
+    class = "text-decoration-none stack-remove",
+  )
 }
 
 #' @rdname generate_ui
@@ -276,14 +349,7 @@ stack_header.stack <- function(x, title, ns, ...) {
       div(
         class = "flex-shrink-1",
         div(
-          class = "ps-1 py-2",
-          # TO DO: move it to workspace (needs other PR).
-          #actionLink(
-          #  ns("remove"),
-          #  "",
-          #  class = "text-decoration-none stack-remove",
-          #  iconTrash()
-          #),
+          class = "stack-tools ps-1 py-2",
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
@@ -296,6 +362,48 @@ stack_header.stack <- function(x, title, ns, ...) {
             iconEdit()
           )
         )
+      )
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+generate_ui.workspace <- function(x, id = NULL, ...) {
+  stopifnot(...length() == 0L)
+
+  id <- if (is.null(id)) attr(x, "name") else id
+
+  ns <- NS(id)
+
+  stacks <- get_workspace_stacks()
+
+  tagList(
+    div(
+      class = "d-flex justify-content-center",
+      actionButton(
+        ns("add_stack"),
+        label = "Add stack",
+        icon = icon("plus"),
+        width = NULL,
+        span(class = "badge bg-secondary", textOutput(ns("n_stacks"))),
+        class = "mx-2"
+      ),
+      actionButton(
+        ns("clear_stacks"),
+        "Clear all",
+        icon("trash"),
+        class = "bg-danger",
+        class = "mx-2"
+      )
+    ),
+    div(
+      class = "m-2 workspace",
+      div(
+        class = "row stacks",
+        lapply(seq_along(stacks), \(i) {
+          inject_remove_button(stacks[[i]], ns)
+        })
       )
     )
   )

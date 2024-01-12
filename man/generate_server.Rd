@@ -9,8 +9,13 @@
 \alias{generate_server.plot_block}
 \alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
-\alias{handle_remove_block}
-\alias{handle_remove_block.block}
+\alias{handle_remove}
+\alias{handle_remove.block}
+\alias{handle_remove.stack}
+\alias{generate_server.workspace}
+\alias{init}
+\alias{init.workspace}
+\alias{init.stack}
 \title{Re-implement numeric_field, using server module}
 \usage{
 \method{generate_server}{keyvalue_field}(x, ...)
@@ -27,31 +32,47 @@ generate_server(x, ...)
 
 \method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, id = NULL, new_blocks = NULL, ...)
+\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
 
-handle_remove_block(x, ...)
+handle_remove(x, ...)
 
-\method{handle_remove_block}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
+\method{handle_remove}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
+
+\method{handle_remove}{stack}(x, vals, session = getDefaultReactiveDomain(), ...)
+
+\method{generate_server}{workspace}(x, id = NULL, ...)
+
+init(x, ...)
+
+\method{init}{workspace}(x, stacks, vals, session, ...)
+
+\method{init}{stack}(x, vals, session, ...)
 }
 \arguments{
-\item{x}{Block element.}
+\item{x}{Element.}
 
 \item{...}{Generic consistency.}
 
-\item{id}{Unique module id. Useful when the stack is called as a module.}
+\item{id}{Unique module id. Useful when the workspace is called as a module.}
 
 \item{in_dat}{Reactive input data}
 
-\item{new_blocks}{For dynamically inserted blocks.}
+\item{new_block}{For dynamically inserted blocks.}
 
-\item{vals}{Internal stack reactive values.}
+\item{vals}{Internal reactive values.}
 
 \item{session}{Shiny session object.}
+
+\item{stacks}{List of workspace stacks.}
 }
 \description{
 Generic for server generation
 
-Generic for block removal
+Generic for stack/block removal
 
 Necessary to be able to remove the block from the stack.
+
+Necessary to be able to remove the stack from the workspace.
+
+Handle initialisation of workspace, stacks, ...
 }
