@@ -1,3 +1,4 @@
 {
-  "index": "./srcjs/index.js"
+  "index": "./srcjs/index.js",
+  "lock": "./srcjs/lock.js"
 }

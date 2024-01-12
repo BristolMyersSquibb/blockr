@@ -60,6 +60,7 @@ var options = {
   entry: entryPoints,
   output: {
     filename: '[name].js',
+    library: {name: 'blockr', type: 'umd'},
     path: path.resolve(__dirname, JSON.parse(outputPath)),
   },
   externals: externals,

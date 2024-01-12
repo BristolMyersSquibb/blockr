@@ -336,7 +336,10 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
       observe({
         session$sendCustomMessage(
           "blockr-bind-stack",
-          list(stack = session$ns(NULL))
+          list(
+            stack = session$ns(NULL),
+            locked = is_locked(session)
+          )
         )
       })
 
