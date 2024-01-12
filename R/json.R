@@ -13,7 +13,7 @@ to_json_impl <- function(x) {
 
   cns <- constructive::construct(
     x,
-    opts_environment("new.env"),
+    constructive::opts_environment("new.env"),
     compare = constructive::compare_options(ignore_function_env = TRUE)
   )
 

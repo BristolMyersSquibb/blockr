@@ -17,7 +17,7 @@
 \usage{
 set_workspace(..., title = "", settings = NULL, force = FALSE)
 
-restore_workspace(workspace)
+restore_workspace(workspace, force = FALSE)
 
 add_workpace_stack(name, stack, force = FALSE)
 
