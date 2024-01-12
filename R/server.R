@@ -18,13 +18,6 @@ generate_server.block <- function(x, ...) {
 }
 
 
-obs_expr2 <- function(x) {
-  splice_args(
-    list(in_dat(), ..(args)),
-    args = rapply(input_ids(x), quoted_input_entries, how = "replace")
-  )
-}
-
 update_blk <- function(b, value, is_srv, input, data) {
   for (field in names(b)) {
     if (field %in% names(is_srv)[is_srv]) {
@@ -60,6 +53,13 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
   # returns NULL
   if (is.null(in_dat)) {
     in_dat <- reactive(NULL)
+  }
+
+  obs_expr <- function(x) {
+    splice_args(
+      list(in_dat(), ..(args)),
+      args = rapply(input_ids(x), quoted_input_entries, how = "replace")
+    )
   }
 
   moduleServer(
@@ -103,7 +103,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       r_values_default <- reactive({
         blk_no_srv <- blk()
         blk_no_srv[is_srv] <- NULL    # to keep class etc
-        eval(obs_expr2(blk_no_srv))
+        eval(obs_expr(blk_no_srv))
       })
 
       r_values <- reactive({
