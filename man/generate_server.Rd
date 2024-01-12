@@ -9,7 +9,6 @@
 \alias{generate_server.plot_block}
 \alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
-<<<<<<< HEAD
 \alias{handle_remove}
 \alias{handle_remove.block}
 \alias{handle_remove.stack}
@@ -17,12 +16,7 @@
 \alias{init}
 \alias{init.workspace}
 \alias{init.stack}
-\title{Server}
-=======
-\alias{handle_remove_block}
-\alias{handle_remove_block.block}
 \title{Re-implement numeric_field, using server module}
->>>>>>> main
 \usage{
 \method{generate_server}{keyvalue_field}(x, ...)
 
