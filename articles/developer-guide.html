@@ -114,9 +114,9 @@ transformed data to produce visualizations.</li>
 <p>A <strong>stack</strong> always starts from a data block and may end
 either by a data transform blocks or by an output block. Note that at
 the moment, there is only one output block per stack.</p>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-be95d8873f36e1e97de8" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-be95d8873f36e1e97de8">{"x":{"diagram":"\nflowchart TB\n    subgraph stack\n      input(Data);\n      transform(Transform);\n      output(Visualize);\n      input-->transform--> output;\n    end\n"},"evals":[],"jsHooks":[]}</script><div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-47f602d676f06dae0c42" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-47f602d676f06dae0c42">{"x":{"diagram":"\nclassDiagram\n    class stack\n    stack : +name\n    stack : +class\n    stack : +generate_server(stack, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The stack is able to dynamically add new blocks through
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-b01c86adbe5b6ad9ae31" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-b01c86adbe5b6ad9ae31">{"x":{"diagram":"\nflowchart TB\n    subgraph stack\n      input(Data);\n      transform(Transform);\n      output(Visualize);\n      input-->transform--> output;\n    end\n"},"evals":[],"jsHooks":[]}</script><div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-e90ba0a416f9c1c58c7b" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-e90ba0a416f9c1c58c7b">{"x":{"diagram":"\nclassDiagram\n    class stack\n    stack : +name\n    stack : +class\n    stack : +generate_server(stack, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The stack is able to dynamically add new blocks through
 <code>add_block</code>.</p>
 </div>
 <div class="section level3">
@@ -135,8 +135,8 @@ produce the block <strong>result</strong>.</li>
 <strong>result</strong>: the block output which can be passed to
 another block.</li>
 </ul>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-ca798c62938dee49bf20" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-ca798c62938dee49bf20">{"x":{"diagram":"\nclassDiagram\n    class block\n    block : +name\n    block : +expr\n    block : +result\n    block : +layout\n    block : +class\n    block : +initialize_block(block)\n    block : +is_initialized(block)\n    block : +generate_code(block)\n    block : +evaluate_block(block, ...)\n    block : +generate_server(block, ...)\n    block : +update_fields(block, ...)\n"},"evals":[],"jsHooks":[]}</script><p>A block is composed of <strong>fields</strong> gathered in a list,
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-62450ba2e9e10a9096d7" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-62450ba2e9e10a9096d7">{"x":{"diagram":"\nclassDiagram\n    class block\n    block : +name\n    block : +expr\n    block : +result\n    block : +layout\n    block : +class\n    block : +initialize_block(block)\n    block : +is_initialized(block)\n    block : +generate_code(block)\n    block : +evaluate_block(block, ...)\n    block : +generate_server(block, ...)\n    block : +update_fields(block, ...)\n"},"evals":[],"jsHooks":[]}</script><p>A block is composed of <strong>fields</strong> gathered in a list,
 which are translated into Shiny inputs. These fields are the necessary
 elements to reconstruct the block <strong>expression</strong> and
 subsequently produce the result whenever it gets evaluated.</p>
@@ -149,8 +149,8 @@ subsequently produce the result whenever it gets evaluated.</p>
 </h4>
 <p>A field is a structure with a <strong>type</strong> and a
 <strong>class</strong>.</p>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-6766be57f217ad1569e6" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-6766be57f217ad1569e6">{"x":{"diagram":"\nclassDiagram\n    class field\n    field : +type\n    field : +class\n    field : +initialize_field(x, env)\n    field : +validate_field(field)\n    field : +update_field(field, value, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The <code>validate_field</code> generic ensures each field has
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-375ca6e9b48a94244288" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-375ca6e9b48a94244288">{"x":{"diagram":"\nclassDiagram\n    class field\n    field : +type\n    field : +class\n    field : +initialize_field(x, env)\n    field : +validate_field(field)\n    field : +update_field(field, value, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The <code>validate_field</code> generic ensures each field has
 revelant values. For instance, for a string field, which ultimately
 becomes a shiny text input, the method
 <code>validate_field.string_field</code> is responsible for checking
