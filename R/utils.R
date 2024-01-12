@@ -259,28 +259,6 @@ create_modal <- function(...) {
   )
 }
 
-#' Evaluate expression safely
-#'
-#' tryCatch wrapper.
-#'
-#' @param expr Expression to evaluate.
-#' @param is_valid Block valid status.
-#'
-#' @return Result or error message.
-#'
-#' @keywords internal
-secure <- function(expr, is_valid) {
-  tryCatch(
-    {
-      expr
-    },
-    error = function(e) {
-      is_valid$error <- "An error occured within a block, please inspect the
-      red border block(s) and fix the issue(s)."
-    }
-  )
-}
-
 #' Validate inputs
 #'
 #' Get input value and determine if they're valid.

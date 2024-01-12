@@ -131,10 +131,6 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       }) |>
         bindEvent(r_values(), in_dat(), ignoreInit = TRUE)
 
-      obs$print_error <- observeEvent(is_valid$error, {
-        create_modal(is_valid$error)
-      })
-
       # Validate block inputs
       obs$validate_inputs <- observeEvent(r_values(), {
         message(sprintf("Validating block %s", class(x)[[1]]))
