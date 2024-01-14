@@ -4,7 +4,13 @@
 \alias{exprs_ui}
 \title{Create a UI element for expressions}
 \usage{
-exprs_ui(id = "", value_name = "newcol", value_val = NULL)
+exprs_ui(
+  id = "",
+  value_name = "newcol",
+  value_val = NULL,
+  delete_button = TRUE,
+  key = c("suggest", "empty", "none")
+)
 }
 \arguments{
 \item{id}{Character string, an identifier for the UI element.}
