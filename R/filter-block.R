@@ -12,8 +12,6 @@ filter_expr <- function(value = c(a = "2.1", b = "4.5")) {
     expr
   }
 
-  print(constructive::construct(value))
-
   exprs <- do.call(c, lapply(value, parse_one))
 
   bquote(
