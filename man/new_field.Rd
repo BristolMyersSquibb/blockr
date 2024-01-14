@@ -136,7 +136,13 @@ list_field(...)
 
 \method{validate_field}{list_field}(x)
 
-new_keyvalue_field(value = numeric(), ...)
+new_keyvalue_field(
+  value = numeric(),
+  multiple = TRUE,
+  submit = TRUE,
+  key = c("suggest", "empty", "none"),
+  ...
+)
 
 keyvalue_field(...)
 
