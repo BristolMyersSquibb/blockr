@@ -121,6 +121,8 @@ ui_input.keyvalue_field <- function(x, id, name) {
 }
 
 #' @rdname new_field
+#' @param submit Should a 'submit button' be shown?
+#' @param key How to display the 'key' field
 #' @export
 new_keyvalue_field <- function(
     value = numeric(),
@@ -181,6 +183,8 @@ get_exprs <- function(prefix, input, garbage) {
 #' @param id Character string, an identifier for the UI element.
 #' @param value_name Default name for the new column.
 #' @param value_val Default value for the new column.
+#' @param delete_button Should a delete button be shown?
+#' @param key How to display the 'key' field
 #' @return A `div` element containing the UI components.
 #' @importFrom shinyAce aceEditor aceAutocomplete aceTooltip
 #' @export
