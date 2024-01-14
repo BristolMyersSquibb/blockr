@@ -14,64 +14,72 @@ generate_server.keyvalue_field <- function(x, ...) {
       multiple <- isTRUE(x$multiple)
       key <- x$key
 
-      r_result <- reactiveVal(value = NULL)
-
-      if (submit) {
-        observeEvent(input$i_submit, {
-          r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
-        })
-      } else {
-        observe({
-          r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
-        })
-      }
-
-      # remove namedchar UI on trash click
-      r_rms_previous <- reactiveVal(integer())
-      # store removed elements (since I cannot find a way to 'flush' input after
-      # removing a UI element)
-      r_rms_garbage <- reactiveVal(character())
+      # using reactiveVal(), instead of reactive, reduces the number of updates
+      r_value_user <- reactiveVal(NULL)
       observe({
-        rms <- get_rms("pl_", input, garbage = character())
-        rms_previous <- isolate(r_rms_previous())
-        nms_both <- intersect(names(rms), names(rms_previous))
-        to_be_rm <- gsub("_rm$", "", nms_both[rms[nms_both] != rms_previous[nms_both]])
-        if (length(to_be_rm) > 0) {
-          removeUI(paste0("#", ns(to_be_rm)))
-          # make sure it is not read again in the future
-          r_rms_garbage(c(isolate(r_rms_garbage()), to_be_rm))
+        ans <- get_exprs("pl_", input)
+        value <- isolate(r_value())
+
+        # previously used ids are not removed from dom
+        if (length(ans) > length(value)) {
+          ans <- ans[1:length(value)]
         }
-        r_rms_previous(rms)
+        r_value_user(ans)
       })
 
-      if (multiple) {
-        observeEvent(input$i_add, {
-          pl_ints <-
-            names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
-            gsub("_rm$", "", x = _) |>
-            gsub("^pl_", "", x = _) |>
-            as.integer()
+      r_value <- reactiveVal(if (is.null(init()$value)) c(newcol = "") else init()$value)
 
-          if (length(pl_ints) == 0) {
-            # if everything is in garbage
-            last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())), 0)
-          } else {
-            last_pl_int <- max(pl_ints)
-          }
+      # by user input
+      observe({
+        req(r_value_user())
+        r_value(r_value_user())
+      }) |>
+        bindEvent(r_value_user(), ignoreInit = TRUE)
 
-          next_pl <- paste0("pl_", last_pl_int + 1L)
-          insertUI(
-            paste0("#", ns("pls")),
-            ui = exprs_ui(ns(next_pl), key = key),
-            where = "beforeEnd",
-            session = session
-          )
+      # by add button
+      observe({
+        r_value(c(r_value(), newcol = ""))
+      }) |>
+        bindEvent(input$i_add, ignoreInit = FALSE)
 
-          aceAutocomplete(paste0(next_pl, "_val"))
-          aceTooltip(paste0(next_pl, "_val"))
-        })
+      # by remove button
+      r_to_be_removed <- reactive({
+        rms <- get_rms("pl_", input, garbage = character())
+        to_be_rm <- names(rms[rms > 0])
+        if (identical(length(to_be_rm), 0L)) return()
+        ans <- as.integer(gsub("_rm$", "", gsub("^pl_", "", to_be_rm)))
+        ans
+      })
+      observe({
+        req(r_to_be_removed())
+        # keep one expression
+        if (length(r_value()) <= 1) return()
+        r_value(r_value()[-r_to_be_removed()])
+      }) |>
+        bindEvent(r_to_be_removed())
+
+      observe({
+        if (!identical(r_value(), r_value_user())) {
+          message("redraw")
+          output$kv <- renderUI({
+            # isolate here is needed, despite bindEvent(), for some reason
+            keyvalue_ui(value = isolate(r_value()), multiple = TRUE, submit = TRUE, key = "suggest", ns = ns)
+          })
+        }
+      }) |>
+        bindEvent(r_value())
+
+      if (submit) {
+        r_result <- reactive({
+          r_value()
+        }) |>
+          bindEvent(input$i_submit)
+      } else {
+        r_result <- reactive({
+          r_value()
+        }) |>
+          bindEvent(input$i_submit)
       }
-
 
       r_result # return 'namedchar'
     })
@@ -82,41 +90,8 @@ generate_server.keyvalue_field <- function(x, ...) {
 #' @export
 ui_input.keyvalue_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
-
-  submit <- isTRUE(x$submit)
-  multiple <- isTRUE(x$multiple)
-  key <- x$key
-
-  init <- exprs_ui(ns("pl_1"), delete_button = multiple, key = key)
-  div(
-    div(
-      id = ns("pls"),
-      init
-    ),
-    div(
-      style = "width: 100%; display: flex; justify-content: flex-end;",
-      div(
-        style = "margin: 0px;",
-        class = "mb-5",
-        if (multiple) {
-          actionButton(
-            ns("i_add"),
-            label = NULL,
-            icon = icon("plus"),
-            class = "btn btn-success",
-            style = "margin-right: 7px"
-          )
-        },
-        if (submit) {
-          actionButton(
-            ns("i_submit"),
-            label = "Submit",
-            icon = icon("paper-plane"),
-            class = "btn btn-primary"
-          )
-        }
-      )
-    )
+  uiOutput(
+    ns("kv")
   )
 }
 
@@ -166,7 +141,7 @@ get_rms <- function(prefix, input, garbage) {
   vapply(setNames(input_names, input_names), \(x) input[[x]], 0L)
 }
 
-get_exprs <- function(prefix, input, garbage) {
+get_exprs <- function(prefix, input, garbage = character()) {
   input_names <- get_input_names(prefix, input, garbage, "_name$|_val$")
   ans <- lapply(setNames(input_names, input_names), \(x) input[[x]])
   vals <- unlist(ans[grepl("_val$", names(ans))])
@@ -276,3 +251,59 @@ exprs_ui <- function(id = "",
     }
   )
 }
+
+
+# shinyApp(
+#   ui = bslib::page_fluid(
+#     keyvalue_ui(value = c(a = "ls()", b = "ls()"), multiple = TRUE, submit = TRUE, key = "suggest")
+#   ),
+#   server = function(input, output) {}
+# )
+keyvalue_ui <- function(value, multiple, submit, key, ns = function(x) x) {
+
+  names <- names(value)
+  values <- unname(value)
+  ids <- ns(paste0("pl_", seq(value)))
+
+  core_ui <- tagList(Map(
+    function(name, value, id) {
+      exprs_ui(id, value_name = name, value_val = value, delete_button = multiple, key = key)
+    },
+    name = names,
+    value = values,
+    id = ids
+  ))
+
+  div(
+    div(
+      id = ns("pls"),
+      core_ui
+    ),
+    div(
+      style = "width: 100%; display: flex; justify-content: flex-end;",
+      div(
+        style = "margin: 0px;",
+        class = "mb-5",
+        if (multiple) {
+          actionButton(
+            ns("i_add"),
+            label = NULL,
+            icon = icon("plus"),
+            class = "btn btn-success",
+            style = "margin-right: 7px"
+          )
+        },
+        if (submit) {
+          actionButton(
+            ns("i_submit"),
+            label = "Submit",
+            icon = icon("paper-plane"),
+            class = "btn btn-primary"
+          )
+        }
+      )
+    )
+  )
+}
+
+
