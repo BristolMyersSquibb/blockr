@@ -6,6 +6,9 @@
 #' @param value Field value
 #' @param ... Further field components
 #' @param type Field type (allowed values are `"literal"` and `"name"`)
+#' @param title A brief title for the field, primarily for display purposes.
+#' @param descr A description of the field, explaining its purpose or usage.
+#' @param status The status of the field (experimental)
 #' @param class Field subclass
 #' @param exclude Experimental: Exclude field from being captured in the update_fields
 #' feature. Default to FALSE. Not yet used.
