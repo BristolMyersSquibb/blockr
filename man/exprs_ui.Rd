@@ -18,6 +18,10 @@ exprs_ui(
 \item{value_name}{Default name for the new column.}
 
 \item{value_val}{Default value for the new column.}
+
+\item{delete_button}{Should a delete button be shown?}
+
+\item{key}{How to display the 'key' field}
 }
 \value{
 A \code{div} element containing the UI components.

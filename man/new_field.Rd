@@ -185,6 +185,10 @@ feature. Default to FALSE. Not yet used.}
 \item{components}{Variable list of field components}
 
 \item{sub_fields}{Fields contained in \code{list_field}}
+
+\item{submit}{Should a 'submit button' be shown?}
+
+\item{key}{How to display the 'key' field}
 }
 \description{
 Each block consists of a set of fields, which define the type of value
