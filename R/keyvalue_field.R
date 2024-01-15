@@ -34,7 +34,10 @@ generate_server.keyvalue_field <- function(x, ...) {
 
         # previously used ids are not removed from dom
         if (length(ans) > length(value)) {
-          ans <- ans[seq_along(value)]
+          idx <- seq_along(value)
+          if (length(idx) > 0) {
+            ans <- ans[idx]
+          }
         }
         r_value_user(ans)
       })
