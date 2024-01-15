@@ -34,7 +34,7 @@ generate_server.keyvalue_field <- function(x, ...) {
 
         # previously used ids are not removed from dom
         if (length(ans) > length(value)) {
-          ans <- ans[1:length(value)]
+          ans <- ans[seq_along(value)]
         }
         r_value_user(ans)
       })
@@ -284,7 +284,12 @@ exprs_ui <- function(id = "",
 #   ),
 #   server = function(input, output) {}
 # )
-keyvalue_ui <- function(value, multiple, submit, key, auto_complete_list = NULL, ns = function(x) x) {
+keyvalue_ui <- function(value,
+                        multiple,
+                        submit,
+                        key,
+                        auto_complete_list = NULL,
+                        ns = function(x) x) {
 
   names <- names(value)
   values <- unname(value)
@@ -337,5 +342,3 @@ keyvalue_ui <- function(value, multiple, submit, key, auto_complete_list = NULL,
     )
   )
 }
-
-
