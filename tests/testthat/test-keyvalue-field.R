@@ -48,6 +48,8 @@ test_that("simple data_block with keyvalue field", {
 
   shiny::testServer(
     module_server_test, {
+      session$setInputs(`value-i_add` = 1)  # click something to initialize
+
       # Simulate input to the ACE Editor fields
       session$setInputs(`columns-pl_1_name` = "col1", `columns-pl_1_val` = "rep(1, 5)")
 
