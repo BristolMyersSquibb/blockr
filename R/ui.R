@@ -470,6 +470,17 @@ ui_input.upload_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.filesbrowser_field <- function(x, id, name) {
+  shinyFiles::shinyFilesButton(
+    input_ids(x, id),
+    label = "File select",
+    title = "Please select a file",
+    multiple = FALSE
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -618,6 +629,18 @@ ui_update.submit_field <- function(x, session, id, name) {
 #' @export
 ui_update.upload_field <- function(x, session, id, name) {
   NULL
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.filesbrowser_field <- function(x, session, id, name) {
+  # TO DO: don't harcode and leave user configure searcheable locations
+  volumes <- c(home = path.expand("~"))
+  shinyFiles::shinyFileChoose(
+    session$input,
+    input_ids(x, id),
+    roots = volumes
+  )
 }
 
 #' @rdname generate_ui

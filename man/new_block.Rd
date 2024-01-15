@@ -20,6 +20,8 @@
 \alias{data_block}
 \alias{new_upload_block}
 \alias{upload_block}
+\alias{new_filesbrowser_block}
+\alias{filesbrowser_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -106,6 +108,10 @@ data_block(...)
 new_upload_block(...)
 
 upload_block(...)
+
+new_filesbrowser_block(...)
+
+filesbrowser_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 

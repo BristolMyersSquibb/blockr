@@ -232,7 +232,6 @@ new_upload_field <- function(...) {
   new_field(
     value = NULL,
     ...,
-    label = "Choose a file",
     class = "upload_field"
   )
 }
@@ -246,6 +245,28 @@ upload_field <- function(...) {
 #' @rdname new_field
 #' @export
 validate_field.upload_field <- function(x) {
+  x
+}
+
+#' @rdname new_field
+#' @export
+new_filesbrowser_field <- function(...) {
+  new_field(
+    value = NULL,
+    ...,
+    class = "filesbrowser_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+filesbrowser_field <- function(...) {
+  validate_field(new_filesbrowser_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.filesbrowser_field <- function(x) {
   x
 }
 

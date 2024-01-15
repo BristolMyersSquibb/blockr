@@ -26,6 +26,9 @@
 \alias{new_upload_field}
 \alias{upload_field}
 \alias{validate_field.upload_field}
+\alias{new_filesbrowser_field}
+\alias{filesbrowser_field}
+\alias{validate_field.filesbrowser_field}
 \alias{value}
 \alias{values}
 \alias{value<-}
@@ -106,6 +109,12 @@ new_upload_field(...)
 upload_field(...)
 
 \method{validate_field}{upload_field}(x)
+
+new_filesbrowser_field(...)
+
+filesbrowser_field(...)
+
+\method{validate_field}{filesbrowser_field}(x)
 
 value(x, name = "value")
 
