@@ -1,4 +1,4 @@
-filter_expr <- function(value = c(a = "2.1", b = "4.5")) {
+filter2_expr <- function(value = c(a = "2.1", b = "4.5")) {
   if (is.null(value)) {
     return(quote(dplyr::filter()))
   }
@@ -25,7 +25,7 @@ new_filter2_block <- function(data, value = NULL, ...) {
   fields <- list(
     # value = new_keyvalue_field(value = value),
     value = new_keyvalue_field(value = value, submit = TRUE, multiple = TRUE, key = "none"),
-    expression = new_hidden_field(filter_expr)
+    expression = new_hidden_field(filter2_expr)
   )
 
   new_block(
