@@ -22,6 +22,8 @@ test_that("filter2_module_server handles input correctly", {
 
   shiny::testServer(
     module_server_test, {
+      session$setInputs(`value-i_add` = 1)  # click something to initialize
+
       # Simulate input to the ACE Editor fields
       session$setInputs(`value-pl_1_val` = "Species == 'virginica'")
 
