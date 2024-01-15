@@ -283,7 +283,13 @@ exprs_ui <- function(id = "",
 
 # shinyApp(
 #   ui = bslib::page_fluid(
-#     keyvalue_ui(value = c(a = "ls()", b = "ls()"), multiple = TRUE, submit = TRUE, key = "suggest")
+#     keyvalue_ui(
+#       value = c(a = "ls()",
+#       b = "ls()"),
+#       multiple = TRUE,
+#       submit = TRUE,
+#       key = "suggest"
+#     )
 #   ),
 #   server = function(input, output) {}
 # )
