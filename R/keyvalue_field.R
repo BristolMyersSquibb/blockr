@@ -7,6 +7,10 @@ generate_server.keyvalue_field <- function(x, ...) {
     moduleServer(id, function(input, output, session) {
       ns <- session$ns
 
+      submit <- isTRUE(x$submit)
+      multiple <- isTRUE(x$multiple)
+      key <- x$key
+
       r_n_max <- reactiveVal(0L)
       # dynamically add aceAutocomplete, aceTooltip for each new row
       observe({
@@ -21,10 +25,6 @@ generate_server.keyvalue_field <- function(x, ...) {
         }
       }) |>
         bindEvent(r_value())
-
-      submit <- isTRUE(x$submit)
-      multiple <- isTRUE(x$multiple)
-      key <- x$key
 
       # using reactiveVal(), instead of reactive, reduces the number of updates
       r_value_user <- reactiveVal(NULL)
@@ -52,7 +52,7 @@ generate_server.keyvalue_field <- function(x, ...) {
       observe({
         r_value(c(r_value(), newcol = ""))
       }) |>
-        bindEvent(input$i_add, ignoreInit = FALSE)
+        bindEvent(input$i_add)
 
       # by remove button
       r_to_be_removed <- reactive({
@@ -93,7 +93,7 @@ generate_server.keyvalue_field <- function(x, ...) {
           bindEvent(input$i_submit)
       }
 
-      r_result # return 'namedchar'
+      r_result
     })
   }
 }
