@@ -7,8 +7,20 @@ generate_server.keyvalue_field <- function(x, ...) {
     moduleServer(id, function(input, output, session) {
       ns <- session$ns
 
-      aceAutocomplete("pl_1_val")
-      aceTooltip("pl_1_val")
+      r_n_max <- reactiveVal(0L)
+      # dynamically add aceAutocomplete, aceTooltip for each new row
+      observe({
+        n <- length(r_value())
+        if (n > r_n_max()) {
+          add <- (r_n_max() + 1):n
+          for (i in add) {
+            aceAutocomplete(paste0("pl_", i, "_val"))
+            aceTooltip(paste0("pl_", i, "_val"))
+          }
+          r_n_max(n)
+        }
+      }) |>
+        bindEvent(r_value())
 
       submit <- isTRUE(x$submit)
       multiple <- isTRUE(x$multiple)
