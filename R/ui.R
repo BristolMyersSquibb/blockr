@@ -208,11 +208,14 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 
 #' Add block UI interface
 #'
-#' Useful to allow stack to add blocks to them.
+#' Useful to allow stack to add blocks to it.
+#' The selected block can be accessed through `input$selected_block`.
+#' Combined to the blocks registry API, this allows to select a block from R like
+#' \code{available_blocks()[[input$selected_block]]}.
 #'
 #' @param ns Stack namespace.
 #'
-#' @keywords internal
+#' @export
 add_block_ui <- function(ns) {
   div(
     class = "d-flex justify-content-center",
