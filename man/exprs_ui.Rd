@@ -9,7 +9,8 @@ exprs_ui(
   value_name = "newcol",
   value_val = NULL,
   delete_button = TRUE,
-  key = c("suggest", "empty", "none")
+  key = c("suggest", "empty", "none"),
+  auto_complete_list = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ exprs_ui(
 \item{delete_button}{Should a delete button be shown?}
 
 \item{key}{How to display the 'key' field}
+
+\item{auto_complete_list}{auto_complete_list, passed to shinyAce::aceEditor()}
 }
 \value{
 A \code{div} element containing the UI components.

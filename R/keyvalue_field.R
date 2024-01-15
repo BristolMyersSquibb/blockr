@@ -70,12 +70,24 @@ generate_server.keyvalue_field <- function(x, ...) {
       }) |>
         bindEvent(r_to_be_removed())
 
+      r_auto_complete_list <- reactive({
+        user_cols <- names(r_value())
+        unique(c(colnames(data()), user_cols))
+      })
+
       observe({
         if (!identical(r_value(), r_value_user())) {
           message("redraw")
           output$kv <- renderUI({
             # isolate here is needed, despite bindEvent(), for some reason
-            keyvalue_ui(value = isolate(r_value()), multiple = multiple, submit = submit, key = key, ns = ns)
+            keyvalue_ui(
+              value = isolate(r_value()),
+              multiple = multiple,
+              submit = submit,
+              key = key,
+              auto_complete_list = list(column = isolate(r_auto_complete_list())),
+              ns = ns
+            )
           })
         }
       }) |>
@@ -171,6 +183,7 @@ get_exprs <- function(prefix, input, garbage = character()) {
 #' @param value_val Default value for the new column.
 #' @param delete_button Should a delete button be shown?
 #' @param key How to display the 'key' field
+#' @param auto_complete_list auto_complete_list, passed to shinyAce::aceEditor()
 #' @return A `div` element containing the UI components.
 #' @importFrom shinyAce aceEditor aceAutocomplete aceTooltip
 #' @export
@@ -189,7 +202,8 @@ exprs_ui <- function(id = "",
                      value_name = "newcol",
                      value_val = NULL,
                      delete_button = TRUE,
-                     key = c("suggest", "empty", "none")) {
+                     key = c("suggest", "empty", "none"),
+                     auto_complete_list = NULL) {
 
 
   key <- match.arg(key)
@@ -239,7 +253,7 @@ exprs_ui <- function(id = "",
         mode = "r",
         autoComplete = "live",
         autoCompleters = c("rlang", "static"),
-        autoCompleteList = list(columns = c("demand", "Time")),
+        autoCompleteList = auto_complete_list,
         height = "20px",
         showPrintMargin = FALSE,
         highlightActiveLine = FALSE,
@@ -270,7 +284,7 @@ exprs_ui <- function(id = "",
 #   ),
 #   server = function(input, output) {}
 # )
-keyvalue_ui <- function(value, multiple, submit, key, ns = function(x) x) {
+keyvalue_ui <- function(value, multiple, submit, key, auto_complete_list = NULL, ns = function(x) x) {
 
   names <- names(value)
   values <- unname(value)
@@ -278,7 +292,14 @@ keyvalue_ui <- function(value, multiple, submit, key, ns = function(x) x) {
 
   core_ui <- tagList(Map(
     function(name, value, id) {
-      exprs_ui(id, value_name = name, value_val = value, delete_button = multiple, key = key)
+      exprs_ui(
+        id,
+        value_name = name,
+        value_val = value,
+        delete_button = multiple,
+        key = key,
+        auto_complete_list = auto_complete_list
+      )
     },
     name = names,
     value = values,
