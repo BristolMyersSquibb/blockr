@@ -75,7 +75,7 @@ generate_server.keyvalue_field <- function(x, ...) {
           message("redraw")
           output$kv <- renderUI({
             # isolate here is needed, despite bindEvent(), for some reason
-            keyvalue_ui(value = isolate(r_value()), multiple = TRUE, submit = TRUE, key = "suggest", ns = ns)
+            keyvalue_ui(value = isolate(r_value()), multiple = multiple, submit = submit, key = key, ns = ns)
           })
         }
       }) |>
@@ -89,8 +89,7 @@ generate_server.keyvalue_field <- function(x, ...) {
       } else {
         r_result <- reactive({
           r_value()
-        }) |>
-          bindEvent(input$i_submit)
+        })
       }
 
       r_result
