@@ -109,7 +109,7 @@ new_upload_block(...)
 
 upload_block(...)
 
-new_filesbrowser_block(...)
+new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
 
@@ -245,6 +245,8 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{dat}{Multiple datasets.}
 
 \item{selected}{Selected dataset.}
+
+\item{volumes}{Paths accessible by the shinyFiles browser.}
 
 \item{columns}{Column(s) to select.}
 

@@ -225,16 +225,15 @@ upload_block <- function(...) {
 }
 
 #' @rdname new_block
+#' @param volumes Paths accessible by the shinyFiles browser.
 #' @export
-new_filesbrowser_block <- function(...) {
+new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
   read_data <- function(dat) {
     if (length(dat) == 0 || is.integer(dat) || length(dat$files) == 0) {
       cat("No files have been selected yet.")
       return(data.frame())
     }
 
-    # TO DO: remove hardcoded volumes (how to send this to ui_update part?)
-    volumes <- c(home = path.expand("~"))
     files <- shinyFiles::parseFilePaths(volumes, dat)
     data_func <- utils::read.csv # TO DO switch
 
@@ -246,7 +245,7 @@ new_filesbrowser_block <- function(...) {
 
   new_block(
     fields = list(
-      dat = new_filesbrowser_field(),
+      dat = new_filesbrowser_field(volumes = volumes),
       expression = new_hidden_field(read_data)
     ),
     expr = quote(.(expression)),

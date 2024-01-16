@@ -634,12 +634,10 @@ ui_update.upload_field <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.filesbrowser_field <- function(x, session, id, name) {
-  # TO DO: don't harcode and leave user configure searcheable locations
-  volumes <- c(home = path.expand("~"))
   shinyFiles::shinyFileChoose(
     session$input,
     input_ids(x, id),
-    roots = volumes
+    roots = x$volumes
   )
 }
 
