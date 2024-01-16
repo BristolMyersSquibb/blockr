@@ -759,10 +759,25 @@ new_html_block <- function(
   fields <- list(
     prefix = new_string_field(""),
     suffix = new_string_field(""),
-    content = new_string_field(""),
-    main_tag = new_string_field("strong"),
+    main_tag = new_string_field("h1"),
     prefix_tag = new_string_field("span"),
-    suffix_tag = new_string_field("span")
+    suffix_tag = new_string_field("span"),
+    icon = new_string_field("info"),
+    text_colour = new_string_field("white"),
+    colour = new_select_field(
+      "info",
+      c(
+        "white",
+        "primary",
+        "secondary",
+        "info",
+        "success",
+        "danger",
+        "warning",
+        "dark",
+        "light"
+      )
+    )
   )
 
   new_block(
@@ -770,14 +785,29 @@ new_html_block <- function(
     expr = quote({
       prefix_tag <- do.call(.(prefix_tag), list(.(prefix), .noWS = "after"))
       suffix_tag <- do.call(.(suffix_tag), list(.(suffix), .noWS = "before"))
+      main_tag <- do.call(.(main_tag), list(data[1], .noWS = "after"))
 
-      do.call(
-        .(main_tag),
-        list(
-          prefix_tag,
-          .(content),
-          suffix_tag,
-          .noWS = "after"
+      cl <- sprintf("w-100 p-2 rounded bg-%s", .(colour))
+
+      icon <- ""
+      if (.(icon) != "")
+        icon <- icon(.(icon), class = "float-right")
+
+      div(
+        class = cl,
+        style = sprintf("color:%s;", .(text_colour)),
+        div(
+          class = "row",
+          div(
+            class = "col-md-10",
+            prefix_tag,
+            main_tag,
+            suffix_tag
+          ),
+          div(
+            class = "col-md-2 fs-1",
+            icon
+          )
         )
       )
     }),

@@ -136,32 +136,43 @@ html_layout_fields <- function(fields, ...) {
     div(
       class = "row",
       div(
-        class = "col-md-4",
+        class = "col-md-3",
         fields$prefix
       ),
       div(
-        class = "col-md-4",
-        fields$content
+        class = "col-md-3",
+        fields$suffix
       ),
       div(
-        class = "col-md-4",
-        fields$suffix
+        class = "col-md-3",
+        fields$colour
+      ),
+      div(
+        class = "col-md-3",
+        fields$text_colour
       )
     ),
     div(
       class = "row",
       div(
-        class = "col-md-4",
+        class = "col-md-3",
         fields$prefix_tag
       ),
       div(
-        class = "col-md-4",
+        class = "col-md-3",
         fields$main_tag
       ),
       div(
-        class = "col-md-4",
+        class = "col-md-3",
         fields$suffix_tag
+      ),
+      div(
+        class = "col-md-3",
+        fields$icon
       )
+    ),
+    div(
+      class = "row",
     ),
     fields$expression
   )
