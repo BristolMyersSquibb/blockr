@@ -228,9 +228,9 @@ validate_field.submit_field <- function(x) {
 
 #' @rdname new_field
 #' @export
-new_upload_field <- function(...) {
+new_upload_field <- function(value = character(), ...) {
   new_field(
-    value = NULL,
+    value,
     ...,
     class = "upload_field"
   )
@@ -250,9 +250,9 @@ validate_field.upload_field <- function(x) {
 
 #' @rdname new_field
 #' @export
-new_filesbrowser_field <- function(...) {
+new_filesbrowser_field <- function(value = character(), ...) {
   new_field(
-    value = NULL,
+    value,
     ...,
     class = "filesbrowser_field"
   )
@@ -330,11 +330,15 @@ variable_field <- function(...) validate_field(new_variable_field(...))
 #' @export
 validate_field.variable_field <- function(x) {
   val <- value(x, "field")
+  # TO DO: avoid hardcoding
   opt <- c(
     "string_field",
     "select_field",
+    "switch_field",
     "range_field",
-    "numeric_field"
+    "numeric_field",
+    "upload_field",
+    "filesbrowser_field"
   )
 
   stopifnot(is.character(val), length(val) <= 1L)

@@ -196,7 +196,10 @@ data_block <- function(...) {
 new_upload_block <- function(...) {
 
   read_data <- function(dat) {
-    if (is.null(dat)) return(data.frame())
+    if (length(dat) == 0) {
+      return(data.frame())
+    }
+
     data_func <- utils::read.csv # TO DO switch
     bquote(
       .(read_func)(.(path)),
@@ -225,15 +228,16 @@ upload_block <- function(...) {
 #' @export
 new_filesbrowser_block <- function(...) {
   read_data <- function(dat) {
-    if (is.null(dat) || is.integer(dat)) {
+    if (length(dat) == 0 || is.integer(dat) || length(dat$files) == 0) {
       cat("No files have been selected yet.")
       return(data.frame())
-    } else {
-      # TO DO: remove hardcoded volumes (how to send this to ui_update part?)
-      volumes <- c(home = path.expand("~"))
-      files <- shinyFiles::parseFilePaths(volumes, dat)
     }
+
+    # TO DO: remove hardcoded volumes (how to send this to ui_update part?)
+    volumes <- c(home = path.expand("~"))
+    files <- shinyFiles::parseFilePaths(volumes, dat)
     data_func <- utils::read.csv # TO DO switch
+
     bquote(
       .(read_func)(.(path)),
       list(read_func = data_func, path = files$datapath)

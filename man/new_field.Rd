@@ -104,13 +104,13 @@ submit_field(...)
 
 \method{validate_field}{submit_field}(x)
 
-new_upload_field(...)
+new_upload_field(value = character(), ...)
 
 upload_field(...)
 
 \method{validate_field}{upload_field}(x)
 
-new_filesbrowser_field(...)
+new_filesbrowser_field(value = character(), ...)
 
 filesbrowser_field(...)
 
