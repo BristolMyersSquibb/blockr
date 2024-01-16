@@ -285,12 +285,14 @@ inject_remove_button <- function(x, ...) {
 #' inserting a new block within a stack.
 #'
 #' @param ns Parent namespace.
+#' @param .hidden Whether to initialise the block with
+#' hidden inputs.
 #'
 #' @export
 #' @rdname generate_ui
-inject_remove_button.block <- function(x, ns, ...) {
+inject_remove_button.block <- function(x, ns, .hidden = TRUE, ...) {
   id <- attr(x, "name")
-  tmp <- generate_ui(x, id = ns(id), .hidden = FALSE)
+  tmp <- generate_ui(x, id = ns(id), .hidden = .hidden)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
     find(".block-tools")$
