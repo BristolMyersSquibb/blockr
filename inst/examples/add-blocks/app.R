@@ -5,7 +5,7 @@ library(blockr)
 stack <- new_stack(data_block)
 shinyApp(
   ui = bslib::page_fluid(
-    add_block_ui(identity),
+    add_block_ui(),
     generate_ui(stack, id = "mystack")
   ),
   server = function(input, output, session) {
