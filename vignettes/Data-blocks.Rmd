@@ -1,0 +1,23 @@
+---
+title: "Data-blocks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data-blocks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(blockr)
+```
+
+## Introduction
+
+Data blocks are the starting point of any stack.
