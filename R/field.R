@@ -406,7 +406,7 @@ validate_field.list_field <- function(x) {
 
 update_sub_fields <- function(sub, val) {
   # Added this because of the join_block
-  if (is.null(names(val))) {
+  if (is.null(names(val)) && length(sub)) {
     value(sub[[1]]) <- unlist(val)
   } else {
     for (fld in names(val)[lgl_ply(val, is_truthy)]) {
