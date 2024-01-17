@@ -129,7 +129,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
         message(sprintf("Updating UI of block %s", class(x)[[1]]))
       }) |>
-        bindEvent(r_values(), in_dat(), ignoreInit = TRUE)
+        bindEvent(r_values(), in_dat())
 
       obs$print_error <- observeEvent(is_valid$error, {
         create_modal(is_valid$error)
