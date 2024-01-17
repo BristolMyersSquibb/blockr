@@ -131,10 +131,6 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       }) |>
         bindEvent(r_values(), in_dat())
 
-      obs$print_error <- observeEvent(is_valid$error, {
-        create_modal(is_valid$error)
-      })
-
       # Validate block inputs
       obs$validate_inputs <- observeEvent(r_values(), {
         message(sprintf("Validating block %s", class(x)[[1]]))
@@ -213,6 +209,10 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 generate_server.data_block <- function(x, id, ...) {
   generate_server_block(x = x, in_dat = NULL, id = id)
 }
+
+#' @rdname generate_server
+#' @export
+generate_server.upload_block <- generate_server.data_block
 
 #' @param in_dat Reactive input data
 #' @rdname generate_server

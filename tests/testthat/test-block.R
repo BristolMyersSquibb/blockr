@@ -178,3 +178,32 @@ test_that("summarize block", {
   expect_equal(nrow(res), 1)
   expect_equal(ncol(res), 2)
 })
+
+test_that("upload block", {
+  block <- upload_block()
+
+  expect_s3_class(block, "upload_block")
+  expect_type(block, "list")
+
+  ui <- generate_ui(block, "foo")
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+})
+
+test_that("filesbrowser block", {
+  block <- filesbrowser_block()
+
+  expect_s3_class(block, "filesbrowser_block")
+  expect_type(block, "list")
+  field <- block$dat
+  expect_identical(unname(field$volumes), path.expand("~"))
+
+  ui <- generate_ui(block, "foo")
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+  shinyFiles_ui <- htmltools::tagQuery(ui)$
+    find(".shinyFiles")$
+  selectedTags()
+
+  expect_length(shinyFiles_ui, 1)
+})

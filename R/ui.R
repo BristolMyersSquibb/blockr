@@ -466,6 +466,26 @@ ui_input.submit_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.upload_field <- function(x, id, name) {
+  fileInput(
+    input_ids(x, id),
+    name
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.filesbrowser_field <- function(x, id, name) {
+  shinyFiles::shinyFilesButton(
+    input_ids(x, id),
+    label = "File select",
+    title = "Please select a file",
+    multiple = FALSE
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -607,6 +627,22 @@ ui_update.submit_field <- function(x, session, id, name) {
     session,
     input_ids(x, id),
     name
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.upload_field <- function(x, session, id, name) {
+  NULL
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.filesbrowser_field <- function(x, session, id, name) {
+  shinyFiles::shinyFileChoose(
+    session$input,
+    input_ids(x, id),
+    roots = x$volumes
   )
 }
 
