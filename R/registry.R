@@ -147,7 +147,7 @@ register_blockr_blocks <- function(pkg) {
 
   register_blocks(
     constructor = c(
-      data_block, filter_block, select_block, summarize_block
+      new_data_block, new_filter_block, new_select_block, new_summarize_block
     ),
     name = c(
       "data block", "filter block", "select block", "summarize block"
