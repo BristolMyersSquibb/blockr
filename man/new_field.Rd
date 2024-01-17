@@ -53,6 +53,9 @@ new_field(
   value,
   ...,
   type = c("literal", "name"),
+  title = "",
+  descr = "",
+  status = c("active", "disabled", "invisible"),
   class = character(),
   exclude = FALSE
 )
@@ -163,6 +166,12 @@ keyvalue_field(...)
 \item{...}{Further field components}
 
 \item{type}{Field type (allowed values are \code{"literal"} and \code{"name"})}
+
+\item{title}{A brief title for the field, primarily for display purposes.}
+
+\item{descr}{A description of the field, explaining its purpose or usage.}
+
+\item{status}{The status of the field (experimental)}
 
 \item{class}{Field subclass}
 

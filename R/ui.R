@@ -208,11 +208,14 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 
 #' Add block UI interface
 #'
-#' Useful to allow stack to add blocks to them.
+#' Useful to allow stack to add blocks to it.
+#' The selected block can be accessed through `input$selected_block`.
+#' Combined to the blocks registry API, this allows to select a block from R like
+#' \code{available_blocks()[[input$selected_block]]}.
 #'
 #' @param ns Stack namespace.
 #'
-#' @keywords internal
+#' @export
 add_block_ui <- function(ns) {
   div(
     class = "d-flex justify-content-center",
@@ -282,12 +285,14 @@ inject_remove_button <- function(x, ...) {
 #' inserting a new block within a stack.
 #'
 #' @param ns Parent namespace.
+#' @param .hidden Whether to initialise the block with
+#' hidden inputs.
 #'
 #' @export
 #' @rdname generate_ui
-inject_remove_button.block <- function(x, ns, ...) {
+inject_remove_button.block <- function(x, ns, .hidden = TRUE, ...) {
   id <- attr(x, "name")
-  tmp <- generate_ui(x, id = ns(id), .hidden = FALSE)
+  tmp <- generate_ui(x, id = ns(id), .hidden = .hidden)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
     find(".block-tools")$

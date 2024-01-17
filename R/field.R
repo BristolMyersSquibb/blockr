@@ -6,14 +6,22 @@
 #' @param value Field value
 #' @param ... Further field components
 #' @param type Field type (allowed values are `"literal"` and `"name"`)
+#' @param title A brief title for the field, primarily for display purposes.
+#' @param descr A description of the field, explaining its purpose or usage.
+#' @param status The status of the field (experimental)
 #' @param class Field subclass
 #' @param exclude Experimental: Exclude field from being captured in the update_fields
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
 new_field <- function(value, ..., type = c("literal", "name"),
+                      title = "",
+                      descr = "",
+                      status = c("active", "disabled", "invisible"),
                       class = character(), exclude = FALSE) {
   x <- list(value = value, ...)
+
+  status <- match.arg(status)
 
   stopifnot(is.list(x), length(unique(names(x))) == length(x))
 
@@ -21,6 +29,9 @@ new_field <- function(value, ..., type = c("literal", "name"),
     x,
     type = match.arg(type),
     class = c(class, "field"),
+    title = title,
+    descr = descr,
+    status = status,
     exclude = exclude
   )
 }
