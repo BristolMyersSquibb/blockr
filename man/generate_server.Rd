@@ -5,7 +5,6 @@
 \alias{generate_server}
 \alias{generate_server.block}
 \alias{generate_server.data_block}
-\alias{generate_server.upload_block}
 \alias{generate_server.transform_block}
 \alias{generate_server.plot_block}
 \alias{generate_server.ggiraph_block}
@@ -26,8 +25,6 @@ generate_server(x, ...)
 \method{generate_server}{block}(x, ...)
 
 \method{generate_server}{data_block}(x, id, ...)
-
-\method{generate_server}{upload_block}(x, id, ...)
 
 \method{generate_server}{transform_block}(x, in_dat, id, ...)
 
