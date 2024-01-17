@@ -558,38 +558,26 @@ new_join_block <- function(
     by_col = character(),
     ...) {
   # by depends on selected dataset and the input data.
-  by_choices <- function(data, y) {
-    choices <- intersect(
-      colnames(data),
-      colnames(eval(as.name(y)))
-    )
+  choices <- intersect(
+    colnames(data),
+    colnames(eval(as.name(y)))
+  )
 
-    default <- if (length(choices) == 0) {
-      character()
+  default <- if (length(choices) == 0) {
+    character()
+  } else {
+    if (length(by_col) > 0) {
+      by_col
     } else {
-      if (length(by_col) > 0) {
-        by_col
-      } else {
-        choices[[1]]
-      }
+      choices[[1]]
     }
-
-    # TO DO: currently, validate_field.list_field don't work
-    # if we don't return a list.
-    list(
-      val = new_select_field(
-        default,
-        choices,
-        multiple = TRUE
-      )
-    )
   }
 
   join_expr <- function(data, join_func, y, by) {
-    if (length(by$val) == 0) stop("Nothing to merge, restoring defaults.")
+    if (length(by) == 0) stop("Nothing to merge, restoring defaults.")
     bquote(
       .(join_func)(y = .(y), by = .(by)),
-      list(join_func = as.name(join_func), y = as.name(y), by = by$val)
+      list(join_func = as.name(join_func), y = as.name(y), by = by)
     )
   }
 
@@ -610,7 +598,7 @@ new_join_block <- function(
       paste(join_types, "join", sep = "_")
     ),
     y = new_select_field(y[[1]], y),
-    by = new_list_field(sub_fields = by_choices),
+    by = new_select_field(default, choices, multiple = TRUE),
     expression = new_hidden_field(join_expr)
   )
 
