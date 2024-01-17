@@ -115,10 +115,15 @@ plus some meta data.</p>
 <span>  selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for plot_block</span></span>
-<span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">data_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_upload_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">upload_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_filesbrowser_block</span><span class="op">(</span>volumes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>home <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/path.expand.html" class="external-link">path.expand</a></span><span class="op">(</span><span class="st">"~"</span><span class="op">)</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">filesbrowser_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -282,6 +287,10 @@ the list of fields to layout and returns one or more UI tag(s).</p></dd>
 
 <dt>selected</dt>
 <dd><p>Selected dataset.</p></dd>
+
+
+<dt>volumes</dt>
+<dd><p>Paths accessible by the shinyFiles browser.</p></dd>
 
 
 <dt>columns</dt>
