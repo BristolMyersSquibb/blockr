@@ -98,7 +98,7 @@ remove_button(x, ...)
 
 inject_remove_button(x, ...)
 
-\method{inject_remove_button}{block}(x, ns, ...)
+\method{inject_remove_button}{block}(x, ns, .hidden = TRUE, ...)
 
 \method{inject_remove_button}{stack}(x, ns, ...)
 
@@ -188,7 +188,8 @@ uiCode(x, ns)
 \item{inputs_hidden}{For styling purposes: CSS class to apply
 when the block is collapsed.}
 
-\item{.hidden}{Whether to initialise the block hidden.}
+\item{.hidden}{Whether to initialise the block with
+hidden inputs.}
 
 \item{session}{Shiny session}
 }

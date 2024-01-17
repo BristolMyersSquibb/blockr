@@ -288,7 +288,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
               where = "afterEnd",
               inject_remove_button(
                 vals$stack[[p]],
-                session$ns
+                session$ns,
+                .hidden = FALSE
               )
             )
           } else {
@@ -548,7 +549,7 @@ inject_block <- function(input, vals, id) {
   observeEvent(input[[sprintf("%s-add", id)]], {
     # Reset to avoid re-adding existing blocks to stacks
     vals$new_block <- NULL
-    block <- list_blocks()[[as.numeric(input[[sprintf("%s-selected_block", id)]])]]
+    block <- available_blocks()[[input[[sprintf("%s-selected_block", id)]]]]
     # add_block expect the current stack, the block to add and its position
     # (NULL is fine for the position, in that case the block will
     # go at the end)

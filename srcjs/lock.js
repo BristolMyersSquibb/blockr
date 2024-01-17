@@ -61,7 +61,6 @@ const lock = (stack) => {
 
   const $editor = $stack.find(".stack-edit-toggle");
   const isClosed = $editor.find("i").hasClass("fa-chevron-up");
-  console.log(isClosed);
 
   if (isClosed) return;
 
