@@ -264,19 +264,17 @@ create_modal <- function(...) {
 #' tryCatch wrapper.
 #'
 #' @param expr Expression to evaluate.
-#' @param is_valid Block valid status.
 #'
 #' @return Result or error message.
 #'
 #' @keywords internal
-secure <- function(expr, is_valid) {
+secure <- function(expr) {
   tryCatch(
     {
       expr
     },
     error = function(e) {
-      is_valid$error <- "An error occured within a block, please inspect the
-      red border block(s) and fix the issue(s)."
+      cat(e$message)
     }
   )
 }

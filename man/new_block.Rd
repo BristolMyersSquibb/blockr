@@ -18,6 +18,10 @@
 \alias{evaluate_block.ggiraph_block}
 \alias{new_data_block}
 \alias{data_block}
+\alias{new_upload_block}
+\alias{upload_block}
+\alias{new_filesbrowser_block}
+\alias{filesbrowser_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -99,9 +103,15 @@ new_data_block(
   selected = character()
 )
 
-\method{evaluate_block}{plot_block}(x, data, ...)
-
 data_block(...)
+
+new_upload_block(...)
+
+upload_block(...)
+
+new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
+
+filesbrowser_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
@@ -235,6 +245,8 @@ the list of fields to layout and returns one or more UI tag(s).}
 \item{dat}{Multiple datasets.}
 
 \item{selected}{Selected dataset.}
+
+\item{volumes}{Paths accessible by the shinyFiles browser.}
 
 \item{columns}{Column(s) to select.}
 

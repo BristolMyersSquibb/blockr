@@ -61,3 +61,27 @@ test_that("submit fields", {
   expect_type(field, "list")
   expect_identical(value(field), 0)
 })
+
+test_that("switch field", {
+  field <- switch_field()
+
+  expect_s3_class(field, "switch_field")
+  expect_type(field, "list")
+  expect_identical(value(field), FALSE)
+})
+
+test_that("upload field", {
+  field <- upload_field()
+
+  expect_s3_class(field, "upload_field")
+  expect_type(field, "list")
+  expect_identical(value(field), character(0))
+})
+
+test_that("filesbrowser field", {
+  field <- filesbrowser_field()
+
+  expect_s3_class(field, "filesbrowser_field")
+  expect_type(field, "list")
+  expect_identical(value(field), character(0))
+})

@@ -237,6 +237,50 @@ validate_field.submit_field <- function(x) {
   x
 }
 
+#' @rdname new_field
+#' @export
+new_upload_field <- function(value = character(), ...) {
+  new_field(
+    value,
+    ...,
+    class = "upload_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+upload_field <- function(...) {
+  validate_field(new_upload_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.upload_field <- function(x) {
+  x
+}
+
+#' @rdname new_field
+#' @export
+new_filesbrowser_field <- function(value = character(), ...) {
+  new_field(
+    value,
+    ...,
+    class = "filesbrowser_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+filesbrowser_field <- function(...) {
+  validate_field(new_filesbrowser_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.filesbrowser_field <- function(x) {
+  x
+}
+
 #' @param name Field component name
 #' @rdname new_field
 #' @export
@@ -297,11 +341,15 @@ variable_field <- function(...) validate_field(new_variable_field(...))
 #' @export
 validate_field.variable_field <- function(x) {
   val <- value(x, "field")
+  # TO DO: avoid hardcoding
   opt <- c(
     "string_field",
     "select_field",
+    "switch_field",
     "range_field",
-    "numeric_field"
+    "numeric_field",
+    "upload_field",
+    "filesbrowser_field"
   )
 
   stopifnot(is.character(val), length(val) <= 1L)
@@ -406,7 +454,7 @@ validate_field.list_field <- function(x) {
 
 update_sub_fields <- function(sub, val) {
   # Added this because of the join_block
-  if (is.null(names(val))) {
+  if (is.null(names(val)) && length(sub)) {
     value(sub[[1]]) <- unlist(val)
   } else {
     for (fld in names(val)[lgl_ply(val, is_truthy)]) {
