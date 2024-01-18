@@ -102,7 +102,7 @@ remove_button(x, ...)
 
 inject_remove_button(x, ...)
 
-\method{inject_remove_button}{block}(x, ns, .hidden = TRUE, ...)
+\method{inject_remove_button}{block}(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...)
 
 \method{inject_remove_button}{stack}(x, ns, ...)
 

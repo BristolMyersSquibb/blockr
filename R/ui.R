@@ -182,10 +182,8 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 
   block_class <- "block"
   inputs_hidden <- ""
-  hidden_class <- ""
   if (.hidden) {
-    hidden_class <- "d-none"
-    inputs_hidden <- hidden_class
+    inputs_hidden <- "d-none"
     block_class <- sprintf("%s d-none", block_class)
   }
 
@@ -197,7 +195,7 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
       class = "card shadow-sm p-2 mb-2 border",
       div(
         class = "card-body p-1",
-        block_header(x, ns, hidden_class),
+        block_header(x, ns, inputs_hidden),
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
         block_code(x, ns, inputs_hidden)
@@ -290,7 +288,7 @@ inject_remove_button <- function(x, ...) {
 #'
 #' @export
 #' @rdname generate_ui
-inject_remove_button.block <- function(x, ns, .hidden = TRUE, ...) {
+inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...) {
   id <- attr(x, "name")
   tmp <- generate_ui(x, id = ns(id), .hidden = .hidden)
   # Remove button now belongs to the stack namespace!
