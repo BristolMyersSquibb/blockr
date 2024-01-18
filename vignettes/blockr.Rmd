@@ -68,6 +68,14 @@ mermaid("
   )
 ```
 
+### The user interface
+
+By default, only the last __stack__ block is visible, all others are collapsed.
+To preview all block you can set `options("BLOCKR_DEV" = TRUE)`.
+
+```{r blockr-ui, echo=FALSE, fig.cap='User Interface Overview', fig.align = 'center', out.width='100%'}
+knitr::include_graphics("figures/blockr-ui.png")
+```
 
 ### Create a stack
 
@@ -126,8 +134,8 @@ It accepts the name of the block to insert as well as its position in the stack 
 
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
-  "Note that [`{blockr.demo}`](https://github.com/blockr-org/block.demo) 
-  utilises [`{masonry}`](https://github.com/blockr-org/masonry) to provide
+  "Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo) 
+  utilises `{masonry}` (https://github.com/blockr-org/masonry) to provide
   a better user experience, allowing one to drag and drop blocks
   within the stack.",
   color = "primary"
