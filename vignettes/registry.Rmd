@@ -17,26 +17,41 @@ knitr::opts_chunk$set(
 ```{r setup, echo=FALSE, message=FALSE}
 library(blockr)
 library(bslib)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
 ```
 
 ## Introduction
 
-This part is likely more dedicated to developers than users. However,
-it might be useful whenever you design custom blocks and want to register
-them in `{blockr}`.
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "This part is likely more dedicated to developers than users. However,
+  it might be useful whenever you design custom blocks and want to register
+  them in `{blockr}`.",
+  color = "primary"
+)
+```
 
-The registry is a __environment__ which provides access to multiple blocks as well as some
+The __registry__ is a __environment__ which provides access to multiple __blocks__ as well as some
 metadata:
 
-- The block description.
-- Inputs accepted (default to data.frame, expect for `data_block` blocks)
-- Output returned.
+- The block __description__.
+- Allowed __input__ (default to data.frame, expect for `data_block` blocks)
+- Returned __output__.
 - ...
 
 ## Previewing available blocks
 
-Upon loading, `{blockr}` registers its internal blocks with `register_blockr_blocks()`.
-You won't have to call this function as it is not exported anyway. This makes the registry environment
+Upon loading, `{blockr}` __registers__ its internal __blocks__ with `register_blockr_blocks()`.
+You won't have to call this function as it is not exported anyway. This makes the __registry__ environment
 ready to be queried by `available_blocks()`. A truncated output example below:
 
 ```r
@@ -88,8 +103,8 @@ names(available_blocks())
 ## Register a block
 To register you own blocks, user facing functions are:
 
-- `register_block()` to register a block in the registry. If the block is already registered,
-it overwrites the existing one.
+- `register_block()` to register a block in the __registry__. If the __block__ is already registered,
+it __overwrites__ the existing one.
 - `register_blocks()` to register multiple blocks.
 
 Let's say you want to create a new `head_block` which returns the `n` first rows of the
@@ -124,7 +139,8 @@ If we now query the registry, the new block is available:
 names(available_blocks())
 ```
 
-We can now run the demo app to add blocks:
+We can now run the demo app to add blocks. The new `head_block` should be
+visible in the new choices:
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
@@ -177,5 +193,6 @@ unregister_blocks(ids = "head_block")
 names(available_blocks())
 ```
 
-__ids__ is the first entry we applied in the class attributes when the block
-was created, that is `head_block`.
+where __ids__ is the first entry we applied in the class attributes when the block
+was created, that is `head_block`. If you had to remove multiple blocks at once,
+you can pass a vector in __ids__.

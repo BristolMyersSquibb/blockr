@@ -18,6 +18,16 @@ knitr::opts_chunk$set(
 library(blockr)
 library(bslib)
 library(DiagrammeR)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
 ```
 
 ## Get started
@@ -61,10 +71,10 @@ mermaid("
 
 ### Create a stack
 
-To create a stack, you call `new_stack()` and feed it all the required blocks.
+To create a __stack__, you call `new_stack()` and feed it all the required __blocks__.
 Below is a simple stack providing a dataset selector and a filter operation. `serve_stack()` is a simple
 wrapper to run the corresponding shiny app. Note that with `serve_stack()`, you don't need to worry about
-specifying any modules ID, they are automatically handled by `{blockr}`.
+specifying any __modules IDs__, they are automatically handled by `{blockr}`.
 
 ```r
 library(blockr)
@@ -88,7 +98,18 @@ card(
 )
 ```
 
-In the next example, we'll see how to create an which can dynamically add/remove blocks.
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "You'll notice that some blocks, such as the `filter_block` 
+  have a submit button. The reason was to prevent any expansive task
+  to run without explicit user approval. That said, this feature is 
+  still very much experimental and might change in the future.",
+  color = "primary"
+)
+```
+
+
+In the next example, we'll see how to create an which can dynamically add or remove blocks.
 
 ### Dynamically add a block
 
@@ -97,15 +118,21 @@ which is nothing more than calling the stack module UI and `generate_server()` i
 the namespace is automatically handled.
 
 To get the list of available blocks, we leverage the `{blockr}` registry namely `available_blocks()` which exposes the
-currently registered blocks. `add_block_ui()` is a UI helper to show a button as well
+currently registered blocks. You can learn more about the registry in the dedicated
+vignette. `add_block_ui()` is a UI helper to show a button as well
 as the necessary interface to contain the new block choice.
-Within an `observer` we listen to the add block button. Then, we pass the new block in the `new_block` slot of the `generate_server()` function.
+Within an `observer` we listen to the "add block" button. Then, we pass the new block in the `new_block` slot of the `generate_server()` function.
 It accepts the name of the block to insert as well as its position in the stack (here we append).
 
-Note that [`{blockr.demo}`](https://github.com/blockr-org/block.demo) 
-utilises [`{masonry}`](https://github.com/blockr-org/masonry) to provide
-a better user experience, allowing one to drag and drop blocks
-within the stack.
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "Note that [`{blockr.demo}`](https://github.com/blockr-org/block.demo) 
+  utilises [`{masonry}`](https://github.com/blockr-org/masonry) to provide
+  a better user experience, allowing one to drag and drop blocks
+  within the stack.",
+  color = "primary"
+)
+```
 
 ```r
 library(shiny)
@@ -145,7 +172,12 @@ shinyApp(
 
 Blocks can be removed in any context. Keep in mind that a stack can't contain 2 data blocks.
 
-At the moment, we don't check whether removing a block breaks the pipeline.
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "At the moment, we don't check whether removing a block breaks the pipeline.",
+  color = "danger"
+)
+```
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
