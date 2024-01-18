@@ -24,13 +24,18 @@ available_blocks()[[input$selected_block]]."><!-- mathjax --><script src="https:
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/blockr.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Data-blocks.html">1. Data blocks</a>
     <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
+    <a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a>
   </div>
 </li>
 <li class="nav-item">
@@ -69,13 +74,14 @@ Combined to the blocks registry API, this allows to select a block from R like
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_block_ui</span><span class="op">(</span><span class="va">ns</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_block_ui</span><span class="op">(</span>ns <span class="op">=</span> <span class="va">identity</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>ns</dt>
-<dd><p>Stack namespace.</p></dd>
+<dd><p>Stack namespace. Default to <a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a> so
+that it can be used when the stack is the top level element.</p></dd>
 
 </dl></div>
 

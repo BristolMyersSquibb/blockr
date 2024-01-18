@@ -7,10 +7,19 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/Data-blocks.html</loc>
+  </url>
+  <url>
+    <loc>/articles/blockr.html</loc>
+  </url>
+  <url>
     <loc>/articles/developer-guide.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/articles/registry.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -32,6 +41,9 @@
   </url>
   <url>
     <loc>/reference/convert_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/create_app_link.html</loc>
   </url>
   <url>
     <loc>/reference/create_block.html</loc>
