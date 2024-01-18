@@ -20,4 +20,50 @@ library(blockr)
 
 ## Introduction
 
-Data blocks are the starting point of any stack.
+Data blocks are the starting point of any __stack__ and are required by any __transform__ or __plot__ block.
+
+### Package based data block
+
+`{blockr}` introduces a `data_block()` which takes as input any package containing a (or multiple) dataset(s).
+This block is constructed as follows:
+
+```r
+new_data_block <- function(
+  ...,
+  dat = as.environment("package:datasets"),
+  selected = character()
+) {
+  # code  
+}
+```
+
+By default, the selected dataset is from the `datasets` package but you can actually provide any dataset you like by changing the `dat` parameter
+(in the following we leverage the `{blockr.data}` datasets with the lab data pre-selected):
+
+```r
+data_block(
+  dat = as.environment("package:blockr.data"),
+  selected = "lab"
+)
+```
+
+In practice, you'll always call `data_block()` and not `new_data_block()` (internal constructor).
+
+Overall, this block is good for testing or if you get your own data package. In the next part, we see how to import
+data from a file.
+
+### Reading data from files
+
+#### Upload data
+
+If you want to load data from any location on your computer or a server, `upload_block()` is what you need.
+At the moment, it only supports csv files but other format will be added.
+
+
+Since the `upload_block()` temporarily moves the data in a custom location, we recognize that it might not be always possible
+for security reasons.
+
+#### Files browser block
+
+That's why we introduced a `filesbrowser_block()` which can read data (csv only for now) from any specified location without moving them.
+
