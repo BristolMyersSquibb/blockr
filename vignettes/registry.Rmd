@@ -1,0 +1,198 @@
+---
+title: "2. Blocks registry"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{2. Blocks registry}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(blockr)
+library(bslib)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
+```
+
+## Introduction
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "This part is likely more dedicated to developers than users. However,
+  it might be useful whenever you design custom blocks and want to register
+  them in `{blockr}`.",
+  color = "primary"
+)
+```
+
+The __registry__ is a __environment__ which provides access to multiple __blocks__ as well as some
+metadata:
+
+- The block __description__.
+- Allowed __input__ (default to data.frame, expect for `data_block` blocks)
+- Returned __output__.
+- ...
+
+## Previewing available blocks
+
+Upon loading, `{blockr}` __registers__ its internal __blocks__ with `register_blockr_blocks()`.
+You won't have to call this function as it is not exported anyway. This makes the __registry__ environment
+ready to be queried by `available_blocks()`. A truncated output example below:
+
+```r
+$dataset_block
+function(...) {
+  initialize_block(new_data_block(...))
+}
+<environment: namespace:blockr>
+attr(,"name")
+[1] "data block"
+attr(,"description")
+[1] "choose a dataset"
+attr(,"classes")
+[1] "dataset_block" "data_block"   
+attr(,"input")
+[1] NA
+attr(,"output")
+[1] "data.frame"
+attr(,"package")
+[1] "blockr"
+attr(,"class")
+[1] "block_descr"
+
+$select_block
+function(data, ...) {
+  initialize_block(new_select_block(data, ...), data)
+}
+<environment: namespace:blockr>
+attr(,"name")
+[1] "select block"
+attr(,"description")
+[1] "select columns in a table"
+attr(,"classes")
+[1] "select_block"    "transform_block"
+attr(,"input")
+[1] "data.frame"
+attr(,"output")
+[1] "data.frame"
+attr(,"package")
+[1] "blockr"
+attr(,"class")
+[1] "block_descr"
+```
+
+```{r, eval=TRUE}
+names(available_blocks())
+```
+
+## Register a block
+To register you own blocks, user facing functions are:
+
+- `register_block()` to register a block in the __registry__. If the __block__ is already registered,
+it __overwrites__ the existing one.
+- `register_blocks()` to register multiple blocks.
+
+Let's say you want to create a new `head_block` which returns the `n` first rows of the
+selected dataset:
+
+```{r, eval=TRUE}
+new_head_block <- function(data, n_rows = numeric(), ...) {
+
+  new_block(
+    fields = list(
+      n_rows = new_numeric_field(n_rows, 1L, 100L)
+    ),
+    expr = quote(head(n = .(n_rows))),
+    class = c("head_block", "transform_block"),
+    ...
+  )
+}
+
+register_block(
+  constructor = new_head_block,
+  name = "head block",
+  description = "return first n rows",
+  classes = c("head_block", "transform_block"),
+  input = "data.frame",
+  output = "data.frame"
+)
+```
+
+If we now query the registry, the new block is available:
+
+```{r, eval=TRUE}
+names(available_blocks())
+```
+
+We can now run the demo app to add blocks. The new `head_block` should be
+visible in the new choices:
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI9g02cLjg0Iio0RiMABMoLjjAiDhqAH0NOCh8iujxGQAeUxkAMwcIAlJXCD5CrlkICoYiamU1CAd4BhYCPj9ZDGW-GRBAmRkyyobBCE3NtpY4bnyJmWDOPYOD4dHx1S3yiqmZuYqjk-y+O7H2WQAjAAZQEABlBQLiN0WGwOcAAHqgGI8AI4OIjkPjVWo-R4YH4jP5+Ym4WGbAjcKDsc7zTQ1OoNaTqMCkRIcNoWGD1XLifyk-YHZYYWFxAC+gUC8lsnDgDG5JmuMmIHFZDm6Fke2yq9PlEn5m2g8EedNqMkZeFh+Tg7AIs1QPRIxrA8lIDgY+yODE4Wzkf2ksIpVPY1setLA2IZPKZQlZUHZnN1vLAMIFbFQDlIToGUAwbUS8H9AqIGfTmbUQmzufzcCEgRKKqgEmarS1nEb4n6RSgibiKTSAEF0IqHCxHnR2JlmKgoJY4B9uCPvmSZLVIyYKiO+CwrWQ7Ol9QdZ2VEuQNyw+G29TJt06YOFL0moTIU5tgwwAG6yx4dLoOvppjNZGLHRAJkYNqV6VZ1gFTZ3x4ZQWjkGpuhYT8ADUeAca0fmeBpHgAOQAVSBSFlwfZsZCPWUijnN9PwYRUbgfA8bhvcswDvB9CxuA1cJ5R55EbHpPz4ODuHYAASLUGifTZ6xuIhx1lT8AFFPzILcIFLCTV1kaCeJkMTJOk-jEKIkjl02ABiGR+24agoHvFd0AofIZFIIgwK4CRLIuMQKO4ChLHsC9vPECSGnYWSDjwxCoDglhKREOdIoWYBgAA0gJODQLujgNcJAAXUK3ybNXRMZARVA4G6dzqiVN15DILz21kew4DNfiPJXfI3LjNy7GUHw7F6UqZD4cygWvZQjjKdoNXamRhr-WQ2DqoolSpDrFrw6hEu4MbLE8jbFtc6LYPgqS+JMAKWCuXzNjwtQGhYnjlt6R5cl86LRSfcUID8MBRUKoA", #nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
+
+If you had to register multiple blocks:
+
+```r
+register_blocks(
+  constructor = c(
+    data_block, filter_block, select_block, summarize_block
+  ),
+  name = c(
+    "data block", "filter block", "select block", "summarize block"
+  ),
+  description = c(
+    "choose a dataset",
+    "filter rows in a table",
+    "select columns in a table",
+    "summarize data groups"
+  ),
+  classes = list(
+    c("dataset_block", "data_block"),
+    c("filter_block", "transform_block", "submit_block"),
+    c("select_block", "transform_block"),
+    c("summarize_block", "transform_block", "submit_block")
+  ),
+  input = c(NA_character_, "data.frame", "data.frame", "data.frame"),
+  output = c("data.frame", "data.frame", "data.frame", "data.frame"),
+  package = pkg
+)
+```
+
+## Unregister a block
+
+The counterpart of `register_block()` is `unregister_blocks()`. We can remove
+our new `head_block` from the registry:
+
+```{r, eval=TRUE}
+unregister_blocks(ids = "head_block")
+
+# Check it out
+names(available_blocks())
+```
+
+where __ids__ is the first entry we applied in the class attributes when the block
+was created, that is `head_block`. If you had to remove multiple blocks at once,
+you can pass a vector in __ids__.

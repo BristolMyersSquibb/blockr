@@ -211,10 +211,11 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 #' Combined to the blocks registry API, this allows to select a block from R like
 #' \code{available_blocks()[[input$selected_block]]}.
 #'
-#' @param ns Stack namespace.
+#' @param ns Stack namespace. Default to \link{identity} so
+#' that it can be used when the stack is the top level element.
 #'
 #' @export
-add_block_ui <- function(ns) {
+add_block_ui <- function(ns = identity) {
   div(
     class = "d-flex justify-content-center",
     tags$button(
