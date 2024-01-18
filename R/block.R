@@ -174,7 +174,7 @@ new_data_block <- function(
 
   expr <- substitute(
     get(.(dataset), envir = data),
-    list(data = dat)
+    list(data = substitute(dat))
   )
 
   new_block(
