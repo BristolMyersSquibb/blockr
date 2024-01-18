@@ -1,0 +1,230 @@
+---
+title: "3. Case study: create a plot block"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{3. Case study: create a plot block}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(blockr)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
+```
+
+In this vignette, we show how to create a plot block layer by layer with the `{ggplot2}` package.
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "Before going further, please be sure to read the S3 chapter of advanced R: https://adv-r.hadley.nz/s3.html.", #nolint
+  color = "warning"
+)
+```
+
+## Introduction
+
+### Anatomy of a `{ggplot2}` plot
+
+With `{ggplot2}`, plots are built __layer__ by __layer__. It all starts with
+`ggplot()` which initialises the ggplot object passing optional data and mappings.
+Then, we add __geoms__, like `geom_point()`. Geoms also accept custom mappings (in case not mapping is 
+passed through the first `ggplot()` call), data as well as other parameters.
+At the end of the day, there are many ways to build a ggplot:
+
+```r
+# 1
+ggplot(data = <DATA>, mapping = <MAPPING>) +
+  geom_point()
+# 2
+ggplot(data = <DATA>) +
+  geom_point(mapping = <MAPPING>) +
+  geom_point(mapping = <MAPPING>)
+
+# 3
+ggplot() +
+  geom_point(data = <DATA>, mapping = <MAPPING>) +
+  geom_point(data = <DATA>, mapping = <MAPPING>)
+```
+
+That said, even if we pass data and mappings to `ggplot()`, we can still overwrite them in
+subsequent calls to `geom_*()` functions. Therefore, we'll go for the first option.
+
+### To do list
+
+What do we need to create?
+
+It seems obvious to add a new `ggplot_block()` __constructor__. On the Shiny side, we have to handle the 
+plot output element. Remember that the `server_output()` __generic__ is defined in the `{blockr}`
+`server.R` script. It supports tables with `server_output.block()` and plots with `server_output.plot_block()`.
+Therefore, we don't need to create another S3 method and have to make sure that our new plot block inherits
+from the `plot_block` class to __dispatch__ to the correct method. Most of our work will be on the block side since
+we'll have to generate the plot layer by layer, where each layer is a block.
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "Notice that the current {blockr} plot_block isn't built layer by layer but as a huge monolitic structure", #nolint
+  "which is certainly less flexible.",
+  color = "primary"
+)
+```
+
+### Create the ggplot block
+
+To create a new block, we call the `new_block()` constructor. It expects:
+
+- __fields__: a list of field, which are translated into shiny inputs.
+- __expr__: the expression return by the block, necessary to produce an output and export the code.
+- __name__: a name (randomely choosen), you don't need to worry about this).
+- __class__: a class to dispatch to the relevant S3 methods.
+- __layout__: an optional layout (default to `default_layout_fields()`).
+
+Our block will have `c("ggplot_block", "plot_block")` as classes, some fields to pass mappings and we
+leave the layout to the default choice. Note that the mapping field depends on the provided data. 
+To stay simple, we assume to only handle `x` and `y` aesthetics.
+
+```{r}
+new_ggplot_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      # TO DO
+    ),
+    expr = quote(),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+
+ggplot_block <- function(data, ...) {
+  initialize_block(new_ggplot_block(data, ...), data)
+}
+```
+
+We finally end with `new_ggplot_block` (internal constructor) and 
+`ggplot_block` (user facing constructor). The next step is to create the mappings fields with 
+2 `select_field()`. We define the `create_mapping_field` helper:
+
+```r
+create_mapping_field <- function(data) {
+  cols <- colnames(data)
+  new_select_field(value = cols[1], cols)
+}
+```
+
+We modify `new_ggplot_block` such that:
+
+```r
+new_ggplot_block <- function(data, ...) {
+
+  new_block(
+    fields = list(
+      x = create_mapping_field(data),
+      y = create_mapping_field(data)
+    ),
+    expr = quote(),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+```
+
+It is now time to produce the expression, which is certainly the most technical part as it involves a bit of metaprogramming. 
+The expression must not be evaluated in the block, that's why it is wrapped in a `quote()`. 
+`{blockr}` is then able to generate the expression with `generate_code()` and evaluate it with `evaluate_block()`.
+
+
+We start by defining a naive implementation of the `ggplot_expr` function. If we were directly doing this:
+
+```{r}
+ggplot_expr <- function(data, x, y) {
+  quote({
+    data |> ggplot(
+      mapping = aes(
+        x = data[[.(x)]],
+        y = data[[.(y)]]
+      )
+    )
+  })
+}
+```
+
+we would not be able to capture the user input `x` and `y` and therefore, the generated expression wouldn't be valid as
+we want to substitute by the input values of `x` and `y`. This is why we leverage `bquote()`: it only evaluates arguments wrapped
+by `.()` with variables in the environment, which makes it easier to use than `substitute()` (since we explicitly mark what we want to
+evaluate).
+
+```{r}
+ggplot_expr <- function(data, x, y) {
+  bquote({
+    data %>% ggplot(
+      mapping = aes(
+        x = .data[[.(x)]],
+        y = .data[[.(y)]]
+      )
+    )
+  }, list(x = x, y = y))
+}
+```
+
+We need to create a specific field which contains the expression with `new_hidden_field`, which won't be visible
+to the user. This eventually gives us:
+
+```r
+new_ggplot_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      x = create_mapping_field(data),
+      y = create_mapping_field(data),
+      expression = new_hidden_field(ggplot_expr)
+    ),
+    expr = quote(.(expression)),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+```
+
+You might wonder why we are doing `quote(.(expression))`. This is because `generate_code` calls `bquote()`.
+
+### Create a geom block
+
+Now that we have a valid `ggplot_block`, we want to add it a geometry. The easiest one is `geom_point()`.
+We initialise the geom block:
+
+```r
+new_geompoint_block <- function(plot, mappings, ...) {
+
+  geompoint_expr <- function(color) {
+    bquote(plot + geom_point(color = .(color)), list(color = color))
+  }
+
+  new_block(
+    fields = list(
+      color = new_select_field("blue", c("blue", "green", "red")),
+      expression = new_hidden_field(geompoint_expr)
+    ),
+    expr = quote(.(expression)),
+    class = c("geom_block", "plot_block"),
+    ...
+  )
+}
+
+geompoint_block <- function(data, ...) {
+  initialize_block(new_geompoint_block(data, ...), data)
+}
+```
