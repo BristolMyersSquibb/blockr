@@ -1,8 +1,8 @@
 ---
-title: "Data-blocks"
+title: "1. Data blocks"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data-blocks}
+  %\VignetteIndexEntry{1. Data blocks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,8 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, echo=FALSE}
+```{r setup, echo=FALSE, message=FALSE}
 library(blockr)
+library(bslib)
 ```
 
 ## Introduction
@@ -41,9 +42,30 @@ By default, the selected dataset is from the `datasets` package but you can actu
 (in the following we leverage the `{blockr.data}` datasets with the lab data pre-selected):
 
 ```r
-data_block(
-  dat = as.environment("package:blockr.data"),
-  selected = "lab"
+# Define the custom data block
+custom_data_block <- function(...) {
+  data_block(
+    dat = as.environment("package:blockr.data"),
+    selected = "lab",
+    ...
+  )
+}
+
+stack <- new_stack(
+  custom_data_block, 
+  select_block
+)
+serve_stack(stack)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI6MkMABMoLjjAggdOIhgAfQyuQpSZAB5TGQAzBwgCUlcIPgw2vxkQQJkZEqgy0QlBCB6ektUZKHYMCgA3FgYSeDJBMFQoCShLOEQUhnTMqH9cbtH2OG44Rrg0iaFuKDppU562jFO4gF9AwM4N8Uq1QgcGohT+Q1OuXyRT6AxMslO50ujThEkCcXODFmcDBXCG4PEfjAnwAukA", #nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
 )
 ```
 
@@ -56,14 +78,70 @@ data from a file.
 
 #### Upload data
 
-If you want to load data from any location on your computer or a server, `upload_block()` is what you need.
-At the moment, it only supports csv files but other format will be added.
-
-
-Since the `upload_block()` temporarily moves the data in a custom location, we recognize that it might not be always possible
+If you want to load data from any location on your computer, `upload_block()` is what you need.
+At the moment, it only supports csv files but other format will be added. Since the `upload_block()` temporarily moves the data in a custom location, we recognize that it might not be always possible
 for security reasons.
+
+```r
+library(blockr)
+
+stack <- new_stack(
+  upload_block,
+  select_block
+)
+serve_stack(stack)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQdUUSgAE0zo8VxAopl2OG44AlIq0QlAuMDGhgA3OGyE8T4ciT8wAF8AXSA", #nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
 
 #### Files browser block
 
-That's why we introduced a `filesbrowser_block()` which can read data (csv only for now) from any specified location without moving them.
+`filesbrowser_block()` can read data (csv only for now) from the server file system.
+It means that if no data is available on the server, you won't see anything.
+You can customize the accessible locations as follows, through the `volumes` parameter:
 
+```r
+custom_filesbrowser_block <- function(...) {
+  filesbrowser_block(
+    volumes = c(vol1 = "<PATH1>", vol2 = "<PATH2>"),
+    ...
+  )
+}
+```
+
+In the following demonstration, we uploaded a dummy dataset on the webR file system so you can play with
+the block. That said, you can definitely upload your own data thanks to the corresponding
+shinylive feature (upload button).
+
+```r
+library(blockr)
+
+stack <- new_stack(
+  filesbrowser_block,
+  select_block
+)
+serve_stack(stack)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQAzFm44dkYianY4Bkzo8VxAopla8oJSBtEJQLjA2oYANzhshPE+HIk-MABfXHBoeCoAeW5wmFQWAnZMgHFYCowdobxCEnJKZDgAEztXCFxb+5JMlhunu9IHzIcGblw4TgYVwBDs4VBRAcZAimWK3Cgll+-0h0NIsIgYlwOQYXRuUHITwgN0y+MJxE2cG+31eZLguBY7AAEnBuDdAgBGAAcAE4AGwyADKDhg8AYMjWGy2O1wHNw+meNI4+jl3P5uAAgvY2FB5SwYIiKvp4Yj2Po9lgAKIYVAQSy4C2W2QCjWoBhlWUAVhkrvdAIFgGQCGQcgDMPrdHs5PIADNGhSKxRL1pttuxcAAmeWKh5mzMcmPR3AABTCjL1BssRpNljNADEsBqbXbcPWNbh2xyACwyACyUHCMiD6a5Es6RDodWaEHz0e7wtFdSTUtTuBDWa+Of0a5nndwgtIGBkABkoWX9PrDWbq2aAKqCxu2+13ttd3v99vBmQAKQc60HMnTAUADkiBGGAJwYKcZxHedE0lFMZU9dcXmVJDoNwE9iRIctL2NBEa3NAAhLAm3tPZiNlMMf3Wdt0wAdnDP1-xDDlR1IcdJyjDl03jBdxXg6U0z5ZClTNYT824vd2IkDQiG4GAcMrK98LNQUAHVrUfPcNOdb9fwhei9JomRvT7AchwY6iIS4gVYMXASV09QsFQ3EgzSc2UeQ5YTCLqYJHnPCsqxU81LRIrS9jC9tcEAFAJcBA0gZA0VkbhkG4HDgGR2JkagwijdM4zs-jk0E3A6JEzdyvzArNTIWgGFQChFOC019EIy0j1I3B2qPWVuw1BxLAcThVzjAahpG9Mw19Mp-24oUFHIcDOOnHl0znBN7JKlcuQqtz9F26rdxLd000C3Dr30VsutbWRvSsjNLP02RuzM-9DIe-KYM24rlxlHk9uVAHqt2jUYE4Op8QU86lLw1qgMtAARLqEcRjMRwe+bxuG0hZQYt6gyxwacagnkQx4oqlwQtMOWc7N9tpzzyYwpQfTtVkKma5TWufLrn1GoyIVfbGRpDOMrLm-riZGqMQ1sn6qdKjk5RclCzWVpmfL8tgubhgjIvC5sDdkViRdx7yfWl825pdK3Sc7QqFYcxCVfp1DVR5B3cBZbh2DYcQWF1y7awASSAm6w+iuKEqSlK0oyrKiByvLVs7Da+MVxzM1V0T9E9PNPd3TCbmwmGWv14iuvIrAo-iohEuStl48y7LcqkVPvoz52aezt31YLztduL0uL1hy7q6rij0x5QW+stibccAwXJfnkmo3z3i4O2mVQ0B9Xtx5fPvdZP2IADoOQtD8OtKvzzZ5kaa7dfCWgwf1eZdWz15a77ead3HPNxdk8l-XAPZWR0ChAwdIF9WoajvF1OBgoMw8RAmBCCsgRyIzgAQOAy1ILphQaBXBEF-wyEwdg4hK18x8kdj-P6NMkIAIZmhfkhYsBEANDAgiIcAAqD5my8LbOmb0ZtZSsUFItSh+CRFWzmuIyReDSZ8nTlvehsphJMOVN5TyyjcA8KIOIcIRAuFmi-EWa+zYzFAVlHGFYY50HrTYhxSCyt3rdjsexdBUY+Sd1UdTPGe8VRVX5LtAAwiwBw+JUo3Eyj2AAlwAD22MYsu3MCI9ktAADS6hkzJsoeIeOcY9Jx6D5oWRKVQnkdEKZO1-rKXamj1aHSqZmHsAAfiABBkoBVHuXOsWA9g3QGRmW2C8xELVQEtBxoycZyImVMypdFv5+KVgDRpKpgZVOEj2C4DA4k8BMfoUJGoLH2mOdYjkT1jKmyfhjfSpCbljKjFyWhKyVw1XWTVfMLzQFKHEEMXUqS9a3iwIKPmoK74PTfqIgqy9X6PyeatLkKitpqPTK7Vyyp0WeWRSzZQGp2blDOr0tJt57x83vOjWeRMxkyAFC-YMPFRHPN8ai-xBDAkcu+btCRUIARAsugAaRWIbe0wqa6XPmVI2QBT7GTklRIyZUjSGys8ZUtam82WlSmpyg+a1uphBwaIaAhzLSCiLF1M1RYMz3WejIGeMLuwMvte-XGUZ+Sat+uy-+fd9DrU8uqLUCIyCApJcC-QvMtL83zPfKWYzYXOrjWvCABVYyeszjKYRnKkKpsLIKcINx0gQgFSFRBCC7xeilYoz8hTSlhkVQs8Ur9WK1pWqmlFXrtUaN9YBDMsZdxag0DqQ5joq5Wkoq6jMDqn6sSHNOxFqbWWdscmudZno1yLu6nAFgAArNg9oS2tVCUyU5uBj3WLIZOxxojAwASTR-Aq81Kbd1wJ6H1mL3K7kfZmYePSgqkqIqKh0U8rlCyZXbYRcLGWTsCI+5ZWrHJrN9Z6AGcHcBYFcGlTKX4oDpBYAwFJYbLrEX4faEjd0r2PJJmGIcVGH3Rlhc+upfIMVq30CxvtNV9GGMI-+8NViupWIzFRe5BVsWXrNgBBjcp0VQYk7IsTcpYMMY7RmoSq7fV8g3Sp4spZiV8eDg2IZbZ2xxWU8OdNL7dHrN0WJoerMCWViJYcyNzZ+amanAVcmlm6khmqYEvzmYvOZkIqdOguH6SHoImWrSiDa75W7GpNg5Bl2ZqQx+v1mz-WhI0LAEgLAEmHOujfBsGYnW4YcGECEJkZC1noAwSrEQRnfgq1V0h3Y6uMEa9ZVaFmktkAQzKMWAXCwgz3Lh8QiUdnulIAAL0OYKG8IcuqLZDuMzrDWqt41q-V7r4zCYzw23t2WPF+spbU6uVjucWJMx-VAcQmUiwIjBB8KLZLSO4H5jIDru2tuhh211rb3ZCbeiO1t2WAozuDbTMzdZzN8xywdGEGAjIummBOpcAODAulNTe6FIDxs6UA8201i2YOmu3rJ79prUYHYyCh6ltMnpGHIZYV7A4DAUfsDRxjigWOcd-ouiFA2VcooeZjo3aJCdW4p3zGnenyXoevu7RlkBcvdyhIsN8aAaUADkYNGqzdm7xoXrVBFdUEbXCXcd0otyTm3WnI4GcXZDBpjLrvPKD3G2fKbFg7Dzbx6tlbS2BY4YgHty95OIRixa+Htrr8RxR9JhvZ3L6QzvrY+n4BmYVjsFEIcoCIqUYisrUnyDSfXxDlB9Tnr+Yv4K4G4z1cLP3csJAZr3EOo9cG7gEbk3Y8Qrm60pbpeYeI-V8B010frWIikInyT2vrCG-nbTyrzP4lWF7gAI6VeoDIAAajwcoxaiMhVc0+Sl3Jid7YsxXmeQ5E816UYlxXTe-MBeCbokOEAOBdYkIcuBHhctHhKdWPCPQ7J-D6GfcyQoCAyfRfHxZfJXEMBpX1FAnRXaPYeQTEEQSLU-VqYrZsW6InCvR-eA3AYHYMMghfUmapJAt-dLTPTZfzQUNARQAjQ5ATLSITN+CvMMJPGjYMfgp-KMJZegi7L2dZL2fMJZXAb-X-Brf-PHQA4Al6a-P7efPbQQjkTQ8HJFOMVPOpTsK7TcYwnFQsI8e7R7Z7d4FzclKNS-YQ8gxxCvHiIcH7cg55F-RvCQ3uDLTsAuXFVghgKAHdOAIYfvPpfQAATRvEGS0liL2AwXUNJzgJoIYgOxSMXy5Cd1fwkLdzY07APhyLPR4EsC2zx3OS6nOQnTL2oL23+wfyyNJg1UMLUTTkCQ6PzH1Q1G4AglICGDKHKCKyMxKzbEj0gKcJoJHCHCmOO1Wk9nEJfU7Bb0KJYU9gwiGLgFyz4gLyLy0kLwlR4jLwYlcPelOJEIWNyJ8OWLX1zk7A3x5F2iAkRFw0iIAy4MsXMVkAuOcOOKfwyIAn+M8JTVjFOzyOWPKikPKlTUzFYO4ESksIexkHCVIBPwMzP3sLc0pQmOcI8JoPvzvWaOU2jEhwhKMMYPuNQ1jGEn0XdExEOSHwET4RsWaKXgr1nQAgFCT2U1piWLqU9ChOQxhOjEZkP06ShBGEgkqJOWqJOXyTZPqL+zcIAiVJp1BNfDaP8U9FQNV12kfV3EFDECHUOSwHgS0jNKQRkF+JoKmmaNvTtJ5I1OuJX2YzpgyxoT7W5GLCBBIEsBy1wwPXwIInFS6nFVkDSJv10KaxmIAmjJ6zE3BJuOYz8LYz5CCwYxC23T3WbEqJPWqJPTULLzjDL3ehLMuLEzJOTLUX83WX80rNATKDeNMA721ygG70pD70ZL4QtxZJIMgOBJoMoIIWJM-gFEtB3wqHRBYFwwoN1MKOaRAX3BMFknkgWw0hWx0j5J-GgUlR3PpFcUJiemgSjFJJkG-xSwIB4AJFuAoM6M8lJM1G1BNTx1HQinHRHJmgBAAjfAMiZQjG4BVV-KnDmAAF0gA", #nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
+
+Note that in a later release, we plan to merge `filesbrowser_block()` and `upload_block()` into
+a single variable block.
