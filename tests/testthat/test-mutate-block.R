@@ -22,6 +22,8 @@ test_that("mutate_module_server handles input correctly", {
 
   shiny::testServer(
     module_server_test, {
+      session$setInputs(`value-i_add` = 1)  # click something to initialize
+
       # Simulate input to the ACE Editor fields
       session$setInputs(`value-pl_1_name` = "new", `value-pl_1_val` = "2 * Sepal.Length")
 
