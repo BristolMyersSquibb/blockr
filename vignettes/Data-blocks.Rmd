@@ -17,6 +17,16 @@ knitr::opts_chunk$set(
 ```{r setup, echo=FALSE, message=FALSE}
 library(blockr)
 library(bslib)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
 ```
 
 ## Introduction
@@ -66,6 +76,13 @@ card(
     header = FALSE
   ),
   full_screen = TRUE
+)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "In the registry vignette, we see how to register a block in a cleaner way.",
+  color = "primary"
 )
 ```
 
