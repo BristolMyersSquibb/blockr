@@ -10,11 +10,17 @@
 #     )
 #   )
 #
-# pkgload::load_all("."); stack <- new_stack(data_block, mutate_block, admiral_derive_param_computed_block); serve_stack(stack)
+# pkgload::load_all(".");
+# stack <- new_stack(data_block, mutate_block, admiral_dpc_block);
+# serve_stack(stack)
 
 #' @importFrom admiral derive_param_computed
 #' @importFrom rlang exprs
-new_admiral_derive_param_computed_block <- function(data, by_vars = NULL, parameters = NULL, set_values_to = NULL,...) {
+new_admiral_dpc_block <- function(data,
+                                  by_vars = NULL,
+                                  parameters = NULL,
+                                  set_values_to = NULL,
+                                  ...) {
 
   # 0. helper functions
   handle_error <- function(e) {
@@ -112,14 +118,14 @@ new_admiral_derive_param_computed_block <- function(data, by_vars = NULL, parame
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("admiral_derive_param_computed_block", "transform_block")
+    class = c("admiral_dpc_block", "transform_block")
   )
 }
 
 #' @rdname new_block
 #' @export
-admiral_derive_param_computed_block <- function(data, ...) {
-  initialize_block(new_admiral_derive_param_computed_block(data, ...), data)
+admiral_dpc_block <- function(data, ...) {
+  initialize_block(new_admiral_dpc_block(data, ...), data)
 }
 
 
@@ -128,7 +134,7 @@ admiral_derive_param_computed_block <- function(data, ...) {
 #
 # we need the fields, not the rendered fields, that's why I can't use the layout
 # methods
-ui_fields.admiral_derive_param_computed_block <- function(x, ns, inputs_hidden, ...) {
+ui_fields.admiral_dpc_block <- function(x, ns, inputs_hidden, ...) {
 
   html_card <- function(field, field_name) {
     div(
@@ -158,5 +164,3 @@ ui_fields.admiral_derive_param_computed_block <- function(x, ns, inputs_hidden, 
   )
 
 }
-
-

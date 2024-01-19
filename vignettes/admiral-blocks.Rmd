@@ -1,5 +1,5 @@
 ---
-title: "Transform Block for Admiral"
+title: "2. Transform Block for Admiral"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Transform Block for Admiral}
@@ -37,7 +37,7 @@ Admiral is an R package designed to facilitate the analysis and reporting of cli
 
 The following provides a step-by-step guide to wrap an admiral function into a __transform__ block.
 
-Blocks are modular code segments that wrap existing R functions for interactive use in the blockr system. This is a step-by-step guide to create a block using `admiral_derive_param_computed_block` as an example.
+Blocks are modular code segments that wrap existing R functions for interactive use in the blockr system. This is a step-by-step guide to create a block using `admiral_dpc_block` as an example.
 
 ### 1. Understanding the Function to Wrap
 
@@ -47,7 +47,7 @@ The objective here is to comprehend the function you wish to encapsulate within 
 library(admiral)
 library(dplyr)
 BOD |>
-  mutate(PARAMCD = as.character(1:n())) |>
+  mutate(PARAMCD = as.character(seq_len(n()))) |>
   derive_param_computed(
     by_vars = exprs(Time),
     parameters = c("4", "5"),
@@ -62,10 +62,10 @@ Note that the function requires a column named `PARAMCD` to be present in the da
 
 ### 2. Block Creator Function
 
-Now, we want to define the block function in a block creator function, which we call `new_admiral_derive_param_computed_block()`:
+Now, we want to define the block function in a block creator function, which we call `new_admiral_dpc_block()`:
 
 ```r
-new_admiral_derive_param_computed_block <- function() {
+new_admiral_dpc_block <- function() {
   # 0. helper functions
 
   # 1. main expression
@@ -100,7 +100,7 @@ Fields can optionally contain a title and a description. This information will b
 
 #### Block creation
 
-Finally, block creation is done with a call to `new_block()`. This is usually left unchanged. In addition, we use a wrapper function, `admiral_derive_param_computed_block`, to initialize and make the block available for blockr.
+Finally, block creation is done with a call to `new_block()`. This is usually left unchanged. In addition, we use a wrapper function, `admiral_dpc_block`, to initialize and make the block available for blockr.
 
 ### 3. Try Out in blockr
 
@@ -109,7 +109,7 @@ Create a minimal stack to run a workable example. Since our example involves a m
 ```R
 options(BLOCKR_DEV = TRUE)
 pkgload::load_all(".")
-stack <- new_stack(data_block, mutate_block, admiral_derive_param_computed_block)
+stack <- new_stack(data_block, mutate_block, admiral_dpc_block)
 serve_stack(stack)
 ```
 
