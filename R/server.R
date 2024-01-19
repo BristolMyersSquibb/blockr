@@ -132,17 +132,19 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         bindEvent(r_values(), in_dat())
 
       # Validate block inputs
-      obs$validate_inputs <- observeEvent(r_values(), {
-        message(sprintf("Validating block %s", class(x)[[1]]))
-        blk_no_srv <- blk()
-        blk_no_srv[is_srv] <- NULL    # to keep class etc
-        validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
+      if (display != "plot") {
+        obs$validate_inputs <- observeEvent(r_values(), {
+          message(sprintf("Validating block %s", class(x)[[1]]))
+          blk_no_srv <- blk()
+          blk_no_srv[is_srv] <- NULL    # to keep class etc
+          validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
 
-        # Block will have a red border if any nested input is invalid
-        # since blocks can be collapsed and people won't see the input
-        # elements.
-        validate_block(blk(), is_valid, session)
-      })
+          # Block will have a red border if any nested input is invalid
+          # since blocks can be collapsed and people won't see the input
+          # elements.
+          validate_block(blk(), is_valid, session)
+        })
+      }
 
       # For submit blocks like filter, summarise,
       # join that can have computationally intense tasks
