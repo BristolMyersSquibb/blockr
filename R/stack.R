@@ -65,11 +65,17 @@ generate_code.stack <- function(x) {
   Reduce(binary_substitute, lapply(x, \(b) b))
 }
 
-#' @rdname new_stack
+#' Combine 2 block expressions
+#'
+#' Useful for \link{generate_code}.
+#'
+#' @rdname block_combiner
+#' @param x Block object.
 #' @export
 block_combiner <- function(x, ...) UseMethod("block_combiner", x)
 
-#' @rdname new_stack
+#' @rdname block_combiner
+#' @param y Block object.
 #' @export
 block_combiner.transform_block <- function(x, y, ...) {
   substitute(
@@ -78,15 +84,15 @@ block_combiner.transform_block <- function(x, y, ...) {
   )
 }
 
-#' @rdname new_stack
+#' @rdname block_combiner
 #' @export
 block_combiner.data_block <- block_combiner.transform_block
 
-#' @rdname new_stack
+#' @rdname block_combiner
 #' @export
 block_combiner.plot_block <- block_combiner.transform_block
 
-#' @rdname new_stack
+#' @rdname block_combiner
 #' @export
 block_combiner.plot_layer_block <- function(x, y, ...) {
   substitute(

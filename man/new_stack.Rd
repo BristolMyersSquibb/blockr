@@ -4,11 +4,6 @@
 \alias{new_stack}
 \alias{is_stack}
 \alias{generate_code.stack}
-\alias{block_combiner}
-\alias{block_combiner.transform_block}
-\alias{block_combiner.data_block}
-\alias{block_combiner.plot_block}
-\alias{block_combiner.plot_layer_block}
 \alias{serve_stack}
 \title{Stacks}
 \usage{
@@ -17,16 +12,6 @@ new_stack(..., title = "Stack")
 is_stack(x)
 
 \method{generate_code}{stack}(x)
-
-block_combiner(x, ...)
-
-\method{block_combiner}{transform_block}(x, y, ...)
-
-\method{block_combiner}{data_block}(x, y, ...)
-
-\method{block_combiner}{plot_block}(x, y, ...)
-
-\method{block_combiner}{plot_layer_block}(x, y, ...)
 
 serve_stack(stack)
 }
