@@ -3,6 +3,7 @@ export const collapse = (stack) => {
   showLastOutputs(stack);
   toggleOutputInput(stack);
   handleIcons(stack);
+  handleBlockError(stack);
 };
 
 export const handleIcons = (stack) => {
@@ -164,4 +165,21 @@ const showLastOutputs = (stack) => {
   $(stack).each((_, el) => {
     showLastOutput(el);
   });
+};
+
+const handleBlockError = (stack) => {
+  let hasError = false;
+  $(stack)
+    .find(".block>.card")
+    .each((_index, block) => {
+      if (!$(block).hasClass("border-danger")) return;
+
+      hasError = true;
+    });
+
+  console.log(hasError);
+
+  if (!hasError) return;
+
+  $(stack).find(".stack-edit-toggle").trigger("click");
 };
