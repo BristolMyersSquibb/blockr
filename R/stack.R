@@ -27,6 +27,19 @@ new_stack <- function(..., title = "Stack") {
     )
   }
 
+  for (i in seq_along(ctors)) {
+    # To prevent ggplot block from rendering intermediate layers as shiny outputs
+    attr(blocks[[i]], "show_output") <- if (i < length(ctors)) {
+      if (i == 1) {
+        TRUE
+      } else {
+        if (inherits(blocks[[i + 1]], "plot_block")) FALSE else TRUE
+      }
+    } else {
+      TRUE
+    }
+  }
+
   stopifnot(
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
   )
@@ -46,9 +59,13 @@ is_stack <- function(x) {
 generate_code.stack <- function(x) {
 
   binary_substitute <- function(x, y) {
-    substitute(x %>% y, list(x = x, y = y))
+    # TO DO: remove this hell asap (just for testing)
+    if (grepl("(geom)|(labs)|(theme)", deparse(y), perl = TRUE)) {
+      substitute(x + y, list(x = x, y = y))
+    } else {
+      substitute(x %>% y, list(x = x, y = y))
+    }
   }
-
   Reduce(binary_substitute, lapply(x, generate_code))
 }
 

@@ -152,14 +152,7 @@ We start by defining a naive implementation of the `ggplot_expr` function. If we
 
 ```{r}
 ggplot_expr <- function(data, x, y) {
-  quote({
-    data |> ggplot(
-      mapping = aes(
-        x = data[[.(x)]],
-        y = data[[.(y)]]
-      )
-    )
-  })
+  quote(ggplot(mapping = aes(x = .data[[.(x)]], y = .data[[.(y)]])))
 }
 ```
 
@@ -170,14 +163,10 @@ evaluate).
 
 ```{r}
 ggplot_expr <- function(data, x, y) {
-  bquote({
-    data %>% ggplot(
-      mapping = aes(
-        x = .data[[.(x)]],
-        y = .data[[.(y)]]
-      )
-    )
-  }, list(x = x, y = y))
+  bquote(
+    ggplot(mapping = aes(x = .data[[.(x)]], y = .data[[.(y)]])),
+    list(x = x, y = y)
+  )
 }
 ```
 
@@ -210,7 +199,7 @@ We initialise the geom block:
 new_geompoint_block <- function(plot, mappings, ...) {
 
   geompoint_expr <- function(color) {
-    bquote(plot + geom_point(color = .(color)), list(color = color))
+    bquote(geom_point(color = .(color)), list(color = color))
   }
 
   new_block(

@@ -15,6 +15,7 @@
 \alias{evaluate_block.data_block}
 \alias{evaluate_block.transform_block}
 \alias{evaluate_block.plot_block}
+\alias{evaluate_block.geom_block}
 \alias{evaluate_block.ggiraph_block}
 \alias{new_data_block}
 \alias{data_block}
@@ -94,6 +95,8 @@ evaluate_block(x, ...)
 \method{evaluate_block}{transform_block}(x, data, ...)
 
 \method{evaluate_block}{plot_block}(x, data, ...)
+
+\method{evaluate_block}{geom_block}(x, data, ...)
 
 \method{evaluate_block}{ggiraph_block}(x, data, ...)
 

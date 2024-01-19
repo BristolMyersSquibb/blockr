@@ -138,9 +138,17 @@ evaluate_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evaluate_block.plot_block <- function(x, data, ...) {
+evaluate_block.plot_block <- evaluate_block.transform_block
+
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evaluate_block.geom_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
-  eval(generate_code(x), list(data = data))
+  eval(
+    substitute(data + expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
 }
 
 #' @param data Result from previous block

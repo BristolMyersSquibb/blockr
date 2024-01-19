@@ -64,7 +64,7 @@ block_body.block <- function(x, ns, inputs_hidden, ...) {
     div(
       class = sprintf("%s block-output", inputs_hidden),
       id = result_id,
-      uiOutputBlock(x, ns),
+      if (attr(x, "show_output")) uiOutputBlock(x, ns),
       div(
         class = sprintf(
           "block-loading d-flex justify-content-center %s",
