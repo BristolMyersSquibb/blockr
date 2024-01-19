@@ -4,7 +4,6 @@ library(shiny)
 
 stack <- new_stack(
   data_block,
-  filter_block,
   select_block,
   title = "test"
 )

@@ -177,8 +177,6 @@ const handleBlockError = (stack) => {
       hasError = true;
     });
 
-  console.log(hasError);
-
   if (!hasError) return;
 
   $(stack).find(".stack-edit-toggle").trigger("click");
