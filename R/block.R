@@ -13,6 +13,9 @@
 #' @param class Block subclass
 #' @param layout Callback function accepting one argument:
 #' the list of fields to layout and returns one or more UI tag(s).
+#' @param show_output Whether the block shows its output in the interface.
+#' This is useful for building plots block by block and only render the last plot block.
+#' All previous plot block don't render their output. The logic is handled by the stack.
 #'
 #' @export
 #' @import blockr.data
@@ -20,7 +23,7 @@
 #' @importFrom stats setNames
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character(),
-                      layout = default_layout_fields) {
+                      layout = default_layout_fields, show_output = TRUE) {
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
     is.language(expr),
@@ -38,6 +41,7 @@ new_block <- function(fields, expr, name = rand_names(), ...,
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
     layout = layout,
+    show_output = show_output,
     class = c(class, "block")
   )
 }
