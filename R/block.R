@@ -113,6 +113,12 @@ generate_code.transform_block <- function(x) {
 
 #' @rdname new_block
 #' @export
+generate_code.call <- function(x) {
+  identity(x)
+}
+
+#' @rdname new_block
+#' @export
 evaluate_block <- function(x, ...) {
   UseMethod("evaluate_block")
 }
@@ -143,7 +149,7 @@ evaluate_block.plot_block <- evaluate_block.transform_block
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evaluate_block.geom_block <- function(x, data, ...) {
+evaluate_block.plot_layer_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   eval(
     substitute(data + expr, list(expr = generate_code(x))),

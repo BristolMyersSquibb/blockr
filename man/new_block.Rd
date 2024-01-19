@@ -11,11 +11,12 @@
 \alias{generate_code.block}
 \alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
+\alias{generate_code.call}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
 \alias{evaluate_block.transform_block}
 \alias{evaluate_block.plot_block}
-\alias{evaluate_block.geom_block}
+\alias{evaluate_block.plot_layer_block}
 \alias{evaluate_block.ggiraph_block}
 \alias{new_data_block}
 \alias{data_block}
@@ -88,6 +89,8 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
+\method{generate_code}{call}(x)
+
 evaluate_block(x, ...)
 
 \method{evaluate_block}{data_block}(x, ...)
@@ -96,7 +99,7 @@ evaluate_block(x, ...)
 
 \method{evaluate_block}{plot_block}(x, data, ...)
 
-\method{evaluate_block}{geom_block}(x, data, ...)
+\method{evaluate_block}{plot_layer_block}(x, data, ...)
 
 \method{evaluate_block}{ggiraph_block}(x, data, ...)
 

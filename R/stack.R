@@ -59,14 +59,40 @@ is_stack <- function(x) {
 generate_code.stack <- function(x) {
 
   binary_substitute <- function(x, y) {
-    # TO DO: remove this hell asap (just for testing)
-    if (grepl("(geom)|(labs)|(theme)", deparse(y), perl = TRUE)) {
-      substitute(x + y, list(x = x, y = y))
-    } else {
-      substitute(x %>% y, list(x = x, y = y))
-    }
+    block_combiner(x = y, y = x)
   }
-  Reduce(binary_substitute, lapply(x, generate_code))
+
+  Reduce(binary_substitute, lapply(x, \(b) b))
+}
+
+#' @rdname new_stack
+#' @export
+block_combiner <- function(x, ...) UseMethod("block_combiner", x)
+
+#' @rdname new_stack
+#' @export
+block_combiner.transform_block <- function(x, y, ...) {
+  substitute(
+    y %>% x,
+    list(x = generate_code(x), y = generate_code(y))
+  )
+}
+
+#' @rdname new_stack
+#' @export
+block_combiner.data_block <- block_combiner.transform_block
+
+#' @rdname new_stack
+#' @export
+block_combiner.plot_block <- block_combiner.transform_block
+
+#' @rdname new_stack
+#' @export
+block_combiner.plot_layer_block <- function(x, y, ...) {
+  substitute(
+    y + x,
+    list(x = generate_code(x), y = generate_code(y))
+  )
 }
 
 #' Add block to a stack
