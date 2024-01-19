@@ -105,8 +105,8 @@ general idea below.</p>
 <h3 id="stack">Stack<a class="anchor" aria-label="anchor" href="#stack"></a>
 </h3>
 <p>The stack is a list of blocks.</p>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-5547e011509d9c474648" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-5547e011509d9c474648">{"x":{"diagram":"\nclassDiagram\n    class stack\n    stack : +name\n    stack : +class\n    stack : +generate_server(stack, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The stack is able to dynamically add new blocks through
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-45f3e2c7d0faec0ed405" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-45f3e2c7d0faec0ed405">{"x":{"diagram":"\nclassDiagram\n    class stack\n    stack : +name\n    stack : +class\n    stack : +generate_server(stack, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The stack is able to dynamically add new blocks through
 <code><a href="../reference/add_block.html">add_block()</a></code>.</p>
 <div class="section level4">
 <h4 id="modify-a-stack">Modify a stack<a class="anchor" aria-label="anchor" href="#modify-a-stack"></a>
@@ -146,8 +146,8 @@ produce the block <strong>result</strong>.</li>
 <strong>result</strong>: the block output which can be passed to
 another block.</li>
 </ul>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-01d8c5c32ad4932f5d22" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-01d8c5c32ad4932f5d22">{"x":{"diagram":"\nclassDiagram\n    class block\n    block : +name\n    block : +expr\n    block : +result\n    block : +layout\n    block : +class\n    block : +initialize_block(block)\n    block : +is_initialized(block)\n    block : +generate_code(block)\n    block : +evaluate_block(block, ...)\n    block : +generate_server(block, ...)\n    block : +update_fields(block, ...)\n"},"evals":[],"jsHooks":[]}</script><p>A block is composed of <strong>fields</strong> gathered in a list,
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-e992266f0d3c98fb5ad8" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-e992266f0d3c98fb5ad8">{"x":{"diagram":"\nclassDiagram\n    class block\n    block : +name\n    block : +expr\n    block : +result\n    block : +layout\n    block : +class\n    block : +initialize_block(block)\n    block : +is_initialized(block)\n    block : +generate_code(block)\n    block : +evaluate_block(block, ...)\n    block : +generate_server(block, ...)\n    block : +update_fields(block, ...)\n"},"evals":[],"jsHooks":[]}</script><p>A block is composed of <strong>fields</strong> gathered in a list,
 which are translated into Shiny inputs. These fields are the necessary
 elements to reconstruct the block <strong>expression</strong> and
 subsequently produce the result whenever it gets evaluated.</p>
@@ -160,8 +160,8 @@ subsequently produce the result whenever it gets evaluated.</p>
 </h4>
 <p>A field is a structure with a <strong>type</strong> and a
 <strong>class</strong>.</p>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-3fa4b0c0514731da56d4" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-3fa4b0c0514731da56d4">{"x":{"diagram":"\nclassDiagram\n    class field\n    field : +type\n    field : +class\n    field : +initialize_field(x, env)\n    field : +validate_field(field)\n    field : +update_field(field, value, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The <code>validate_field</code> generic ensures each field has
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-b63c5add9c5e13468951" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-b63c5add9c5e13468951">{"x":{"diagram":"\nclassDiagram\n    class field\n    field : +type\n    field : +class\n    field : +initialize_field(x, env)\n    field : +validate_field(field)\n    field : +update_field(field, value, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The <code>validate_field</code> generic ensures each field has
 revelant values. For instance, for a string field, which ultimately
 becomes a shiny text input, the method
 <code>validate_field.string_field</code> is responsible for checking
