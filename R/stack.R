@@ -57,6 +57,8 @@ is_stack <- function(x) {
 #' @rdname new_stack
 #' @export
 generate_code.stack <- function(x) {
+  if (length(x) == 0) return(quote(identity()))
+
   # Handles monoblock stacks
   if (length(x) > 1) {
     aggregate_code <- function(x, y) {
@@ -74,6 +76,7 @@ generate_code.stack <- function(x) {
 #'
 #' @rdname block_combiner
 #' @param x Block object.
+#' @param ... For generic consistency.
 #' @export
 block_combiner <- function(x, ...) UseMethod("block_combiner", x)
 

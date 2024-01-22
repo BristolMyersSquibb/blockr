@@ -21,6 +21,8 @@ block_combiner(x, ...)
 \arguments{
 \item{x}{Block object.}
 
+\item{...}{For generic consistency.}
+
 \item{y}{Block object.}
 }
 \description{

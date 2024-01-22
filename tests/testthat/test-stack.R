@@ -12,6 +12,12 @@ test_that("stacks", {
   expect_s3_class(app, "shiny.appobj")
 
   code <- generate_code(
+    new_stack()
+  )
+
+  expect_type(code, "language")
+
+  code <- generate_code(
     new_stack(new_data_block)
   )
 
