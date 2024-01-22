@@ -57,12 +57,15 @@ is_stack <- function(x) {
 #' @rdname new_stack
 #' @export
 generate_code.stack <- function(x) {
-
-  binary_substitute <- function(x, y) {
-    block_combiner(x = y, y = x)
+  # Handles monoblock stacks
+  if (length(x) > 1) {
+    aggregate_code <- function(x, y) {
+      block_combiner(x = y, y = x)
+    }
+    Reduce(aggregate_code, lapply(x, \(b) b))
+  } else {
+    generate_code(x[[1]])
   }
-
-  Reduce(binary_substitute, lapply(x, \(b) b))
 }
 
 #' Combine 2 block expressions
