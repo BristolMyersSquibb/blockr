@@ -128,6 +128,8 @@ We modify `new_ggplot_block` such that:
 ```r
 new_ggplot_block <- function(data, ...) {
 
+  data_cols <- function(data) colnames(data)
+
   new_block(
     fields = list(
       x = new_select_field(colnames(data)[1], data_cols, type = "name"),
@@ -147,7 +149,7 @@ The expression must not be evaluated in the block, that's why it is wrapped in a
 
 Our ggplot expression can be written as:
 
-```{r}
+```r
 ggplot(mapping = aes(x = .(x), y = .(y)))
 ```
 
