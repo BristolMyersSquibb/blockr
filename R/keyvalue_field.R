@@ -1,4 +1,4 @@
-#' Re-implement numeric_field, using server module
+#' Key Value Field
 #'
 #' @rdname generate_server
 #' @export
@@ -7,59 +7,107 @@ generate_server.keyvalue_field <- function(x, ...) {
     moduleServer(id, function(input, output, session) {
       ns <- session$ns
 
-      aceAutocomplete("pl_1_val")
-      aceTooltip("pl_1_val")
+      submit <- isTRUE(x$submit)
+      multiple <- isTRUE(x$multiple)
+      key <- x$key
 
-      r_result <- reactiveVal(value = NULL)
-      observeEvent(input$i_submit, {
-        r_result(get_exprs("pl_", input, garbage = r_rms_garbage()))
-      })
-
-      # remove namedchar UI on trash click
-      r_rms_previous <- reactiveVal(integer())
-      # store removed elements (since I cannot find a way to 'flush' input after
-      # removing a UI element)
-      r_rms_garbage <- reactiveVal(character())
+      r_n_max <- reactiveVal(0L)
+      # dynamically add aceAutocomplete, aceTooltip for each new row
       observe({
-        rms <- get_rms("pl_", input, garbage = character())
-        rms_previous <- isolate(r_rms_previous())
-        nms_both <- intersect(names(rms), names(rms_previous))
-        to_be_rm <- gsub("_rm$", "", nms_both[rms[nms_both] != rms_previous[nms_both]])
-        if (length(to_be_rm) > 0) {
-          removeUI(paste0("#", ns(to_be_rm)))
-          # make sure it is not read again in the future
-          r_rms_garbage(c(isolate(r_rms_garbage()), to_be_rm))
+        n <- length(r_value())
+        if (n > r_n_max()) {
+          add <- (r_n_max() + 1):n
+          for (i in add) {
+            aceAutocomplete(paste0("pl_", i, "_val"))
+            aceTooltip(paste0("pl_", i, "_val"))
+          }
+          r_n_max(n)
         }
-        r_rms_previous(rms)
+      }) |>
+        bindEvent(r_value())
+
+      # using reactiveVal(), instead of reactive, reduces the number of updates
+      r_value_user <- reactiveVal(NULL)
+      observe({
+        ans <- get_exprs("pl_", input)
+        value <- isolate(r_value())
+
+        # previously used ids are not removed from dom
+        if (length(ans) > length(value)) {
+          idx <- seq_along(value)
+          if (length(idx) > 0) {
+            ans <- ans[idx]
+          }
+        }
+        r_value_user(ans)
       })
 
-      observeEvent(input$i_add, {
-        pl_ints <-
-          names(get_rms("pl_", input, garbage = r_rms_garbage())) |>
-          gsub("_rm$", "", x = _) |>
-          gsub("^pl_", "", x = _) |>
-          as.integer()
+      r_value <- reactiveVal(if (is.null(init()$value)) c(newcol = "") else init()$value)
 
-        if (length(pl_ints) == 0) {
-          # if everything is in garbage
-          last_pl_int <- max(as.integer(gsub("^pl_", "", x = r_rms_garbage())), 0)
-        } else {
-          last_pl_int <- max(pl_ints)
-        }
+      # by user input
+      observe({
+        req(r_value_user())
+        r_value(r_value_user())
+      }) |>
+        bindEvent(r_value_user(), ignoreInit = TRUE)
 
-        next_pl <- paste0("pl_", last_pl_int + 1L)
-        insertUI(
-          paste0("#", ns("pls")),
-          ui = exprs_ui(ns(next_pl)),
-          where = "beforeEnd",
-          session = session
-        )
+      # by add button
+      observe({
+        r_value(c(r_value(), newcol = ""))
+      }) |>
+        bindEvent(input$i_add)
 
-        aceAutocomplete(paste0(next_pl, "_val"))
-        aceTooltip(paste0(next_pl, "_val"))
+      # by remove button
+      r_to_be_removed <- reactive({
+        rms <- get_rms("pl_", input)
+        to_be_rm <- names(rms[rms > 0])
+        if (identical(length(to_be_rm), 0L)) return()
+        ans <- as.integer(gsub("_rm$", "", gsub("^pl_", "", to_be_rm)))
+        ans
+      })
+      observe({
+        req(r_to_be_removed())
+        # keep one expression
+        if (length(r_value()) <= 1) return()
+        r_value(r_value()[-r_to_be_removed()])
+      }) |>
+        bindEvent(r_to_be_removed())
+
+      r_auto_complete_list <- reactive({
+        user_cols <- names(r_value())
+        unique(c(colnames(data()), user_cols))
       })
 
-      r_result # return 'namedchar'
+      observe({
+        if (!identical(r_value(), r_value_user())) {
+          message("redraw")
+          output$kv <- renderUI({
+            # isolate here is needed, despite bindEvent(), for some reason
+            keyvalue_ui(
+              value = isolate(r_value()),
+              multiple = multiple,
+              submit = submit,
+              key = key,
+              auto_complete_list = list(column = isolate(r_auto_complete_list())),
+              ns = ns
+            )
+          })
+        }
+      }) |>
+        bindEvent(r_value())
+
+      if (submit) {
+        r_result <- reactive({
+          r_value()
+        }) |>
+          bindEvent(input$i_submit)
+      } else {
+        r_result <- reactive({
+          r_value()
+        })
+      }
+
+      r_result
     })
   }
 }
@@ -68,41 +116,29 @@ generate_server.keyvalue_field <- function(x, ...) {
 #' @export
 ui_input.keyvalue_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
-  init <- exprs_ui(ns("pl_1"))
-  div(
-    div(
-      id = ns("pls"),
-      init
-    ),
-    div(
-      style = "width: 100%; display: flex; justify-content: flex-end;",
-      div(
-        style = "margin: 0px;",
-        class = "mb-5",
-        actionButton(
-          ns("i_add"),
-          label = NULL,
-          icon = icon("plus"),
-          class = "btn btn-success",
-          style = "margin-right: 7px"
-        ),
-        actionButton(
-          ns("i_submit"),
-          label = "Submit",
-          icon = icon("paper-plane"),
-          class = "btn btn-primary"
-        )
-      )
-    )
+  uiOutput(
+    ns("kv")
   )
 }
 
 #' @rdname new_field
+#' @param submit Should a 'submit button' be shown?
+#' @param key How to display the 'key' field
 #' @export
 new_keyvalue_field <- function(
-    value = numeric(),
+    value = NULL,
+    multiple = TRUE,
+    submit = TRUE,
+    key = c("suggest", "empty", "none"),
     ...) {
-  new_field(value, class = "keyvalue_field")
+  new_field(
+    value,
+    multiple = multiple,
+    submit = submit,
+    key = key,
+    class = "keyvalue_field",
+    ...
+  )
 }
 
 #' @rdname new_field
@@ -117,23 +153,18 @@ validate_field.keyvalue_field <- function(x) {
   x
 }
 
-
-get_input_names <- function(prefix, input, garbage, regex) {
+get_input_names <- function(prefix, input, regex) {
   input_names <- grep(paste0("^", prefix), names(input), value = TRUE)
-  input_names <- grep(regex, input_names, value = TRUE)
-
-  # see comment r_rms_garbage
-  is_garbage <- gsub(regex, "", input_names) %in% garbage
-  input_names[!is_garbage]
+  grep(regex, input_names, value = TRUE)
 }
 
-get_rms <- function(prefix, input, garbage) {
-  input_names <- get_input_names(prefix, input, garbage, "_rm$")
+get_rms <- function(prefix, input) {
+  input_names <- get_input_names(prefix, input, "_rm$")
   vapply(setNames(input_names, input_names), \(x) input[[x]], 0L)
 }
 
-get_exprs <- function(prefix, input, garbage) {
-  input_names <- get_input_names(prefix, input, garbage, "_name$|_val$")
+get_exprs <- function(prefix, input) {
+  input_names <- get_input_names(prefix, input, "_name$|_val$")
   ans <- lapply(setNames(input_names, input_names), \(x) input[[x]])
   vals <- unlist(ans[grepl("_val$", names(ans))])
   names <- unlist(ans[grepl("_name$", names(ans))])
@@ -149,6 +180,9 @@ get_exprs <- function(prefix, input, garbage) {
 #' @param id Character string, an identifier for the UI element.
 #' @param value_name Default name for the new column.
 #' @param value_val Default value for the new column.
+#' @param delete_button Should a delete button be shown?
+#' @param key How to display the 'key' field
+#' @param auto_complete_list auto_complete_list, passed to shinyAce::aceEditor()
 #' @return A `div` element containing the UI components.
 #' @importFrom shinyAce aceEditor aceAutocomplete aceTooltip
 #' @export
@@ -163,7 +197,16 @@ get_exprs <- function(prefix, input, garbage) {
 #'   server = function(input, output) {}
 #' )
 #' }
-exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
+exprs_ui <- function(id = "",
+                     value_name = "newcol",
+                     value_val = NULL,
+                     delete_button = TRUE,
+                     key = c("suggest", "empty", "none"),
+                     auto_complete_list = NULL) {
+
+
+  key <- match.arg(key)
+
   div(
     id = id,
     class = "input-group d-flex justify-content-between mt-1 mb-3",
@@ -174,27 +217,31 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         margin: 10px;
       }
     ")),
-    span(
-      style = "width: 20%",
-      shinyAce::aceEditor(
-        outputId = paste0(id, "_name"),
-        # default value of 1000 may result in no update when clicking 'submit'
-        # too fast.
-        debounce = 300,
-        value = value_name,
-        mode = "r",
-        autoComplete = "disabled",
-        height = "20px",
-        showPrintMargin = FALSE,
-        highlightActiveLine = FALSE,
-        tabSize = 2,
-        theme = "tomorrow",
-        maxLines = 1,
-        fontSize = 14,
-        showLineNumbers = FALSE
+    if (key != "none") {
+      span(
+        style = "width: 20%",
+        shinyAce::aceEditor(
+          outputId = paste0(id, "_name"),
+          # default value of 1000 may result in no update when clicking 'submit'
+          # too fast.
+          debounce = 300,
+          value = value_name,
+          mode = "r",
+          autoComplete = "disabled",
+          height = "20px",
+          showPrintMargin = FALSE,
+          highlightActiveLine = FALSE,
+          tabSize = 2,
+          theme = "tomorrow",
+          maxLines = 1,
+          fontSize = 14,
+          showLineNumbers = FALSE
+        )
       )
-    ),
-    span(class = "input-group-text", icon("equals"), style = "margin: -1px;"),
+    },
+    if (key != "none") {
+      span(class = "input-group-text", icon("equals"), style = "margin: -1px;")
+    },
     span(
       # class = ""
       style = "width: 70%",
@@ -205,7 +252,7 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         mode = "r",
         autoComplete = "live",
         autoCompleters = c("rlang", "static"),
-        autoCompleteList = list(columns = c("demand", "Time")),
+        autoCompleteList = auto_complete_list,
         height = "20px",
         showPrintMargin = FALSE,
         highlightActiveLine = FALSE,
@@ -217,12 +264,86 @@ exprs_ui <- function(id = "", value_name = "newcol", value_val = NULL) {
         # placeholder = "type expression, e.g., `col1 + col2`"
       )
     ),
-    tags$button(
-      id = paste0(id, "_rm"),
-      style = "margin: -1px;",
-      type = "button",
-      class = "btn btn-default action-button",
-      icon("trash-can")
+    if (delete_button) {
+      tags$button(
+        id = paste0(id, "_rm"),
+        style = "margin: -1px;",
+        type = "button",
+        class = "btn btn-default action-button",
+        icon("trash-can")
+      )
+    }
+  )
+}
+
+
+# shinyApp(
+#   ui = bslib::page_fluid(
+#     keyvalue_ui(
+#       value = c(a = "ls()",
+#       b = "ls()"),
+#       multiple = TRUE,
+#       submit = TRUE,
+#       key = "suggest"
+#     )
+#   ),
+#   server = function(input, output) {}
+# )
+keyvalue_ui <- function(value,
+                        multiple,
+                        submit,
+                        key,
+                        auto_complete_list = NULL,
+                        ns = function(x) x) {
+
+  names <- names(value)
+  values <- unname(value)
+  ids <- ns(paste0("pl_", seq(value)))
+
+  core_ui <- tagList(Map(
+    function(name, value, id) {
+      exprs_ui(
+        id,
+        value_name = name,
+        value_val = value,
+        delete_button = multiple,
+        key = key,
+        auto_complete_list = auto_complete_list
+      )
+    },
+    name = names,
+    value = values,
+    id = ids
+  ))
+
+  div(
+    div(
+      id = ns("pls"),
+      core_ui
+    ),
+    div(
+      style = "width: 100%; display: flex; justify-content: flex-end;",
+      div(
+        style = "margin: 0px;",
+        class = "mb-5",
+        if (multiple) {
+          actionButton(
+            ns("i_add"),
+            label = NULL,
+            icon = icon("plus"),
+            class = "btn btn-success",
+            style = if (submit) "margin-right: 7px"
+          )
+        },
+        if (submit) {
+          actionButton(
+            ns("i_submit"),
+            label = "Submit",
+            icon = icon("paper-plane"),
+            class = "btn btn-primary"
+          )
+        }
+      )
     )
   )
 }
