@@ -303,7 +303,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
               where = "afterBegin",
               inject_remove_button(
                 vals$stack[[p]],
-                session$ns
+                session$ns,
+                .hidden = FALSE
               )
             )
           }
