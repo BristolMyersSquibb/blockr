@@ -43,9 +43,9 @@ note_box(
 
 With `{ggplot2}`, plots are built __layer__ by __layer__. It all starts with
 `ggplot()` which initialises the ggplot object passing optional data and mappings.
-Then, we add __geoms__, like `geom_point()`. Geoms also accept custom mappings (in case not mapping is 
-passed through the first `ggplot()` call), data as well as other parameters.
-At the end of the day, there are many ways to build a ggplot:
+Then, we add __geoms__, like `geom_point()`. Geoms also accept custom __mappings__ (overwrite mappings
+passed to the first `ggplot()` call), data, as well as other parameters.
+As a result, there are many ways to build a ggplot:
 
 ```r
 # 1
@@ -62,14 +62,13 @@ ggplot() +
   geom_point(data = <DATA>, mapping = <MAPPING>)
 ```
 
-That said, even if we pass data and mappings to `ggplot()`, we can still overwrite them in
-subsequent calls to `geom_*()` functions. Therefore, we'll go for the first option.
+In this tutorial, we go for the first option.
 
 ### To do list
 
 What do we need to create?
 
-It seems obvious to add a new `ggplot_block()` __constructor__. On the Shiny side, we have to handle the 
+It seems obvious to add new `ggplot_block()` and geom __constructors__. On the Shiny side, we have to handle the 
 plot output element. Remember that the `server_output()` __generic__ is defined in the `{blockr}`
 `server.R` script. It supports tables with `server_output.block()` and plots with `server_output.plot_block()`.
 Therefore, we don't need to create another S3 method and have to make sure our new plot block inherits
@@ -79,7 +78,7 @@ we'll have to generate the plot layer by layer, where each layer is a block.
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
   "Notice that the current {blockr} plot_block isn't built layer by layer but as a huge monolitic structure", #nolint
-  "which is certainly less flexible.",
+  "which is certainly less flexible than what we show here.",
   color = "primary"
 )
 ```
@@ -89,14 +88,14 @@ note_box(
 To create a new block, we call the `new_block()` constructor. It expects:
 
 - __fields__: a list of field, which are translated into shiny inputs.
-- __expr__: the expression return by the block, necessary to produce an output and export the code.
-- __name__: a name (randomely choosen), you don't need to worry about this).
+- __expr__: the expression returned by the block, necessary to produce an output and export the code.
+- __name__: a name (randomly choosen, you don't need to worry about this).
 - __class__: a class to dispatch to the relevant S3 methods.
 - __layout__: an optional layout (default to `default_layout_fields()`).
 
 Our block will have `c("ggplot_block", "plot_block")` as classes, some fields to pass mappings and we
 leave the layout to the default choice. Note that the mapping field depends on the provided data. 
-To stay simple, we assume to only handle `x` and `y` aesthetics.
+To stay simple, we assume to only handle `x` and `y` __aesthetics__.
 
 ```{r}
 new_ggplot_block <- function(data, ...) {
@@ -115,9 +114,10 @@ ggplot_block <- function(data, ...) {
 }
 ```
 
-We finally end with `new_ggplot_block` (internal constructor) and 
-`ggplot_block` (user facing constructor). The next step is to create the mappings fields with 
-2 `select_field()`. We define the `data_cols` helper:
+We finally end with `new_ggplot_block`, the internal constructor and 
+`ggplot_block`, the user facing constructor. The next step is to create the mappings fields with 
+two `new_select_field()`. Those fields are converted into shiny inputs, specifically `selectInput()`.
+To set the field choices which depend on the data, we define the `data_cols` helper:
 
 ```r
 data_cols <- function(data) colnames(data)
@@ -142,10 +142,9 @@ new_ggplot_block <- function(data, ...) {
 }
 ```
 
-It is now time to produce the expression, which is certainly the most technical part as it involves a bit of metaprogramming. 
+Producing the expression, which is certainly the most "technical" part, as it involves a bit of __metaprogramming__. 
 The expression must not be evaluated in the block, that's why it is wrapped in a `quote()`. 
 `{blockr}` is then able to generate the expression with `generate_code()` and evaluate it with `evaluate_block()`.
-
 
 Our ggplot expression can be written as:
 
@@ -157,8 +156,7 @@ In the above expression, you may notice `.()`, which is actually required by `ge
 by `.()` with variables from the environment. It makes it easier to use than `substitute()`, since we explicitly mark what we want to
 evaluate.
 
-We need to create a specific field which contains the expression with `new_hidden_field`, which won't be visible
-to the user. All combined together, this eventually yields:
+All combined together, this eventually yields:
 
 ```r
 new_ggplot_block <- function(data, ...) {
@@ -179,10 +177,27 @@ new_ggplot_block <- function(data, ...) {
 }
 ```
 
+As you can, see the code base is reasonable.
+
 ### Create a geom block
 
 Now that we have a valid `ggplot_block`, we want to add it a geometry. The easiest one is `geom_point()`.
-We initialise the geom block:
+To keep the vignette as simple as possible, we only handle one option, namely the point color. We
+host this information in a `new_select_field()`, for instance:
+
+```r
+new_select_field("blue", c("blue", "green", "red"))
+```
+
+The expression is straightforward to get:
+
+```r
+geom_point(color = .(color)) # Don't forget to wrap it with quote(...).
+```
+
+Importantly, since we use `.(color)`, the field name must be __color__.
+
+This finally gives us:
 
 ```r
 new_geompoint_block <- function(data, mappings, ...) {
@@ -206,3 +221,13 @@ geompoint_block <- function(data, ...) {
 
 Note the class `plot_layer_block`. This is necessary to invoke the right `evaluate_block` 
 method (to use `+` instead of `%>%`).
+
+
+### Try it
+
+We can try it on some data:
+
+```r
+stack <- new_stack(data_block, ggplot_block, geompoint_block)
+serve_stack(stack)
+```

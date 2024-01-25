@@ -31,7 +31,9 @@
 \alias{new_summarize_block}
 \alias{summarize_block}
 \alias{select_block}
+\alias{new_arrange_block}
 \alias{arrange_block}
+\alias{new_group_by_block}
 \alias{group_by_block}
 \alias{new_join_block}
 \alias{join_block}
@@ -145,7 +147,11 @@ summarize_block(data, ...)
 
 select_block(data, ...)
 
+new_arrange_block(data, columns = colnames(data)[1], ...)
+
 arrange_block(data, ...)
+
+new_group_by_block(data, columns = colnames(data)[1], ...)
 
 group_by_block(data, ...)
 

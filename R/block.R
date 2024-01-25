@@ -93,11 +93,13 @@ generate_code.block <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.arrange_block <- function(x) {
+  where <- lapply(x, type_trans)
+
   do.call(
     bquote,
     list(
       attr(x, "expr"),
-      where = lapply(x, type_trans),
+      where = lapply(where, as.list),
       splice = TRUE
     )
   )
@@ -551,15 +553,52 @@ select_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
+new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Type as name for arrange and group_by
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(dplyr::arrange(..(columns))),
+    ...,
+    class = c("arrange_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
 arrange_block <- function(data, ...) {
-  # Arrange is close to select so we can use its init functuib
-  convert_block(to = arrange, data = data, ...)
+  initialize_block(new_arrange_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Select_field only allow one value, not multi select
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(
+      dplyr::group_by(..(columns))
+    ),
+    ...,
+    class = c("group_by_block", "transform_block")
+  )
 }
 
 #' @rdname new_block
 #' @export
 group_by_block <- function(data, ...) {
-  convert_block(to = group_by, data = data, ...)
+  initialize_block(new_group_by_block(data, ...), data)
 }
 
 #' @rdname new_block
