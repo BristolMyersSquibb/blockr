@@ -186,7 +186,13 @@ the field holds and can be used to customize how the UI is generated.</p>
 <span><span class="co"># S3 method for list_field</span></span>
 <span><span class="fu">validate_field</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_keyvalue_field</span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">new_keyvalue_field</span><span class="op">(</span></span>
+<span>  value <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  multiple <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  submit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"suggest"</span>, <span class="st">"empty"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">keyvalue_field</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -267,6 +273,14 @@ feature. Default to FALSE. Not yet used.</p></dd>
 
 <dt>sub_fields</dt>
 <dd><p>Fields contained in <code>list_field</code></p></dd>
+
+
+<dt>submit</dt>
+<dd><p>Should a 'submit button' be shown?</p></dd>
+
+
+<dt>key</dt>
+<dd><p>How to display the 'key' field</p></dd>
 
 </dl></div>
 
