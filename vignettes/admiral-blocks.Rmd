@@ -1,0 +1,117 @@
+---
+title: "2. Transform Block for Admiral"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Transform Block for Admiral}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(blockr)
+library(bslib)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
+```
+
+## Introduction
+
+Many R functions can be wrapped into a __transform__ block to provide a starting point for block creation. The R package admiral contains numerous functions that can be integrated into blockr.
+
+Admiral is an R package designed to facilitate the analysis and reporting of clinical trial data. It offers a suite of functions and tools specifically tailored for creating standardized analysis datasets and tables, ensuring compliance with regulatory standards and streamlining the data analysis process in clinical research.
+
+The following provides a step-by-step guide to wrap an admiral function into a __transform__ block.
+
+Blocks are modular code segments that wrap existing R functions for interactive use in the blockr system. This is a step-by-step guide to create a block using `admiral_dpc_block` as an example.
+
+### 1. Understanding the Function to Wrap
+
+The objective here is to comprehend the function you wish to encapsulate within a block. For this example, we will use the `derive_param_computed` function from `admiral`. To provide a simple example, we use it with the built-in dataset from R, `BOD`.
+
+```{r}
+library(admiral)
+library(dplyr)
+BOD |>
+  mutate(PARAMCD = as.character(seq_len(n()))) |>
+  derive_param_computed(
+    by_vars = exprs(Time),
+    parameters = c("4", "5"),
+    set_values_to = exprs(
+      demand = demand * 2,
+      PARAMCD = "17"
+    )
+  )
+```
+
+Note that the function requires a column named `PARAMCD` to be present in the data. In blockr, we can use the mutate block to create such a column.
+
+### 2. Block Creator Function
+
+Now, we want to define the block function in a block creator function, which we call `new_admiral_dpc_block()`:
+
+```r
+new_admiral_dpc_block <- function() {
+  # 0. helper functions
+
+  # 1. main expression
+
+  # 2. functions for derived inputs
+
+  # 3. fields
+
+  # 4. block creation
+}
+```
+As stated in the skeleton, the block creator function contains 5 steps, which we will discuss in turn.
+
+#### Helper functions
+
+Utilities to assist with the parsing of expressions. This is still experimental and may lead to properly predefined helper functions within blockr. We will not discuss these further.
+
+#### Main expression
+
+This is one of the most important pieces of the code. The expression generating function combines user input into an R _expression_, which will be evaluated in the UI. The R function `bquote()` performs most of the magic by injecting expression pieces into a main expression.
+
+#### Functions for Derived Inputs (optional)
+
+Optionally, inputs can be functions that use 'data' or other fields, which will be evaluated in the UI (this currently doesn't work for 'keyvalue_field'). In our example, one function returns the values in the `PARAMCD` column (if present), and the other returns all columns in the data. These functions will be used as inputs in the next step.
+
+#### Fields
+
+Fields are the centerpiece of blockr blocks. They define the look and feel of the user input.
+It is up to block authors to decide which UI elements are suitable for each argument. In the example, we use two select inputs and one key-value field. The key-value field can be used to collect multiple key-value expressions. In these expressions, any R code can be entered by the user.
+
+Fields can optionally contain a title and a description. This information will be shown in the UI to the user.
+
+#### Block creation
+
+Finally, block creation is done with a call to `new_block()`. This is usually left unchanged. In addition, we use a wrapper function, `admiral_dpc_block`, to initialize and make the block available for blockr.
+
+### 3. Try Out in blockr
+
+Create a minimal stack to run a workable example. Since our example involves a mutate statement, we will also use the included `mutate_block`:
+
+```R
+options(BLOCKR_DEV = TRUE)
+library(blockr)
+library(blockr.extra)
+stack <- new_stack(data_block, mutate_block, admiral_dpc_block)
+serve_stack(stack)
+```
+
+
