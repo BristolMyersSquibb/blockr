@@ -79,8 +79,8 @@ const editor = (stack) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
 
-    $(event.currentTarget).toggleClass("etidable");
-    const editable = $(event.currentTarget).hasClass("etidable");
+    $(event.currentTarget).toggleClass("editable");
+    const editable = $(event.currentTarget).hasClass("editable");
 
     $blocks.each((index, block) => {
       const $block = $(block);
