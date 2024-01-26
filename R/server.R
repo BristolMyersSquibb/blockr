@@ -171,9 +171,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       }
 
       if (display == "plot") {
-        output$plot <- if (attr(x, "show_output")) {
-          server_output(x, out_dat, output)
-        }
+        output$plot <- server_output(x, out_dat, output)
       } else {
         output$res <- server_output(x, out_dat, output)
       }

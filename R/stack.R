@@ -27,19 +27,6 @@ new_stack <- function(..., title = "Stack") {
     )
   }
 
-  for (i in seq_along(ctors)) {
-    # To prevent ggplot block from rendering intermediate layers as shiny outputs
-    attr(blocks[[i]], "show_output") <- if (i < length(ctors)) {
-      if (i == 1) {
-        TRUE
-      } else {
-        if (inherits(blocks[[i + 1]], "plot_block")) FALSE else TRUE
-      }
-    } else {
-      TRUE
-    }
-  }
-
   stopifnot(
     is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
   )

@@ -72,8 +72,7 @@ new_block(
   name = rand_names(),
   ...,
   class = character(),
-  layout = default_layout_fields,
-  show_output = TRUE
+  layout = default_layout_fields
 )
 
 is_block(x)
@@ -250,10 +249,6 @@ of the fields)}
 
 \item{layout}{Callback function accepting one argument:
 the list of fields to layout and returns one or more UI tag(s).}
-
-\item{show_output}{Whether the block shows its output in the interface.
-This is useful for building plots block by block and only render the last plot block.
-All previous plot block don't render their output. The logic is handled by the stack.}
 
 \item{x}{An object inheriting form \code{"block"}}
 
