@@ -2,7 +2,10 @@ devtools::load_all()
 library(blockr.data)
 library(shiny)
 
-stack <- new_stack(data_block)
+stack <- new_stack(
+  data_block,
+  select_block
+)
 
 ui <- fluidPage(
   theme = bslib::bs_theme(5L),

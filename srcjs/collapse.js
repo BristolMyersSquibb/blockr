@@ -42,9 +42,9 @@ export const toggleOutputInput = (stack) => {
         const $block = $(event.target).closest(".block");
 
         const outputVisible = $block.find(".block-output").is(":visible");
-        const inputVisible = $block.find(".block-input").is(":visible");
+        const inputVisible = $block.find(".block-inputs").is(":visible");
 
-        const toggle = outputVisible || inputVisible;
+        let toggle = outputVisible || inputVisible;
 
         if (toggle) {
           $block.find(".block-inputs").addClass("d-none");
@@ -89,6 +89,9 @@ const editor = (stack) => {
         $block.removeClass("d-none");
         $block.find(".block-title").removeClass("d-none");
 
+        $block.find(".block-code-toggle").removeClass("d-none");
+        $block.find(".block-output-toggle").removeClass("d-none");
+
         if (index == $blocks.length - 1) {
           $block.find(".block-output").addClass("show");
           $block.find(".block-output").removeClass("d-none");
@@ -108,6 +111,9 @@ const editor = (stack) => {
         $block.find(".block-loading").addClass("d-none");
         return;
       }
+
+      $block.find(".block-code-toggle").addClass("d-none");
+      $block.find(".block-output-toggle").addClass("d-none");
 
       $block.find(".block-title").addClass("d-none");
       if (index == $blocks.length - 1) {
@@ -147,6 +153,10 @@ export const showLastOutput = (el) => {
   $lastTitle.addClass("d-none");
   $lastOutput.removeClass("d-none");
   $lastOutput.trigger("shown");
+
+  // hide togglers
+  $block.find(".block-code-toggle").addClass("d-none");
+  $block.find(".block-output-toggle").addClass("d-none");
 
   // we have a loading state
   // because some block validations have no last output
