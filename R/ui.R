@@ -133,6 +133,7 @@ block_header.block <- function(x, ns, hidden_class, ...) {
       div(
         class = "flex-grow-1",
         p(
+          block_icon(x),
           title,
           class = "fw-bold m-0"
         )
@@ -760,4 +761,42 @@ iconOutput <- function() {
 #' @importFrom shiny icon
 iconTrash <- function() {
   icon("trash")
+}
+
+block_icon <- function(x, ...) UseMethod("block_icon", x)
+
+#' @export
+block_icon.default <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Block",
+    icon("cube")
+  )
+}
+
+#' @export
+block_icon.data_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Data block",
+    icon("table")
+  )
+}
+
+#' @export
+block_icon.transform_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Transform block",
+    icon("shuffle")
+  )
+}
+
+#' @export
+block_icon.plot_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Plot block",
+    icon("chart-bar")
+  )
 }
