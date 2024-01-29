@@ -13,6 +13,7 @@
 \alias{generate_code.transform_block}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
+\alias{evaluate_block.csv_parser_block}
 \alias{evaluate_block.transform_block}
 \alias{evaluate_block.plot_block}
 \alias{evaluate_block.ggiraph_block}
@@ -22,6 +23,8 @@
 \alias{upload_block}
 \alias{new_filesbrowser_block}
 \alias{filesbrowser_block}
+\alias{new_csv_parser_block}
+\alias{csv_parser_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -91,6 +94,8 @@ evaluate_block(x, ...)
 
 \method{evaluate_block}{data_block}(x, ...)
 
+\method{evaluate_block}{csv_parser_block}(x, data, ...)
+
 \method{evaluate_block}{transform_block}(x, data, ...)
 
 \method{evaluate_block}{plot_block}(x, data, ...)
@@ -112,6 +117,10 @@ upload_block(...)
 new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
+
+new_csv_parser_block(data, ...)
+
+csv_parser_block(data, ...)
 
 \method{initialize_block}{data_block}(x, ...)
 

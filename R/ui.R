@@ -713,6 +713,12 @@ uiOutputBlock.block <- function(x, ns) {
 
 #' @rdname generate_ui
 #' @export
+uiOutputBlock.upload_block <- function(x, ns) {
+  shiny::verbatimTextOutput(ns("res"))
+}
+
+#' @rdname generate_ui
+#' @export
 uiOutputBlock.plot_block <- function(x, ns) {
   shiny::plotOutput(ns("plot"))
 }

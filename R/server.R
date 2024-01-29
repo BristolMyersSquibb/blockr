@@ -27,6 +27,7 @@ update_blk <- function(b, value, is_srv, input, data) {
         list(data = data),
         value[-which(names(value) == field)]
       )
+      browser()
       b[[field]] <- update_field(b[[field]], value[[field]], env)
       if (identical(input[[field]], value(b[[field]]))) next
     }
@@ -629,6 +630,12 @@ server_output.block <- function(x, result, output) {
 
 #' @rdname generate_ui
 #' @export
+server_output.upload_block <- function(x, result, output) {
+  shiny::renderPrint(result())
+}
+
+#' @rdname generate_ui
+#' @export
 server_output.plot_block <- function(x, result, output) {
   shiny::renderPlot(result())
 }
@@ -652,4 +659,17 @@ server_code.block <- function(x, state, output) {
   shiny::renderPrint(
     cat(deparse(generate_code(state())), sep = "\n")
   )
+}
+
+#' @rdname generate_ui
+#' @export
+server_code.upload_block <- function(x, state, output) {
+  shiny::renderPrint({
+    res <- generate_code(state())
+    if (length(res) == 0) {
+      cat(deparse(res), sep = "\n")
+    } else {
+      cat(deparse(res$datapath), sep = "\n")
+    }
+  })
 }

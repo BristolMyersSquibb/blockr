@@ -124,6 +124,14 @@ evaluate_block.data_block <- function(x, ...) {
   eval(generate_code(x), new.env())
 }
 
+#' @rdname new_block
+#' @export
+evaluate_block.csv_parser_block <- function(x, data, ...) {
+  stopifnot(...length() == 0L)
+  if (length(data) == 0 || !file.exists(data$datapath)) return(data.frame())
+  eval(generate_code(x), list(data = data$datapath))
+}
+
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
@@ -194,25 +202,11 @@ data_block <- function(...) {
 #' @rdname new_block
 #' @export
 new_upload_block <- function(...) {
-
-  read_data <- function(dat) {
-    if (length(dat) == 0) {
-      return(data.frame())
-    }
-
-    data_func <- utils::read.csv # TO DO switch
-    bquote(
-      .(read_func)(.(path)),
-      list(read_func = data_func, path = dat$datapath)
-    )
-  }
-
   new_block(
     fields = list(
-      dat = new_upload_field(),
-      expression = new_hidden_field(read_data)
+      dat = new_upload_field()
     ),
-    expr = quote(.(expression)),
+    expr = quote(.(dat)),
     ...,
     class = c("upload_block", "data_block")
   )
@@ -258,6 +252,34 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 #' @export
 filesbrowser_block <- function(...) {
   initialize_block(new_filesbrowser_block(...))
+}
+
+#' @rdname new_block
+#' @export
+new_csv_parser_block <- function(data, ...) {
+
+  val <- function(data) {
+    if (length(data) == 0) {
+      character()
+    } else {
+      data$datapath
+    }
+  }
+
+  new_block(
+    # readonly field, just to remind the user about the data path
+    # in case the previous data block is collapsed.
+    fields = list(data_path = new_string_field(val)),
+    expr = quote(utils::read.csv(.(data_path))),
+    ...,
+    class = c("csv_parser_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+csv_parser_block <- function(data, ...) {
+  initialize_block(new_csv_parser_block(data, ...), data)
 }
 
 #' @rdname new_block
