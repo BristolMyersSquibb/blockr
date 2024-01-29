@@ -27,7 +27,6 @@ update_blk <- function(b, value, is_srv, input, data) {
         list(data = data),
         value[-which(names(value) == field)]
       )
-      browser()
       b[[field]] <- update_field(b[[field]], value[[field]], env)
       if (identical(input[[field]], value(b[[field]]))) next
     }
