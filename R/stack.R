@@ -49,7 +49,7 @@ generate_code.stack <- function(x) {
   # Handles monoblock stacks
   if (length(x) > 1) {
     aggregate_code <- function(x, y) {
-      block_combiner(x = y, y = x)
+      block_combiner(x, y)
     }
     Reduce(aggregate_code, lapply(x, \(b) b))
   } else {
@@ -62,24 +62,21 @@ generate_code.stack <- function(x) {
 #' Useful for \link{generate_code}.
 #'
 #' @rdname block_combiner
-#' @param x Block object.
+#' @param left Left block object in `x %>% y`.
+#' @param right Right block object in `x %>% y`.
+#'
 #' @param ... For generic consistency.
 #' @export
-block_combiner <- function(x, ...) UseMethod("block_combiner", x)
+block_combiner <- function(left, right, ...) UseMethod("block_combiner", right)
 
 #' @rdname block_combiner
-#' @param y Block object.
 #' @export
-block_combiner.transform_block <- function(x, y, ...) {
+block_combiner.transform_block <- function(left, right, ...) {
   substitute(
-    y %>% x,
-    list(x = generate_code(x), y = generate_code(y))
+    left %>% right,
+    list(left = generate_code(left), right = generate_code(right))
   )
 }
-
-#' @rdname block_combiner
-#' @export
-block_combiner.data_block <- block_combiner.transform_block
 
 #' @rdname block_combiner
 #' @export
@@ -87,10 +84,10 @@ block_combiner.plot_block <- block_combiner.transform_block
 
 #' @rdname block_combiner
 #' @export
-block_combiner.plot_layer_block <- function(x, y, ...) {
+block_combiner.plot_layer_block <- function(left, right, ...) {
   substitute(
-    y + x,
-    list(x = generate_code(x), y = generate_code(y))
+    left + right,
+    list(left = generate_code(left), right = generate_code(right))
   )
 }
 

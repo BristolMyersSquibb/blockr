@@ -3,27 +3,24 @@
 \name{block_combiner}
 \alias{block_combiner}
 \alias{block_combiner.transform_block}
-\alias{block_combiner.data_block}
 \alias{block_combiner.plot_block}
 \alias{block_combiner.plot_layer_block}
 \title{Combine 2 block expressions}
 \usage{
-block_combiner(x, ...)
+block_combiner(left, right, ...)
 
-\method{block_combiner}{transform_block}(x, y, ...)
+\method{block_combiner}{transform_block}(left, right, ...)
 
-\method{block_combiner}{data_block}(x, y, ...)
+\method{block_combiner}{plot_block}(left, right, ...)
 
-\method{block_combiner}{plot_block}(x, y, ...)
-
-\method{block_combiner}{plot_layer_block}(x, y, ...)
+\method{block_combiner}{plot_layer_block}(left, right, ...)
 }
 \arguments{
-\item{x}{Block object.}
+\item{left}{Left block object in \code{x \%>\% y}.}
+
+\item{right}{Right block object in \code{x \%>\% y}.}
 
 \item{...}{For generic consistency.}
-
-\item{y}{Block object.}
 }
 \description{
 Useful for \link{generate_code}.

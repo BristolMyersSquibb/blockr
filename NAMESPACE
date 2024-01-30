@@ -2,7 +2,6 @@
 
 S3method(block_body,block)
 S3method(block_code,block)
-S3method(block_combiner,data_block)
 S3method(block_combiner,plot_block)
 S3method(block_combiner,plot_layer_block)
 S3method(block_combiner,transform_block)
