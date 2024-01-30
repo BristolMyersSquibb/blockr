@@ -129,24 +129,22 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
         message(sprintf("Updating UI of block %s", class(x)[[1]]))
       }) |>
-        bindEvent(r_values(), in_dat(), ignoreInit = TRUE)
-
-      obs$print_error <- observeEvent(is_valid$error, {
-        create_modal(is_valid$error)
-      })
+        bindEvent(r_values(), in_dat())
 
       # Validate block inputs
-      obs$validate_inputs <- observeEvent(r_values(), {
-        message(sprintf("Validating block %s", class(x)[[1]]))
-        blk_no_srv <- blk()
-        blk_no_srv[is_srv] <- NULL    # to keep class etc
-        validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
+      if (display != "plot") {
+        obs$validate_inputs <- observeEvent(r_values(), {
+          message(sprintf("Validating block %s", class(x)[[1]]))
+          blk_no_srv <- blk()
+          blk_no_srv[is_srv] <- NULL    # to keep class etc
+          validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
 
-        # Block will have a red border if any nested input is invalid
-        # since blocks can be collapsed and people won't see the input
-        # elements.
-        validate_block(blk(), is_valid, session)
-      })
+          # Block will have a red border if any nested input is invalid
+          # since blocks can be collapsed and people won't see the input
+          # elements.
+          validate_block(blk(), is_valid, session)
+        })
+      }
 
       # For submit blocks like filter, summarise,
       # join that can have computationally intense tasks
@@ -214,6 +212,10 @@ generate_server.data_block <- function(x, id, ...) {
   generate_server_block(x = x, in_dat = NULL, id = id)
 }
 
+#' @rdname generate_server
+#' @export
+generate_server.upload_block <- generate_server.data_block
+
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
@@ -236,9 +238,9 @@ generate_server.ggiraph_block <- generate_server.plot_block
 
 #' @rdname generate_server
 #' @param id Unique module id. Useful when the stack is called as a module.
-#' @param new_blocks For dynamically inserted blocks.
+#' @param new_block For dynamically inserted blocks.
 #' @export
-generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
+generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
   stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
@@ -250,18 +252,19 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
         stack = x,
         blocks = vector("list", length(x))
       )
-      init_blocks(x, vals, session)
+
+      init(x, vals, session)
 
       # Add new block
       observeEvent(
         {
-          req(new_blocks)
-          new_blocks()
+          req(new_block)
+          new_block()
         },
         {
           # Update stack
-          block_to_add <- new_blocks()$block
-          position <- new_blocks()$position
+          block_to_add <- new_block()$block
+          position <- new_block()$position
 
           vals$stack <- add_block(vals$stack, block_to_add, position)
 
@@ -286,8 +289,8 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
               ),
               where = "afterEnd",
               inject_remove_button(
-                session$ns,
                 vals$stack[[p]],
+                session$ns,
                 .hidden = FALSE
               )
             )
@@ -299,15 +302,15 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
               ),
               where = "afterBegin",
               inject_remove_button(
-                session$ns,
                 vals$stack[[p]],
+                session$ns,
                 .hidden = FALSE
               )
             )
           }
 
           # Dynamically handle remove block event
-          handle_remove_block(vals$stack[[p]], vals)
+          handle_remove(vals$stack[[p]], vals)
 
           # trigger javascript-ui functionalities on add
           session$sendCustomMessage(
@@ -349,28 +352,28 @@ generate_server.stack <- function(x, id = NULL, new_blocks = NULL, ...) {
 }
 
 
-#' Handle block generic
+#' Remove stack/block generic
 #'
-#' Generic for block removal
+#' Generic for stack/block removal
 #'
-#' @param x Block element.
+#' @param x Element.
 #' @param ... Generic consistency.
 #'
 #' @export
 #' @rdname generate_server
-handle_remove_block <- function(x, ...) {
-  UseMethod("handle_remove_block")
+handle_remove <- function(x, ...) {
+  UseMethod("handle_remove")
 }
 
 #' Attach an observeEvent to the given block
 #'
 #' Necessary to be able to remove the block from the stack.
 #'
-#' @param vals Internal stack reactive values.
+#' @param vals Internal reactive values.
 #' @param session Shiny session object.
 #' @export
 #' @rdname generate_server
-handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomain(), ...) {
+handle_remove.block <- function(x, vals, session = getDefaultReactiveDomain(), ...) {
   input <- session$input
   id <- attr(x, "name")
   observeEvent({
@@ -399,9 +402,180 @@ handle_remove_block.block <- function(x, vals, session = getDefaultReactiveDomai
   })
 }
 
-#' Init blocks server
+#' Attach an observeEvent to the given stack
+#'
+#' Necessary to be able to remove the stack from the workspace.
+#'
+#' @param vals Internal reactive values.
+#' @param session Shiny session object.
+#' @export
+#' @rdname generate_server
+handle_remove.stack <- function(x, vals, session = getDefaultReactiveDomain(), ...) {
+  input <- session$input
+  id <- attr(x, "name")
+  observeEvent({
+    input[[sprintf("remove-stack-%s", id)]]
+  }, {
+    # We can't remove the data block if there are downstream consumers...
+    stacks <- get_workspace_stacks()
+    to_remove <- which(chr_ply(stacks, \(x) attr(x, "name")) == id)
+    message(sprintf("REMOVING STACK %s", to_remove))
+    # Remove UI is done from JS
+    # TO DO: this isn't very consistent with what we have for blocks
+    # Remove stack UI is handled on the JS side and not on the R side.
+    # To be consistent and align between block and stacks we should choose
+    # only 1 way to remove elements.
+    vals$stacks[[to_remove]] <- NULL
+    rm_workspace_stack(names(stacks)[[to_remove]])
+  })
+}
+
+#' @rdname generate_server
+#' @param id Unique module id. Useful when the workspace is called as a module.
+#' @export
+generate_server.workspace <- function(x, id = NULL, ...) {
+  stopifnot(...length() == 0L)
+
+  id <- if (is.null(id)) attr(x, "name") else id
+
+  moduleServer(
+    id = id,
+    function(input, output, session) {
+      vals <- reactiveValues(stacks = list(), new_block = list(), save = list())
+
+      output$n_stacks <- renderText(length(vals$stacks))
+
+      # Init existing stack modules
+      init(x, get_workspace_stacks(), vals, session)
+
+      # Standalone: when called from our generate_server.workspace
+
+      # Add stack
+      observeEvent(input$add_stack, {
+        message("ADD STACK")
+        add_workpace_stack(
+          sprintf("stack-%s", length(vals$stacks) + 1),
+          new_stack(data_block)
+        )
+
+        stacks <- get_workspace_stacks()
+        el <- stacks[[length(stacks)]]
+
+        stack_ui <- inject_remove_button(
+          el,
+          session$ns
+        )
+
+        insertUI(
+          selector = if (length(vals$stacks) == 0) {
+            ".workspace"
+          } else {
+            ".stacks"
+          },
+          ui = if (length(vals$stacks) == 0) {
+            div(
+              class = "row stacks",
+              stack_ui
+            )
+          } else {
+            stack_ui
+          }
+        )
+
+        # Handle remove for newly added stacks
+        handle_remove(el, vals)
+
+        # Invoke server
+        vals$stacks[[length(stacks)]] <- generate_server(
+          el,
+          id = attr(el, "name"),
+          new_block = reactive(vals$new_block[[attr(el, "name")]])
+        )
+
+        # Handle new block injection
+        inject_block(input, vals, id = attr(el, "name"))
+      })
+
+      # Clear all stacks
+      observeEvent(input$clear_stacks, {
+        clear_workspace_stacks()
+        vals$stacks <- NULL
+        removeUI(".stacks")
+      })
+
+      # Serialize
+      observeEvent(input$serialize, {
+        vals$save <- blockr_serialize(x)
+      })
+
+      observeEvent(input$restore, {
+        browser()
+        do.call(set_workspace, args = blockr_deserialize(vals$save))
+        init(x, get_workspace_stacks(), vals, session)
+      })
+    }
+  )
+}
+
+#' Generic for server initialisation
+#'
+#' Handle initialisation of workspace, stacks, ...
+#'
+#' @param x Element.
+#' @param ... Generic consistency.
+#'
+#' @export
+#' @rdname generate_server
+init <- function(x, ...) {
+  UseMethod("init")
+}
+
+#' Init stacks server
+#'
+#' @param stacks List of workspace stacks.
+#' @export
+#' @rdname generate_server
+init.workspace <- function(x, stacks, vals, session, ...) {
+  input <- session$input
+
+  observeEvent(TRUE, {
+    lapply(seq_along(stacks), \(i) {
+      id <- attr(stacks[[i]], "name")
+      vals$stacks[[i]] <- generate_server(
+        stacks[[i]],
+        id = id,
+        new_block = reactive(vals$new_block[[id]])
+      )
+      handle_remove(stacks[[i]], vals)
+
+      # To dynamically insert blocks
+      inject_block(input, vals, id)
+    })
+  })
+}
+
+#' Inject block into stack
+#'
+#' Called by workspace.
+#'
 #' @keywords internal
-init_blocks <- function(x, vals, session) {
+inject_block <- function(input, vals, id) {
+  observeEvent(input[[sprintf("%s-add", id)]], {
+    # Reset to avoid re-adding existing blocks to stacks
+    vals$new_block <- NULL
+    block <- available_blocks()[[input[[sprintf("%s-selected_block", id)]]]]
+    # add_block expect the current stack, the block to add and its position
+    # (NULL is fine for the position, in that case the block will
+    # go at the end)
+    vals$new_block[[id]] <- list(block = block)
+  })
+}
+
+#' Init blocks server
+#'
+#' @export
+#' @rdname generate_server
+init.stack <- function(x, vals, session, ...) {
   observeEvent(TRUE, {
     for (i in seq_along(x)) {
       vals$blocks[[i]] <- init_block(i, vals, session)
@@ -410,12 +584,12 @@ init_blocks <- function(x, vals, session) {
   # Remove block from stack (can't be done within the block)
   # This works for extisting blocks. Newly added blocks need
   # to be handled separately.
-  lapply(x, handle_remove_block, vals = vals)
+  lapply(x, handle_remove, vals = vals)
 }
 
 #' Init a single block
 #'
-#' Useful for \link{init_blocks} but also
+#' Useful for init.blocks but also
 #' to be called after \link{add_block}.
 #'
 #' @param i Block position
@@ -434,18 +608,7 @@ init_block <- function(i, vals, session) {
       # Data from previous block
       vals$blocks[[i - 1]]
     },
-    id = id,
-    remove = reactive(session$input[[sprintf("remove-block-%s", id)]])
-  )
-}
-
-#' Cleanup module inputs
-#' @keywords internal
-remove_shiny_inputs <- function(id, .input) {
-  invisible(
-    lapply(grep(id, names(.input), value = TRUE), function(i) {
-      .subset2(.input, "impl")$.values$remove(i)
-    })
+    id = id
   )
 }
 

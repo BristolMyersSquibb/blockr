@@ -37,7 +37,8 @@ Imports:
     ggiraph,
     shinyAce,
     jsonlite,
-    constructive
+    constructive,
+    shinyFiles
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui,
@@ -49,6 +50,7 @@ Suggests:
     testthat (>= 3.0.0),
     shinytest2,
     pkgload,
-    withr
+    withr,
+    htmlwidgets
 Config/testthat/edition: 3
 VignetteBuilder: knitr

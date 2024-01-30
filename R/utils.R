@@ -264,19 +264,17 @@ create_modal <- function(...) {
 #' tryCatch wrapper.
 #'
 #' @param expr Expression to evaluate.
-#' @param is_valid Block valid status.
 #'
 #' @return Result or error message.
 #'
 #' @keywords internal
-secure <- function(expr, is_valid) {
+secure <- function(expr) {
   tryCatch(
     {
       expr
     },
     error = function(e) {
-      is_valid$error <- "An error occured within a block, please inspect the
-      red border block(s) and fix the issue(s)."
+      cat(e$message)
     }
   )
 }
@@ -386,4 +384,37 @@ has_method <- function(x, generic) {
   mts1 <- gsub(paste0("^", generic, "\\."), "", as.character(mts0))
   mts <- gsub(paste0("*$"), "", mts1)
   any(class(x) %in% mts)
+}
+
+#' Create shinylive iframe
+#'
+#' @param app_code base64 app code. You can create it from https://shinylive.io/r
+#' by writing code and click on share and copy the link. The code is located at
+#' the end of the url.
+#' @param mode How to display the shinylive app. Default to app mode.
+#' @param header Whether to display the shinylive header. Default to TRUE.
+#'
+#' @export
+create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) {
+  mode <- match.arg(mode)
+
+  app_url <- sprintf(
+    "https://shinylive.io/r/%s/#code=%s", mode, app_code
+  )
+
+  if (!header) {
+    app_url <- paste0(app_url, "&h=0")
+  }
+
+  tags$iframe(
+    # To allow the content to fill the full screen card
+    class = "html-fill-item",
+    src = app_url,
+    height = "700",
+    width = "100%",
+    style = "border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;",
+    allowfullscreen = "",
+    allow = "autoplay",
+    `data-external` = "1"
+  )
 }

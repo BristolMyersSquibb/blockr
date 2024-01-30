@@ -23,6 +23,12 @@
 \alias{new_submit_field}
 \alias{submit_field}
 \alias{validate_field.submit_field}
+\alias{new_upload_field}
+\alias{upload_field}
+\alias{validate_field.upload_field}
+\alias{new_filesbrowser_field}
+\alias{filesbrowser_field}
+\alias{validate_field.filesbrowser_field}
 \alias{value}
 \alias{values}
 \alias{value<-}
@@ -47,6 +53,9 @@ new_field(
   value,
   ...,
   type = c("literal", "name"),
+  title = "",
+  descr = "",
+  status = c("active", "disabled", "invisible"),
   class = character(),
   exclude = FALSE
 )
@@ -98,6 +107,18 @@ submit_field(...)
 
 \method{validate_field}{submit_field}(x)
 
+new_upload_field(value = character(), ...)
+
+upload_field(...)
+
+\method{validate_field}{upload_field}(x)
+
+new_filesbrowser_field(value = character(), ...)
+
+filesbrowser_field(...)
+
+\method{validate_field}{filesbrowser_field}(x)
+
 value(x, name = "value")
 
 values(x, name = names(x))
@@ -133,7 +154,13 @@ list_field(...)
 
 \method{validate_field}{list_field}(x)
 
-new_keyvalue_field(value = numeric(), ...)
+new_keyvalue_field(
+  value = NULL,
+  multiple = TRUE,
+  submit = TRUE,
+  key = c("suggest", "empty", "none"),
+  ...
+)
 
 keyvalue_field(...)
 
@@ -145,6 +172,12 @@ keyvalue_field(...)
 \item{...}{Further field components}
 
 \item{type}{Field type (allowed values are \code{"literal"} and \code{"name"})}
+
+\item{title}{A brief title for the field, primarily for display purposes.}
+
+\item{descr}{A description of the field, explaining its purpose or usage.}
+
+\item{status}{The status of the field (experimental)}
 
 \item{class}{Field subclass}
 
@@ -170,6 +203,10 @@ feature. Default to FALSE. Not yet used.}
 \item{components}{Variable list of field components}
 
 \item{sub_fields}{Fields contained in \code{list_field}}
+
+\item{submit}{Should a 'submit button' be shown?}
+
+\item{key}{How to display the 'key' field}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

@@ -4,12 +4,10 @@
 \alias{secure}
 \title{Evaluate expression safely}
 \usage{
-secure(expr, is_valid)
+secure(expr)
 }
 \arguments{
 \item{expr}{Expression to evaluate.}
-
-\item{is_valid}{Block valid status.}
 }
 \value{
 Result or error message.
