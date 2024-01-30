@@ -22,10 +22,14 @@ new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character(),
                       layout = default_layout_fields) {
   stopifnot(
-    is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
+    is.list(fields),
     is.language(expr),
     is_string(name)
   )
+
+  if (length(fields) > 0) {
+    stopifnot(length(fields) >= 1L, all(lgl_ply(fields, is_field)))
+  }
 
   # Add submit button
   if ("submit_block" %in% class) {
@@ -129,7 +133,10 @@ evaluate_block.data_block <- function(x, ...) {
 evaluate_block.csv_parser_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
   if (length(data) == 0 || !file.exists(data$datapath)) return(data.frame())
-  eval(generate_code(x), list(data = data$datapath))
+  eval(
+    substitute(data %>% expr, list(expr = generate_code(x))),
+    list(data = data$datapath)
+  )
 }
 
 #' @param data Result from previous block
@@ -257,20 +264,10 @@ filesbrowser_block <- function(...) {
 #' @rdname new_block
 #' @export
 new_csv_parser_block <- function(data, ...) {
-
-  val <- function(data) {
-    if (length(data) == 0) {
-      character()
-    } else {
-      data$datapath
-    }
-  }
-
   new_block(
-    # readonly field, just to remind the user about the data path
-    # in case the previous data block is collapsed.
-    fields = list(data_path = new_string_field(val)),
-    expr = quote(utils::read.csv(.(data_path))),
+    # Empty list
+    fields = list(),
+    expr = quote(utils::read.csv()),
     ...,
     class = c("csv_parser_block", "transform_block")
   )
