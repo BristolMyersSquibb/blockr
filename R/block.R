@@ -116,7 +116,7 @@ generate_code.transform_block <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.call <- function(x) {
-  identity(x)
+  x
 }
 
 #' @rdname new_block
