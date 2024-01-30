@@ -28,7 +28,7 @@ note_box <- function(..., color) {
 }
 ```
 
-In this vignette, we show how to create a plot block layer by layer with the `{ggplot2}` package.
+In this vignette, we show how to create a plot block __layer__ by layer with the `{ggplot2}` package.
 
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
@@ -73,7 +73,22 @@ plot output element. Remember that the `server_output()` __generic__ is defined 
 `server.R` script. It supports tables with `server_output.block()` and plots with `server_output.plot_block()`.
 Therefore, we don't need to create another S3 method and have to make sure our new plot block inherits
 from the `plot_block` class to __dispatch__ to the correct method. Most of our work will be on the block side since
-we'll have to generate the plot layer by layer, where each layer is a block.
+we'll have to generate the plot layer by layer, each layer being a block. Before writing this vignette,
+`{blockr}` did not support layer by layer plots. This new concept required to expose a new way of combining plot expressions
+to generate the entire stack code. With the previous infrastructure, we could only do:
+
+```r
+data %>% block_1 %>% block_2
+```
+
+However, handling `{ggplot2}` grammar requires to be able to combine with `+` such as:
+
+```r
+data %>% plot_block + layer_block
+```
+
+All the process is described in the following, which should 
+highlight the __flexibility__ provided by `{blockr}`.
 
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
@@ -82,6 +97,142 @@ note_box(
   color = "primary"
 )
 ```
+
+### New block helpers
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "What is described in the following may not be necessary in all cases and 
+  is specific to `{ggplot2}` which brings specific syntax like `+`. 
+  `{blockr}` now supports layer by layer plots and you theoretically only have 
+  to create the corresponding blocks (See next section). 
+  What we show below is sort of 'making off' that will serve to advanced users.",
+  color = "warning"
+)
+```
+
+#### New `evaluate_block()` method
+
+We define below a new way to pass data to a block layer, through the `evaluate_block.plot_layer_block()` method.
+As a consequence, these block layer must have the `plot_layer_block` class:
+
+```r
+evaluate_block.plot_layer_block <- function(x, data, ...) {
+  stopifnot(...length() == 0L)
+  eval(
+    substitute(data + expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
+}
+```
+
+Compared to `evaluate_block.transform_block()`, we simply replaced `%>%` by `+`. Nothing more! 
+As a side note, if you had to develop your own method in a test script, 
+you could register it and test it with:
+
+```r
+.S3method("<GENERIC>", "<CLASS>", <METHOD>)
+```
+
+#### Generate a valid stack code
+
+Before adding the layer by layer plot blocks, `generate_code.stack()` was:
+
+```r
+generate_code.stack <- function(x) {
+
+  binary_substitute <- function(x, y) {
+    substitute(x %>% y, list(x = x, y = y))
+  }
+
+  Reduce(binary_substitute, lapply(x, generate_code))
+}
+```
+
+This method leverages `Reduce()` which applies a __binary function__ to combine 
+elements of a vector (from left to right by default).
+For instance, we could sum the 3 first integers with:
+
+```r
+Reduce(`+`, 1:3)
+```
+
+`generate_code.stack()` successively combines all the block expressions given by `lapply(x, generate_code)`. 
+If there are 3 blocks in the stack:
+
+```r
+my_stack <- new_stack(data_block, filter_block, select_block)
+```
+
+`binary_substitute` is called twice:
+
+- Once to combine x being `<data_block_EXPR>` (the data block expression) and y being `<filter_block_EXPR>`, 
+to give `<data_block_EXPR> %>% <filter_block_EXPR>`.
+- Then to combine the previous result, namely x, equal to `<data_block_EXPR> %>% <filter_block_EXPR>` with y equal to `<select_block_EXPR>`.
+- This ultimately yields: `<data_block_EXPR> %>% <filter_block_EXPR> %>% <select_block_EXPR>`
+
+`substitute()` ensures we don't evaluate the generated expression and replace `x` and `y` by their respective values.
+
+Can you spot the current point? How do we combine plot layer expressions linked by `+` with this setup?
+In order to overcome this limitation, we introduced the `block_combiner()`, 
+a new generic which aims at linking multiple block expressions depending on their class. Under the hood,
+we only check the class of the __right__ block to determine the expression link (the S3 dispatch occurs on the second block), 
+that is `%>%` or `+` (and maybe more in the future). 
+
+```r
+block_combiner <- function(left, right, ...) UseMethod("block_combiner", right)
+```
+
+Another important modification to bring is about `generate_code.stack()`. 
+With the above logic, `Reduce()` only consumes the block expressions, thereby
+preventing us from being able to dispatch. We pass a vector of blocks instead, 
+such that we get:
+
+```r
+generate_code.stack <- function(x) {
+  if (length(x) == 0) return(quote(identity()))
+
+  # Handles monoblock stacks
+  if (length(x) > 1) {
+    aggregate_code <- function(x, y) {
+      block_combiner(x, y)
+    }
+    Reduce(aggregate_code, lapply(x, \(b) b))
+  } else {
+    generate_code(x[[1]])
+  }
+}
+```
+
+For empty stacks, the returned code is arbitrary. For stacks with one block, we don't 
+need `Reduce()` and only call `generate_code()` for the corresponding block. We create a new
+internal function, that is `aggregate_code`, subsequently calling `block_combiner()`. 
+
+There is still one last issue to solve. Since we now pass blocks,
+we have to find a way to let `block_combiner()` evaluate each block expression. 
+We apply `generate_code()` within the `substitute()` call so we can inject the block expression
+and not the block itself. This eventually leads us to:
+
+```r
+block_combiner.transform_block <- function(left, right, ...) {
+  substitute(
+    left %>% right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
+}
+
+block_combiner.plot_block <- block_combiner.transform_block
+
+block_combiner.plot_layer_block <- function(left, right, ...) {
+  substitute(
+    left + right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
+}
+```
+
+Importantly, plot constructor like `ggplot()` should have the `plot_block` class
+so that the link is `%>%` (the same as for other transform blocks).
 
 ### Create the ggplot block
 
@@ -158,7 +309,7 @@ evaluate.
 
 All combined together, this eventually yields:
 
-```r
+```{r, eval=TRUE}
 new_ggplot_block <- function(data, ...) {
 
   data_cols <- function(data) colnames(data)
@@ -177,7 +328,7 @@ new_ggplot_block <- function(data, ...) {
 }
 ```
 
-As you can, see the code base is reasonable.
+As you can, see the code base is reasonable in terms of complexity.
 
 ### Create a geom block
 
@@ -199,7 +350,7 @@ Importantly, since we use `.(color)`, the field name must be __color__.
 
 This finally gives us:
 
-```r
+```{r, eval=TRUE}
 new_geompoint_block <- function(data, mappings, ...) {
 
   new_block(
@@ -219,13 +370,23 @@ geompoint_block <- function(data, ...) {
 }
 ```
 
-Note the class `plot_layer_block`. This is necessary to invoke the right `evaluate_block` 
-method (to use `+` instead of `%>%`).
+Note the class `plot_layer_block`. This is necessary to invoke the corresponding 
+`evaluate_block()` method (to use `+` instead of `%>%`).
 
 
 ### Try it
 
-We can try it on some data:
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "We currently decided that each plot layer can be visible, so that you can
+  see the plot construction step by step within the UI. In any case, `{blockr}` 
+  only expands the latest stack block UI so you can focus on the final result.
+  Toggling other blocks is up to the end-user.",
+  color = "primary"
+)
+```
+
+We can try it on the following stack:
 
 ```r
 stack <- new_stack(data_block, ggplot_block, geompoint_block)
