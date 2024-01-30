@@ -45,9 +45,11 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Data-blocks.html">1. Data blocks</a>
-    <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
+    <h6 class="dropdown-header" data-toc-skip>User Guide</h6>
+    <a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a>
     <a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a>
+    <a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a>
+    <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
   </div>
 </li>
 <li class="nav-item">
@@ -117,8 +119,8 @@ transformed data to produce visualizations.</li>
 <p>A <strong>stack</strong> always starts from a data block and may end
 either by a transform blocks or an output block.</p>
 <p>Note: at the moment, there is only one output block per stack.</p>
-<div id="htmlwidget-1723d950f999312db472" style="width:700px;height:120px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1723d950f999312db472">{"x":{"diagram":"\n  flowchart TB\n    subgraph stack\n      input(Data);\n      transform(Transform);\n      output(Visualize);\n      input-->transform--> output;\n    end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
+<div id="htmlwidget-0fc02156bd2cce005e99" style="width:700px;height:120px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0fc02156bd2cce005e99">{"x":{"diagram":"\n  flowchart TB\n    subgraph stack\n      input(Data);\n      transform(Transform);\n      output(Visualize);\n      input-->transform--> output;\n    end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
 </div>
 <div class="section level3">
 <h3 id="the-user-interface">The user interface<a class="anchor" aria-label="anchor" href="#the-user-interface"></a>

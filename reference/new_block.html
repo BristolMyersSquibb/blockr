@@ -31,9 +31,11 @@ plus some meta data."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Data-blocks.html">1. Data blocks</a>
-    <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
+    <h6 class="dropdown-header" data-toc-skip>User Guide</h6>
+    <a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a>
     <a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a>
+    <a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a>
+    <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
   </div>
 </li>
 <li class="nav-item">
@@ -100,6 +102,9 @@ plus some meta data.</p>
 <span><span class="co"># S3 method for transform_block</span></span>
 <span><span class="fu">generate_code</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for call</span></span>
+<span><span class="fu">generate_code</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data_block</span></span>
@@ -109,6 +114,9 @@ plus some meta data.</p>
 <span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for plot_block</span></span>
+<span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for plot_layer_block</span></span>
 <span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for ggiraph_block</span></span>
@@ -156,7 +164,11 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">select_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">new_arrange_block</span><span class="op">(</span><span class="va">data</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">arrange_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_group_by_block</span><span class="op">(</span><span class="va">data</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">group_by_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
