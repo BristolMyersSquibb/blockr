@@ -496,6 +496,16 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         inject_block(input, vals, id = attr(el, "name"))
       })
 
+      observeEvent(vals$stacks, {
+        if (length(vals$stacks)) {
+          stcks <- lapply(vals$stacks, `[[`, "stack")
+          set_workspace_stacks(
+            set_names(stcks, chr_ply(stcks, attr, "name")),
+            force = TRUE
+          )
+        }
+      })
+
       # Clear all stacks
       observeEvent(input$clear_stacks, {
         clear_workspace_stacks()
