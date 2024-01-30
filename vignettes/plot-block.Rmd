@@ -293,6 +293,9 @@ new_ggplot_block <- function(data, ...) {
 }
 ```
 
+Passing `type = "name"` allows to inject functions inside the select field choices. This
+is useful to dynamically update the choices whenever data change.
+
 Producing the expression, which is certainly the most "technical" part, as it involves a bit of __metaprogramming__. 
 The expression must not be evaluated in the block, that's why it is wrapped in a `quote()`. 
 `{blockr}` is then able to generate the expression with `generate_code()` and evaluate it with `evaluate_block()`.
@@ -351,7 +354,7 @@ Importantly, since we use `.(color)`, the field name must be __color__.
 This finally gives us:
 
 ```{r, eval=TRUE}
-new_geompoint_block <- function(data, mappings, ...) {
+new_geompoint_block <- function(data, ...) {
 
   new_block(
     fields = list(
@@ -392,3 +395,142 @@ We can try it on the following stack:
 stack <- new_stack(data_block, ggplot_block, geompoint_block)
 serve_stack(stack)
 ```
+
+### Going further
+
+Below is a possible implementation of an interactive `{ggiraph}` [plot](https://davidgohel.github.io/ggiraph/#with-r-and-r-markdown).
+<p class="text-center">
+<a 
+class="btn btn-primary" 
+data-bs-toggle="collapse" 
+href="#ggiraphBlockr" 
+role="button" 
+aria-expanded="false" 
+aria-controls="ggiraphBlockr">
+Toggle code
+</a>
+</p>
+
+<div class="collapse" id="ggiraphBlockr">
+
+```r
+library(blockr)
+library(ggplot2)
+library(ggiraph)
+
+custom_data_block <- function(...) {
+  initialize_block(
+    new_data_block(
+      ...,
+      selected = "mtcars"
+    )
+  )
+}
+
+new_ggplot_block <- function(data, ...) {
+
+  data_cols <- function(data) colnames(data)
+
+  new_block(
+    fields = list(
+      x = new_select_field("wt", data_cols, type = "name"),
+      y = new_select_field("qsec", data_cols, type = "name"),
+      color = new_select_field("disp", data_cols, type = "name")
+    ),
+    expr = quote(
+      ggplot(mapping = aes(x = .(x), y = .(y), color = .(color)))
+    ),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+
+ggplot_block <- function(data, ...) {
+  initialize_block(new_ggplot_block(data, ...), data)
+}
+
+# We could have use a mutate_block instead of
+# changing the data from inside the block ...
+# {blockr} is flexible here.
+new_geompoint_interactive_block <- function(data, ...) {
+  build_expr <- function(data) {
+    # Get data from the previous ggplot layer
+    # data is the ggplot so we need to use data$data
+    # to get the initial data
+    data$data$carname <- row.names(data$data)
+    substitute(
+      geom_point_interactive(
+        # Pass in new data
+        data = new_data,
+        aes(
+          tooltip = carname,
+          data_id = carname
+        )
+      ),
+      list(new_data = data$data)
+    )
+  }
+
+  new_block(
+    fields = list(
+      expression = new_hidden_field(build_expr)
+    ),
+    expr = quote(.(expression)),
+    class = c("plot_layer_block", "plot_block"),
+    ...
+  )
+}
+
+geompoint_interactive_block <- function(data, ...) {
+  initialize_block(new_geompoint_interactive_block(data, ...), data)
+}
+
+new_theme_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      theme = new_select_field(
+        "theme_minimal", 
+        grep("^theme_.*$", ls("package:ggplot2"), perl = TRUE, value = TRUE),
+        type = "name"
+      )
+    ),
+    expr = quote(
+      .(theme)()
+    ),
+    class = c("plot_layer_block", "plot_block"),
+    ...
+  )
+}
+
+theme_block <- function(data, ...) {
+  initialize_block(new_theme_block(data, ...), data)
+}
+
+new_ggiraph_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      pointsize = new_numeric_field(12, min = 1, max = 20)
+    ),
+    expr = quote(
+      girafe(ggobj = data, pointsize = .(pointsize))
+    ),
+    class = c("ggiraph_block", "plot_block"),
+    ...
+  )
+}
+
+ggiraph_block <- function(data, ...) {
+  initialize_block(new_ggiraph_block(data, ...), data)
+}
+
+stack <- new_stack(
+  custom_data_block,
+  ggplot_block,
+  geompoint_interactive_block,
+  theme_block,
+  ggiraph_block
+)
+serve_stack(stack)
+```
+
+</div>
