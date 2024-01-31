@@ -2,7 +2,7 @@ library(shiny)
 library(blockr.data)
 library(blockr)
 
-stack <- new_stack(data_block)
+stack <- new_stack()
 shinyApp(
   ui = bslib::page_fluid(
     add_block_ui(),

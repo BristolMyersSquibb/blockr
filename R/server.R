@@ -297,8 +297,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
           } else {
             insertUI(
               selector = sprintf(
-                "#%s-body",
-                session$ns(attr(vals$stack, "name"))
+                "#%sbody",
+                session$ns("")
               ),
               where = "afterBegin",
               inject_remove_button(
