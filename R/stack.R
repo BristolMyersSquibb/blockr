@@ -34,6 +34,15 @@ new_stack <- function(..., title = "Stack") {
   structure(blocks, title = title, name = rand_names(), class = "stack")
 }
 
+set_stack_blocks <- function(stack, blocks) {
+
+  stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
+
+  attributes(blocks) <- attributes(stack)
+
+  blocks
+}
+
 #' @param x An object inheriting form `"stack"`
 #' @rdname new_stack
 #' @export

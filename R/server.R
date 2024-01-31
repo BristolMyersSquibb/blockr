@@ -200,7 +200,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
-      out_dat
+      reactiveValues(block = blk(), data = out_dat())
     }
   )
 }
@@ -334,6 +334,13 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
 
       observeEvent(input$newTitle, {
         set_title(vals$stack, input$newTitle)
+      })
+
+      observeEvent(vals$blocks, {
+        if (length(vals$blocks)) {
+          blks <- lapply(vals$blocks, `[[`, "block")
+          vals$stack <- set_stack_blocks(vals$stack, blks)
+        }
       })
 
       observe({
@@ -605,7 +612,7 @@ init_block <- function(i, vals, session) {
       NULL
     } else {
       # Data from previous block
-      vals$blocks[[i - 1]]
+      vals$blocks[[i - 1]]$data
     },
     id = id
   )
