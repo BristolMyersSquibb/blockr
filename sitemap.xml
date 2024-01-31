@@ -58,6 +58,9 @@
     <loc>/reference/custom_verbatim_output.html</loc>
   </url>
   <url>
+    <loc>/reference/default_layout_fields.html</loc>
+  </url>
+  <url>
     <loc>/reference/div_card.html</loc>
   </url>
   <url>
@@ -80,6 +83,9 @@
   </url>
   <url>
     <loc>/reference/inject_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/layout_fields.html</loc>
   </url>
   <url>
     <loc>/reference/lock.html</loc>
