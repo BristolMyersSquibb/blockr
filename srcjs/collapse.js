@@ -91,6 +91,14 @@ const editor = (stack) => {
 
         $block.find(".block-code-toggle").removeClass("d-none");
         $block.find(".block-output-toggle").removeClass("d-none");
+        $block
+          .find(".block-output-toggle")
+          .find("i")
+          .addClass("fa-chevron-down");
+        $block
+          .find(".block-output-toggle")
+          .find("i")
+          .removeClass("fa-chevron-up");
 
         if (index == $blocks.length - 1) {
           $block.find(".block-output").addClass("show");
@@ -114,6 +122,11 @@ const editor = (stack) => {
 
       $block.find(".block-code-toggle").addClass("d-none");
       $block.find(".block-output-toggle").addClass("d-none");
+      $block.find(".block-output-toggle").find("i").addClass("fa-chevron-up");
+      $block
+        .find(".block-output-toggle")
+        .find("i")
+        .removeClass("fa-chevron-down");
 
       $block.find(".block-title").addClass("d-none");
       if (index == $blocks.length - 1) {
