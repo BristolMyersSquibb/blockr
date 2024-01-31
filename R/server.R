@@ -659,4 +659,3 @@ server_code.block <- function(x, state, output) {
     cat(deparse(generate_code(state())), sep = "\n")
   )
 }
-
