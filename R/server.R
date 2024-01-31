@@ -542,21 +542,24 @@ init <- function(x, ...) {
 #' @export
 #' @rdname generate_server
 init.workspace <- function(x, stacks, vals, session, ...) {
+
   input <- session$input
 
   observeEvent(TRUE, {
-    lapply(seq_along(stacks), \(i) {
-      id <- attr(stacks[[i]], "name")
-      vals$stacks[[i]] <- generate_server(
-        stacks[[i]],
-        id = id,
-        new_block = reactive(vals$new_block[[id]])
+
+    for (nme in names(stacks)) {
+
+      vals$stacks[[nme]] <- generate_server(
+        stacks[[nme]],
+        id = nme,
+        new_block = reactive(vals$new_block[[nme]])
       )
-      handle_remove(stacks[[i]], vals)
+
+      handle_remove(stacks[[nme]], vals)
 
       # To dynamically insert blocks
-      inject_block(input, vals, id)
-    })
+      inject_block(input, vals, nme)
+    }
   })
 }
 
