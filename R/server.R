@@ -162,7 +162,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       } else {
         reactive({
           req(is_valid$block)
-          if (is.null(in_dat())) {
+          if (is.null(in_dat()) && !inherits(x, "transform_block")) {
             evaluate_block(blk())
           } else {
             evaluate_block(blk(), data = in_dat())
@@ -211,10 +211,6 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 generate_server.data_block <- function(x, id, ...) {
   generate_server_block(x = x, in_dat = NULL, id = id)
 }
-
-#' @rdname generate_server
-#' @export
-generate_server.upload_block <- generate_server.data_block
 
 #' @param in_dat Reactive input data
 #' @rdname generate_server
@@ -635,6 +631,10 @@ server_output.upload_block <- function(x, result, output) {
 
 #' @rdname generate_ui
 #' @export
+server_output.filesbrowser_block <- server_output.upload_block
+
+#' @rdname generate_ui
+#' @export
 server_output.plot_block <- function(x, result, output) {
   shiny::renderPlot(result())
 }
@@ -660,15 +660,3 @@ server_code.block <- function(x, state, output) {
   )
 }
 
-#' @rdname generate_ui
-#' @export
-server_code.upload_block <- function(x, state, output) {
-  shiny::renderPrint({
-    res <- generate_code(state())
-    if (length(res) == 0) {
-      cat(deparse(res), sep = "\n")
-    } else {
-      cat(deparse(res$datapath), sep = "\n")
-    }
-  })
-}

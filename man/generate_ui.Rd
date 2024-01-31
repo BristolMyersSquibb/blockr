@@ -5,11 +5,11 @@
 \alias{server_output}
 \alias{server_output.block}
 \alias{server_output.upload_block}
+\alias{server_output.filesbrowser_block}
 \alias{server_output.plot_block}
 \alias{server_output.ggiraph_block}
 \alias{server_code}
 \alias{server_code.block}
-\alias{server_code.upload_block}
 \alias{generate_ui}
 \alias{ui_fields}
 \alias{ui_fields.block}
@@ -59,6 +59,7 @@
 \alias{uiOutputBlock}
 \alias{uiOutputBlock.block}
 \alias{uiOutputBlock.upload_block}
+\alias{uiOutputBlock.filesbrowser_block}
 \alias{uiOutputBlock.plot_block}
 \alias{uiOutputBlock.ggiraph_block}
 \alias{uiCode}
@@ -73,6 +74,8 @@ server_output(x, result, output)
 
 \method{server_output}{upload_block}(x, result, output)
 
+\method{server_output}{filesbrowser_block}(x, result, output)
+
 \method{server_output}{plot_block}(x, result, output)
 
 \method{server_output}{ggiraph_block}(x, result, output)
@@ -80,8 +83,6 @@ server_output(x, result, output)
 server_code(x, state, output)
 
 \method{server_code}{block}(x, state, output)
-
-\method{server_code}{upload_block}(x, state, output)
 
 generate_ui(x, ...)
 
@@ -180,6 +181,8 @@ uiOutputBlock(x, ns)
 \method{uiOutputBlock}{block}(x, ns)
 
 \method{uiOutputBlock}{upload_block}(x, ns)
+
+\method{uiOutputBlock}{filesbrowser_block}(x, ns)
 
 \method{uiOutputBlock}{plot_block}(x, ns)
 

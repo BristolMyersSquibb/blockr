@@ -13,7 +13,6 @@
 \alias{generate_code.transform_block}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
-\alias{evaluate_block.csv_parser_block}
 \alias{evaluate_block.transform_block}
 \alias{evaluate_block.plot_block}
 \alias{evaluate_block.ggiraph_block}
@@ -93,8 +92,6 @@ generate_code(x)
 evaluate_block(x, ...)
 
 \method{evaluate_block}{data_block}(x, ...)
-
-\method{evaluate_block}{csv_parser_block}(x, data, ...)
 
 \method{evaluate_block}{transform_block}(x, data, ...)
 

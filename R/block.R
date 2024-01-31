@@ -23,13 +23,11 @@ new_block <- function(fields, expr, name = rand_names(), ...,
                       layout = default_layout_fields) {
   stopifnot(
     is.list(fields),
+    length(fields) >= 1L,
+    all(lgl_ply(fields, is_field)),
     is.language(expr),
     is_string(name)
   )
-
-  if (length(fields) > 0) {
-    stopifnot(length(fields) >= 1L, all(lgl_ply(fields, is_field)))
-  }
 
   # Add submit button
   if ("submit_block" %in% class) {
@@ -128,17 +126,6 @@ evaluate_block.data_block <- function(x, ...) {
   eval(generate_code(x), new.env())
 }
 
-#' @rdname new_block
-#' @export
-evaluate_block.csv_parser_block <- function(x, data, ...) {
-  stopifnot(...length() == 0L)
-  if (length(data) == 0 || !file.exists(data$datapath)) return(data.frame())
-  eval(
-    substitute(data %>% expr, list(expr = generate_code(x))),
-    list(data = data$datapath)
-  )
-}
-
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
@@ -209,11 +196,21 @@ data_block <- function(...) {
 #' @rdname new_block
 #' @export
 new_upload_block <- function(...) {
+
+  data_path <- function(dat) {
+    if (length(dat) == 0) return(character())
+    bquote(
+      .(path),
+      list(path = dat$datapath)
+    )
+  }
+
   new_block(
     fields = list(
-      dat = new_upload_field()
+      dat = new_upload_field(),
+      expression = new_hidden_field(data_path)
     ),
-    expr = quote(.(dat)),
+    expr = quote(.(expression)),
     ...,
     class = c("upload_block", "data_block")
   )
@@ -229,25 +226,19 @@ upload_block <- function(...) {
 #' @param volumes Paths accessible by the shinyFiles browser.
 #' @export
 new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
-  read_data <- function(dat) {
+  data_path <- function(dat) {
     if (length(dat) == 0 || is.integer(dat) || length(dat$files) == 0) {
       cat("No files have been selected yet.")
       return(data.frame())
     }
-
     files <- shinyFiles::parseFilePaths(volumes, dat)
-    data_func <- utils::read.csv # TO DO switch
-
-    bquote(
-      .(read_func)(.(path)),
-      list(read_func = data_func, path = files$datapath)
-    )
+    unname(files$datapath)
   }
 
   new_block(
     fields = list(
       dat = new_filesbrowser_field(volumes = volumes),
-      expression = new_hidden_field(read_data)
+      expression = new_hidden_field(data_path)
     ),
     expr = quote(.(expression)),
     ...,
@@ -264,10 +255,22 @@ filesbrowser_block <- function(...) {
 #' @rdname new_block
 #' @export
 new_csv_parser_block <- function(data, ...) {
+
+  read_data <- function(data) {
+    if (length(data) == 0) {
+      return(data.frame())
+    }
+    bquote(
+      .(read_func)(),
+      list(read_func = quote(utils::read.csv))
+    )
+  }
+
   new_block(
-    # Empty list
-    fields = list(),
-    expr = quote(utils::read.csv()),
+    fields = list(
+      expression = new_hidden_field(read_data)
+    ),
+    expr = quote(.(expression)),
     ...,
     class = c("csv_parser_block", "transform_block")
   )
