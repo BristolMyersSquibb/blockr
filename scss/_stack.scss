@@ -5,6 +5,9 @@ html {
   }
 
   .stack {
+    .stack-title {
+      font-weight: bold;
+    }
 
     .stack-edit-toggle {
       color: var(--bs-gray);
@@ -40,6 +43,12 @@ html {
       .stack-copy-code,
       .stack-edit-toggle {
         opacity: 1;
+      }
+    }
+
+    .card-header {
+      .d-flex {
+        height: 1.5rem;
       }
     }
   }
