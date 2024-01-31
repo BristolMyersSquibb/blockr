@@ -381,6 +381,16 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
 
   stacks <- get_workspace_stacks()
 
+  stack_ui <- NULL
+  if (length(stacks) > 0) {
+    stack_ui <-  div(
+      class = "row stacks",
+      lapply(seq_along(stacks), \(i) {
+        inject_remove_button(stacks[[i]], ns)
+      })
+    )
+  }
+
   tagList(
     div(
       class = "d-flex justify-content-center",
@@ -400,15 +410,7 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
         class = "mx-2"
       )
     ),
-    div(
-      class = "m-2 workspace",
-      div(
-        class = "row stacks",
-        lapply(seq_along(stacks), \(i) {
-          inject_remove_button(stacks[[i]], ns)
-        })
-      )
-    )
+    div(class = "m-2 row workspace", stack_ui)
   )
 }
 
