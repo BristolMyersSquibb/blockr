@@ -200,7 +200,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
-      list(block = blk, data = out_dat)
+      reactiveValues(block = blk(), data = out_dat())
     }
   )
 }
