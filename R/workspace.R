@@ -177,3 +177,23 @@ get_workspace_settings <- function() {
   stopifnot(is.list(res))
   res
 }
+
+#' @param clear Clear current worspace
+#' @param id Workspace ID
+#'
+#' @rdname set_workspace
+#' @export
+serve_worskpace <- function(clear = TRUE, id = "myworkspace") {
+
+  ws <- get_workspace()
+
+  ui <- bslib::page_fluid(
+    generate_ui(ws, id = id)
+  )
+
+  server <- function(input, output, session) {
+    generate_server(ws, id = id)
+  }
+
+  shinyApp(ui, server)
+}
