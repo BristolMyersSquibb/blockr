@@ -200,7 +200,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
-      reactiveValues(block = blk(), data = out_dat())
+      list(block = blk, data = out_dat)
     }
   )
 }
@@ -448,6 +448,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
+
       vals <- reactiveValues(stacks = list(), new_block = list())
 
       output$n_stacks <- renderText(length(vals$stacks))
@@ -455,18 +456,18 @@ generate_server.workspace <- function(x, id = NULL, ...) {
       # Init existing stack modules
       init(x, get_workspace_stacks(), vals, session)
 
-      # Standalone: when called from our generate_server.workspace
-
       # Add stack
       observeEvent(input$add_stack, {
-        message("ADD STACK")
-        add_workpace_stack(
-          sprintf("stack-%s", length(vals$stacks) + 1),
-          new_stack(data_block)
-        )
 
-        stacks <- get_workspace_stacks()
-        el <- stacks[[length(stacks)]]
+        stck <- new_stack()
+
+        stack_id <- get_stack_name(stck)
+
+        message("ADD STACK (", stack_id, ")")
+
+        add_workpace_stack(stack_id, stck)
+
+        el <- get_workspace_stack(stack_id)
 
         stack_ui <- inject_remove_button(
           el,
@@ -493,21 +494,20 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         handle_remove(el, vals)
 
         # Invoke server
-        vals$stacks[[length(stacks)]] <- generate_server(
+        vals$stacks[[stack_id]] <- generate_server(
           el,
-          id = attr(el, "name"),
-          new_block = reactive(vals$new_block[[attr(el, "name")]])
+          id = stack_id,
+          new_block = reactive(vals$new_block[[stack_id]])
         )
 
         # Handle new block injection
-        inject_block(input, vals, id = attr(el, "name"))
+        inject_block(input, vals, id = stack_id)
       })
 
       observeEvent(vals$stacks, {
         if (length(vals$stacks)) {
-          stcks <- lapply(vals$stacks, `[[`, "stack")
           set_workspace_stacks(
-            set_names(stcks, chr_ply(stcks, attr, "name")),
+            lapply(vals$stacks, `[[`, "stack"),
             force = TRUE
           )
         }

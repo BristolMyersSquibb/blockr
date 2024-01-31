@@ -8,28 +8,30 @@
 #'
 #' @export
 new_stack <- function(..., title = "Stack") {
+
   ctors <- c(...)
   names <- names(ctors)
 
-  if (!length(ctors)) {
-    return(structure(list(), title = title, name = rand_names(), class = "stack"))
+  if (length(ctors)) {
+
+    blocks <- vector("list", length(ctors))
+
+    blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
+    temp <- evaluate_block(blocks[[1L]])
+
+    for (i in seq_along(ctors)[-1L]) {
+      temp <- evaluate_block(
+        blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
+        data = temp
+      )
+    }
+
+  } else {
+
+    blocks <- list()
   }
 
-  blocks <- vector("list", length(ctors))
-
-  blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
-  temp <- evaluate_block(blocks[[1L]])
-
-  for (i in seq_along(ctors)[-1L]) {
-    temp <- evaluate_block(
-      blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
-      data = temp
-    )
-  }
-
-  stopifnot(
-    is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
-  )
+  stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
   structure(blocks, title = title, name = rand_names(), class = "stack")
 }
@@ -41,6 +43,17 @@ set_stack_blocks <- function(stack, blocks) {
   attributes(blocks) <- attributes(stack)
 
   blocks
+}
+
+get_stack_name <- function(stack) {
+  stopifnot(is_stack(stack))
+  attr(stack, "name")
+}
+
+set_stack_name <- function(stack, name) {
+  stopifnot(is_stack(stack), is_string(name))
+  attr(stack, "name") <- name
+  stack
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -103,6 +116,8 @@ add_block <- function(stack, block, position = NULL) {
     position <- 1L
   }
 
+  message("ADD BLOCK (position ", position, ")")
+
   # get data from the previous block
   if (length(stack) == 1) {
     data <- evaluate_block(stack[[position]])
@@ -116,13 +131,13 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  if (!length(stack))
+  if (!length(stack)) {
     tmp <- do.call(block, list())
-  else
+  } else {
     tmp <- do.call(block, list(data = data, position = position))
+  }
 
-  stack <- append(stack, list(tmp), position)
-  invisible(stack)
+  set_stack_blocks(stack, append(stack, list(tmp), position))
 }
 
 #' Move blocks within a stack
