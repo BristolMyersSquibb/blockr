@@ -18,3 +18,13 @@ navbar:
     home: ~
     dark-mode:
       href: "#dark-mode"
+
+articles:
+- title: User guide
+  desc: ~
+  navbar: User Guide
+  contents:
+  - '`data-blocks`'
+  - '`registry`'
+  - '`plot-block`'
+  - '`developer-guide`'

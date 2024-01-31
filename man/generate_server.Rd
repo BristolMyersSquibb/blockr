@@ -17,7 +17,7 @@
 \alias{init}
 \alias{init.workspace}
 \alias{init.stack}
-\title{Re-implement numeric_field, using server module}
+\title{Key Value Field}
 \usage{
 \method{generate_server}{keyvalue_field}(x, ...)
 

@@ -32,7 +32,7 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   layout <- attr(x, "layout")
 
   div(
-    class = sprintf("block-inputs %s", inputs_hidden),
+    class = sprintf("block-inputs mt-2 %s", inputs_hidden),
     layout(fields)
   )
 }
@@ -133,9 +133,9 @@ block_header.block <- function(x, ns, hidden_class, ...) {
       div(
         class = "flex-grow-1",
         p(
-          span(icon("cube"), class = "text-muted"),
+          block_icon(x),
           title,
-          class = "fw-bold"
+          class = "fw-bold m-0"
         )
       ),
       div(
@@ -358,13 +358,12 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(icon("cubes"), class = "text-muted me-1"),
         span(get_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",
         div(
-          class = "stack-tools ps-1 py-2",
+          class = "stack-tools",
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
@@ -778,4 +777,42 @@ iconOutput <- function() {
 #' @importFrom shiny icon
 iconTrash <- function() {
   icon("trash")
+}
+
+block_icon <- function(x, ...) UseMethod("block_icon", x)
+
+#' @export
+block_icon.default <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Block",
+    icon("cube")
+  )
+}
+
+#' @export
+block_icon.data_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Data block",
+    icon("table")
+  )
+}
+
+#' @export
+block_icon.transform_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Transform block",
+    icon("shuffle")
+  )
+}
+
+#' @export
+block_icon.plot_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Plot block",
+    icon("chart-bar")
+  )
 }
