@@ -137,6 +137,13 @@ clear_workspace_settings <- function() {
   set_workspace_settings(list())
 }
 
+clear_workspace <- function() {
+  clear_workspace_stacks()
+  clear_workspace_title()
+  clear_workspace_settings()
+  invisible(NULL)
+}
+
 #' @rdname set_workspace
 #' @export
 get_workspace <- function() {
@@ -183,7 +190,11 @@ get_workspace_settings <- function() {
 #'
 #' @rdname set_workspace
 #' @export
-serve_worskpace <- function(clear = TRUE, id = "myworkspace") {
+serve_workspace <- function(clear = TRUE, id = "myworkspace") {
+
+  if (isTRUE(clear)) {
+    clear_workspace()
+  }
 
   ws <- get_workspace()
 

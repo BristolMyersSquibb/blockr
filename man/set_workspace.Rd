@@ -12,7 +12,7 @@
 \alias{get_workspace_stacks}
 \alias{get_workspace_title}
 \alias{get_workspace_settings}
-\alias{serve_worskpace}
+\alias{serve_workspace}
 \title{Workspace}
 \usage{
 set_workspace(..., title = "", settings = NULL, force = FALSE)
@@ -37,7 +37,7 @@ get_workspace_title()
 
 get_workspace_settings()
 
-serve_worskpace(clear = TRUE, id = "myworkspace")
+serve_workspace(clear = TRUE, id = "myworkspace")
 }
 \arguments{
 \item{...}{A set of of stacks}
