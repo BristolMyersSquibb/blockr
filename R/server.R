@@ -134,7 +134,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # Validate block inputs
       if (display != "plot") {
         obs$validate_inputs <- observeEvent(r_values(), {
-          log_message("Validating block", class(x)[[1]])
+          log_info("Validating block", class(x)[[1]])
           blk_no_srv <- blk()
           blk_no_srv[is_srv] <- NULL    # to keep class etc
           validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$

@@ -2,6 +2,8 @@ devtools::load_all()
 library(blockr.data)
 library(shiny)
 
+options(BLOCKR_DEV = T)
+
 new_test_block <- function(data, ...) {
   fields <- letters |>
     lapply(\(x) new_string_field(x))
