@@ -209,10 +209,9 @@ data_block <- function(...) {
 
 #' @rdname new_block
 #' @export
-new_code_block <- function(data, ...) {
+new_code_transform_block <- function(data, ...) {
   new_block(
     fields = list(
-      out = new_select_field("transform", choices = c("transform", "plot")),
       code = new_code_field("data # from parent block")
     ),
     expr = quote({
@@ -222,14 +221,38 @@ new_code_block <- function(data, ...) {
     }),
     layout = code_layout_fields,
     ...,
-    class = c("code_block", "transform_block", "submit_block")
+    class = c("code_transform_block", "transform_block", "submit_block")
   )
 }
 
 #' @rdname new_block
 #' @export
-code_block <- function(data, ...) {
-  initialize_block(new_code_block(data, ...), data)
+code_transform_block <- function(data, ...) {
+  initialize_block(new_code_transform_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_code_plot_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      code = new_code_field("plot(data) # from parent block")
+    ),
+    expr = quote({
+      .(code) |>
+        parse(text = _) |>
+        eval()
+    }),
+    layout = code_layout_fields,
+    ...,
+    class = c("code_transform_block", "plot_block", "submit_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+code_plot_block <- function(data, ...) {
+  initialize_block(new_code_plot_block(data, ...), data)
 }
 
 #' @rdname new_block

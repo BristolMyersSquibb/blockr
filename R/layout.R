@@ -212,18 +212,11 @@ join_layout_fields <- function(fields, ...) {
 }
 
 code_layout_fields <- function(fields, ...) {
+  # we apply padding because there seems to be some
+  # CSS that pushes the editor up and hides the buttons
   div(
-    div(
-      class = "d-flex",
-      div(
-        class = "flex-grow-1",
-        fields$out
-      ),
-      div(
-        class = "flex-shrink-1",
-        fields$submit
-      )
-    ),
-    fields$code
+    class = "mt-4",
+    fields$code,
+    fields$submit
   )
 }
