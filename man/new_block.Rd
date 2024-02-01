@@ -22,8 +22,17 @@
 \alias{upload_block}
 \alias{new_filesbrowser_block}
 \alias{filesbrowser_block}
+\alias{new_parser_block}
 \alias{new_csv_parser_block}
 \alias{csv_parser_block}
+\alias{new_rds_parser_block}
+\alias{rds_parser_block}
+\alias{new_json_parser_block}
+\alias{json_parser_block}
+\alias{new_sas_parser_block}
+\alias{sas_parser_block}
+\alias{new_xpt_parser_block}
+\alias{xpt_parser_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -115,9 +124,27 @@ new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
 
+new_parser_block(data, parse_func, ...)
+
 new_csv_parser_block(data, ...)
 
 csv_parser_block(data, ...)
+
+new_rds_parser_block(data, ...)
+
+rds_parser_block(data, ...)
+
+new_json_parser_block(data, ...)
+
+json_parser_block(data, ...)
+
+new_sas_parser_block(data, ...)
+
+sas_parser_block(data, ...)
+
+new_xpt_parser_block(data, ...)
+
+xpt_parser_block(data, ...)
 
 \method{initialize_block}{data_block}(x, ...)
 
@@ -254,6 +281,8 @@ the list of fields to layout and returns one or more UI tag(s).}
 
 \item{volumes}{Paths accessible by the shinyFiles browser.}
 
+\item{parse_func}{Function to apply to parse a file}
+
 \item{columns}{Column(s) to select.}
 
 \item{values}{Definition of the equality filter.}
@@ -289,3 +318,7 @@ Blocks consist of a set of fields, an expression that defines what the block
 produces (given the result of the previous block combined with user input),
 plus some meta data.
 }
+\note{
+Useful to build other parser blocks
+}
+\keyword{internal}

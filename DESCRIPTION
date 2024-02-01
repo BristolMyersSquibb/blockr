@@ -37,7 +37,8 @@ Imports:
     ggiraph,
     shinyAce,
     jsonlite,
-    shinyFiles
+    shinyFiles,
+    haven
 Remotes:
     blockr-org/blockr.data,
     blockr-org/bmsui,

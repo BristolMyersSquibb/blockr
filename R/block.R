@@ -253,16 +253,17 @@ filesbrowser_block <- function(...) {
 }
 
 #' @rdname new_block
-#' @export
-new_csv_parser_block <- function(data, ...) {
-
+#' @param parse_func Function to apply to parse a file
+#' @keywords internal
+#' @note Useful to build other parser blocks
+new_parser_block <- function(data, parse_func, ...) {
   read_data <- function(data) {
     if (length(data) == 0) {
       return(data.frame())
     }
     bquote(
       .(read_func)(),
-      list(read_func = quote(utils::read.csv))
+      list(read_func = parse_func)
     )
   }
 
@@ -278,8 +279,62 @@ new_csv_parser_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
+new_csv_parser_block <- function(data, ...) {
+  new_parser_block(data, parse_func = quote(utils::read.csv))
+}
+
+#' @rdname new_block
+#' @export
 csv_parser_block <- function(data, ...) {
   initialize_block(new_csv_parser_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_rds_parser_block <- function(data, ...) {
+  new_parser_block(data, parse_func = quote(readRDS))
+}
+
+#' @rdname new_block
+#' @export
+rds_parser_block <- function(data, ...) {
+  initialize_block(new_rds_parser_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_json_parser_block <- function(data, ...) {
+  new_parser_block(data, parse_func = quote(jsonlite::fromJSON))
+}
+
+#' @rdname new_block
+#' @export
+json_parser_block <- function(data, ...) {
+  initialize_block(new_json_parser_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_sas_parser_block <- function(data, ...) {
+  new_parser_block(data, parse_func = quote(haven::read_sas))
+}
+
+#' @rdname new_block
+#' @export
+sas_parser_block <- function(data, ...) {
+  initialize_block(new_sas_parser_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_xpt_parser_block <- function(data, ...) {
+  new_parser_block(data, parse_func = quote(haven::read_xpt))
+}
+
+#' @rdname new_block
+#' @export
+xpt_parser_block <- function(data, ...) {
+  initialize_block(new_xpt_parser_block(data, ...), data)
 }
 
 #' @rdname new_block
