@@ -5,7 +5,7 @@
 #' @param fields Named list of fields.
 #' @param ... Currently ignored.
 #' @export
-layout <- function(x, fields, ...) UseMethod("layout")
+layout <- function(x, fields, ...) UseMethod("layout", x)
 
 #' @export
 layout.block <- function(x, fields, ...) {
