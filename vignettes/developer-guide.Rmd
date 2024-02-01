@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, echo=FALSE}
 library(DiagrammeR)
 ```
 
@@ -23,30 +23,13 @@ library(DiagrammeR)
 Under the hood, `{blockr}` utilises S3 to creates classes and apply the relevant methods
 whenever necessary. We describe the general idea below.
 
-## Introduction
+## Workspace
 
-`{blockr}` aims at abstracting the logic behind `{dplyr}` functions
-under __blocks__. We assume that a __stack__ is a succession
-of dependent blocks. We designed 3 kinds of blocks:
+TBD
 
-- __data__ block: entry level block to determine input data.
-- __transform__ block: materialize `{dplyr}` operations on the selected data.
-- __output__ (only plot for now) block: consumes transformed data to produce visualizations.
+## Stack
 
-A __stack__ always starts from a data block and may end either by a data transform blocks or by an output block.
-Note that at the moment, there is only one output block per stack.
-
-```{r, echo=FALSE}
-mermaid("
-flowchart TB
-    subgraph stack
-      input(Data);
-      transform(Transform);
-      output(Visualize);
-      input-->transform--> output;
-    end
-")
-```
+The stack is a list of blocks.
 
 ```{r, echo=FALSE}
 mermaid("
@@ -58,7 +41,30 @@ classDiagram
 ")
 ```
 
-The stack is able to dynamically add new blocks through `add_block`.
+The stack is able to dynamically add new blocks through `add_block()`.
+
+### Modify a stack
+
+To add a block to a stack, you can leverage `add_block()`:
+
+```r
+stack <- new_stack(data_block) |>
+  add_block(select_block) |>
+  add_block(filter_block, 1)
+```
+
+If you specify the position (last parameter), you can add a block right 
+after the given index. For instance, the above command first inserts
+a select block after the data block. Then, a filter block is included
+right after the data block.
+
+Note that you can't add a block before the data block and 
+before the plot block. In a later version, we may add multiple
+plots per stack.
+
+### Moving blocks
+
+TBD
 
 ## Blocks
 

@@ -14,7 +14,7 @@ init_block(i, vals, session)
 \item{session}{Shiny session object.}
 }
 \description{
-Useful for \link{init_blocks} but also
+Useful for init.blocks but also
 to be called after \link{add_block}.
 }
 \keyword{internal}

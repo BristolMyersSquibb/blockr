@@ -8,6 +8,12 @@ export const remove = (stack) => {
     $(btn).on("click", (event) => {
       const $stack = $(event.target).closest(".stack");
       const $masonry = $stack.closest(".masonry-item");
+      const $workspace = $stack.closest(".workspace");
+
+      if ($workspace.length) {
+        $stack.closest(".col").remove();
+        return;
+      }
 
       $stack.remove();
 

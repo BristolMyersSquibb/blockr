@@ -89,11 +89,13 @@ generate_code.block <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.arrange_block <- function(x) {
+  where <- lapply(x, type_trans)
+
   do.call(
     bquote,
     list(
       attr(x, "expr"),
-      where = lapply(x, type_trans),
+      where = lapply(where, as.list),
       splice = TRUE
     )
   )
@@ -109,6 +111,12 @@ generate_code.transform_block <- function(x) {
   }
 
   NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+generate_code.call <- function(x) {
+  x
 }
 
 #' @rdname new_block
@@ -138,9 +146,17 @@ evaluate_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evaluate_block.plot_block <- function(x, data, ...) {
+evaluate_block.plot_block <- evaluate_block.transform_block
+
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evaluate_block.plot_layer_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
-  eval(generate_code(x), list(data = data))
+  eval(
+    substitute(data + expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
 }
 
 #' @param data Result from previous block
@@ -174,7 +190,7 @@ new_data_block <- function(
 
   expr <- substitute(
     get(.(dataset), envir = data),
-    list(data = dat)
+    list(data = substitute(dat))
   )
 
   new_block(
@@ -185,15 +201,79 @@ new_data_block <- function(
   )
 }
 
-#' @param data Result from previous block
-#' @rdname new_block
-#' @export
-evaluate_block.plot_block <- evaluate_block.ggiraph_block
-
 #' @rdname new_block
 #' @export
 data_block <- function(...) {
   initialize_block(new_data_block(...))
+}
+
+#' @rdname new_block
+#' @export
+new_upload_block <- function(...) {
+
+  read_data <- function(dat) {
+    if (length(dat) == 0) {
+      return(data.frame())
+    }
+
+    data_func <- utils::read.csv # TO DO switch
+    bquote(
+      .(read_func)(.(path)),
+      list(read_func = data_func, path = dat$datapath)
+    )
+  }
+
+  new_block(
+    fields = list(
+      dat = new_upload_field(),
+      expression = new_hidden_field(read_data)
+    ),
+    expr = quote(.(expression)),
+    ...,
+    class = c("upload_block", "data_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+upload_block <- function(...) {
+  initialize_block(new_upload_block(...))
+}
+
+#' @rdname new_block
+#' @param volumes Paths accessible by the shinyFiles browser.
+#' @export
+new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
+  read_data <- function(dat) {
+    if (length(dat) == 0 || is.integer(dat) || length(dat$files) == 0) {
+      cat("No files have been selected yet.")
+      return(data.frame())
+    }
+
+    files <- shinyFiles::parseFilePaths(volumes, dat)
+    data_func <- utils::read.csv # TO DO switch
+
+    bquote(
+      .(read_func)(.(path)),
+      list(read_func = data_func, path = files$datapath)
+    )
+  }
+
+  new_block(
+    fields = list(
+      dat = new_filesbrowser_field(volumes = volumes),
+      expression = new_hidden_field(read_data)
+    ),
+    expr = quote(.(expression)),
+    ...,
+    class = c("filesbrowser_block", "data_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+filesbrowser_block <- function(...) {
+  initialize_block(new_filesbrowser_block(...))
 }
 
 #' @rdname new_block
@@ -469,15 +549,52 @@ select_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
+new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Type as name for arrange and group_by
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(dplyr::arrange(..(columns))),
+    ...,
+    class = c("arrange_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
 arrange_block <- function(data, ...) {
-  # Arrange is close to select so we can use its init functuib
-  convert_block(to = arrange, data = data, ...)
+  initialize_block(new_arrange_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Select_field only allow one value, not multi select
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(
+      dplyr::group_by(..(columns))
+    ),
+    ...,
+    class = c("group_by_block", "transform_block")
+  )
 }
 
 #' @rdname new_block
 #' @export
 group_by_block <- function(data, ...) {
-  convert_block(to = group_by, data = data, ...)
+  initialize_block(new_group_by_block(data, ...), data)
 }
 
 #' @rdname new_block
@@ -494,38 +611,26 @@ new_join_block <- function(
     by_col = character(),
     ...) {
   # by depends on selected dataset and the input data.
-  by_choices <- function(data, y) {
-    choices <- intersect(
-      colnames(data),
-      colnames(eval(as.name(y)))
-    )
+  choices <- intersect(
+    colnames(data),
+    colnames(eval(as.name(y)))
+  )
 
-    default <- if (length(choices) == 0) {
-      character()
+  default <- if (length(choices) == 0) {
+    character()
+  } else {
+    if (length(by_col) > 0) {
+      by_col
     } else {
-      if (length(by_col) > 0) {
-        by_col
-      } else {
-        choices[[1]]
-      }
+      choices[[1]]
     }
-
-    # TO DO: currently, validate_field.list_field don't work
-    # if we don't return a list.
-    list(
-      val = new_select_field(
-        default,
-        choices,
-        multiple = TRUE
-      )
-    )
   }
 
   join_expr <- function(data, join_func, y, by) {
-    if (length(by$val) == 0) stop("Nothing to merge, restoring defaults.")
+    if (length(by) == 0) stop("Nothing to merge, restoring defaults.")
     bquote(
       .(join_func)(y = .(y), by = .(by)),
-      list(join_func = as.name(join_func), y = as.name(y), by = by$val)
+      list(join_func = as.name(join_func), y = as.name(y), by = by)
     )
   }
 
@@ -546,7 +651,7 @@ new_join_block <- function(
       paste(join_types, "join", sep = "_")
     ),
     y = new_select_field(y[[1]], y),
-    by = new_list_field(sub_fields = by_choices),
+    by = new_select_field(default, choices, multiple = TRUE),
     expression = new_hidden_field(join_expr)
   )
 

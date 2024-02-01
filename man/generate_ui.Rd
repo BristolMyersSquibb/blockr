@@ -16,17 +16,24 @@
 \alias{block_code}
 \alias{block_code.block}
 \alias{block_header}
-\alias{block_remove}
-\alias{block_remove.block}
+\alias{remove_button}
+\alias{remove_button.block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
+\alias{inject_remove_button}
+\alias{inject_remove_button.block}
+\alias{inject_remove_button.stack}
+\alias{remove_button.stack}
 \alias{stack_header}
+\alias{generate_ui.workspace}
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
 \alias{ui_input.switch_field}
 \alias{ui_input.numeric_field}
 \alias{ui_input.submit_field}
+\alias{ui_input.upload_field}
+\alias{ui_input.filesbrowser_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -43,6 +50,8 @@
 \alias{ui_update.range_field}
 \alias{ui_update.numeric_field}
 \alias{ui_update.submit_field}
+\alias{ui_update.upload_field}
+\alias{ui_update.filesbrowser_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
 \alias{uiOutputBlock}
@@ -83,15 +92,25 @@ block_code(x, ...)
 
 block_header(x, ...)
 
-block_remove(x, ...)
+remove_button(x, ...)
 
-\method{block_remove}{block}(x, id, ...)
+\method{remove_button}{block}(x, id, ...)
 
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
 
+inject_remove_button(x, ...)
+
+\method{inject_remove_button}{block}(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...)
+
+\method{inject_remove_button}{stack}(x, ns, ...)
+
+\method{remove_button}{stack}(x, id, ...)
+
 stack_header(x, ...)
+
+\method{generate_ui}{workspace}(x, id = NULL, ...)
 
 ui_input(x, id, name)
 
@@ -104,6 +123,10 @@ ui_input(x, id, name)
 \method{ui_input}{numeric_field}(x, id, name)
 
 \method{ui_input}{submit_field}(x, id, name)
+
+\method{ui_input}{upload_field}(x, id, name)
+
+\method{ui_input}{filesbrowser_field}(x, id, name)
 
 input_ids(x, ...)
 
@@ -136,6 +159,10 @@ ui_update(x, session, id, name)
 \method{ui_update}{numeric_field}(x, session, id, name)
 
 \method{ui_update}{submit_field}(x, session, id, name)
+
+\method{ui_update}{upload_field}(x, session, id, name)
+
+\method{ui_update}{filesbrowser_field}(x, session, id, name)
 
 \method{ui_update}{hidden_field}(x, session, id, name)
 
@@ -173,10 +200,19 @@ uiCode(x, ns)
 \item{inputs_hidden}{For styling purposes: CSS class to apply
 when the block is collapsed.}
 
-\item{.hidden}{Whether to initialise the block hidden.}
+\item{.hidden}{Whether to initialise the block with
+hidden inputs.}
 
 \item{session}{Shiny session}
 }
 \description{
 Generic for UI generation
+
+This has to be called from the stack parent
+namespace. This can also be called dynamically when
+inserting a new block within a stack.
+
+This has to be called from the workspace parent
+namespace. This can also be called dynamically when
+inserting a new stack within a workspace.
 }

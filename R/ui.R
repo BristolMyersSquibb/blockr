@@ -32,7 +32,7 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   layout <- attr(x, "layout")
 
   div(
-    class = sprintf("block-inputs %s", inputs_hidden),
+    class = sprintf("block-inputs mt-2 %s", inputs_hidden),
     layout(fields)
   )
 }
@@ -133,9 +133,9 @@ block_header.block <- function(x, ns, hidden_class, ...) {
       div(
         class = "flex-grow-1",
         p(
-          span(icon("cube"), class = "text-muted"),
+          block_icon(x),
           title,
-          class = "fw-bold"
+          class = "fw-bold m-0"
         )
       ),
       div(
@@ -158,13 +158,13 @@ block_header.block <- function(x, ns, hidden_class, ...) {
 
 #' @rdname generate_ui
 #' @export
-block_remove <- function(x, ...) {
-  UseMethod("block_remove", x)
+remove_button <- function(x, ...) {
+  UseMethod("remove_button", x)
 }
 
 #' @rdname generate_ui
 #' @export
-block_remove.block <- function(x, id, ...) {
+remove_button.block <- function(x, id, ...) {
   actionLink(
     id,
     icon("trash"),
@@ -182,10 +182,8 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 
   block_class <- "block"
   inputs_hidden <- ""
-  hidden_class <- ""
   if (.hidden) {
-    hidden_class <- "d-none"
-    inputs_hidden <- hidden_class
+    inputs_hidden <- "d-none"
     block_class <- sprintf("%s d-none", block_class)
   }
 
@@ -197,11 +195,49 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
       class = "card shadow-sm p-2 mb-2 border",
       div(
         class = "card-body p-1",
-        block_header(x, ns, hidden_class),
+        block_header(x, ns, inputs_hidden),
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
         block_code(x, ns, inputs_hidden)
       )
+    )
+  )
+}
+
+#' Add block UI interface
+#'
+#' Useful to allow stack to add blocks to it.
+#' The selected block can be accessed through `input$selected_block`.
+#' Combined to the blocks registry API, this allows to select a block from R like
+#' \code{available_blocks()[[input$selected_block]]}.
+#'
+#' @param ns Stack namespace. Default to \link{identity} so
+#' that it can be used when the stack is the top level element.
+#'
+#' @export
+add_block_ui <- function(ns = identity) {
+  div(
+    class = "d-flex justify-content-center",
+    tags$button(
+      type = "button",
+      "Add a new block",
+      class = "btn btn-primary",
+      class = "my-2",
+      `data-bs-toggle` = "offcanvas",
+      `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
+      `aria-controls` = ns("addBlockCanvas")
+    ),
+    off_canvas(
+      id = ns("addBlockCanvas"),
+      title = "My blocks",
+      position = "bottom",
+      radioButtons(
+        ns("selected_block"),
+        "Choose a block",
+        choices = names(available_blocks()),
+        inline = TRUE
+      ),
+      actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")
     )
   )
 }
@@ -227,12 +263,18 @@ generate_ui.stack <- function(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(x, \(b) {
-          inject_remove_button(ns, b)
+          inject_remove_button(b, ns)
         })
       )
     ),
     useBlockr()
   )
+}
+
+#' @rdname generate_ui
+#' @export
+inject_remove_button <- function(x, ...) {
+  UseMethod("inject_remove_button")
 }
 
 #' Inject remove button into block header
@@ -241,19 +283,54 @@ generate_ui.stack <- function(
 #' namespace. This can also be called dynamically when
 #' inserting a new block within a stack.
 #'
-#' @param ns Stack namespace.
-#' @param b Current block.
-#' @param .hidden Internal parameter. Default to FALSE
+#' @param ns Parent namespace.
+#' @param .hidden Whether to initialise the block with
+#' hidden inputs.
 #'
-#' @keywords internal
-inject_remove_button <- function(ns, b, .hidden = !getOption("BLOCKR_DEV", FALSE)) {
-  block_id <- attr(b, "name")
-  tmp <- generate_ui(b, id = ns(block_id), .hidden = FALSE)
+#' @export
+#' @rdname generate_ui
+inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...) {
+  id <- attr(x, "name")
+  tmp <- generate_ui(x, id = ns(id), .hidden = .hidden)
   # Remove button now belongs to the stack namespace!
   htmltools::tagQuery(tmp)$
     find(".block-tools")$
-    prepend(block_remove(b, ns(sprintf("remove-block-%s", block_id))))$
+    prepend(remove_button(x, ns(sprintf("remove-block-%s", id))))$
   allTags()
+}
+
+#' Inject remove button into stack header
+#'
+#' This has to be called from the workspace parent
+#' namespace. This can also be called dynamically when
+#' inserting a new stack within a workspace.
+#'
+#' @param ns Parent namespace.
+#'
+#' @export
+#' @rdname generate_ui
+inject_remove_button.stack <- function(x, ns, ...) {
+  id <- attr(x, "name")
+  tmp <- htmltools::tagQuery(generate_ui(x, id = ns(id)))$
+    find(".stack-tools")$
+    prepend(remove_button(x, ns(sprintf("remove-stack-%s", id))))$
+  allTags()
+
+  tmp[[1]] <- tagAppendChildren(
+    tmp[[1]],
+    add_block_ui(NS(ns(attr(x, "name"))))
+  )
+  div(class = "col m-1", tmp)
+}
+
+#' @rdname generate_ui
+#' @export
+remove_button.stack <- function(x, id, ...) {
+  actionLink(
+    id,
+    icon("trash"),
+    class = "text-decoration-none stack-remove",
+  )
 }
 
 #' @rdname generate_ui
@@ -270,20 +347,12 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(icon("cubes"), class = "text-muted"),
         span(get_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",
         div(
-          class = "ps-1 py-2",
-          # TO DO: move it to workspace (needs other PR).
-          #actionLink(
-          #  ns("remove"),
-          #  "",
-          #  class = "text-decoration-none stack-remove",
-          #  iconTrash()
-          #),
+          class = "stack-tools",
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
@@ -296,6 +365,48 @@ stack_header.stack <- function(x, title, ns, ...) {
             iconEdit()
           )
         )
+      )
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+generate_ui.workspace <- function(x, id = NULL, ...) {
+  stopifnot(...length() == 0L)
+
+  id <- if (is.null(id)) attr(x, "name") else id
+
+  ns <- NS(id)
+
+  stacks <- get_workspace_stacks()
+
+  tagList(
+    div(
+      class = "d-flex justify-content-center",
+      actionButton(
+        ns("add_stack"),
+        label = "Add stack",
+        icon = icon("plus"),
+        width = NULL,
+        span(class = "badge bg-secondary", textOutput(ns("n_stacks"))),
+        class = "mx-2"
+      ),
+      actionButton(
+        ns("clear_stacks"),
+        "Clear all",
+        icon("trash"),
+        class = "bg-danger",
+        class = "mx-2"
+      )
+    ),
+    div(
+      class = "m-2 workspace",
+      div(
+        class = "row stacks",
+        lapply(seq_along(stacks), \(i) {
+          inject_remove_button(stacks[[i]], ns)
+        })
       )
     )
   )
@@ -348,6 +459,26 @@ ui_input.submit_field <- function(x, id, name) {
     name,
     icon = icon("play"),
     class = "btn btn-success mt-4"
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.upload_field <- function(x, id, name) {
+  fileInput(
+    input_ids(x, id),
+    name
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.filesbrowser_field <- function(x, id, name) {
+  shinyFiles::shinyFilesButton(
+    input_ids(x, id),
+    label = "File select",
+    title = "Please select a file",
+    multiple = FALSE
   )
 }
 
@@ -499,6 +630,22 @@ ui_update.submit_field <- function(x, session, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_update.upload_field <- function(x, session, id, name) {
+  NULL
+}
+
+#' @rdname generate_ui
+#' @export
+ui_update.filesbrowser_field <- function(x, session, id, name) {
+  shinyFiles::shinyFileChoose(
+    session$input,
+    input_ids(x, id),
+    roots = x$volumes
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 ui_update.hidden_field <- function(x, session, id, name) {
   NULL
 }
@@ -614,4 +761,42 @@ iconOutput <- function() {
 #' @importFrom shiny icon
 iconTrash <- function() {
   icon("trash")
+}
+
+block_icon <- function(x, ...) UseMethod("block_icon", x)
+
+#' @export
+block_icon.default <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Block",
+    icon("cube")
+  )
+}
+
+#' @export
+block_icon.data_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Data block",
+    icon("table")
+  )
+}
+
+#' @export
+block_icon.transform_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Transform block",
+    icon("shuffle")
+  )
+}
+
+#' @export
+block_icon.plot_block <- function(x, ...) {
+  span(
+    `data-bs-toggle` = "tooltip",
+    `data-bs-title` = "Plot block",
+    icon("chart-bar")
+  )
 }

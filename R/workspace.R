@@ -12,7 +12,7 @@ set_workspace <- function(..., title = "", settings = NULL, force = FALSE) {
 
   set_workspace_title(title)
   set_workspace_settings(settings)
-  set_workpsace_stacks(list(...), force = force)
+  set_workspace_stacks(list(...))
 
   invisible(workspace_env)
 }
@@ -37,7 +37,7 @@ workspace_env <- structure(
   class = "workspace"
 )
 
-set_workpsace_stacks <- function(stacks, force = FALSE) {
+set_workspace_stacks <- function(stacks, force = FALSE) {
 
   if (is_stack(stacks)) {
     stacks <- list(stacks)
