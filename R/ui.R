@@ -525,7 +525,11 @@ ui_input.variable_field <- function(x, id, name) {
 ui_input.code_field <- function(x, id, name) {
   shinyAce::aceEditor(
     id,
-    value(x)
+    value(x),
+    mode = "r",
+    theme = "github",
+    autoComplete = "live",
+    fontSize = 14
   )
 }
 
