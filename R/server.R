@@ -17,7 +17,6 @@ generate_server.block <- function(x, ...) {
   stop("no base-class server for blocks available")
 }
 
-
 update_blk <- function(b, value, is_srv, input, data) {
   for (field in names(b)) {
     if (field %in% names(is_srv)[is_srv]) {
@@ -205,7 +204,6 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
   )
 }
 
-
 #' @rdname generate_server
 #' @export
 generate_server.data_block <- function(x, id, ...) {
@@ -223,15 +221,12 @@ generate_server.transform_block <- function(x, in_dat, id, ...) {
   generate_server_block(x = x, in_dat = in_dat, id = id)
 }
 
-#' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
 generate_server.plot_block <- function(x, in_dat, id, ...) {
   generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot")
 }
 
-
-#' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
 generate_server.ggiraph_block <- generate_server.plot_block
@@ -357,7 +352,6 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
     }
   )
 }
-
 
 #' Remove stack/block generic
 #'
@@ -615,7 +609,7 @@ init_block <- function(i, vals, session) {
       NULL
     } else {
       # Data from previous block
-      vals$blocks[[i - 1]]$data
+      reactiveVal(vals$blocks[[i - 1]]$data)
     },
     id = id
   )
