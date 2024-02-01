@@ -230,12 +230,6 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
   generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot")
 }
 
-
-#' @param in_dat Reactive input data
-#' @rdname generate_server
-#' @export
-generate_server.ggiraph_block <- generate_server.plot_block
-
 #' @rdname generate_server
 #' @param id Unique module id. Useful when the stack is called as a module.
 #' @param new_block For dynamically inserted blocks.
@@ -631,12 +625,6 @@ server_output.block <- function(x, result, output) {
 #' @export
 server_output.plot_block <- function(x, result, output) {
   shiny::renderPlot(result())
-}
-
-#' @rdname generate_ui
-#' @export
-server_output.ggiraph_block <- function(x, result, output) {
-  ggiraph::renderGirafe(result())
 }
 
 #' @param state Block state
