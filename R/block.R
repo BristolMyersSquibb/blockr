@@ -11,16 +11,13 @@
 #' of the fields)
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
-#' @param layout Callback function accepting one argument:
-#' the list of fields to layout and returns one or more UI tag(s).
 #'
 #' @export
 #' @import blockr.data
 #' @import dplyr
 #' @importFrom stats setNames
 new_block <- function(fields, expr, name = rand_names(), ...,
-                      class = character(),
-                      layout = default_layout_fields) {
+                      class = character()) {
   stopifnot(
     is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
     is.language(expr),
@@ -37,7 +34,6 @@ new_block <- function(fields, expr, name = rand_names(), ...,
 
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
-    layout = layout,
     class = c(class, "block")
   )
 }
@@ -384,8 +380,7 @@ new_filter_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("filter_block", "transform_block", "submit_block"),
-    layout = filter_layout_fields
+    class = c("filter_block", "transform_block", "submit_block")
   )
 }
 
@@ -530,8 +525,7 @@ new_summarize_block <- function(
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("summarize_block", "transform_block", "submit_block"),
-    layout = summarize_layout_fields
+    class = c("summarize_block", "transform_block", "submit_block")
   )
 }
 
@@ -664,8 +658,7 @@ new_join_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("join_block", "transform_block", "submit_block"),
-    layout = join_layout_fields
+    class = c("join_block", "transform_block", "submit_block")
   )
 }
 
@@ -828,8 +821,7 @@ new_plot_block <- function(
         )
     }),
     ...,
-    class = c("plot_block"),
-    layout = plot_layout_fields
+    class = c("plot_block")
   )
 }
 
@@ -983,8 +975,7 @@ new_ggiraph_block <- function(
       )
     }),
     ...,
-    class = c("ggiraph_block"),
-    layout = ggiraph_layout_fields
+    class = c("ggiraph_block")
   )
 }
 

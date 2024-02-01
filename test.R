@@ -24,7 +24,7 @@ test_block <- function(data, ...) {
 
 stack <- new_stack(
   data_block,
-  select_block
+  filter_block
 )
 
 ui <- fluidPage(
