@@ -213,7 +213,7 @@ new_code_block <- function(data, ...) {
   new_block(
     fields = list(
       out = new_select_field("transform", choices = c("transform", "plot")),
-      code = new_code_field("data")
+      code = new_code_field("data # from parent block")
     ),
     expr = quote({
       .(code) |>

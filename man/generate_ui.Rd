@@ -44,6 +44,7 @@
 \alias{ui_input.hidden_field}
 \alias{ui_input.list_field}
 \alias{ui_update}
+\alias{ui_update.code_field}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
 \alias{ui_update.switch_field}
@@ -148,6 +149,8 @@ input_ids(x, ...)
 \method{ui_input}{list_field}(x, id, name)
 
 ui_update(x, session, id, name)
+
+\method{ui_update}{code_field}(x, session, id, name)
 
 \method{ui_update}{string_field}(x, session, id, name)
 
