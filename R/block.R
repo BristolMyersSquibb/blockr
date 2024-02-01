@@ -209,6 +209,31 @@ data_block <- function(...) {
 
 #' @rdname new_block
 #' @export
+new_code_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      out = new_select_field("transform", choices = c("transform", "plot")),
+      code = new_code_field("data")
+    ),
+    expr = quote({
+      .(code) |>
+        parse(text = _) |>
+        eval()
+    }),
+    layout = code_layout_fields,
+    ...,
+    class = c("code_block", "transform_block", "submit_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+code_block <- function(data, ...) {
+  initialize_block(new_code_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
 new_upload_block <- function(...) {
 
   read_data <- function(dat) {

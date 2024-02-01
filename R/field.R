@@ -144,6 +144,25 @@ select_field <- function(...) validate_field(new_select_field(...))
 
 #' @rdname new_field
 #' @export
+new_code_field <- function(value = character(), ...) {
+  new_field(
+    value,
+    class = "code_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+code_field <- function(...) validate_field(new_code_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.code_field <- function(x) {
+  x
+}
+
+#' @rdname new_field
+#' @export
 new_switch_field <- function(value = FALSE, ...) {
   new_field(value, ..., class = "switch_field")
 }

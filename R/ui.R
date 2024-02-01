@@ -522,6 +522,15 @@ ui_input.variable_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.code_field <- function(x, id, name) {
+  shinyAce::aceEditor(
+    id,
+    value(x)
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 ui_input.range_field <- function(x, id, name) {
   sliderInput(
     input_ids(x, id), name, value(x, "min"), value(x, "max"), value(x)
@@ -558,6 +567,13 @@ ui_input.list_field <- function(x, id, name) {
 #' @export
 ui_update <- function(x, session, id, name) {
   UseMethod("ui_update", x)
+}
+
+#' @param session Shiny session
+#' @rdname generate_ui
+#' @export
+ui_update.code_field <- function(x, session, id, name) {
+  NULL
 }
 
 #' @rdname generate_ui

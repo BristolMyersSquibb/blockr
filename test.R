@@ -2,29 +2,9 @@ devtools::load_all()
 library(blockr.data)
 library(shiny)
 
-new_test_block <- function(data, ...) {
-  fields <- letters |>
-    lapply(\(x) new_string_field(x))
-
-  names(fields) <- letters
-
-  new_block(
-    fields = fields,
-    expr = quote({
-      data
-    }),
-    ...,
-    class = c("test_block", "transform_block")
-  )
-}
-
-test_block <- function(data, ...) {
-  initialize_block(new_test_block(data, ...), data)
-}
-
 stack <- new_stack(
   data_block,
-  select_block
+  code_block
 )
 
 ui <- fluidPage(

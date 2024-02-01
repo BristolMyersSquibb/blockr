@@ -14,6 +14,9 @@
 \alias{validate_field.select_field}
 \alias{new_select_field}
 \alias{select_field}
+\alias{new_code_field}
+\alias{code_field}
+\alias{validate_field.code_field}
 \alias{new_switch_field}
 \alias{switch_field}
 \alias{validate_field.switch_field}
@@ -88,6 +91,12 @@ new_select_field(
 )
 
 select_field(...)
+
+new_code_field(value = character(), ...)
+
+code_field(...)
+
+\method{validate_field}{code_field}(x)
 
 new_switch_field(value = FALSE, ...)
 

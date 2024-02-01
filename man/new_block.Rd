@@ -20,6 +20,8 @@
 \alias{evaluate_block.ggiraph_block}
 \alias{new_data_block}
 \alias{data_block}
+\alias{new_code_block}
+\alias{code_block}
 \alias{new_upload_block}
 \alias{upload_block}
 \alias{new_filesbrowser_block}
@@ -112,6 +114,10 @@ new_data_block(
 )
 
 data_block(...)
+
+new_code_block(data, ...)
+
+code_block(data, ...)
 
 new_upload_block(...)
 

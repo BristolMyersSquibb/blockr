@@ -39,6 +39,7 @@
 \alias{input_ids.field}
 \alias{input_ids.list_field}
 \alias{ui_input.variable_field}
+\alias{ui_input.code_field}
 \alias{ui_input.range_field}
 \alias{ui_input.hidden_field}
 \alias{ui_input.list_field}
@@ -137,6 +138,8 @@ input_ids(x, ...)
 \method{input_ids}{list_field}(x, name, ...)
 
 \method{ui_input}{variable_field}(x, id, name)
+
+\method{ui_input}{code_field}(x, id, name)
 
 \method{ui_input}{range_field}(x, id, name)
 

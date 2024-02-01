@@ -210,3 +210,20 @@ join_layout_fields <- function(fields, ...) {
     fields$expression
   )
 }
+
+code_layout_fields <- function(fields, ...) {
+  div(
+    div(
+      class = "d-flex",
+      div(
+        class = "flex-grow-1",
+        fields$out
+      ),
+      div(
+        class = "flex-shrink-1",
+        fields$submit
+      )
+    ),
+    fields$code
+  )
+}
