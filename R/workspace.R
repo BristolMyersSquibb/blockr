@@ -30,16 +30,27 @@ set_workspace_stacks <- function(stacks, force = FALSE) {
     stacks <- list(stacks)
   }
 
-  nms <- names(stacks)
-
   stopifnot(
-    is.list(stacks), all(lgl_ply(stacks, is_stack)),
-    !is.null(nms), !anyNA(nms), all(nzchar(nms)), !anyDuplicated(nms)
+    is.list(stacks), all(lgl_ply(stacks, is_stack)), is_bool(force)
   )
 
-  clear_workspace_stacks(force)
+  if (length(stacks)) {
 
-  list2env(stacks, envir = workspace_env)
+    nms <- names(stacks)
+
+    stopifnot(
+      is.list(stacks), all(lgl_ply(stacks, is_stack)),
+      !is.null(nms), !anyNA(nms), all(nzchar(nms)), !anyDuplicated(nms)
+    )
+
+    clear_workspace_stacks(force)
+
+    list2env(stacks, envir = workspace_env)
+
+  } else {
+
+    clear_workspace_stacks()
+  }
 
   invisible(stacks)
 }

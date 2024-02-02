@@ -338,18 +338,11 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
 
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
-      observeEvent({
-        lapply(vals$blocks, \(b) {
-          list(
-            b$data(),
-            b$block()
-          )
-        })
-      }, {
-        if (length(vals$blocks)) {
-          blks <- lapply(vals$blocks, \(b) b$block())
-          vals$stack <- set_stack_blocks(vals$stack, blks)
-        }
+      observeEvent(lapply(vals$blocks, \(b) b$block()), {
+        vals$stack <- set_stack_blocks(
+          vals$stack,
+          lapply(vals$blocks, \(b) b$block())
+        )
       })
 
       observe({
@@ -512,13 +505,11 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         inject_block(input, vals, id = stack_id)
       })
 
-      observeEvent(vals$stacks, {
-        if (length(vals$stacks)) {
-          set_workspace_stacks(
-            lapply(vals$stacks, `[[`, "stack"),
-            force = TRUE
-          )
-        }
+      observeEvent(lapply(vals$stacks, `[[`, "stack"), {
+        set_workspace_stacks(
+          lapply(vals$stacks, `[[`, "stack"),
+          force = TRUE
+        )
       })
 
       # Clear all stacks
