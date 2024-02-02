@@ -11,16 +11,13 @@
 #' of the fields)
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
-#' @param layout Callback function accepting one argument:
-#' the list of fields to layout and returns one or more UI tag(s).
 #'
 #' @export
 #' @import blockr.data
 #' @import dplyr
 #' @importFrom stats setNames
 new_block <- function(fields, expr, name = rand_names(), ...,
-                      class = character(),
-                      layout = default_layout_fields) {
+                      class = character()) {
   stopifnot(
     is.list(fields),
     length(fields) >= 1L,
@@ -39,7 +36,6 @@ new_block <- function(fields, expr, name = rand_names(), ...,
 
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
-    layout = layout,
     class = c(class, "block")
   )
 }
@@ -91,11 +87,13 @@ generate_code.block <- function(x) {
 #' @rdname new_block
 #' @export
 generate_code.arrange_block <- function(x) {
+  where <- lapply(x, type_trans)
+
   do.call(
     bquote,
     list(
       attr(x, "expr"),
-      where = lapply(x, type_trans),
+      where = lapply(where, as.list),
       splice = TRUE
     )
   )
@@ -111,6 +109,12 @@ generate_code.transform_block <- function(x) {
   }
 
   NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+generate_code.call <- function(x) {
+  x
 }
 
 #' @rdname new_block
@@ -140,9 +144,17 @@ evaluate_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evaluate_block.plot_block <- function(x, data, ...) {
+evaluate_block.plot_block <- evaluate_block.transform_block
+
+#' @param data Result from previous block
+#' @rdname new_block
+#' @export
+evaluate_block.plot_layer_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
-  eval(generate_code(x), list(data = data))
+  eval(
+    substitute(data + expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
 }
 
 #' @param data Result from previous block
@@ -445,8 +457,7 @@ new_filter_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("filter_block", "transform_block", "submit_block"),
-    layout = filter_layout_fields
+    class = c("filter_block", "transform_block", "submit_block")
   )
 }
 
@@ -591,8 +602,7 @@ new_summarize_block <- function(
     fields = fields,
     expr = quote(.(expression)),
     ...,
-    class = c("summarize_block", "transform_block", "submit_block"),
-    layout = summarize_layout_fields
+    class = c("summarize_block", "transform_block", "submit_block")
   )
 }
 
@@ -610,15 +620,52 @@ select_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
+new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Type as name for arrange and group_by
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(dplyr::arrange(..(columns))),
+    ...,
+    class = c("arrange_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
 arrange_block <- function(data, ...) {
-  # Arrange is close to select so we can use its init functuib
-  convert_block(to = arrange, data = data, ...)
+  initialize_block(new_arrange_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
+  all_cols <- function(data) colnames(data)
+
+  # Select_field only allow one value, not multi select
+  fields <- list(
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(
+      dplyr::group_by(..(columns))
+    ),
+    ...,
+    class = c("group_by_block", "transform_block")
+  )
 }
 
 #' @rdname new_block
 #' @export
 group_by_block <- function(data, ...) {
-  convert_block(to = group_by, data = data, ...)
+  initialize_block(new_group_by_block(data, ...), data)
 }
 
 #' @rdname new_block
@@ -688,8 +735,7 @@ new_join_block <- function(
     fields = fields,
     expr = expr,
     ...,
-    class = c("join_block", "transform_block", "submit_block"),
-    layout = join_layout_fields
+    class = c("join_block", "transform_block", "submit_block")
   )
 }
 
@@ -852,8 +898,7 @@ new_plot_block <- function(
         )
     }),
     ...,
-    class = c("plot_block"),
-    layout = plot_layout_fields
+    class = c("plot_block")
   )
 }
 
@@ -1007,8 +1052,7 @@ new_ggiraph_block <- function(
       )
     }),
     ...,
-    class = c("ggiraph_block"),
-    layout = ggiraph_layout_fields
+    class = c("ggiraph_block")
   )
 }
 

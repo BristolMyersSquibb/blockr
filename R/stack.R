@@ -44,12 +44,51 @@ is_stack <- function(x) {
 #' @rdname new_stack
 #' @export
 generate_code.stack <- function(x) {
+  if (length(x) == 0) return(quote(identity()))
 
-  binary_substitute <- function(x, y) {
-    substitute(x %>% y, list(x = x, y = y))
+  # Handles monoblock stacks
+  if (length(x) > 1) {
+    aggregate_code <- function(x, y) {
+      block_combiner(x, y)
+    }
+    Reduce(aggregate_code, lapply(x, \(b) b))
+  } else {
+    generate_code(x[[1]])
   }
+}
 
-  Reduce(binary_substitute, lapply(x, generate_code))
+#' Combine 2 block expressions
+#'
+#' Useful for \link{generate_code}.
+#'
+#' @rdname block_combiner
+#' @param left Left block object in `x %>% y`.
+#' @param right Right block object in `x %>% y`.
+#'
+#' @param ... For generic consistency.
+#' @export
+block_combiner <- function(left, right, ...) UseMethod("block_combiner", right)
+
+#' @rdname block_combiner
+#' @export
+block_combiner.transform_block <- function(left, right, ...) {
+  substitute(
+    left %>% right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
+}
+
+#' @rdname block_combiner
+#' @export
+block_combiner.plot_block <- block_combiner.transform_block
+
+#' @rdname block_combiner
+#' @export
+block_combiner.plot_layer_block <- function(left, right, ...) {
+  substitute(
+    left + right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
 }
 
 #' Add block to a stack
