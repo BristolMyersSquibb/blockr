@@ -20,7 +20,6 @@ new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
   stopifnot(
     is.list(fields),
-    length(fields) >= 1L,
     all(lgl_ply(fields, is_field)),
     is.language(expr),
     is_string(name)
@@ -276,88 +275,89 @@ filesbrowser_block <- function(...) {
 }
 
 #' @rdname new_block
-#' @param parse_func Function to apply to parse a file
 #' @keywords internal
 #' @note Useful to build other parser blocks
-new_parser_block <- function(data, parse_func, ...) {
-  read_data <- function(data) {
-    if (length(data) == 0) {
-      return(data.frame())
+new_parser_block <- function(data, expr, fields = list(), ...,
+                             class = character()) {
+
+  safe_expr <- function(data) {
+    if (length(data)) {
+      expr
+    } else {
+      quote(identity())
     }
-    bquote(
-      .(read_func)(),
-      list(read_func = parse_func)
-    )
   }
 
   new_block(
-    fields = list(
-      expression = new_hidden_field(read_data)
+    fields = c(
+      fields,
+      list(expression = new_hidden_field(safe_expr))
     ),
     expr = quote(.(expression)),
     ...,
-    class = c("csv_parser_block", "transform_block")
+    class = c(class, "parser_block", "transform_block")
   )
 }
 
 #' @rdname new_block
 #' @export
-new_csv_parser_block <- function(data, ...) {
-  new_parser_block(data, parse_func = quote(utils::read.csv))
+new_csv_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(utils::read.csv()), class = "csv_block")
 }
 
 #' @rdname new_block
 #' @export
-csv_parser_block <- function(data, ...) {
-  initialize_block(new_csv_parser_block(data, ...), data)
+csv_block <- function(data, ...) {
+  initialize_block(new_csv_block(data, ...), data)
 }
 
 #' @rdname new_block
 #' @export
-new_rds_parser_block <- function(data, ...) {
-  new_parser_block(data, parse_func = quote(readRDS))
+new_rds_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(readRDS()), class = "rds_block")
 }
 
 #' @rdname new_block
 #' @export
-rds_parser_block <- function(data, ...) {
-  initialize_block(new_rds_parser_block(data, ...), data)
+rds_block <- function(data, ...) {
+  initialize_block(new_rds_block(data, ...), data)
 }
 
 #' @rdname new_block
 #' @export
-new_json_parser_block <- function(data, ...) {
-  new_parser_block(data, parse_func = quote(jsonlite::fromJSON))
+new_json_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(jsonlite::fromJSON()),
+                   class = "json_block")
 }
 
 #' @rdname new_block
 #' @export
-json_parser_block <- function(data, ...) {
-  initialize_block(new_json_parser_block(data, ...), data)
+json_block <- function(data, ...) {
+  initialize_block(new_json_block(data, ...), data)
 }
 
 #' @rdname new_block
 #' @export
-new_sas_parser_block <- function(data, ...) {
-  new_parser_block(data, parse_func = quote(haven::read_sas))
+new_sas_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(haven::read_sas()), class = "sas_block")
 }
 
 #' @rdname new_block
 #' @export
-sas_parser_block <- function(data, ...) {
-  initialize_block(new_sas_parser_block(data, ...), data)
+sas_block <- function(data, ...) {
+  initialize_block(new_sas_block(data, ...), data)
 }
 
 #' @rdname new_block
 #' @export
-new_xpt_parser_block <- function(data, ...) {
-  new_parser_block(data, parse_func = quote(haven::read_xpt))
+new_xpt_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(haven::read_xpt()), class = "xpt_block")
 }
 
 #' @rdname new_block
 #' @export
-xpt_parser_block <- function(data, ...) {
-  initialize_block(new_xpt_parser_block(data, ...), data)
+xpt_block <- function(data, ...) {
+  initialize_block(new_xpt_block(data, ...), data)
 }
 
 #' @rdname new_block

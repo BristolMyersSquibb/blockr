@@ -11,6 +11,7 @@
 \alias{generate_code.block}
 \alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
+\alias{generate_code.data_block}
 \alias{generate_code.call}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
@@ -25,16 +26,16 @@
 \alias{new_filesbrowser_block}
 \alias{filesbrowser_block}
 \alias{new_parser_block}
-\alias{new_csv_parser_block}
-\alias{csv_parser_block}
-\alias{new_rds_parser_block}
-\alias{rds_parser_block}
-\alias{new_json_parser_block}
-\alias{json_parser_block}
-\alias{new_sas_parser_block}
-\alias{sas_parser_block}
-\alias{new_xpt_parser_block}
-\alias{xpt_parser_block}
+\alias{new_csv_block}
+\alias{csv_block}
+\alias{new_rds_block}
+\alias{rds_block}
+\alias{new_json_block}
+\alias{json_block}
+\alias{new_sas_block}
+\alias{sas_block}
+\alias{new_xpt_block}
+\alias{xpt_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -95,6 +96,8 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
+\method{generate_code}{data_block}(x)
+
 \method{generate_code}{call}(x)
 
 evaluate_block(x, ...)
@@ -125,27 +128,27 @@ new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
 
-new_parser_block(data, parse_func, ...)
+new_parser_block(data, expr, fields = list(), ..., class = character())
 
-new_csv_parser_block(data, ...)
+new_csv_block(data, ...)
 
-csv_parser_block(data, ...)
+csv_block(data, ...)
 
-new_rds_parser_block(data, ...)
+new_rds_block(data, ...)
 
-rds_parser_block(data, ...)
+rds_block(data, ...)
 
-new_json_parser_block(data, ...)
+new_json_block(data, ...)
 
-json_parser_block(data, ...)
+json_block(data, ...)
 
-new_sas_parser_block(data, ...)
+new_sas_block(data, ...)
 
-sas_parser_block(data, ...)
+sas_block(data, ...)
 
-new_xpt_parser_block(data, ...)
+new_xpt_block(data, ...)
 
-xpt_parser_block(data, ...)
+xpt_block(data, ...)
 
 \method{initialize_block}{data_block}(x, ...)
 
@@ -282,8 +285,6 @@ of the fields)}
 \item{selected}{Selected dataset.}
 
 \item{volumes}{Paths accessible by the shinyFiles browser.}
-
-\item{parse_func}{Function to apply to parse a file}
 
 \item{columns}{Column(s) to select.}
 
