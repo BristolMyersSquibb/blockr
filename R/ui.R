@@ -716,12 +716,6 @@ uiOutputBlock.plot_block <- function(x, ns) {
 
 #' @rdname generate_ui
 #' @export
-uiOutputBlock.ggiraph_block <- function(x, ns) {
-  ggiraph::girafeOutput(ns("plot"))
-}
-
-#' @rdname generate_ui
-#' @export
 uiCode <- function(x, ns) {
   UseMethod("uiCode", x)
 }
