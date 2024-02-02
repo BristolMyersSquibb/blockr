@@ -199,7 +199,12 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
-      reactiveValues(block = blk(), data = out_dat())
+      return(
+        list(
+          block = blk,
+          data = out_dat
+        )
+      )
     }
   )
 }
@@ -331,9 +336,18 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
         set_title(vals$stack, input$newTitle)
       })
 
-      observeEvent(vals$blocks, {
+      # Any block change: data or input should be sent
+      # up to the stack so we can properly serialise.
+      observeEvent({
+        lapply(vals$blocks, \(b) {
+          list(
+            b$data(),
+            b$block()
+          )
+        })
+      }, {
         if (length(vals$blocks)) {
-          blks <- lapply(vals$blocks, `[[`, "block")
+          blks <- lapply(vals$blocks, \(b) b$block())
           vals$stack <- set_stack_blocks(vals$stack, blks)
         }
       })
@@ -609,7 +623,7 @@ init_block <- function(i, vals, session) {
       NULL
     } else {
       # Data from previous block
-      reactiveVal(vals$blocks[[i - 1]]$data)
+      vals$blocks[[i - 1]]$data
     },
     id = id
   )
