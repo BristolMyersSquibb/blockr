@@ -107,8 +107,7 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  if (is.null(position)) {
-    # inject new block + pass in data from previous block
+  if (is.null(position) || position > length(stack)) {
     position <- length(stack)
   }
 
