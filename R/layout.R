@@ -12,7 +12,7 @@ layout.block <- function(x, fields, ...) {
   # we remove hidden fields
   fields <- fields[lgl_ply(fields, Negate(inherits), "hidden_field")]
 
-  if (length(fields) < 6L) {
+  if (length(fields) <= 6L) {
     return(layout_fields(fields))
   }
 
