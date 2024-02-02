@@ -1,4 +1,45 @@
-is_whole <- \(n) {
+#' Default layout for fields
+#' Default layout for fields, places fields on rows
+#' and collapses parts of inputs when there are too many.
+#' @param x Object (block).
+#' @param fields Named list of fields.
+#' @param ... Currently ignored.
+#' @export
+layout <- function(x, fields, ...) UseMethod("layout", x)
+
+#' @export
+layout.block <- function(x, fields, ...) {
+  # we remove hidden fields
+  fields <- fields[lgl_ply(fields, Negate(inherits), "hidden_field")]
+
+  if (length(fields) <= 6L) {
+    return(layout_fields(fields))
+  }
+
+  id <- rand_names()
+
+  fields_shown <- fields[1:6L]
+  fields_hidden <- fields[7L:length(fields)]
+
+  list(
+    fields_shown |> layout_fields(),
+    tags$a(
+      `data-bs-toggle` = "collapse",
+      href = sprintf("#%s", id),
+      "show more inputs"
+    ),
+    div(
+      id = id,
+      class = "collapse",
+      fields_hidden |> layout_fields()
+    )
+  )
+}
+
+#' Check if number is whole
+#' @param n Number to check.
+is_whole <- \(n = 0L) {
+  stopifnot(is.numeric(n))
   ((n * 10L) %% 10L) == 0L
 }
 
@@ -46,109 +87,4 @@ layout_fields <- function(fields) {
           unname()
       )
     })
-}
-
-#' Default layout for fields
-#' Default layout for fields, places fields on rows
-#' and collapses parts of inputs when there are too many.
-#' @param fields List of fields.
-#' @param ... Currently ignored.
-#' @keywords internal
-default_layout_fields <- function(fields, ...) {
-  # we remove hidden fields
-  fields <- fields[lengths(fields) > 0L]
-
-  if (length(fields) < 6L) {
-    return(layout_fields(fields))
-  }
-
-  id <- rand_names()
-
-  fields_shown <- fields[1:6L]
-  fields_hidden <- fields[7L:length(fields)]
-
-  list(
-    fields_shown |> layout_fields(),
-    tags$a(
-      `data-bs-toggle` = "collapse",
-      href = sprintf("#%s", id),
-      "show more inputs"
-    ),
-    div(
-      id = id,
-      class = "collapse",
-      fields_hidden |> layout_fields()
-    )
-  )
-}
-
-filter_layout_fields <- function(fields, ...) {
-  tagList(
-    div(
-      class = "row",
-      div(
-        class = "col-md-4",
-        fields$columns
-      ),
-      div(
-        class = "col-md-2",
-        fields$filter_func
-      ),
-      div(
-        class = "col-md-4",
-        fields$values
-      ),
-      div(
-        class = "col-md-2",
-        fields$submit
-      )
-    ),
-    fields$expression
-  )
-}
-
-summarize_layout_fields <- function(fields, ...) {
-  tagList(
-    div(
-      class = "row",
-      div(
-        class = "col-md-5",
-        fields$funcs
-      ),
-      div(
-        class = "col-md-5",
-        fields$columns
-      ),
-      div(
-        class = "col-md-2",
-        fields$submit
-      )
-    ),
-    fields$expression
-  )
-}
-
-join_layout_fields <- function(fields, ...) {
-  tagList(
-    div(
-      class = "row",
-      div(
-        class = "col-md-3",
-        fields$join_func
-      ),
-      div(
-        class = "col-md-4",
-        fields$y
-      ),
-      div(
-        class = "col-md-3",
-        fields$by
-      ),
-      div(
-        class = "col-md-2",
-        fields$submit
-      )
-    ),
-    fields$expression
-  )
 }
