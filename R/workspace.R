@@ -12,7 +12,7 @@ set_workspace <- function(..., title = "", settings = NULL, force = FALSE) {
 
   set_workspace_title(title)
   set_workspace_settings(settings)
-  set_workspace_stacks(list(...))
+  set_workspace_stacks(list(...), force)
 
   invisible(workspace_env)
 }
