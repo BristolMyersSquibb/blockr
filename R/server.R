@@ -398,10 +398,10 @@ handle_remove.block <- function(x, vals, session = getDefaultReactiveDomain(), .
       )
     )
 
-    vals$stack[[to_remove]] <- NULL
     vals$blocks[[to_remove]] <- NULL
     # Reinitialize all the downstream stack blocks with new data ...
     if (to_remove < length(vals$stack)) {
+      vals$stack[[to_remove]] <- NULL
       for (i in to_remove:length(vals$stack)) {
         attr(vals$stack[[i]], "position") <- i
         vals$blocks[[i]] <- init_block(i, vals)
