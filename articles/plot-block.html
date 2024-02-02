@@ -150,10 +150,6 @@ to combine with <code>+</code> such as:</p>
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="va">plot_block</span> <span class="op">+</span> <span class="va">layer_block</span></span></code></pre></div>
 <p>All the process is described in the following, which should highlight
 the <strong>flexibility</strong> provided by <code>{blockr}</code>.</p>
-<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
-Notice that the current {blockr} plot_block isn't built layer by layer but as a huge monolitic structure
-which is certainly less flexible than what we show here.
-</div>
 </div>
 <div class="section level3">
 <h3 id="new-block-helpers">New block helpers<a class="anchor" aria-label="anchor" href="#new-block-helpers"></a>
@@ -557,7 +553,7 @@ Below is a possible implementation of an interactive
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">ggiraph_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/new_block.html">initialize_block</a></span><span class="op">(</span><span class="fu"><a href="../reference/new_block.html">new_ggiraph_block</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/new_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_ggiraph_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>

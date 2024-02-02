@@ -112,9 +112,6 @@ plus some meta data.</p>
 <span><span class="co"># S3 method for plot_layer_block</span></span>
 <span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for ggiraph_block</span></span>
-<span><span class="fu">evaluate_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">new_data_block</span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
 <span>  dat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.environment.html" class="external-link">as.environment</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>,</span>
@@ -179,30 +176,6 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">head_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_plot_block</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
-<span>  plot_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, point_size <span class="op">=</span> <span class="fl">3</span>, title <span class="op">=</span> <span class="st">"Plot title"</span>, theme</span>
-<span>    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"theme_minimal"</span>, <span class="st">"theme_gray"</span>, <span class="st">"theme_linedraw"</span>, <span class="st">"theme_dark"</span>, <span class="st">"theme_light"</span>,</span>
-<span>    <span class="st">"theme_classic"</span>, <span class="st">"theme_void"</span>, <span class="st">"theme_bw"</span><span class="op">)</span>, x_lab <span class="op">=</span> <span class="st">"X axis label"</span>, y_lab <span class="op">=</span></span>
-<span>    <span class="st">"Y axis label"</span>, errors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">FALSE</span>, ymin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    lines <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">FALSE</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">plot_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">new_ggiraph_block</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
-<span>  plot_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, point_size <span class="op">=</span> <span class="fl">3</span>, title <span class="op">=</span> <span class="st">"Plot title"</span>, theme</span>
-<span>    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"theme_minimal"</span>, <span class="st">"theme_gray"</span>, <span class="st">"theme_linedraw"</span>, <span class="st">"theme_dark"</span>, <span class="st">"theme_light"</span>,</span>
-<span>    <span class="st">"theme_classic"</span>, <span class="st">"theme_void"</span>, <span class="st">"theme_bw"</span><span class="op">)</span>, x_lab <span class="op">=</span> <span class="st">"X axis label"</span>, y_lab <span class="op">=</span></span>
-<span>    <span class="st">"Y axis label"</span>, errors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span>, ymin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    lines <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">TRUE</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">ggiraph_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for transform_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -222,31 +195,6 @@ plus some meta data.</p>
 <span></span>
 <span><span class="co"># S3 method for plot_block</span></span>
 <span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for ggiraph_block</span></span>
-<span><span class="fu">update_fields</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">new_cheat_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">cheat_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">new_asfactor_block</span><span class="op">(</span><span class="va">data</span>, column <span class="op">=</span> <span class="st">"VISIT"</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">asfactor_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_data_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_join_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_arrange_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_group_by_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_filter_block_1</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_filter_block_2</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">demo_summarize_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for field</span></span>
 <span><span class="fu">is_initialized</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -271,7 +219,7 @@ of the fields)</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Any other params. TO DO</p></dd>
+<dd><p>Further (metadata) attributes</p></dd>
 
 
 <dt>class</dt>
@@ -342,16 +290,8 @@ to join</p></dd>
 <dd><p>Minimum number of rows.</p></dd>
 
 
-<dt>plot_opts</dt>
-<dd><p>List containing options for ggplot (color, ...).</p></dd>
-
-
 <dt>session</dt>
 <dd><p>Shiny session</p></dd>
-
-
-<dt>column</dt>
-<dd><p>Column to apply the operation on.</p></dd>
 
 </dl></div>
 
