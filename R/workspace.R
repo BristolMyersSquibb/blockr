@@ -196,14 +196,26 @@ get_workspace_settings <- function() {
   res
 }
 
+#' @param ... Passed to `set_workspace()`
 #' @param clear Clear current worspace
 #' @param id Workspace ID
 #'
 #' @rdname set_workspace
 #' @export
-serve_workspace <- function(clear = TRUE, id = "myworkspace") {
+serve_workspace <- function(..., clear = NULL, id = "myworkspace") {
+
+  if (...length()) {
+    set_workspace(...)
+  } else if (is.null(clear)) {
+    clear <- TRUE
+  }
 
   if (isTRUE(clear)) {
+
+    if (...length()) {
+      warning("Clearing newly set up workspace")
+    }
+
     clear_workspace()
   }
 

@@ -37,10 +37,10 @@ get_workspace_title()
 
 get_workspace_settings()
 
-serve_workspace(clear = TRUE, id = "myworkspace")
+serve_workspace(..., clear = NULL, id = "myworkspace")
 }
 \arguments{
-\item{...}{A set of of stacks}
+\item{...}{Passed to \code{set_workspace()}}
 
 \item{title}{The workspace title}
 

@@ -506,6 +506,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
       })
 
       observeEvent(lapply(vals$stacks, `[[`, "stack"), {
+        message("UPDADING WORKSPACE")
         set_workspace_stacks(
           lapply(vals$stacks, `[[`, "stack"),
           force = TRUE
