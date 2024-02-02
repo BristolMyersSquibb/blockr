@@ -113,17 +113,6 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  if (length(stack) > 0L) {
-    last <- stack[[length(stack)]]
-    # For now, we won't be able to insert a block
-    # after a plot block. In a later version, we may imagine
-    # have multiple block plot per stack so we'll have to revisit
-    # this ...
-    if (inherits(last, "plot_block")) {
-      stop("Can't insert a block below a plot block.")
-    }
-  }
-
   if (is.null(position)) {
     # inject new block + pass in data from previous block
     position <- length(stack)
