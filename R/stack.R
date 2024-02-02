@@ -112,11 +112,11 @@ add_block <- function(stack, block, position = NULL) {
     position <- length(stack)
   }
 
+  message("ADD BLOCK (position ", position + 1, ")")
+
   if (position < 1L) {
     position <- 1L
   }
-
-  message("ADD BLOCK (position ", position, ")")
 
   # get data from the previous block
   if (length(stack) == 1) {
