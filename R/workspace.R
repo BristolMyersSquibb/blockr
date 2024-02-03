@@ -78,7 +78,7 @@ set_workspace_stacks <- function(stacks, force = FALSE,
 #' @param stack A single stack
 #' @rdname set_workspace
 #' @export
-add_workpace_stack <- function(name, stack, force = FALSE,
+add_workspace_stack <- function(name, stack, force = FALSE,
                                workspace = get_workspace()) {
 
   stopifnot(is_string(name), nzchar(name), is_stack(stack), is_bool(force),

@@ -41,13 +41,19 @@ handle_remove(x, ...)
 
 \method{handle_remove}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
 
-\method{handle_remove}{stack}(x, vals, session = getDefaultReactiveDomain(), ...)
+\method{handle_remove}{stack}(
+  x,
+  vals,
+  session = getDefaultReactiveDomain(),
+  workspace = get_workspace(),
+  ...
+)
 
 \method{generate_server}{workspace}(x, id = NULL, ...)
 
 init(x, ...)
 
-\method{init}{workspace}(x, stacks, vals, session, ...)
+\method{init}{workspace}(x, vals, session, ...)
 
 \method{init}{stack}(x, vals, session, ...)
 }
@@ -66,7 +72,7 @@ init(x, ...)
 
 \item{session}{Shiny session object.}
 
-\item{stacks}{List of workspace stacks.}
+\item{workspace}{The workspace}
 }
 \description{
 Generic for server generation

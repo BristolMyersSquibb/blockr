@@ -4,7 +4,7 @@
 \alias{set_workspace}
 \alias{get_workspace}
 \alias{is_workspace}
-\alias{add_workpace_stack}
+\alias{add_workspace_stack}
 \alias{rm_workspace_stack}
 \alias{set_workspace_title}
 \alias{set_workspace_settings}
@@ -28,7 +28,7 @@ get_workspace()
 
 is_workspace(x)
 
-add_workpace_stack(name, stack, force = FALSE, workspace = get_workspace())
+add_workspace_stack(name, stack, force = FALSE, workspace = get_workspace())
 
 rm_workspace_stack(name, force = FALSE, workspace = get_workspace())
 
