@@ -35,6 +35,7 @@ get_workspace <- function() {
   workspace_env
 }
 
+#' @param x (Workspace) object
 #' @rdname set_workspace
 #' @export
 is_workspace <- function(x) {

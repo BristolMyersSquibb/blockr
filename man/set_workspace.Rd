@@ -64,6 +64,8 @@ serve_workspace(
 
 \item{workspace}{The workspace environment}
 
+\item{x}{(Workspace) object}
+
 \item{name}{Stack name}
 
 \item{stack}{A single stack}
