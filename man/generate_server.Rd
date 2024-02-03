@@ -7,7 +7,6 @@
 \alias{generate_server.upload_block}
 \alias{generate_server.transform_block}
 \alias{generate_server.plot_block}
-\alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
 \alias{handle_remove}
 \alias{handle_remove.block}
@@ -30,9 +29,7 @@ generate_server(x, ...)
 
 \method{generate_server}{plot_block}(x, in_dat, id, ...)
 
-\method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
-
-\method{generate_server}{stack}(x, id, new_block = NULL, ...)
+\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
 
 handle_remove(x, ...)
 
