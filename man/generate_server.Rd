@@ -3,7 +3,6 @@
 \name{generate_server.keyvalue_field}
 \alias{generate_server.keyvalue_field}
 \alias{generate_server}
-\alias{generate_server.block}
 \alias{generate_server.data_block}
 \alias{generate_server.upload_block}
 \alias{generate_server.transform_block}
@@ -23,8 +22,6 @@
 
 generate_server(x, ...)
 
-\method{generate_server}{block}(x, ...)
-
 \method{generate_server}{data_block}(x, id, ...)
 
 \method{generate_server}{upload_block}(x, id, ...)
@@ -35,27 +32,28 @@ generate_server(x, ...)
 
 \method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
+\method{generate_server}{stack}(x, id, new_block = NULL, ...)
 
 handle_remove(x, ...)
 
-\method{handle_remove}{block}(x, vals, stack_id, session = getDefaultReactiveDomain(), ...)
+\method{handle_remove}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
 
 \method{handle_remove}{stack}(
   x,
   vals,
+  id,
   session = getDefaultReactiveDomain(),
   workspace = get_workspace(),
   ...
 )
 
-\method{generate_server}{workspace}(x, id = NULL, ...)
+\method{generate_server}{workspace}(x, id, ...)
 
 init(x, ...)
 
 \method{init}{workspace}(x, vals, session, ...)
 
-\method{init}{stack}(x, vals, stack_id, ...)
+\method{init}{stack}(x, vals, ...)
 }
 \arguments{
 \item{x}{Element.}
@@ -69,8 +67,6 @@ init(x, ...)
 \item{new_block}{For dynamically inserted blocks.}
 
 \item{vals}{Internal reactive values.}
-
-\item{stack_id}{Stack ID}
 
 \item{session}{Shiny session object.}
 

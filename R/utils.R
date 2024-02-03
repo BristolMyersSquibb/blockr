@@ -341,7 +341,6 @@ validate_inputs <- function(blk, is_valid, session) {
 #' @keywords internal
 validate_block <- function(blk, is_valid, session) {
   ns <- session$ns
-
   session$sendCustomMessage(
     "validate-block",
     list(

@@ -180,8 +180,6 @@ generate_ui.block <- function(x, id, ...,
 
   stopifnot(...length() == 0L)
 
-  browser()
-
   ns <- NS(id)
 
   block_class <- "block"
@@ -248,14 +246,10 @@ add_block_ui <- function(ns = identity) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(
-  x,
-  id = NULL,
-  ...
-) {
+generate_ui.stack <- function(x, id, ...) {
+
   stopifnot(...length() == 0L)
 
-  id <- if (is.null(id)) attr(x, "name") else id
   ns <- NS(id)
 
   tagList(
@@ -316,6 +310,7 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
 inject_remove_button.stack <- function(x, id, ...) {
 
   ui <- generate_ui(x, id)
+  ns <- NS(id)
 
   tmp <- htmltools::tagQuery(ui)$
     find(".stack-tools")$
@@ -324,7 +319,7 @@ inject_remove_button.stack <- function(x, id, ...) {
 
   tmp[[1]] <- tagAppendChildren(
     tmp[[1]],
-    add_block_ui(NS(id))
+    add_block_ui(ns)
   )
 
   div(class = "col m-1", tmp)
@@ -379,24 +374,26 @@ stack_header.stack <- function(x, title, ns, ...) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.workspace <- function(x, id = NULL, ...) {
-  stopifnot(...length() == 0L)
+generate_ui.workspace <- function(x, id, ...) {
 
-  id <- if (is.null(id)) attr(x, "name") else id
+  stopifnot(...length() == 0L)
 
   ns <- NS(id)
 
   stacks <- get_workspace_stacks(workspace = x)
 
-  stack_ui <- NULL
-
   if (length(stacks) > 0) {
-    stack_ui <-  div(
+
+    stack_ui <- div(
       class = "row stacks",
       lapply(seq_along(stacks), \(i) {
         inject_remove_button(stacks[[i]], ns(names(stacks)[i]))
       })
     )
+
+  } else {
+
+    stack_ui <- NULL
   }
 
   tagList(
