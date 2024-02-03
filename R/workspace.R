@@ -14,7 +14,7 @@ set_workspace <- function(..., title = "", settings = NULL, force = FALSE,
 
   set_workspace_title(title, workspace)
   set_workspace_settings(settings, workspace)
-  set_workspace_stacks(list(...), workspace)
+  set_workspace_stacks(list(...), force, workspace)
 
   invisible(workspace)
 }
@@ -29,14 +29,17 @@ workspace_env <- structure(
 #' @rdname set_workspace
 #' @export
 get_workspace <- function() {
-  res <- workspace_env
-  stopifnot(inherits(res, "workspace"))
-  res
+
+  stopifnot(is_workspace(workspace_env))
+
+  workspace_env
 }
 
 #' @rdname set_workspace
 #' @export
-is_workspace <- function(x) inherits(x, "workspace")
+is_workspace <- function(x) {
+  inherits(x, "workspace")
+}
 
 set_workspace_stacks <- function(stacks, force = FALSE,
                                  workspace = get_workspace()) {
@@ -270,7 +273,7 @@ serve_workspace <- function(..., clear = NULL, id = "myworkspace",
     clear_workspace(workspace)
   }
 
-  ws <- get_workspace(workspace)
+  ws <- get_workspace()
 
   ui <- bslib::page_fluid(
     generate_ui(ws, id = id)
