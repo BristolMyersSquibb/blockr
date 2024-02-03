@@ -39,7 +39,7 @@ generate_server(x, ...)
 
 handle_remove(x, ...)
 
-\method{handle_remove}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
+\method{handle_remove}{block}(x, vals, stack_id, session = getDefaultReactiveDomain(), ...)
 
 \method{handle_remove}{stack}(
   x,
@@ -55,7 +55,7 @@ init(x, ...)
 
 \method{init}{workspace}(x, vals, session, ...)
 
-\method{init}{stack}(x, vals, session, ...)
+\method{init}{stack}(x, vals, stack_id, ...)
 }
 \arguments{
 \item{x}{Element.}
@@ -69,6 +69,8 @@ init(x, ...)
 \item{new_block}{For dynamically inserted blocks.}
 
 \item{vals}{Internal reactive values.}
+
+\item{stack_id}{Stack ID}
 
 \item{session}{Shiny session object.}
 

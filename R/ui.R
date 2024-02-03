@@ -175,8 +175,12 @@ remove_button.block <- function(x, id, ...) {
 #' @param id UI IDs
 #' @rdname generate_ui
 #' @export
-generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+generate_ui.block <- function(x, id, ...,
+                              .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+
   stopifnot(...length() == 0L)
+
+  browser()
 
   ns <- NS(id)
 
@@ -208,8 +212,8 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 #'
 #' Useful to allow stack to add blocks to it.
 #' The selected block can be accessed through `input$selected_block`.
-#' Combined to the blocks registry API, this allows to select a block from R like
-#' \code{available_blocks()[[input$selected_block]]}.
+#' Combined to the blocks registry API, this allows to select a block from R
+#' like \code{available_blocks()[[input$selected_block]]}.
 #'
 #' @param ns Stack namespace. Default to \link{identity} so
 #' that it can be used when the stack is the top level element.
@@ -305,21 +309,24 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
 #' namespace. This can also be called dynamically when
 #' inserting a new stack within a workspace.
 #'
-#' @param ns Parent namespace.
+#' @param id Parent ID
 #'
 #' @export
 #' @rdname generate_ui
-inject_remove_button.stack <- function(x, ns, ...) {
-  id <- attr(x, "name")
-  tmp <- htmltools::tagQuery(generate_ui(x, id = ns(id)))$
+inject_remove_button.stack <- function(x, id, ...) {
+
+  ui <- generate_ui(x, id)
+
+  tmp <- htmltools::tagQuery(ui)$
     find(".stack-tools")$
     prepend(remove_button(x, ns(sprintf("remove-stack-%s", id))))$
-  allTags()
+    allTags()
 
   tmp[[1]] <- tagAppendChildren(
     tmp[[1]],
-    add_block_ui(NS(ns(attr(x, "name"))))
+    add_block_ui(NS(id))
   )
+
   div(class = "col m-1", tmp)
 }
 
@@ -379,14 +386,15 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
 
   ns <- NS(id)
 
-  stacks <- get_workspace_stacks()
+  stacks <- get_workspace_stacks(workspace = x)
 
   stack_ui <- NULL
+
   if (length(stacks) > 0) {
     stack_ui <-  div(
       class = "row stacks",
       lapply(seq_along(stacks), \(i) {
-        inject_remove_button(stacks[[i]], ns)
+        inject_remove_button(stacks[[i]], ns(names(stacks)[i]))
       })
     )
   }

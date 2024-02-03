@@ -241,6 +241,7 @@ generate_server.ggiraph_block <- generate_server.plot_block
 #' @param new_block For dynamically inserted blocks.
 #' @export
 generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
+
   stopifnot(...length() == 0L)
 
   id <- if (is.null(id)) attr(x, "name") else id
@@ -253,7 +254,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
         blocks = vector("list", length(x))
       )
 
-      init(x, vals, session)
+      init(x, vals, id)
 
       # Add new block
       observeEvent(
@@ -278,7 +279,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
           if (p < 0L)
             p <- 1L
 
-          vals$blocks[[p]] <- init_block(p, vals)
+          vals$blocks[[p]] <- init_block(p, vals, id)
 
           # Insert UI
           if (p > 1L) {
@@ -310,7 +311,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
           }
 
           # Dynamically handle remove block event
-          handle_remove(vals$stack[[p]], vals)
+          handle_remove(vals$stack[[p]], vals, id)
 
           # trigger javascript-ui functionalities on add
           session$sendCustomMessage(
@@ -378,10 +379,13 @@ handle_remove <- function(x, ...) {
 #' Necessary to be able to remove the block from the stack.
 #'
 #' @param vals Internal reactive values.
+#' @param stack_id Stack ID
 #' @param session Shiny session object.
 #' @export
 #' @rdname generate_server
-handle_remove.block <- function(x, vals, session = getDefaultReactiveDomain(), ...) {
+handle_remove.block <- function(x, vals, stack_id,
+                                session = getDefaultReactiveDomain(), ...) {
+
   input <- session$input
   id <- attr(x, "name")
   observeEvent({
@@ -404,7 +408,7 @@ handle_remove.block <- function(x, vals, session = getDefaultReactiveDomain(), .
       vals$stack[[to_remove]] <- NULL
       for (i in to_remove:length(vals$stack)) {
         attr(vals$stack[[i]], "position") <- i
-        vals$blocks[[i]] <- init_block(i, vals)
+        vals$blocks[[i]] <- init_block(i, vals, stack_id)
       }
     }
   })
@@ -504,7 +508,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
         )
 
         # Handle new block injection
-        inject_block(input, vals, id = stack_id)
+        inject_block(input, vals, stack_id)
       })
 
       observeEvent(lapply(vals$stacks, `[[`, "stack"), {
@@ -552,13 +556,13 @@ init.workspace <- function(x, vals, session, ...) {
 
     for (nme in names(stacks)) {
 
+      handle_remove(stacks[[nme]], vals, workspace = x)
+
       vals$stacks[[nme]] <- generate_server(
         stacks[[nme]],
         id = nme,
         new_block = reactive(vals$new_block[[nme]])
       )
-
-      handle_remove(stacks[[nme]], vals, workspace = x)
 
       # To dynamically insert blocks
       inject_block(input, vals, nme)
@@ -587,16 +591,16 @@ inject_block <- function(input, vals, id) {
 #'
 #' @export
 #' @rdname generate_server
-init.stack <- function(x, vals, session, ...) {
+init.stack <- function(x, vals, stack_id, ...) {
   observeEvent(TRUE, {
     for (i in seq_along(x)) {
-      vals$blocks[[i]] <- init_block(i, vals, session)
+      vals$blocks[[i]] <- init_block(i, vals, stack_id)
     }
   })
   # Remove block from stack (can't be done within the block)
   # This works for extisting blocks. Newly added blocks need
   # to be handled separately.
-  lapply(x, handle_remove, vals = vals)
+  lapply(x, handle_remove, vals, stack_id)
 }
 
 #' Init a single block
@@ -605,12 +609,12 @@ init.stack <- function(x, vals, session, ...) {
 #' to be called after \link{add_block}.
 #'
 #' @param i Block position
-#' @param vals Reactive values containing the stack.
-#' @param session Shiny session object.
+#' @param vals Reactive values containing the stack
+#' @param stack_id Stack ID
 #'
 #' @keywords internal
-init_block <- function(i, vals, session) {
-  id <- attr(vals$stack[[i]], "name")
+init_block <- function(i, vals, stack_id) {
+
   generate_server(
     vals$stack[[i]],
     in_dat = if (i == 1) {
@@ -620,7 +624,7 @@ init_block <- function(i, vals, session) {
       # Data from previous block
       vals$blocks[[i - 1]]$data
     },
-    id = id
+    id = stack_id
   )
 }
 
