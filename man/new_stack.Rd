@@ -13,7 +13,7 @@ is_stack(x)
 
 \method{generate_code}{stack}(x)
 
-serve_stack(stack)
+serve_stack(stack, id = "my_stack")
 }
 \arguments{
 \item{...}{An ordered set of blocks (each argument is required to inherit
@@ -24,6 +24,8 @@ from \code{"block"})}
 \item{x}{An object inheriting form \code{"stack"}}
 
 \item{stack}{An object inheriting form \code{"stack"}}
+
+\item{id}{Stack ID}
 }
 \description{
 A set of blocks can be assembled into a stack.

@@ -29,7 +29,7 @@ generate_server(x, ...)
 
 \method{generate_server}{plot_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
+\method{generate_server}{stack}(x, id, new_block = NULL, ...)
 
 handle_remove(x, ...)
 

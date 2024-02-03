@@ -20,7 +20,7 @@ test_that("workspace", {
     new_select_block
   )
 
-  add_workpace_stack("stack2", stack2)
+  add_workspace_stack("stack2", stack2)
 
   expect_length(get_workspace_stacks(), 2L)
   expect_identical(get_workspace_title(), "")

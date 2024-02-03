@@ -208,13 +208,16 @@ move_block <- function(stack, from, to) {
 }
 
 #' @param stack An object inheriting form `"stack"`
+#' @param id Stack ID
+#'
 #' @rdname new_stack
 #' @export
-serve_stack <- function(stack) {
-  ui <- bslib::page_fluid(generate_ui(stack))
+serve_stack <- function(stack, id = "my_stack") {
+
+  ui <- bslib::page_fluid(generate_ui(stack, id))
 
   server <- function(input, output, session) {
-    generate_server(stack)
+    generate_server(stack, id)
   }
 
   shinyApp(ui, server)
