@@ -80,7 +80,7 @@ set_workspace_stacks <- function(stacks, force = FALSE,
 #' @rdname set_workspace
 #' @export
 add_workspace_stack <- function(name, stack, force = FALSE,
-                               workspace = get_workspace()) {
+                                workspace = get_workspace()) {
 
   stopifnot(is_string(name), nzchar(name), is_stack(stack), is_bool(force),
             is_workspace(workspace))

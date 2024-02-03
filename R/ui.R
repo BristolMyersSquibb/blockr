@@ -312,10 +312,7 @@ inject_remove_button.stack <- function(x, id, ...) {
 
   rm_btn <- remove_button(x, ns("remove-stack"))
 
-  tmp <- htmltools::tagQuery(ui)$
-    find(".stack-tools")$
-    prepend(rm_btn)$
-    allTags()
+  tmp <- htmltools::tagQuery(ui)$find(".stack-tools")$prepend(rm_btn)$allTags()
 
   tmp[[1]] <- tagAppendChildren(
     tmp[[1]],
