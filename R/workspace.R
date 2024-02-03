@@ -184,7 +184,7 @@ clear_workspace <- function(workspace = get_workspace()) {
 
   stopifnot(is_workspace(workspace))
 
-  clear_workspace_stacks(workspace)
+  clear_workspace_stacks(workspace = workspace)
   clear_workspace_title(workspace)
   clear_workspace_settings(workspace)
 

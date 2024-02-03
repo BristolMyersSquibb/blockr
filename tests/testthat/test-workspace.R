@@ -56,4 +56,13 @@ test_that("workspace", {
 
   set_workspace_settings("{\"foo\": \"bar\"}")
   expect_identical(get_workspace_settings(), list(foo = "bar"))
+
+  clear_workspace()
+
+  expect_length(get_workspace_stacks(), 0L)
+  expect_identical(get_workspace_title(), "")
+  expect_identical(get_workspace_settings(), list())
+
+  app <- serve_workspace(my_stack = new_stack(data_block))
+  expect_s3_class(app, "shiny.appobj")
 })
