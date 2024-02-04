@@ -28,20 +28,17 @@ Imports:
     shiny,
     dplyr,
     utils,
-    ggplot2,
     bslib,
     methods,
     DT,
     blockr.data,
     htmltools,
-    ggiraph,
     shinyAce,
     jsonlite,
     shinyFiles,
     memuse
 Remotes:
     blockr-org/blockr.data,
-    blockr-org/bmsui,
     DivadNojnarg/DiagrammeR
 Suggests: 
     knitr,

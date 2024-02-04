@@ -1,5 +1,6 @@
 library(dplyr)
 library(blockr.data)
+
 test_that("data blocks", {
   block <- data_block()
 
@@ -91,37 +92,6 @@ test_that("join blocks", {
   block <- join_block(band_members, y = "band_instruments", type = "inner")
   res <- evaluate_block(block, band_members)
   expect_equal(nrow(res), 2)
-})
-
-test_that("plot block", {
-  data <- merged_data |>
-    filter(LBTEST == "Hemoglobin") |>
-    filter(!startsWith(VISIT, "UNSCHEDULED")) |>
-    arrange(VISITNUM) |>
-    mutate(
-      VISIT = factor(
-        VISIT,
-        levels = unique(VISIT),
-        ordered = TRUE
-      )
-    ) |>
-    group_by(VISIT, ACTARM) |>
-    summarise(
-      Mean = mean(LBSTRESN, na.rm = TRUE),
-      SE = sd(LBSTRESN, na.rm = TRUE) / sqrt(n()),
-      .groups = "drop"
-    ) |>
-    rowwise() |>
-    mutate(ymin = Mean - SE, ymax = Mean + SE)
-
-  block <- plot_block(data)
-
-  expect_s3_class(block, "plot_block")
-  expect_type(block, "list")
-
-  res <- evaluate_block(block, data)
-  expect_s3_class(res, "ggplot")
-  # TO DO: more testing for ggplot2 element ...
 })
 
 test_that("head blocks", {

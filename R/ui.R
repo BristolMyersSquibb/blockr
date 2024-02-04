@@ -29,11 +29,9 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
     name = names(x)
   )
 
-  layout <- attr(x, "layout")
-
   div(
     class = sprintf("block-inputs mt-2 %s", inputs_hidden),
-    layout(fields)
+    layout(x, fields)
   )
 }
 
@@ -714,12 +712,6 @@ uiOutputBlock.block <- function(x, ns) {
 #' @export
 uiOutputBlock.plot_block <- function(x, ns) {
   shiny::plotOutput(ns("plot"))
-}
-
-#' @rdname generate_ui
-#' @export
-uiOutputBlock.ggiraph_block <- function(x, ns) {
-  ggiraph::girafeOutput(ns("plot"))
 }
 
 #' @rdname generate_ui
