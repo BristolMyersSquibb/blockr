@@ -100,9 +100,12 @@ get_log_level <- function() {
   )
 }
 
-get_logger <- function() getOption("BLOCKR_LOGGER", default_logger)
+get_logger <- function() getOption("BLOCKR_LOGGER", cat_logger)
 
-default_logger <- function(msg, level) {
+#' @param msg Message (string)
+#' @rdname write_log
+#' @export
+cnd_logger <- function(msg, level) {
 
   if (level == fatal_log_level) {
     stop(msg, call. = FALSE)
@@ -113,4 +116,21 @@ default_logger <- function(msg, level) {
   } else {
     message(msg)
   }
+}
+
+#' @rdname write_log
+#' @export
+cat_logger <- function(msg, level) {
+
+  if (level == fatal_log_level) {
+    stop(msg, call. = FALSE)
+  }
+
+  if (level == error_log_level) {
+    out <- stderr()
+  } else {
+    out <- stdout()
+  }
+
+  cat(msg, file = out)
 }
