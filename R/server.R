@@ -123,18 +123,18 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
           data = in_dat()
         )
         blk(b)
-        log_info("Updating block ", class(x)[[1]])
+        log_debug("Updating block ", class(x)[[1]])
 
         # 2. Update UI
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
-        log_info("Updating UI of block ", class(x)[[1]])
+        log_debug("Updating UI of block ", class(x)[[1]])
       }) |>
         bindEvent(r_values(), in_dat())
 
       # Validate block inputs
       if (display != "plot") {
         obs$validate_inputs <- observeEvent(r_values(), {
-          log_info("Validating block ", class(x)[[1]])
+          log_debug("Validating block ", class(x)[[1]])
           blk_no_srv <- blk()
           blk_no_srv[is_srv] <- NULL    # to keep class etc
           validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
@@ -446,7 +446,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
 
       # Add stack
       observeEvent(input$add_stack, {
-        log_info("ADD STACK")
+        log_debug("ADD STACK")
         add_workpace_stack(
           sprintf("stack-%s", length(vals$stacks) + 1),
           new_stack(data_block)
