@@ -399,3 +399,8 @@ create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) 
     `data-external` = "1"
   )
 }
+
+last_val <- function(x) {
+  len <- length(x)
+  if (len) x[[len]] else x
+}

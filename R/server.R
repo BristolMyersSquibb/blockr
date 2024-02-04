@@ -328,12 +328,17 @@ generate_server.stack <- function(x, id, new_block = NULL, ...) {
 
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
-      observeEvent(lapply(vals$blocks, \(b) b$block()), {
+      observeEvent(
+        c(
+          lapply(vals$blocks, \(b) b$block()),
+          last_val(vals$blocks)$data()
+        ), {
         vals$stack <- set_stack_blocks(
           vals$stack,
-          lapply(vals$blocks, \(b) b$block())
-        )
-      })
+          lapply(vals$blocks, \(b) b$block()),
+          last_val(vals$blocks)$data()
+        )}
+      )
 
       observe({
         session$sendCustomMessage(

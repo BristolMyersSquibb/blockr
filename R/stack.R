@@ -29,18 +29,21 @@ new_stack <- function(..., title = "Stack") {
   } else {
 
     blocks <- list()
+    temp <- list()
   }
 
   stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks, title = title, name = rand_names(), class = "stack")
+  structure(blocks, title = title, name = rand_names(), result = temp,
+            class = "stack")
 }
 
-set_stack_blocks <- function(stack, blocks) {
+set_stack_blocks <- function(stack, blocks, result) {
 
   stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
 
   attributes(blocks) <- attributes(stack)
+  attr(blocks, "result") <- result
 
   blocks
 }
@@ -54,6 +57,11 @@ set_stack_name <- function(stack, name) {
   stopifnot(is_stack(stack), is_string(name))
   attr(stack, "name") <- name
   stack
+}
+
+get_stack_result <- function(stack) {
+  stopifnot(is_stack(stack))
+  attr(stack, "result")
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -175,7 +183,7 @@ add_block <- function(stack, block, position = NULL) {
     tmp <- do.call(block, list(data = data, position = position))
   }
 
-  set_stack_blocks(stack, append(stack, list(tmp), position))
+  set_stack_blocks(stack, append(stack, list(tmp), position), data)
 }
 
 #' Move blocks within a stack
