@@ -553,7 +553,7 @@ init.workspace <- function(x, vals, session, ...) {
 
   observeEvent(TRUE, {
 
-    for (nme in names(stacks)) {
+    lapply(names(stacks), \(nme) {
 
       handle_remove(stacks[[nme]], vals, nme, workspace = x)
 
@@ -565,7 +565,7 @@ init.workspace <- function(x, vals, session, ...) {
 
       # To dynamically insert blocks
       inject_block(input, vals, nme)
-    }
+    })
   })
 }
 
