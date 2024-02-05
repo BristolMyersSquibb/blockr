@@ -3,11 +3,9 @@
 \name{generate_server.keyvalue_field}
 \alias{generate_server.keyvalue_field}
 \alias{generate_server}
-\alias{generate_server.block}
 \alias{generate_server.data_block}
 \alias{generate_server.transform_block}
 \alias{generate_server.plot_block}
-\alias{generate_server.ggiraph_block}
 \alias{generate_server.stack}
 \alias{handle_remove}
 \alias{handle_remove.block}
@@ -22,31 +20,40 @@
 
 generate_server(x, ...)
 
-\method{generate_server}{block}(x, ...)
-
 \method{generate_server}{data_block}(x, id, ...)
 
 \method{generate_server}{transform_block}(x, in_dat, id, ...)
 
 \method{generate_server}{plot_block}(x, in_dat, id, ...)
 
-\method{generate_server}{ggiraph_block}(x, in_dat, id, ...)
-
-\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
+\method{generate_server}{stack}(
+  x,
+  id = NULL,
+  new_block = NULL,
+  workspace = get_workspace(),
+  ...
+)
 
 handle_remove(x, ...)
 
 \method{handle_remove}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
 
-\method{handle_remove}{stack}(x, vals, session = getDefaultReactiveDomain(), ...)
+\method{handle_remove}{stack}(
+  x,
+  vals,
+  id,
+  session = getDefaultReactiveDomain(),
+  workspace = get_workspace(),
+  ...
+)
 
-\method{generate_server}{workspace}(x, id = NULL, ...)
+\method{generate_server}{workspace}(x, id, ...)
 
 init(x, ...)
 
-\method{init}{workspace}(x, stacks, vals, session, ...)
+\method{init}{workspace}(x, vals, session, ...)
 
-\method{init}{stack}(x, vals, session, ...)
+\method{init}{stack}(x, vals, ...)
 }
 \arguments{
 \item{x}{Element.}
@@ -59,11 +66,11 @@ init(x, ...)
 
 \item{new_block}{For dynamically inserted blocks.}
 
+\item{workspace}{The workspace}
+
 \item{vals}{Internal reactive values.}
 
 \item{session}{Shiny session object.}
-
-\item{stacks}{List of workspace stacks.}
 }
 \description{
 Generic for server generation
