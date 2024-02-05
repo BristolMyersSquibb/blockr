@@ -84,9 +84,6 @@ Handle initialisation of workspace, stacks, ..."><!-- mathjax --><script src="ht
 <span></span>
 <span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for block</span></span>
-<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for data_block</span></span>
 <span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -100,7 +97,13 @@ Handle initialisation of workspace, stacks, ..."><!-- mathjax --><script src="ht
 <span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">in_dat</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stack</span></span>
-<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, id <span class="op">=</span> <span class="cn">NULL</span>, new_block <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">generate_server</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  id <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  new_block <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  workspace <span class="op">=</span> <span class="fu"><a href="set_workspace.html">get_workspace</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">handle_remove</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -108,18 +111,25 @@ Handle initialisation of workspace, stacks, ..."><!-- mathjax --><script src="ht
 <span><span class="fu">handle_remove</span><span class="op">(</span><span class="va">x</span>, <span class="va">vals</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stack</span></span>
-<span><span class="fu">handle_remove</span><span class="op">(</span><span class="va">x</span>, <span class="va">vals</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">handle_remove</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">vals</span>,</span>
+<span>  <span class="va">id</span>,</span>
+<span>  session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  workspace <span class="op">=</span> <span class="fu"><a href="set_workspace.html">get_workspace</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for workspace</span></span>
-<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, id <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">generate_server</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">init</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for workspace</span></span>
-<span><span class="fu">init</span><span class="op">(</span><span class="va">x</span>, <span class="va">stacks</span>, <span class="va">vals</span>, <span class="va">session</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">init</span><span class="op">(</span><span class="va">x</span>, <span class="va">vals</span>, <span class="va">session</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stack</span></span>
-<span><span class="fu">init</span><span class="op">(</span><span class="va">x</span>, <span class="va">vals</span>, <span class="va">session</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">init</span><span class="op">(</span><span class="va">x</span>, <span class="va">vals</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -144,16 +154,16 @@ Handle initialisation of workspace, stacks, ..."><!-- mathjax --><script src="ht
 <dd><p>For dynamically inserted blocks.</p></dd>
 
 
+<dt>workspace</dt>
+<dd><p>The workspace</p></dd>
+
+
 <dt>vals</dt>
 <dd><p>Internal reactive values.</p></dd>
 
 
 <dt>session</dt>
 <dd><p>Shiny session object.</p></dd>
-
-
-<dt>stacks</dt>
-<dd><p>List of workspace stacks.</p></dd>
 
 </dl></div>
 
