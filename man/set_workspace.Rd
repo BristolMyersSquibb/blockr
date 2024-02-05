@@ -25,7 +25,7 @@ set_workspace(
   workspace = get_workspace()
 )
 
-restore_workspace(workspace, force = FALSE)
+restore_workspace(x, force = FALSE, workspace = get_workspace())
 
 get_workspace()
 

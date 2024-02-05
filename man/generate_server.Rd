@@ -74,8 +74,6 @@ init(x, ...)
 \item{vals}{Internal reactive values.}
 
 \item{session}{Shiny session object.}
-
-\item{stacks}{List of workspace stacks.}
 }
 \description{
 Generic for server generation
