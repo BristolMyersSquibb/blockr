@@ -216,6 +216,11 @@ generate_ui.block <- function(x, id, ...,
 #'
 #' @export
 add_block_ui <- function(ns = identity) {
+
+  add_block_ui_id <- ns("add")
+
+  message("Adding \"add block\" UI with ID ", add_block_ui_id)
+
   div(
     class = "d-flex justify-content-center",
     tags$button(
@@ -237,7 +242,11 @@ add_block_ui <- function(ns = identity) {
         choices = names(available_blocks()),
         inline = TRUE
       ),
-      actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")
+      actionButton(
+        add_block_ui_id,
+        icon("plus"),
+        `data-bs-dismiss` = "offcanvas"
+      )
     )
   )
 }

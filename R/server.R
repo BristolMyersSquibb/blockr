@@ -561,7 +561,12 @@ init.workspace <- function(x, vals, session, ...) {
 #'
 #' @keywords internal
 inject_block <- function(input, vals, id) {
-  observeEvent(input[[sprintf("%s-add", id)]], {
+
+  listener_id <- sprintf("%s-add", id)
+
+  message("Setting up \"add block\" listener with ID ", listener_id)
+
+  observeEvent(input[[listener_id]], {
     # Reset to avoid re-adding existing blocks to stacks
     vals$new_block <- NULL
     block <- available_blocks()[[input[[sprintf("%s-selected_block", id)]]]]
