@@ -1,0 +1,528 @@
+---
+title: "3. Case study: create a plot block"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{3. Case study: create a plot block}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(blockr)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
+```
+
+In this vignette, we show how to create a plot block __layer__ by layer with the `{ggplot2}` package.
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "Before going further, please be sure to read the S3 chapter of advanced R: https://adv-r.hadley.nz/s3.html.", #nolint
+  color = "warning"
+)
+```
+
+## Introduction
+
+### Anatomy of a `{ggplot2}` plot
+
+With `{ggplot2}`, plots are built __layer__ by __layer__. It all starts with
+`ggplot()` which initialises the ggplot object passing optional data and mappings.
+Then, we add __geoms__, like `geom_point()`. Geoms also accept custom __mappings__ (overwrite mappings
+passed to the first `ggplot()` call), data, as well as other parameters.
+As a result, there are many ways to build a ggplot:
+
+```r
+# 1
+ggplot(data = <DATA>, mapping = <MAPPING>) +
+  geom_point()
+# 2
+ggplot(data = <DATA>) +
+  geom_point(mapping = <MAPPING>) +
+  geom_point(mapping = <MAPPING>)
+
+# 3
+ggplot() +
+  geom_point(data = <DATA>, mapping = <MAPPING>) +
+  geom_point(data = <DATA>, mapping = <MAPPING>)
+```
+
+In this tutorial, we go for the first option.
+
+### To do list
+
+What do we need to create?
+
+It seems obvious to add new `ggplot_block()` and geom __constructors__. On the Shiny side, we have to handle the 
+plot output element. Remember that the `server_output()` __generic__ is defined in the `{blockr}`
+`server.R` script. It supports tables with `server_output.block()` and plots with `server_output.plot_block()`.
+Therefore, we don't need to create another S3 method and have to make sure our new plot block inherits
+from the `plot_block` class to __dispatch__ to the correct method. Most of our work will be on the block side since
+we'll have to generate the plot layer by layer, each layer being a block. Before writing this vignette,
+`{blockr}` did not support layer by layer plots. This new concept required to expose a new way of combining plot expressions
+to generate the entire stack code. With the previous infrastructure, we could only do:
+
+```r
+data %>% block_1 %>% block_2
+```
+
+However, handling `{ggplot2}` grammar requires to be able to combine with `+` such as:
+
+```r
+data %>% plot_block + layer_block
+```
+
+All the process is described in the following, which should 
+highlight the __flexibility__ provided by `{blockr}`.
+
+### New block helpers
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "What is described in the following may not be necessary in all cases and 
+  is specific to `{ggplot2}` which brings specific syntax like `+`. 
+  `{blockr}` now supports layer by layer plots and you theoretically only have 
+  to create the corresponding blocks (See next section). 
+  What we show below is sort of 'making off' that will serve to advanced users.",
+  color = "warning"
+)
+```
+
+#### New `evaluate_block()` method
+
+We define below a new way to pass data to a block layer, through the `evaluate_block.plot_layer_block()` method.
+As a consequence, these block layer must have the `plot_layer_block` class:
+
+```r
+evaluate_block.plot_layer_block <- function(x, data, ...) {
+  stopifnot(...length() == 0L)
+  eval(
+    substitute(data + expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
+}
+```
+
+Compared to `evaluate_block.transform_block()`, we simply replaced `%>%` by `+`. Nothing more! 
+As a side note, if you had to develop your own method in a test script, 
+you could register it and test it with:
+
+```r
+.S3method("<GENERIC>", "<CLASS>", <METHOD>)
+```
+
+#### Generate a valid stack code
+
+Before adding the layer by layer plot blocks, `generate_code.stack()` was:
+
+```r
+generate_code.stack <- function(x) {
+
+  binary_substitute <- function(x, y) {
+    substitute(x %>% y, list(x = x, y = y))
+  }
+
+  Reduce(binary_substitute, lapply(x, generate_code))
+}
+```
+
+This method leverages `Reduce()` which applies a __binary function__ to combine 
+elements of a vector (from left to right by default).
+For instance, we could sum the 3 first integers with:
+
+```r
+Reduce(`+`, 1:3)
+```
+
+`generate_code.stack()` successively combines all the block expressions given by `lapply(x, generate_code)`. 
+If there are 3 blocks in the stack:
+
+```r
+my_stack <- new_stack(data_block, filter_block, select_block)
+```
+
+`binary_substitute` is called twice:
+
+- Once to combine x being `<data_block_EXPR>` (the data block expression) and y being `<filter_block_EXPR>`, 
+to give `<data_block_EXPR> %>% <filter_block_EXPR>`.
+- Then to combine the previous result, namely x, equal to `<data_block_EXPR> %>% <filter_block_EXPR>` with y equal to `<select_block_EXPR>`.
+- This ultimately yields: `<data_block_EXPR> %>% <filter_block_EXPR> %>% <select_block_EXPR>`
+
+`substitute()` ensures we don't evaluate the generated expression and replace `x` and `y` by their respective values.
+
+Can you spot the current point? How do we combine plot layer expressions linked by `+` with this setup?
+In order to overcome this limitation, we introduced the `block_combiner()`, 
+a new generic which aims at linking multiple block expressions depending on their class. Under the hood,
+we only check the class of the __right__ block to determine the expression link (the S3 dispatch occurs on the second block), 
+that is `%>%` or `+` (and maybe more in the future). 
+
+```r
+block_combiner <- function(left, right, ...) UseMethod("block_combiner", right)
+```
+
+Another important modification to bring is about `generate_code.stack()`. 
+With the above logic, `Reduce()` only consumes the block expressions, thereby
+preventing us from being able to dispatch. We pass a vector of blocks instead, 
+such that we get:
+
+```r
+generate_code.stack <- function(x) {
+  if (length(x) == 0) return(quote(identity()))
+
+  # Handles monoblock stacks
+  if (length(x) > 1) {
+    aggregate_code <- function(x, y) {
+      block_combiner(x, y)
+    }
+    Reduce(aggregate_code, lapply(x, \(b) b))
+  } else {
+    generate_code(x[[1]])
+  }
+}
+```
+
+For empty stacks, the returned code is arbitrary. For stacks with one block, we don't 
+need `Reduce()` and only call `generate_code()` for the corresponding block. We create a new
+internal function, that is `aggregate_code`, subsequently calling `block_combiner()`. 
+
+There is still one last issue to solve. Since we now pass blocks,
+we have to find a way to let `block_combiner()` evaluate each block expression. 
+We apply `generate_code()` within the `substitute()` call so we can inject the block expression
+and not the block itself. This eventually leads us to:
+
+```r
+block_combiner.transform_block <- function(left, right, ...) {
+  substitute(
+    left %>% right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
+}
+
+block_combiner.plot_block <- block_combiner.transform_block
+
+block_combiner.plot_layer_block <- function(left, right, ...) {
+  substitute(
+    left + right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
+}
+```
+
+Importantly, plot constructor like `ggplot()` should have the `plot_block` class
+so that the link is `%>%` (the same as for other transform blocks).
+
+### Create the ggplot block
+
+To create a new block, we call the `new_block()` constructor. It expects:
+
+- __fields__: a list of field, which are translated into shiny inputs.
+- __expr__: the expression returned by the block, necessary to produce an output and export the code.
+- __name__: a name (randomly choosen, you don't need to worry about this).
+- __class__: a class to dispatch to the relevant S3 methods.
+- __layout__: an optional layout (default to `default_layout_fields()`).
+
+Our block will have `c("ggplot_block", "plot_block")` as classes, some fields to pass mappings and we
+leave the layout to the default choice. Note that the mapping field depends on the provided data. 
+To stay simple, we assume to only handle `x` and `y` __aesthetics__.
+
+```{r}
+new_ggplot_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      # TO DO
+    ),
+    expr = quote(),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+
+ggplot_block <- function(data, ...) {
+  initialize_block(new_ggplot_block(data, ...), data)
+}
+```
+
+We finally end with `new_ggplot_block`, the internal constructor and 
+`ggplot_block`, the user facing constructor. The next step is to create the mappings fields with 
+two `new_select_field()`. Those fields are converted into shiny inputs, specifically `selectInput()`.
+To set the field choices which depend on the data, we define the `data_cols` helper:
+
+```r
+data_cols <- function(data) colnames(data)
+```
+
+We modify `new_ggplot_block` such that:
+
+```r
+new_ggplot_block <- function(data, ...) {
+
+  data_cols <- function(data) colnames(data)
+
+  new_block(
+    fields = list(
+      x = new_select_field(colnames(data)[1], data_cols, type = "name"),
+      y = new_select_field(colnames(data)[2], data_cols, type = "name")
+    ),
+    expr = quote(),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+```
+
+Passing `type = "name"` allows to inject functions inside the select field choices. This
+is useful to dynamically update the choices whenever data change.
+
+Producing the expression, which is certainly the most "technical" part, as it involves a bit of __metaprogramming__. 
+The expression must not be evaluated in the block, that's why it is wrapped in a `quote()`. 
+`{blockr}` is then able to generate the expression with `generate_code()` and evaluate it with `evaluate_block()`.
+
+Our ggplot expression can be written as:
+
+```r
+ggplot(mapping = aes(x = .(x), y = .(y)))
+```
+
+In the above expression, you may notice `.()`, which is actually required by `generate_code()`. Under the hoods, this is needed by `bquote()` which only evaluates arguments wrapped
+by `.()` with variables from the environment. It makes it easier to use than `substitute()`, since we explicitly mark what we want to
+evaluate.
+
+All combined together, this eventually yields:
+
+```{r, eval=TRUE}
+new_ggplot_block <- function(data, ...) {
+
+  data_cols <- function(data) colnames(data)
+
+  new_block(
+    fields = list(
+      x = new_select_field(colnames(data)[1], data_cols, type = "name"),
+      y = new_select_field(colnames(data)[2], data_cols, type = "name")
+    ),
+    expr = quote(
+      ggplot(mapping = aes(x = .(x), y = .(y)))
+    ),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+```
+
+As you can, see the code base is reasonable in terms of complexity.
+
+### Create a geom block
+
+Now that we have a valid `ggplot_block`, we want to add it a geometry. The easiest one is `geom_point()`.
+To keep the vignette as simple as possible, we only handle one option, namely the point color. We
+host this information in a `new_select_field()`, for instance:
+
+```r
+new_select_field("blue", c("blue", "green", "red"))
+```
+
+The expression is straightforward to get:
+
+```r
+geom_point(color = .(color)) # Don't forget to wrap it with quote(...).
+```
+
+Importantly, since we use `.(color)`, the field name must be __color__.
+
+This finally gives us:
+
+```{r, eval=TRUE}
+new_geompoint_block <- function(data, ...) {
+
+  new_block(
+    fields = list(
+      color = new_select_field("blue", c("blue", "green", "red"))
+    ),
+    expr = quote(
+      geom_point(color = .(color))
+    ),
+    class = c("plot_layer_block", "plot_block"),
+    ...
+  )
+}
+
+geompoint_block <- function(data, ...) {
+  initialize_block(new_geompoint_block(data, ...), data)
+}
+```
+
+Note the class `plot_layer_block`. This is necessary to invoke the corresponding 
+`evaluate_block()` method (to use `+` instead of `%>%`).
+
+
+### Try it
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "We currently decided that each plot layer can be visible, so that you can
+  see the plot construction step by step within the UI. In any case, `{blockr}` 
+  only expands the latest stack block UI so you can focus on the final result.
+  Toggling other blocks is up to the end-user.",
+  color = "primary"
+)
+```
+
+We can try it on the following stack:
+
+```r
+stack <- new_stack(data_block, ggplot_block, geompoint_block)
+serve_stack(stack)
+```
+
+### Going further
+
+Below is a possible implementation of an interactive `{ggiraph}` [plot](https://davidgohel.github.io/ggiraph/#with-r-and-r-markdown).
+<p class="text-center">
+<a 
+class="btn btn-primary" 
+data-bs-toggle="collapse" 
+href="#ggiraphBlockr" 
+role="button" 
+aria-expanded="false" 
+aria-controls="ggiraphBlockr">
+Toggle code
+</a>
+</p>
+
+<div class="collapse" id="ggiraphBlockr">
+
+```r
+library(blockr)
+library(ggplot2)
+library(ggiraph)
+
+custom_data_block <- function(...) {
+  initialize_block(
+    new_data_block(
+      ...,
+      selected = "mtcars"
+    )
+  )
+}
+
+new_ggplot_block <- function(data, ...) {
+
+  data_cols <- function(data) colnames(data)
+
+  new_block(
+    fields = list(
+      x = new_select_field("wt", data_cols, type = "name"),
+      y = new_select_field("qsec", data_cols, type = "name"),
+      color = new_select_field("disp", data_cols, type = "name")
+    ),
+    expr = quote(
+      ggplot(mapping = aes(x = .(x), y = .(y), color = .(color)))
+    ),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+
+ggplot_block <- function(data, ...) {
+  initialize_block(new_ggplot_block(data, ...), data)
+}
+
+# We could have use a mutate_block instead of
+# changing the data from inside the block ...
+# {blockr} is flexible here.
+new_geompoint_interactive_block <- function(data, ...) {
+  build_expr <- function(data) {
+    # Get data from the previous ggplot layer
+    # data is the ggplot so we need to use data$data
+    # to get the initial data
+    data$data$carname <- row.names(data$data)
+    substitute(
+      geom_point_interactive(
+        # Pass in new data
+        data = new_data,
+        aes(
+          tooltip = carname,
+          data_id = carname
+        )
+      ),
+      list(new_data = data$data)
+    )
+  }
+
+  new_block(
+    fields = list(
+      expression = new_hidden_field(build_expr)
+    ),
+    expr = quote(.(expression)),
+    class = c("plot_layer_block", "plot_block"),
+    ...
+  )
+}
+
+geompoint_interactive_block <- function(data, ...) {
+  initialize_block(new_geompoint_interactive_block(data, ...), data)
+}
+
+new_theme_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      theme = new_select_field(
+        "theme_minimal", 
+        grep("^theme_.*$", ls("package:ggplot2"), perl = TRUE, value = TRUE),
+        type = "name"
+      )
+    ),
+    expr = quote(
+      .(theme)()
+    ),
+    class = c("plot_layer_block", "plot_block"),
+    ...
+  )
+}
+
+theme_block <- function(data, ...) {
+  initialize_block(new_theme_block(data, ...), data)
+}
+
+new_ggiraph_block <- function(data, ...) {
+  new_block(
+    fields = list(
+      pointsize = new_numeric_field(12, min = 1, max = 20)
+    ),
+    expr = quote(
+      girafe(ggobj = data, pointsize = .(pointsize))
+    ),
+    class = c("ggiraph_block", "plot_block"),
+    ...
+  )
+}
+
+ggiraph_block <- function(data, ...) {
+  initialize_block(new_ggiraph_block(data, ...), data)
+}
+
+stack <- new_stack(
+  custom_data_block,
+  ggplot_block,
+  geompoint_interactive_block,
+  theme_block,
+  ggiraph_block
+)
+serve_stack(stack)
+```
+
+</div>

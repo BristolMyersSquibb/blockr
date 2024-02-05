@@ -5,7 +5,6 @@
 \alias{server_output}
 \alias{server_output.block}
 \alias{server_output.plot_block}
-\alias{server_output.ggiraph_block}
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
@@ -57,7 +56,6 @@
 \alias{uiOutputBlock}
 \alias{uiOutputBlock.block}
 \alias{uiOutputBlock.plot_block}
-\alias{uiOutputBlock.ggiraph_block}
 \alias{uiCode}
 \alias{uiCode.block}
 \title{UI}
@@ -69,8 +67,6 @@ server_output(x, result, output)
 \method{server_output}{block}(x, result, output)
 
 \method{server_output}{plot_block}(x, result, output)
-
-\method{server_output}{ggiraph_block}(x, result, output)
 
 server_code(x, state, output)
 
@@ -104,13 +100,13 @@ inject_remove_button(x, ...)
 
 \method{inject_remove_button}{block}(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...)
 
-\method{inject_remove_button}{stack}(x, ns, ...)
+\method{inject_remove_button}{stack}(x, id, ...)
 
 \method{remove_button}{stack}(x, id, ...)
 
 stack_header(x, ...)
 
-\method{generate_ui}{workspace}(x, id = NULL, ...)
+\method{generate_ui}{workspace}(x, id, ...)
 
 ui_input(x, id, name)
 
@@ -174,8 +170,6 @@ uiOutputBlock(x, ns)
 
 \method{uiOutputBlock}{plot_block}(x, ns)
 
-\method{uiOutputBlock}{ggiraph_block}(x, ns)
-
 uiCode(x, ns)
 
 \method{uiCode}{block}(x, ns)
@@ -183,7 +177,7 @@ uiCode(x, ns)
 \arguments{
 \item{x}{Object for which to generate UI components}
 
-\item{id}{UI IDs}
+\item{id}{Parent ID}
 
 \item{name}{Field name}
 

@@ -12,6 +12,12 @@ test_that("stacks", {
   expect_s3_class(app, "shiny.appobj")
 
   code <- generate_code(
+    new_stack()
+  )
+
+  expect_type(code, "language")
+
+  code <- generate_code(
     new_stack(new_data_block)
   )
 
@@ -33,7 +39,7 @@ test_that("stacks", {
 test_that("serve stacks", {
   skip_on_cran()
   driver <- shinytest2::AppDriver$new(
-    system.file("examples/cdisc-plot", package = "blockr"),
+    system.file("examples/add-blocks", package = "blockr"),
     name = "app-starts"
   )
   socket_state <- driver$get_js("Shiny.shinyapp.$socket.readyState")

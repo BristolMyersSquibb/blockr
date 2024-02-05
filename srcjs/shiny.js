@@ -2,6 +2,7 @@ import { collapse, toggleOutputInput, handleIcons } from "./collapse.js";
 import { remove } from "./remove-stack.js";
 import { title } from "./stack-title.js";
 import { renderLocked } from "./lock.js";
+import { tooltip } from "./tooltips.js";
 
 window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
   const stack = `#${msg.stack}`;
@@ -10,6 +11,7 @@ window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
     collapse(stack);
     title(stack, msg.stack);
     renderLocked(stack, msg.locked);
+    tooltip();
     const event = new CustomEvent("blockr:stack-render", { detail: msg });
     document.dispatchEvent(event);
   }, 750);
