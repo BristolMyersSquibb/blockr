@@ -179,3 +179,82 @@ test_that("filesbrowser block", {
 
   expect_length(shinyFiles_ui, 1)
 })
+
+test_that("csv parser block", {
+  tmp_file <- tempfile(fileext = ".csv")
+  utils::write.csv(iris, tmp_file, row.names = FALSE)
+  block <- csv_block(tmp_file)
+
+  expect_s3_class(block, c("csv_block", "parser_block", "transform_block"))
+  expect_type(block, "list")
+
+  dat <- evaluate_block(block, tmp_file)
+  expect_identical(colnames(iris), colnames(dat))
+  unlink(tmp_file)
+
+  expect_s3_class(dat, "data.frame")
+})
+
+test_that("json parser block", {
+  tmp_file <- tempfile(fileext = ".json")
+  write(jsonlite::toJSON(iris), tmp_file)
+  block <- json_block(tmp_file)
+
+  expect_s3_class(block, c("json_block", "parser_block", "transform_block"))
+  expect_type(block, "list")
+
+  dat <- evaluate_block(block, tmp_file)
+  expect_identical(colnames(iris), colnames(dat))
+  unlink(tmp_file)
+
+  expect_s3_class(dat, "data.frame")
+})
+
+test_that("rds parser block", {
+  tmp_file <- tempfile(fileext = ".rds")
+  saveRDS(iris, tmp_file)
+  block <- rds_block(tmp_file)
+
+  expect_s3_class(block, c("rds_block", "parser_block", "transform_block"))
+  expect_type(block, "list")
+
+  dat <- evaluate_block(block, tmp_file)
+  expect_identical(colnames(iris), colnames(dat))
+  unlink(tmp_file)
+
+  expect_s3_class(dat, "data.frame")
+})
+
+test_that("sas parser block", {
+  skip_on_cran()
+  tmp_file <- tempfile(fileext = ".sas7bdat")
+  tmp_dat <- iris
+  colnames(tmp_dat) <- gsub("\\.", "_", colnames(tmp_dat))
+  # Remove deprecated message from haven ...
+  suppressWarnings(haven::write_sas(tmp_dat, tmp_file))
+  block <- sas_block(tmp_file)
+
+  expect_s3_class(block, c("sas_block", "parser_block", "transform_block"))
+  expect_type(block, "list")
+
+  dat <- evaluate_block(block, tmp_file)
+  expect_identical(colnames(tmp_dat), colnames(dat))
+  unlink(tmp_file)
+
+  expect_s3_class(dat, "data.frame")
+})
+
+test_that("xpt parser block", {
+  tmp_file <- tempfile(fileext = ".xpt")
+  haven::write_xpt(mtcars, tmp_file)
+  block <- xpt_block(tmp_file)
+
+  expect_s3_class(block, c("xpt_block", "parser_block", "transform_block"))
+  expect_type(block, "list")
+
+  dat <- evaluate_block(block, tmp_file)
+  expect_identical(colnames(mtcars), colnames(dat))
+  unlink(tmp_file)
+
+  expect_s3_class(dat, "data.frame")
+})
