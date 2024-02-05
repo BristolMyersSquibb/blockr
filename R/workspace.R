@@ -86,7 +86,24 @@ add_workspace_stack <- function(name, stack, force = FALSE,
             is_workspace(workspace))
 
   if (!isTRUE(force) && name %in% list_workspace_stacks(workspace)) {
-    warnings("existing stack ", name, " will be overriden")
+    warning("existing stack ", name, " will be overriden")
+  }
+
+  assign(name, stack, envir = workspace)
+
+  invisible(stack)
+}
+
+#' @rdname set_workspace
+#' @export
+set_workspace_stack <- function(name, stack, force = FALSE,
+                                workspace = get_workspace()) {
+
+  stopifnot(is_string(name), nzchar(name), is_stack(stack), is_bool(force),
+            is_workspace(workspace))
+
+  if (!isTRUE(force) && !name %in% list_workspace_stacks(workspace)) {
+    warning("no stack ", name, " exists")
   }
 
   assign(name, stack, envir = workspace)
@@ -102,7 +119,7 @@ rm_workspace_stack <- function(name, force = FALSE,
   stopifnot(is_string(name), is_bool(force), is_workspace(workspace))
 
   if (!isTRUE(force) && !name %in% list_workspace_stacks(workspace)) {
-    warnings("no stack ", name, " exists")
+    warning("no stack ", name, " exists")
     invisible(FALSE)
   }
 
