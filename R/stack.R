@@ -5,12 +5,15 @@
 #' @param ... An ordered set of blocks (each argument is required to inherit
 #' from `"block"`)
 #' @param title Stack title
+#' @param name Stack name
 #'
 #' @export
-new_stack <- function(..., title = "Stack") {
+new_stack <- function(..., title = "Stack", name = rand_names()) {
 
   ctors <- c(...)
   names <- names(ctors)
+
+  stopifnot(is_string(title), is_string(name))
 
   if (length(ctors)) {
 
@@ -33,7 +36,7 @@ new_stack <- function(..., title = "Stack") {
 
   stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks, title = title, name = rand_names(), class = "stack")
+  structure(blocks, title = title, name = name, class = "stack")
 }
 
 set_stack_blocks <- function(stack, blocks) {
@@ -45,22 +48,41 @@ set_stack_blocks <- function(stack, blocks) {
   blocks
 }
 
-get_stack_name <- function(stack) {
-  stopifnot(is_stack(stack))
-  attr(stack, "name")
-}
-
-set_stack_name <- function(stack, name) {
-  stopifnot(is_stack(stack), is_string(name))
-  attr(stack, "name") <- name
-  stack
-}
-
 #' @param x An object inheriting form `"stack"`
 #' @rdname new_stack
 #' @export
 is_stack <- function(x) {
   inherits(x, "stack")
+}
+
+#' @rdname new_stack
+#' @export
+get_stack_name <- function(x) {
+  stopifnot(is_stack(x))
+  attr(x, "name")
+}
+
+#' @rdname new_stack
+#' @export
+set_stack_name <- function(x, name) {
+  stopifnot(is_stack(x), is_string(name))
+  attr(x, "name") <- name
+  x
+}
+
+#' @rdname new_stack
+#' @export
+set_stack_title <- function(x, title) {
+  stopifnot(is_stack(x), is_string(title))
+  attr(x, "title") <- title
+  x
+}
+
+#' @rdname new_stack
+#' @export
+get_stack_title <- function(x) {
+  stopifnot(is_stack(x))
+  attr(x, "title")
 }
 
 #' @rdname new_stack
@@ -221,20 +243,4 @@ serve_stack <- function(stack, id = "my_stack") {
   }
 
   shinyApp(ui, server)
-}
-
-#' Title
-#' Ge and set title.
-#' @param stack A stack.
-#' @param title Title to set.
-#' @name title
-#' @keywords internal
-set_title <- function(stack, title) {
-  attr(stack, "title") <- title
-  stack
-}
-
-#' @rdname title
-get_title <- function(stack) {
-  attr(stack, "title")
 }

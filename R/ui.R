@@ -257,7 +257,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
 
   stopifnot(...length() == 0L)
 
-  id <- coal(id, attr(x, "name")
+  id <- coal(id, get_stack_name(x))
   ns <- NS(id)
 
   tagList(
@@ -356,7 +356,7 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(get_title(x), class = "stack-title cursor-pointer")
+        span(get_stack_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",

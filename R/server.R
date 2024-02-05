@@ -234,7 +234,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
 
   stopifnot(...length() == 0L)
 
-  id <- coal(id, attr(x, "name")
+  id <- coal(id, get_stack_name(x))
 
   moduleServer(
     id = id,
@@ -325,7 +325,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
       })
 
       observeEvent(input$newTitle, {
-        set_title(vals$stack, input$newTitle)
+        set_stack_title(vals$stack, input$newTitle)
       })
 
       # Any block change: data or input should be sent

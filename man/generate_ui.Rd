@@ -94,7 +94,7 @@ remove_button(x, ...)
 
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
-\method{generate_ui}{stack}(x, id, ...)
+\method{generate_ui}{stack}(x, id = NULL, ...)
 
 inject_remove_button(x, ...)
 

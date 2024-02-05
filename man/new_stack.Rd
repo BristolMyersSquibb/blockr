@@ -3,13 +3,25 @@
 \name{new_stack}
 \alias{new_stack}
 \alias{is_stack}
+\alias{get_stack_name}
+\alias{set_stack_name}
+\alias{set_stack_title}
+\alias{get_stack_title}
 \alias{generate_code.stack}
 \alias{serve_stack}
 \title{Stacks}
 \usage{
-new_stack(..., title = "Stack")
+new_stack(..., title = "Stack", name = rand_names())
 
 is_stack(x)
+
+get_stack_name(x)
+
+set_stack_name(x, name)
+
+set_stack_title(x, title)
+
+get_stack_title(x)
 
 \method{generate_code}{stack}(x)
 
@@ -20,6 +32,8 @@ serve_stack(stack, id = "my_stack")
 from \code{"block"})}
 
 \item{title}{Stack title}
+
+\item{name}{Stack name}
 
 \item{x}{An object inheriting form \code{"stack"}}
 
