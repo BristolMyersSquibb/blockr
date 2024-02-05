@@ -123,18 +123,18 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
           data = in_dat()
         )
         blk(b)
-        message(sprintf("Updating block %s", class(x)[[1]]))
+        log_debug("Updating block ", class(x)[[1]])
 
         # 2. Update UI
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
-        message(sprintf("Updating UI of block %s", class(x)[[1]]))
+        log_debug("Updating UI of block ", class(x)[[1]])
       }) |>
         bindEvent(r_values(), in_dat())
 
       # Validate block inputs
       if (display != "plot") {
         obs$validate_inputs <- observeEvent(r_values(), {
-          message(sprintf("Validating block %s", class(x)[[1]]))
+          log_debug("Validating block ", class(x)[[1]])
           blk_no_srv <- blk()
           blk_no_srv[is_srv] <- NULL    # to keep class etc
           validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
@@ -413,7 +413,7 @@ handle_remove.stack <- function(x, vals, session = getDefaultReactiveDomain(), .
     # We can't remove the data block if there are downstream consumers...
     stacks <- get_workspace_stacks()
     to_remove <- which(chr_ply(stacks, \(x) attr(x, "name")) == id)
-    message(sprintf("REMOVING STACK %s", to_remove))
+    log_debug("REMOVING STACK ", to_remove)
     # Remove UI is done from JS
     # TO DO: this isn't very consistent with what we have for blocks
     # Remove stack UI is handled on the JS side and not on the R side.
@@ -446,7 +446,7 @@ generate_server.workspace <- function(x, id = NULL, ...) {
 
       # Add stack
       observeEvent(input$add_stack, {
-        message("ADD STACK")
+        log_debug("ADD STACK")
         add_workpace_stack(
           sprintf("stack-%s", length(vals$stacks) + 1),
           new_stack(data_block)
