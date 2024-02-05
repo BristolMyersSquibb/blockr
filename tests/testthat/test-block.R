@@ -155,6 +155,8 @@ test_that("upload block", {
   expect_s3_class(block, "upload_block")
   expect_type(block, "list")
 
+  expect_length(value(block$file), 0)
+
   ui <- generate_ui(block, "foo")
   expect_type(ui, "list")
   expect_s3_class(ui, "shiny.tag")
@@ -165,7 +167,7 @@ test_that("filesbrowser block", {
 
   expect_s3_class(block, "filesbrowser_block")
   expect_type(block, "list")
-  field <- block$dat
+  field <- block$file
   expect_identical(unname(field$volumes), path.expand("~"))
 
   ui <- generate_ui(block, "foo")
