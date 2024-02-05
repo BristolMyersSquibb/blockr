@@ -19,8 +19,8 @@ write_log <- function(..., level = "info") {
 
   msg <- paste0(
     "[", toupper(level), "]",
-    "[", Sys.time(), "]",
-    "[", get_mem_use(), "]",
+    if (isTRUE(getOption("BLOCKR_LOG_TIME", TRUE))) get_timmestamp("[", "]"),
+    if (isTRUE(getOption("BLOCKR_LOG_MEM", FALSE))) get_mem_use("[", "]"),
     " ", ...
   )
 
@@ -29,17 +29,21 @@ write_log <- function(..., level = "info") {
   invisible(NULL)
 }
 
-get_mem_use <- function() {
+get_mem_use <- function(prefix = "", suffix = "") {
 
   mem <- memuse::Sys.procmem()
 
   if (is.null(mem$peak)) {
-    peak <- NULL
+    peak <- ""
   } else {
     peak <- paste0("/", mem$peak)
   }
 
-  paste0(mem$size, peak)
+  paste0(prefix, mem$size, peak, suffix)
+}
+
+get_timmestamp <- function(prefix = "", suffix = "") {
+  paste0(prefix, Sys.time(), suffix)
 }
 
 #' @rdname write_log
@@ -85,7 +89,7 @@ info_log_level <- as_log_level("info")
 
 debug_log_level <- as_log_level("debug")
 
-trace_log_level <- as_log_level("fatal")
+trace_log_level <- as_log_level("trace")
 
 get_log_level <- function() {
 
@@ -132,5 +136,5 @@ cat_logger <- function(msg, level) {
     out <- stdout()
   }
 
-  cat(msg, file = out)
+  cat(paste0(msg, "\n"), file = out)
 }
