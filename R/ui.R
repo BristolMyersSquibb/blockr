@@ -216,6 +216,11 @@ generate_ui.block <- function(x, id, ...,
 #'
 #' @export
 add_block_ui <- function(ns = identity) {
+
+  add_block_ui_id <- ns("add")
+
+  message("Adding \"add block\" UI with ID ", add_block_ui_id)
+
   div(
     class = "d-flex justify-content-center",
     tags$button(
@@ -237,17 +242,22 @@ add_block_ui <- function(ns = identity) {
         choices = names(available_blocks()),
         inline = TRUE
       ),
-      actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")
+      actionButton(
+        add_block_ui_id,
+        icon("plus"),
+        `data-bs-dismiss` = "offcanvas"
+      )
     )
   )
 }
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, id, ...) {
+generate_ui.stack <- function(x, id = NULL, ...) {
 
   stopifnot(...length() == 0L)
 
+  id <- coal(id, get_stack_name(x))
   ns <- NS(id)
 
   tagList(
@@ -346,7 +356,7 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(get_title(x), class = "stack-title cursor-pointer")
+        span(get_stack_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",

@@ -116,18 +116,18 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
           data = in_dat()
         )
         blk(b)
-        message(sprintf("Updating block %s", class(x)[[1]]))
+        log_debug("Updating block ", class(x)[[1]])
 
         # 2. Update UI
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
-        message(sprintf("Updating UI of block %s", class(x)[[1]]))
+        log_debug("Updating UI of block ", class(x)[[1]])
       }) |>
         bindEvent(r_values(), in_dat())
 
       # Validate block inputs
       if (display != "plot") {
         obs$validate_inputs <- observeEvent(r_values(), {
-          message(sprintf("Validating block %s", class(x)[[1]]))
+          log_debug("Validating block ", class(x)[[1]])
           blk_no_srv <- blk()
           blk_no_srv[is_srv] <- NULL    # to keep class etc
           validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
@@ -226,13 +226,18 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
   generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot")
 }
 
-#' @rdname generate_server
 #' @param id Unique module id. Useful when the stack is called as a module.
 #' @param new_block For dynamically inserted blocks.
+#' @param workspace Stack workspace
+#'
+#' @rdname generate_server
 #' @export
-generate_server.stack <- function(x, id, new_block = NULL, ...) {
+generate_server.stack <- function(x, id = NULL, new_block = NULL,
+                                  workspace = get_workspace(), ...) {
 
   stopifnot(...length() == 0L)
+
+  id <- coal(id, get_stack_name(x))
 
   get_block_val <- function(b) b$block()
 
@@ -332,7 +337,7 @@ generate_server.stack <- function(x, id, new_block = NULL, ...) {
       })
 
       observeEvent(input$newTitle, {
-        set_title(vals$stack, input$newTitle)
+        set_stack_title(vals$stack, input$newTitle)
       })
 
       # Any block change: data or input should be sent
@@ -348,6 +353,12 @@ generate_server.stack <- function(x, id, new_block = NULL, ...) {
           get_last_block_data(vals$blocks)
         )}
       )
+
+      observeEvent(vals$stack, {
+        message("UPDADING WORKSPACE with stack ", id)
+        add_workspace_stack(id, vals$stack, force = TRUE,
+                            workspace = workspace)
+      })
 
       observe({
         session$sendCustomMessage(
@@ -436,7 +447,9 @@ handle_remove.stack <- function(x, vals, id,
 
   observeEvent(input[[ns("remove-stack")]], {
     # We can't remove the data block if there are downstream consumers...
-    message(sprintf("REMOVING STACK %s", id))
+    stacks <- get_workspace_stacks()
+    to_remove <- which(chr_ply(stacks, \(x) attr(x, "name")) == id)
+    log_debug("REMOVING STACK ", to_remove)
     # Remove UI is done from JS
     # TO DO: this isn't very consistent with what we have for blocks
     # Remove stack UI is handled on the JS side and not on the R side.
@@ -510,15 +523,6 @@ generate_server.workspace <- function(x, id, ...) {
         inject_block(input, vals, stack_id)
       })
 
-      observeEvent(lapply(vals$stacks, `[[`, "stack"), {
-        message("UPDADING WORKSPACE")
-        set_workspace_stacks(
-          lapply(vals$stacks, `[[`, "stack"),
-          force = TRUE,
-          workspace = x
-        )
-      })
-
       # Clear all stacks
       observeEvent(input$clear_stacks, {
         clear_workspace_stacks(workspace = x)
@@ -575,7 +579,12 @@ init.workspace <- function(x, vals, session, ...) {
 #'
 #' @keywords internal
 inject_block <- function(input, vals, id) {
-  observeEvent(input[[sprintf("%s-add", id)]], {
+
+  listener_id <- sprintf("%s-add", id)
+
+  message("Setting up \"add block\" listener with ID ", listener_id)
+
+  observeEvent(input[[listener_id]], {
     # Reset to avoid re-adding existing blocks to stacks
     vals$new_block <- NULL
     block <- available_blocks()[[input[[sprintf("%s-selected_block", id)]]]]
