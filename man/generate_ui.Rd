@@ -100,13 +100,13 @@ inject_remove_button(x, ...)
 
 \method{inject_remove_button}{block}(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...)
 
-\method{inject_remove_button}{stack}(x, ns, ...)
+\method{inject_remove_button}{stack}(x, id, ...)
 
 \method{remove_button}{stack}(x, id, ...)
 
 stack_header(x, ...)
 
-\method{generate_ui}{workspace}(x, id = NULL, ...)
+\method{generate_ui}{workspace}(x, id, ...)
 
 ui_input(x, id, name)
 
@@ -177,7 +177,7 @@ uiCode(x, ns)
 \arguments{
 \item{x}{Object for which to generate UI components}
 
-\item{id}{UI IDs}
+\item{id}{Parent ID}
 
 \item{name}{Field name}
 
