@@ -253,10 +253,11 @@ add_block_ui <- function(ns = identity) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(x, id, ...) {
+generate_ui.stack <- function(x, id = NULL, ...) {
 
   stopifnot(...length() == 0L)
 
+  id <- coal(id, attr(x, "name")
   ns <- NS(id)
 
   tagList(

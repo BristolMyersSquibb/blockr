@@ -230,9 +230,11 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 #' @param id Unique module id. Useful when the stack is called as a module.
 #' @param new_block For dynamically inserted blocks.
 #' @export
-generate_server.stack <- function(x, id, new_block = NULL, ...) {
+generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
 
   stopifnot(...length() == 0L)
+
+  id <- coal(id, attr(x, "name")
 
   moduleServer(
     id = id,
