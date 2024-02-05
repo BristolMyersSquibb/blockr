@@ -234,6 +234,15 @@ generate_server.stack <- function(x, id, new_block = NULL, ...) {
 
   stopifnot(...length() == 0L)
 
+  get_block_val <- function(b) b$block()
+
+  get_block_vals <- function(x) lapply(x, get_block_val)
+
+  get_last_block_data <- function(x) {
+    len <- length(x)
+    if (len) x[[len]]$data() else list()
+  }
+
   moduleServer(
     id = id,
     function(input, output, session) {
@@ -330,13 +339,13 @@ generate_server.stack <- function(x, id, new_block = NULL, ...) {
       # up to the stack so we can properly serialise.
       observeEvent(
         c(
-          lapply(vals$blocks, \(b) b$block()),
-          last_val(vals$blocks)$data()
+          get_block_vals(vals$blocks),
+          get_last_block_data(vals$blocks)
         ), {
         vals$stack <- set_stack_blocks(
           vals$stack,
-          lapply(vals$blocks, \(b) b$block()),
-          last_val(vals$blocks)$data()
+          get_block_vals(vals$blocks),
+          get_last_block_data(vals$blocks)
         )}
       )
 
