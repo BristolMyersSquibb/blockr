@@ -29,7 +29,13 @@ generate_server(x, ...)
 
 \method{generate_server}{plot_block}(x, in_dat, id, ...)
 
-\method{generate_server}{stack}(x, id = NULL, new_block = NULL, ...)
+\method{generate_server}{stack}(
+  x,
+  id = NULL,
+  new_block = NULL,
+  workspace = get_workspace(),
+  ...
+)
 
 handle_remove(x, ...)
 
@@ -63,11 +69,11 @@ init(x, ...)
 
 \item{new_block}{For dynamically inserted blocks.}
 
+\item{workspace}{The workspace}
+
 \item{vals}{Internal reactive values.}
 
 \item{session}{Shiny session object.}
-
-\item{workspace}{The workspace}
 }
 \description{
 Generic for server generation

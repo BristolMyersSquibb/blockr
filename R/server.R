@@ -226,11 +226,14 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
   generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot")
 }
 
-#' @rdname generate_server
 #' @param id Unique module id. Useful when the stack is called as a module.
 #' @param new_block For dynamically inserted blocks.
+#' @param workspace Stack workspace
+#'
+#' @rdname generate_server
 #' @export
-generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
+generate_server.stack <- function(x, id = NULL, new_block = NULL,
+                                  workspace = get_workspace(), ...) {
 
   stopifnot(...length() == 0L)
 
@@ -335,6 +338,12 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL, ...) {
           vals$stack,
           lapply(vals$blocks, \(b) b$block())
         )
+      })
+
+      observeEvent(vals$stack, {
+        message("UPDADING WORKSPACE with stack ", id)
+        add_workspace_stack(id, vals$stack, force = TRUE,
+                            workspace = workspace)
       })
 
       observe({
@@ -496,15 +505,6 @@ generate_server.workspace <- function(x, id, ...) {
 
         # Handle new block injection
         inject_block(input, vals, stack_id)
-      })
-
-      observeEvent(lapply(vals$stacks, `[[`, "stack"), {
-        message("UPDADING WORKSPACE")
-        set_workspace_stacks(
-          lapply(vals$stacks, `[[`, "stack"),
-          force = TRUE,
-          workspace = x
-        )
       })
 
       # Clear all stacks
