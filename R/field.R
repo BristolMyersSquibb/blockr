@@ -490,21 +490,34 @@ generate_server.result_field <- function(x, ...) {
     moduleServer(id, function(input, output, session) {
 
       get_result <- function() {
-        get_stack_result(
-          get_workspace_stack(input[["select-stack"]])
-        )
+        if (input[["select-stack"]] %in% list_workspace_stacks()) {
+          get_stack_result(
+            get_workspace_stack(input[["select-stack"]])
+          )
+        } else {
+          data.frame()
+        }
       }
 
       result_hash <- function() {
         rlang::hash(get_result())
       }
 
-      opts <- reactivePoll(100, session, list_workspace_stacks,
-                           list_workspace_stacks)
+      current_stack <- function() {
+        res <- strsplit(session$ns(NULL), "-")[[1L]]
+        res[length(res) - 2L]
+      }
+
+      stack_opts <- function() {
+        setdiff(list_workspace_stacks(), current_stack())
+      }
+
+      opts <- reactivePoll(100, session, stack_opts, stack_opts)
 
       observeEvent(
         opts(),
-        updateSelectInput(session, input_ids(x, id), choices = opts())
+        updateSelectInput(session, "select-stack", choices = opts(),
+                          selected = input[["select-stack"]])
       )
 
       reactivePoll(100, session, result_hash, get_result)

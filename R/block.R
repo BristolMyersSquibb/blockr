@@ -284,12 +284,12 @@ filesbrowser_block <- function(...) {
 new_result_block <- function(...) {
 
   fields <- list(
-    dataset = new_result_field()
+    stack = new_result_field()
   )
 
   new_block(
     fields = fields,
-    expr = quote(.(dataset)),
+    expr = quote(.(stack)),
     ...,
     class = c("result_block", "data_block")
   )
