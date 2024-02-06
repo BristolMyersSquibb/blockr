@@ -490,11 +490,17 @@ generate_server.result_field <- function(x, ...) {
     moduleServer(id, function(input, output, session) {
 
       get_result <- function() {
-        if (input[["select-stack"]] %in% list_workspace_stacks()) {
+
+        inp <- input[["select-stack"]]
+
+        if (length(inp) && inp %in% list_workspace_stacks()) {
+
           get_stack_result(
-            get_workspace_stack(input[["select-stack"]])
+            get_workspace_stack(inp)
           )
+
         } else {
+
           data.frame()
         }
       }

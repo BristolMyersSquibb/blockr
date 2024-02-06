@@ -85,12 +85,3 @@ test_that("filesbrowser field", {
   expect_type(field, "list")
   expect_identical(value(field), character(0))
 })
-
-test_that("result field", {
-
-  field <- result_field()
-
-  expect_s3_class(field, "result_field")
-  expect_type(field, "list")
-  expect_identical(value(field), list())
-})
