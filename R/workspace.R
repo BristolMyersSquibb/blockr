@@ -19,6 +19,17 @@ set_workspace <- function(..., title = "", settings = NULL, force = FALSE,
   invisible(workspace)
 }
 
+#' @rdname set_workspace
+#' @export
+restore_workspace <- function(x, force = FALSE, workspace = get_workspace()) {
+
+  if (is_string(x)) {
+    x <- from_json(x)
+  }
+
+  do.call(set_workspace, c(x, list(force = force, workspace = workspace)))
+}
+
 workspace_env <- structure(
   new.env(parent = emptyenv()),
   title = "",

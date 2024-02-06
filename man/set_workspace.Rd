@@ -2,6 +2,7 @@
 % Please edit documentation in R/workspace.R
 \name{set_workspace}
 \alias{set_workspace}
+\alias{restore_workspace}
 \alias{get_workspace}
 \alias{is_workspace}
 \alias{add_workspace_stack}
@@ -25,6 +26,8 @@ set_workspace(
   force = FALSE,
   workspace = get_workspace()
 )
+
+restore_workspace(x, force = FALSE, workspace = get_workspace())
 
 get_workspace()
 
