@@ -177,3 +177,15 @@ test_that("filesbrowser block", {
 
   expect_length(shinyFiles_ui, 1)
 })
+
+test_that("result block", {
+
+  block <- result_block()
+
+  expect_s3_class(block, "result_block")
+  expect_type(block, "list")
+
+  ui <- generate_ui(block, "foo")
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+})
