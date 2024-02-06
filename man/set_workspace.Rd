@@ -2,14 +2,10 @@
 % Please edit documentation in R/workspace.R
 \name{set_workspace}
 \alias{set_workspace}
-<<<<<<< HEAD
 \alias{restore_workspace}
-\alias{add_workpace_stack}
-=======
 \alias{get_workspace}
 \alias{is_workspace}
 \alias{add_workspace_stack}
->>>>>>> main
 \alias{rm_workspace_stack}
 \alias{set_workspace_title}
 \alias{set_workspace_settings}
@@ -29,13 +25,9 @@ set_workspace(
   workspace = get_workspace()
 )
 
-<<<<<<< HEAD
-restore_workspace(workspace, force = FALSE)
+restore_workspace(x, force = FALSE, workspace = get_workspace())
 
-add_workpace_stack(name, stack, force = FALSE)
-=======
 get_workspace()
->>>>>>> main
 
 is_workspace(x)
 
@@ -73,14 +65,9 @@ serve_workspace(
 
 \item{force}{Force overwrite existing stacks (otherwise may throw warning)}
 
-<<<<<<< HEAD
-\item{workspace}{Either a string (forwarded to \code{from_json()}) or a list
-with names that is used to construct a call to \code{set_workspace()}}
-=======
 \item{workspace}{The workspace environment}
 
 \item{x}{(Workspace) object}
->>>>>>> main
 
 \item{name}{Stack name}
 
