@@ -102,8 +102,20 @@ generate_code.group_by_block <- generate_code.arrange_block
 #' @rdname new_block
 #' @export
 generate_code.transform_block <- function(x) {
+
   if (!is_initialized(x)) {
     return(quote(identity()))
+  }
+
+  NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+generate_code.data_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(data.frame()))
   }
 
   NextMethod()
@@ -265,6 +277,28 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 #' @export
 filesbrowser_block <- function(...) {
   initialize_block(new_filesbrowser_block(...))
+}
+
+#' @rdname new_block
+#' @export
+new_result_block <- function(...) {
+
+  fields <- list(
+    dataset = new_result_field()
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(dataset)),
+    ...,
+    class = c("result_block", "data_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+result_block <- function(...) {
+  initialize_block(new_result_block(...))
 }
 
 #' @rdname new_block

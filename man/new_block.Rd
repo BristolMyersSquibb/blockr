@@ -10,6 +10,7 @@
 \alias{generate_code.block}
 \alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
+\alias{generate_code.data_block}
 \alias{generate_code.call}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
@@ -22,6 +23,8 @@
 \alias{upload_block}
 \alias{new_filesbrowser_block}
 \alias{filesbrowser_block}
+\alias{new_result_block}
+\alias{result_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -66,6 +69,8 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
+\method{generate_code}{data_block}(x)
+
 \method{generate_code}{call}(x)
 
 evaluate_block(x, ...)
@@ -93,6 +98,10 @@ upload_block(...)
 new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
+
+new_result_block(...)
+
+result_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 

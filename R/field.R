@@ -464,3 +464,46 @@ update_sub_fields <- function(sub, val) {
 
   sub
 }
+
+#' @rdname new_field
+#' @export
+new_result_field <- function(value = list(), ...) {
+  new_field(value, ..., class = "result_field")
+}
+
+#' @rdname new_field
+#' @export
+result_field <- function(...) {
+  validate_field(new_result_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.result_field <- function(x) {
+  x
+}
+
+#' @rdname generate_server
+#' @export
+generate_server.result_field <- function(x, ...) {
+  function(id, init = NULL, data = NULL) {
+    moduleServer(id, function(input, output, session) {
+
+      opts <- reactiveVal(list_workspace_stacks())
+
+      observeEvent(
+        opts(),
+        updateSelectInput(session, input_ids(x, id), choices = opts())
+      )
+
+      id <- "select-stack"
+
+      reactive({
+        log_trace("selecting stack ", input[[id]], " in result server")
+        get_workspace_stack(input[[id]]) |>
+          get_stack_result()
+      }) |>
+        bindEvent(input[[id]])
+    })
+  }
+}

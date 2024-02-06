@@ -33,6 +33,7 @@
 \alias{ui_input.submit_field}
 \alias{ui_input.upload_field}
 \alias{ui_input.filesbrowser_field}
+\alias{ui_input.result_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -123,6 +124,8 @@ ui_input(x, id, name)
 \method{ui_input}{upload_field}(x, id, name)
 
 \method{ui_input}{filesbrowser_field}(x, id, name)
+
+\method{ui_input}{result_field}(x, id, name)
 
 input_ids(x, ...)
 
