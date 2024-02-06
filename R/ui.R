@@ -29,11 +29,9 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
     name = names(x)
   )
 
-  layout <- attr(x, "layout")
-
   div(
     class = sprintf("block-inputs mt-2 %s", inputs_hidden),
-    layout(fields)
+    layout(x, fields)
   )
 }
 
@@ -175,7 +173,9 @@ remove_button.block <- function(x, id, ...) {
 #' @param id UI IDs
 #' @rdname generate_ui
 #' @export
-generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+generate_ui.block <- function(x, id, ...,
+                              .hidden = !getOption("BLOCKR_DEV", FALSE)) {
+
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
@@ -208,14 +208,19 @@ generate_ui.block <- function(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FAL
 #'
 #' Useful to allow stack to add blocks to it.
 #' The selected block can be accessed through `input$selected_block`.
-#' Combined to the blocks registry API, this allows to select a block from R like
-#' \code{available_blocks()[[input$selected_block]]}.
+#' Combined to the blocks registry API, this allows to select a block from R
+#' like \code{available_blocks()[[input$selected_block]]}.
 #'
 #' @param ns Stack namespace. Default to \link{identity} so
 #' that it can be used when the stack is the top level element.
 #'
 #' @export
 add_block_ui <- function(ns = identity) {
+
+  add_block_ui_id <- ns("add")
+
+  message("Adding \"add block\" UI with ID ", add_block_ui_id)
+
   div(
     class = "d-flex justify-content-center",
     tags$button(
@@ -237,21 +242,22 @@ add_block_ui <- function(ns = identity) {
         choices = names(available_blocks()),
         inline = TRUE
       ),
-      actionButton(ns("add"), icon("plus"), `data-bs-dismiss` = "offcanvas")
+      actionButton(
+        add_block_ui_id,
+        icon("plus"),
+        `data-bs-dismiss` = "offcanvas"
+      )
     )
   )
 }
 
 #' @rdname generate_ui
 #' @export
-generate_ui.stack <- function(
-  x,
-  id = NULL,
-  ...
-) {
+generate_ui.stack <- function(x, id = NULL, ...) {
+
   stopifnot(...length() == 0L)
 
-  id <- if (is.null(id)) attr(x, "name") else id
+  id <- coal(id, get_stack_name(x))
   ns <- NS(id)
 
   tagList(
@@ -305,21 +311,24 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
 #' namespace. This can also be called dynamically when
 #' inserting a new stack within a workspace.
 #'
-#' @param ns Parent namespace.
+#' @param id Parent ID
 #'
 #' @export
 #' @rdname generate_ui
-inject_remove_button.stack <- function(x, ns, ...) {
-  id <- attr(x, "name")
-  tmp <- htmltools::tagQuery(generate_ui(x, id = ns(id)))$
-    find(".stack-tools")$
-    prepend(remove_button(x, ns(sprintf("remove-stack-%s", id))))$
-  allTags()
+inject_remove_button.stack <- function(x, id, ...) {
+
+  ui <- generate_ui(x, id)
+  ns <- NS(id)
+
+  rm_btn <- remove_button(x, ns("remove-stack"))
+
+  tmp <- htmltools::tagQuery(ui)$find(".stack-tools")$prepend(rm_btn)$allTags()
 
   tmp[[1]] <- tagAppendChildren(
     tmp[[1]],
-    add_block_ui(NS(ns(attr(x, "name"))))
+    add_block_ui(ns)
   )
+
   div(class = "col m-1", tmp)
 }
 
@@ -347,7 +356,7 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(get_title(x), class = "stack-title cursor-pointer")
+        span(get_stack_title(x), class = "stack-title cursor-pointer")
       ),
       div(
         class = "flex-shrink-1",
@@ -372,14 +381,27 @@ stack_header.stack <- function(x, title, ns, ...) {
 
 #' @rdname generate_ui
 #' @export
-generate_ui.workspace <- function(x, id = NULL, ...) {
-  stopifnot(...length() == 0L)
+generate_ui.workspace <- function(x, id, ...) {
 
-  id <- if (is.null(id)) attr(x, "name") else id
+  stopifnot(...length() == 0L)
 
   ns <- NS(id)
 
-  stacks <- get_workspace_stacks()
+  stacks <- get_workspace_stacks(workspace = x)
+
+  if (length(stacks) > 0) {
+
+    stack_ui <- div(
+      class = "row stacks",
+      lapply(seq_along(stacks), \(i) {
+        inject_remove_button(stacks[[i]], ns(names(stacks)[i]))
+      })
+    )
+
+  } else {
+
+    stack_ui <- NULL
+  }
 
   tagList(
     div(
@@ -400,15 +422,7 @@ generate_ui.workspace <- function(x, id = NULL, ...) {
         class = "mx-2"
       )
     ),
-    div(
-      class = "m-2 workspace",
-      div(
-        class = "row stacks",
-        lapply(seq_along(stacks), \(i) {
-          inject_remove_button(stacks[[i]], ns)
-        })
-      )
-    )
+    div(class = "m-2 row workspace", stack_ui)
   )
 }
 
@@ -714,12 +728,6 @@ uiOutputBlock.block <- function(x, ns) {
 #' @export
 uiOutputBlock.plot_block <- function(x, ns) {
   shiny::plotOutput(ns("plot"))
-}
-
-#' @rdname generate_ui
-#' @export
-uiOutputBlock.ggiraph_block <- function(x, ns) {
-  ggiraph::girafeOutput(ns("plot"))
 }
 
 #' @rdname generate_ui
