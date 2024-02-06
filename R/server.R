@@ -346,12 +346,14 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         c(
           get_block_vals(vals$blocks),
           get_last_block_data(vals$blocks)
-        ), {
-        vals$stack <- set_stack_blocks(
-          vals$stack,
-          get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)
-        )}
+        ),
+        {
+          vals$stack <- set_stack_blocks(
+            vals$stack,
+            get_block_vals(vals$blocks),
+            get_last_block_data(vals$blocks)
+          )
+        }
       )
 
       observeEvent(vals$stack, {
