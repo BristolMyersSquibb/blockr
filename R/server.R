@@ -515,6 +515,16 @@ generate_server.workspace <- function(x, id, ...) {
         vals$stacks <- NULL
         removeUI(".stacks")
       })
+
+      # Serialize
+      output$serialize <- downloadHandler(
+        filename = function() {
+          paste0("workspace-", Sys.Date(), ".json")
+        },
+        content = function(file) {
+          write(to_json(), file)
+        }
+      )
     }
   )
 }

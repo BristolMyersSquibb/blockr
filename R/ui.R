@@ -420,7 +420,12 @@ generate_ui.workspace <- function(x, id, ...) {
         icon("trash"),
         class = "bg-danger",
         class = "mx-2"
-      )
+      ),
+      downloadButton(
+        ns("serialize"),
+        "Save",
+        class = "mx-2"
+      ),
     ),
     div(class = "m-2 row workspace", stack_ui)
   )
