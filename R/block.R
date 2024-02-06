@@ -774,7 +774,7 @@ new_html_block <- function(
       )
     }),
     ...,
-    class = c("html_block")
+    lass = c("html_block")
   )
 }
 
