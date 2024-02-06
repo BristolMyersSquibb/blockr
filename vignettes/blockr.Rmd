@@ -1,0 +1,251 @@
+---
+title: "blockr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{blockr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(blockr)
+library(bslib)
+library(DiagrammeR)
+
+note_box <- function(..., color) {
+  htmltools::div(
+    class = sprintf(
+      "m-3 p-2 text-%s-emphasis bg-%s-subtle border border-%s-subtle rounded-3",
+      color, color, color
+    ),
+    ...
+  )
+}
+```
+
+## Get started
+
+`{blockr}` provides plug and play block which can be used to import, transform and visualize data.
+
+### Introduction
+
+`{blockr}` aims at abstracting the logic behind `{dplyr}` functions
+under __blocks__. We assume that a __stack__ is a succession
+of dependent blocks. We designed 3 kinds of blocks:
+
+- __data__ block: entry level block to determine input data.
+- __transform__ block: materialize `{dplyr}` operations on the selected data.
+- __output__ (only plot for now) block: consumes transformed data to produce visualizations.
+
+A __stack__ always starts from a data block and may end either by a transform blocks or an output block.
+
+Note: at the moment, there is only one output block per stack.
+
+```{r, echo=FALSE}
+mermaid("
+  flowchart TB
+    subgraph stack
+      input(Data);
+      transform(Transform);
+      output(Visualize);
+      input-->transform--> output;
+    end
+  ",
+  height = "120px"
+) |>
+  htmlwidgets::onRender(
+    "function(el, x) {
+      el.classList.add('text-center')
+    }
+    "
+  )
+```
+
+### The user interface
+
+By default, only the last __stack__ block is visible, all others are collapsed.
+To preview all block you can set `options("BLOCKR_DEV" = TRUE)`.
+
+```{r blockr-ui, echo=FALSE, fig.cap='User Interface Overview', fig.align = 'center', out.width='100%'}
+knitr::include_graphics("figures/blockr-ui.png")
+```
+
+### Create a stack
+
+To create a __stack__, you call `new_stack()` and feed it all the required __blocks__.
+Below is a simple stack providing a dataset selector and a filter operation. `serve_stack()` is a simple
+wrapper to run the corresponding shiny app. Note that with `serve_stack()`, you don't need to worry about
+specifying any __modules IDs__, they are automatically handled by `{blockr}`.
+
+```r
+library(blockr)
+library(blockr.data)
+
+stack <- new_stack(
+  data_block,
+  filter_block
+)
+serve_stack(stack)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC5M6PFcQKKZADMWbnIGCtEJQLjA9jgGADc4bITxPhyJPzAAXwBdIA", #nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "You'll notice that some blocks, such as the `filter_block` 
+  have a submit button. The reason was to prevent any expansive task
+  to run without explicit user approval. That said, this feature is 
+  still very much experimental and might change in the future.",
+  color = "primary"
+)
+```
+
+
+In the next example, we'll see how to create an which can dynamically add or remove blocks.
+
+### Dynamically add a block
+
+Below is an app with an interface to dynamically add blocks. On the UI side, we called `generate_ui()`,
+which is nothing more than calling the stack module UI and `generate_server()` in the Shiny server function. If you leave `id` NULL,
+the namespace is automatically handled.
+
+To get the list of available blocks, we leverage the `{blockr}` registry namely `available_blocks()` which exposes the
+currently registered blocks. You can learn more about the registry in the dedicated
+vignette. `add_block_ui()` is a UI helper to show a button as well
+as the necessary interface to contain the new block choice.
+Within an `observer` we listen to the "add block" button. Then, we pass the new block in the `new_block` slot of the `generate_server()` function.
+It accepts the name of the block to insert as well as its position in the stack (here we append).
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo) 
+  utilises `{masonry}` (https://github.com/blockr-org/masonry) to provide
+  a better user experience, allowing one to drag and drop blocks
+  within the stack.",
+  color = "primary"
+)
+```
+
+```r
+library(shiny)
+library(blockr.data)
+library(blockr)
+
+stack <- new_stack(data_block)
+shinyApp(
+  ui = bslib::page_fluid(
+    add_block_ui(),
+    generate_ui(stack, id = "mystack")
+  ),
+  server = function(input, output, session) {
+    vals <- reactiveValues(new_block = NULL)
+    stack <- generate_server(
+      stack,
+      id = "mystack",
+      new_block = reactive(vals$new_block)
+    )
+
+    observeEvent(input$add, {
+      vals$new_block <- NULL
+      # Always append to stack
+      loc <- length(stack$blocks)
+      block <- available_blocks()[[input$selected_block]]
+      # add_block expect the current stack, the block to add and its position
+      # (NULL is fine for the position, in that case the block will
+      # go at the end)
+      vals$new_block <- list(
+        block = block,
+        position = loc
+      )
+    })
+  }
+)
+```
+
+Blocks can be removed in any context. Keep in mind that a stack can't contain 2 data blocks.
+
+```{r, eval=TRUE, echo=FALSE}
+note_box(
+  "At the moment, we don't check whether removing a block breaks the pipeline.",
+  color = "danger"
+)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+dg02cICgkIYwyOMJBgwAEygueODQiL5UyXjAzigJGQAeUxkIOGoAfTKJPiyuBqL46NiAQXRBCBkZBxZVGTp2POZUKEs4BoAzbhGMgaGhqAyMjtEJBpG+FgyKUjs43ED1mTm6pPJ9liiuCVkjsaEYcObxf0uZPwugxk7DgDAAbqCxgsHBACKcSIcIKgHKRZEQUcjUcC4Ox2K4IH4ZCA-kMwTxlNU5HByqcIQA1HgOHF8OqNIpjAByAFUADI8+JXb5VGo3UHZeYg8GgtZXYHPcSA2UyN5qD5feXSEnrVk7ExjeQ0lgQvhk7jsAAkOs6WpKQKGRAmoIhAFEIWREZjzZsMrJiXb1qaLVbduJhTJuXytUMAMQyHrcahQL4yNCoCgZGSkIhy8o-f1DXZh7gUSz2J6581FdgC2XsylQMksbhQETzKt8PzAYBsT0g4twuDbIoAXWHUZkse9uoqcAAHmm4ZmNHAZAQHAx5GQcy8lyv2VmU1sUxAM3ZlD47Pjx7G+BGecrlAs2CuFhZdzIL-CIK9BvZsquoBBd92WoJtuGva5s3-ewV3TGsrkDS16mnUNKWCTgZSVdk1CKRUlQ-JRLxIMZdnHeCZAAXxrCjAj8MAKOHIA", #nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
+
+### Example with modules
+
+The stack can be nested within modules. This is what we do in
+[`{blockr.demo}`](https://github.com/blockr-org/block.demo).
+
+```r
+library(shiny)
+library(blockr.data)
+library(blockr)
+
+stack <- new_stack(
+  data_block,
+  filter_block,
+  select_block
+)
+
+block_ui <- function(id) {
+  ns <- shiny::NS(id)
+  uiOutput(ns("block"))
+}
+
+block_server <- function(id) {
+  moduleServer(
+    id,
+    function(input, output, session){
+      ns <- session$ns
+
+      output$block <- renderUI({
+        generate_ui(stack, id = ns("b"))
+      })
+
+      generate_server(stack, id = "b")
+    }
+  )
+}
+
+ui <- function(req) {
+  fluidPage(
+    theme = bslib::bs_theme(5L),
+    div(
+      class = "row",
+      block_ui("x")
+    )
+  )
+}
+server <- function(input, output, session) {
+  block_server("x")
+}
+
+shinyApp(ui, server)
+```

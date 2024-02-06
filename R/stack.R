@@ -5,29 +5,47 @@
 #' @param ... An ordered set of blocks (each argument is required to inherit
 #' from `"block"`)
 #' @param title Stack title
+#' @param name Stack name
 #'
 #' @export
-new_stack <- function(..., title = "Stack") {
+new_stack <- function(..., title = "Stack", name = rand_names()) {
+
   ctors <- c(...)
   names <- names(ctors)
 
-  blocks <- vector("list", length(ctors))
+  stopifnot(is_string(title), is_string(name))
 
-  blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
-  temp <- evaluate_block(blocks[[1L]])
+  if (length(ctors)) {
 
-  for (i in seq_along(ctors)[-1L]) {
-    temp <- evaluate_block(
-      blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
-      data = temp
-    )
+    blocks <- vector("list", length(ctors))
+
+    blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
+    temp <- evaluate_block(blocks[[1L]])
+
+    for (i in seq_along(ctors)[-1L]) {
+      temp <- evaluate_block(
+        blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
+        data = temp
+      )
+    }
+
+  } else {
+
+    blocks <- list()
   }
 
-  stopifnot(
-    is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
-  )
+  stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks, title = title, name = rand_names(), class = "stack")
+  structure(blocks, title = title, name = name, class = "stack")
+}
+
+set_stack_blocks <- function(stack, blocks) {
+
+  stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
+
+  attributes(blocks) <- attributes(stack)
+
+  blocks
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -39,13 +57,82 @@ is_stack <- function(x) {
 
 #' @rdname new_stack
 #' @export
+get_stack_name <- function(x) {
+  stopifnot(is_stack(x))
+  attr(x, "name")
+}
+
+#' @rdname new_stack
+#' @export
+set_stack_name <- function(x, name) {
+  stopifnot(is_stack(x), is_string(name))
+  attr(x, "name") <- name
+  x
+}
+
+#' @rdname new_stack
+#' @export
+set_stack_title <- function(x, title) {
+  stopifnot(is_stack(x), is_string(title))
+  attr(x, "title") <- title
+  x
+}
+
+#' @rdname new_stack
+#' @export
+get_stack_title <- function(x) {
+  stopifnot(is_stack(x))
+  attr(x, "title")
+}
+
+#' @rdname new_stack
+#' @export
 generate_code.stack <- function(x) {
+  if (length(x) == 0) return(quote(identity()))
 
-  binary_substitute <- function(x, y) {
-    substitute(x %>% y, list(x = x, y = y))
+  # Handles monoblock stacks
+  if (length(x) > 1) {
+    aggregate_code <- function(x, y) {
+      block_combiner(x, y)
+    }
+    Reduce(aggregate_code, lapply(x, \(b) b))
+  } else {
+    generate_code(x[[1]])
   }
+}
 
-  Reduce(binary_substitute, lapply(x, generate_code))
+#' Combine 2 block expressions
+#'
+#' Useful for \link{generate_code}.
+#'
+#' @rdname block_combiner
+#' @param left Left block object in `x %>% y`.
+#' @param right Right block object in `x %>% y`.
+#'
+#' @param ... For generic consistency.
+#' @export
+block_combiner <- function(left, right, ...) UseMethod("block_combiner", right)
+
+#' @rdname block_combiner
+#' @export
+block_combiner.transform_block <- function(left, right, ...) {
+  substitute(
+    left %>% right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
+}
+
+#' @rdname block_combiner
+#' @export
+block_combiner.plot_block <- block_combiner.transform_block
+
+#' @rdname block_combiner
+#' @export
+block_combiner.plot_layer_block <- function(left, right, ...) {
+  substitute(
+    left + right,
+    list(left = generate_code(left), right = generate_code(right))
+  )
 }
 
 #' Add block to a stack
@@ -61,32 +148,40 @@ generate_code.stack <- function(x) {
 #' @return Invisibly returns the stack.
 #' @export
 add_block <- function(stack, block, position = NULL) {
-  stopifnot(length(stack) > 0)
-  if (is.null(position)) stopifnot(position >= 1)
   if (length(stack) == 0) {
-    block_name <- deparse(substitute(block))
-    if (!grepl("data", block_name)) {
+    # we can't check check inherit because
+    # this comes from the registry which is of class
+    # block_descr
+    if (!"data_block" %in% attr(block, "classes")) {
       stop("The first block must be a data block.")
     }
   }
 
-  last <- stack[[length(stack)]]
-  # For now, we won't be able to insert a block
-  # after a plot block. In a later version, we may imagine
-  # have multiple block plot per stack so we'll have to revisit
-  # this ...
-  if (inherits(last, "plot_block")) {
-    stop("Can't insert a block below a plot block.")
+  if (length(stack) > 0L) {
+    last <- stack[[length(stack)]]
+    # For now, we won't be able to insert a block
+    # after a plot block. In a later version, we may imagine
+    # have multiple block plot per stack so we'll have to revisit
+    # this ...
+    if (inherits(last, "plot_block")) {
+      stop("Can't insert a block below a plot block.")
+    }
   }
-  if (is.null(position)) {
-    # inject new block + pass in data from previous block
+
+  if (is.null(position) || position > length(stack)) {
     position <- length(stack)
+  }
+
+  message("ADD BLOCK (position ", position + 1, ")")
+
+  if (position < 1L) {
+    position <- 1L
   }
 
   # get data from the previous block
   if (length(stack) == 1) {
     data <- evaluate_block(stack[[position]])
-  } else {
+  } else if (length(stack) > 1L) {
     data <- evaluate_block(stack[[1]])
     for (i in seq_along(stack)[-1L]) {
       data <- evaluate_block(
@@ -96,9 +191,13 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  tmp <- do.call(block, list(data = data, position = position))
-  stack <- append(stack, list(tmp), position)
-  invisible(stack)
+  if (!length(stack)) {
+    tmp <- do.call(block, list())
+  } else {
+    tmp <- do.call(block, list(data = data, position = position))
+  }
+
+  set_stack_blocks(stack, append(stack, list(tmp), position))
 }
 
 #' Move blocks within a stack
@@ -131,30 +230,17 @@ move_block <- function(stack, from, to) {
 }
 
 #' @param stack An object inheriting form `"stack"`
+#' @param id Stack ID
+#'
 #' @rdname new_stack
 #' @export
-serve_stack <- function(stack) {
-  ui <- bslib::page_fluid(generate_ui(stack))
+serve_stack <- function(stack, id = "my_stack") {
+
+  ui <- bslib::page_fluid(generate_ui(stack, id))
 
   server <- function(input, output, session) {
-    generate_server(stack)
+    generate_server(stack, id)
   }
 
   shinyApp(ui, server)
-}
-
-#' Title
-#' Ge and set title.
-#' @param stack A stack.
-#' @param title Title to set.
-#' @name title
-#' @keywords internal
-set_title <- function(stack, title) {
-  attr(stack, "title") <- title
-  stack
-}
-
-#' @rdname title
-get_title <- function(stack) {
-  attr(stack, "title")
 }

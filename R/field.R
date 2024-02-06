@@ -6,14 +6,22 @@
 #' @param value Field value
 #' @param ... Further field components
 #' @param type Field type (allowed values are `"literal"` and `"name"`)
+#' @param title A brief title for the field, primarily for display purposes.
+#' @param descr A description of the field, explaining its purpose or usage.
+#' @param status The status of the field (experimental)
 #' @param class Field subclass
 #' @param exclude Experimental: Exclude field from being captured in the update_fields
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
 new_field <- function(value, ..., type = c("literal", "name"),
+                      title = "",
+                      descr = "",
+                      status = c("active", "disabled", "invisible"),
                       class = character(), exclude = FALSE) {
   x <- list(value = value, ...)
+
+  status <- match.arg(status)
 
   stopifnot(is.list(x), length(unique(names(x))) == length(x))
 
@@ -21,6 +29,9 @@ new_field <- function(value, ..., type = c("literal", "name"),
     x,
     type = match.arg(type),
     class = c(class, "field"),
+    title = title,
+    descr = descr,
+    status = status,
     exclude = exclude
   )
 }
@@ -226,6 +237,50 @@ validate_field.submit_field <- function(x) {
   x
 }
 
+#' @rdname new_field
+#' @export
+new_upload_field <- function(value = character(), ...) {
+  new_field(
+    value,
+    ...,
+    class = "upload_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+upload_field <- function(...) {
+  validate_field(new_upload_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.upload_field <- function(x) {
+  x
+}
+
+#' @rdname new_field
+#' @export
+new_filesbrowser_field <- function(value = character(), ...) {
+  new_field(
+    value,
+    ...,
+    class = "filesbrowser_field"
+  )
+}
+
+#' @rdname new_field
+#' @export
+filesbrowser_field <- function(...) {
+  validate_field(new_filesbrowser_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.filesbrowser_field <- function(x) {
+  x
+}
+
 #' @param name Field component name
 #' @rdname new_field
 #' @export
@@ -286,11 +341,15 @@ variable_field <- function(...) validate_field(new_variable_field(...))
 #' @export
 validate_field.variable_field <- function(x) {
   val <- value(x, "field")
+  # TO DO: avoid hardcoding
   opt <- c(
     "string_field",
     "select_field",
+    "switch_field",
     "range_field",
-    "numeric_field"
+    "numeric_field",
+    "upload_field",
+    "filesbrowser_field"
   )
 
   stopifnot(is.character(val), length(val) <= 1L)
@@ -395,7 +454,7 @@ validate_field.list_field <- function(x) {
 
 update_sub_fields <- function(sub, val) {
   # Added this because of the join_block
-  if (is.null(names(val))) {
+  if (is.null(names(val)) && length(sub)) {
     value(sub[[1]]) <- unlist(val)
   } else {
     for (fld in names(val)[lgl_ply(val, is_truthy)]) {

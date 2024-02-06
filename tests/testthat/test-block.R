@@ -1,5 +1,6 @@
 library(dplyr)
 library(blockr.data)
+
 test_that("data blocks", {
   block <- data_block()
 
@@ -93,37 +94,6 @@ test_that("join blocks", {
   expect_equal(nrow(res), 2)
 })
 
-test_that("plot block", {
-  data <- merged_data |>
-    filter(LBTEST == "Hemoglobin") |>
-    filter(!startsWith(VISIT, "UNSCHEDULED")) |>
-    arrange(VISITNUM) |>
-    mutate(
-      VISIT = factor(
-        VISIT,
-        levels = unique(VISIT),
-        ordered = TRUE
-      )
-    ) |>
-    group_by(VISIT, ACTARM) |>
-    summarise(
-      Mean = mean(LBSTRESN, na.rm = TRUE),
-      SE = sd(LBSTRESN, na.rm = TRUE) / sqrt(n()),
-      .groups = "drop"
-    ) |>
-    rowwise() |>
-    mutate(ymin = Mean - SE, ymax = Mean + SE)
-
-  block <- plot_block(data)
-
-  expect_s3_class(block, "plot_block")
-  expect_type(block, "list")
-
-  res <- evaluate_block(block, data)
-  expect_s3_class(res, "ggplot")
-  # TO DO: more testing for ggplot2 element ...
-})
-
 test_that("head blocks", {
   data <- datasets::iris
   # Min is 1. As 12 > 1, validate_field.numeric_field
@@ -177,4 +147,33 @@ test_that("summarize block", {
   expect_equal(colnames(res), toupper(block$funcs$value))
   expect_equal(nrow(res), 1)
   expect_equal(ncol(res), 2)
+})
+
+test_that("upload block", {
+  block <- upload_block()
+
+  expect_s3_class(block, "upload_block")
+  expect_type(block, "list")
+
+  ui <- generate_ui(block, "foo")
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+})
+
+test_that("filesbrowser block", {
+  block <- filesbrowser_block()
+
+  expect_s3_class(block, "filesbrowser_block")
+  expect_type(block, "list")
+  field <- block$dat
+  expect_identical(unname(field$volumes), path.expand("~"))
+
+  ui <- generate_ui(block, "foo")
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+  shinyFiles_ui <- htmltools::tagQuery(ui)$
+    find(".shinyFiles")$
+  selectedTags()
+
+  expect_length(shinyFiles_ui, 1)
 })

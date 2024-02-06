@@ -5,13 +5,9 @@ library(shiny)
 stack <- new_stack(
   data_block,
   select_block,
-<<<<<<< HEAD
   head_block,
-  html_block
-=======
-  filter_block,
+  html_block,
   title = "test"
->>>>>>> main
 )
 
 ui <- fluidPage(
@@ -20,12 +16,8 @@ ui <- fluidPage(
   generate_ui(stack)
 )
 
-server <- function(input, output) {
-  x <- generate_server(stack)
-
-  observe({
-    print(x$remove)
-  })
+server <- function(input, output, session) {
+  generate_server(stack)
 }
 
 shinyApp(ui, server)

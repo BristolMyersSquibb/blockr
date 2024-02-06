@@ -109,6 +109,20 @@ set_names <- function(object = nm, nm) {
   object
 }
 
+coal <- function(..., fail_null = TRUE) {
+
+  for (i in seq_len(...length())) {
+    x <- ...elt(i)
+    if (is.null(x)) next else return(x)
+  }
+
+  if (isTRUE(fail_null)) {
+    stop("No non-NULL value encountered")
+  }
+
+  NULL
+}
+
 quoted_input_entry <- function(x) {
   bquote(input[[.(val)]], list(val = x))
 }
@@ -137,7 +151,11 @@ type_trans <- function(x) {
 
   switch(attr(x, "type"),
     literal = res,
-    name = unlst(lapply(res, as.name))
+    name = if (length(res) <= 1) {
+      as.name(res)
+    } else {
+      lapply(res, as.name)
+    }
   )
 }
 
@@ -170,28 +188,6 @@ unlst <- function(x, recursive = FALSE, use_names = FALSE) {
 # dropNulls
 dropNulls <- function(x) {
   x[!vapply(x, is.null, FUN.VALUE = logical(1))]
-}
-
-#' Convert block from a type to another
-#'
-#' For instance, you can convert from a select block to an
-#' arrange block or group_by which have similar structure.
-#'
-#' @param from Block function to start from like new_select_block.
-#' @param to dplyr verb (function, not a string!) such as arrange, group_by...
-#' @param data Necessary to \link{initialize_block}.
-#' @param ... Necessary to \link{initialize_block}.
-#'
-#' @keywords internal
-convert_block <- function(from = new_select_block, to, data, ...) {
-  block <- initialize_block(from(data, ...), data)
-  class(block)[[1]] <- sprintf("%s_block", deparse(substitute(to)))
-  # Change type to name since arrange/group_by don't work with literals
-  attr(block$columns, "type") <- "name"
-  attr(block, "expr") <- substitute(
-    to(..(columns))
-  )
-  block
 }
 
 `!startsWith` <- Negate(startsWith)
@@ -264,19 +260,17 @@ create_modal <- function(...) {
 #' tryCatch wrapper.
 #'
 #' @param expr Expression to evaluate.
-#' @param is_valid Block valid status.
 #'
 #' @return Result or error message.
 #'
 #' @keywords internal
-secure <- function(expr, is_valid) {
+secure <- function(expr) {
   tryCatch(
     {
       expr
     },
     error = function(e) {
-      is_valid$error <- "An error occured within a block, please inspect the
-      red border block(s) and fix the issue(s)."
+      cat(e$message)
     }
   )
 }
@@ -343,7 +337,6 @@ validate_inputs <- function(blk, is_valid, session) {
 #' @keywords internal
 validate_block <- function(blk, is_valid, session) {
   ns <- session$ns
-
   session$sendCustomMessage(
     "validate-block",
     list(
@@ -378,4 +371,45 @@ validate_block <- function(blk, is_valid, session) {
       session = session
     )
   }
+}
+
+# has_method(character(), "generate_server")
+has_method <- function(x, generic) {
+  mts0 <- utils::methods(generic = generic)
+  mts1 <- gsub(paste0("^", generic, "\\."), "", as.character(mts0))
+  mts <- gsub(paste0("*$"), "", mts1)
+  any(class(x) %in% mts)
+}
+
+#' Create shinylive iframe
+#'
+#' @param app_code base64 app code. You can create it from https://shinylive.io/r
+#' by writing code and click on share and copy the link. The code is located at
+#' the end of the url.
+#' @param mode How to display the shinylive app. Default to app mode.
+#' @param header Whether to display the shinylive header. Default to TRUE.
+#'
+#' @export
+create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) {
+  mode <- match.arg(mode)
+
+  app_url <- sprintf(
+    "https://shinylive.io/r/%s/#code=%s", mode, app_code
+  )
+
+  if (!header) {
+    app_url <- paste0(app_url, "&h=0")
+  }
+
+  tags$iframe(
+    # To allow the content to fill the full screen card
+    class = "html-fill-item",
+    src = app_url,
+    height = "700",
+    width = "100%",
+    style = "border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;",
+    allowfullscreen = "",
+    allow = "autoplay",
+    `data-external` = "1"
+  )
 }
