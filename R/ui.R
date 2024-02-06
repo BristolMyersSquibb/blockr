@@ -423,9 +423,21 @@ generate_ui.workspace <- function(x, id, ...) {
       ),
       downloadButton(
         ns("serialize"),
-        "Save",
+        "Export",
         class = "mx-2"
       ),
+      actionButton(
+        ns("save"),
+        "Save",
+        icon("save"),
+        class = "mx-2"
+      ),
+      actionButton(
+        ns("restore"),
+        "Restore",
+        icon("reload"),
+        class = "mx-2"
+      )
     ),
     div(class = "m-2 row workspace", stack_ui)
   )

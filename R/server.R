@@ -457,7 +457,7 @@ generate_server.workspace <- function(x, id, ...) {
     id = id,
     function(input, output, session) {
 
-      vals <- reactiveValues(stacks = list(), new_block = list())
+      vals <- reactiveValues(stacks = list(), new_block = list(), save = list())
 
       # Init existing stack modules
       init(x, vals, session)
@@ -525,6 +525,51 @@ generate_server.workspace <- function(x, id, ...) {
           write(to_json(), file)
         }
       )
+
+      observeEvent(input$save, {
+        message("SAVING WORKSPACE")
+        vals$save <- blockr_serialize(x)
+      })
+
+      # restore
+      observeEvent(input$restore, {
+        message("RESTORING WORKSPACE")
+        saved_stacks <- blockr_deserialize(vals$save)
+        current_stacks_names <- list_workspace_stacks()
+        saved_stacks_names <- names(dropNulls(lapply(saved_stacks, \(el) {
+          if (inherits(el, "stack")) get_stack_name(el)
+        })))
+
+        # If length saved is < length current, we have to remove elements
+        if (length(current_stacks_names) > length(saved_stacks_names)) {
+          to_remove <- current_stacks_names[!(saved_stacks_names %in% current_stacks_names)]
+          lapply(to_remove, \(stack) {
+            removeUI(
+              selector = session$ns(stack)
+            )
+          })
+        } else {
+          to_restore <- saved_stacks_names[!(saved_stacks_names %in% current_stacks_names)]
+
+          lapply(to_restore, \(stack) {
+            tmp <- saved_stacks[[stack]]
+            stack_ui <- inject_remove_button(
+              tmp,
+              session$ns(stack)
+            )
+
+            insertUI(
+              selector = ".stacks",
+              ui = stack_ui
+            )
+
+          })
+        }
+
+        restore_workspace(blockr_deserialize(vals$save))
+        # Reinit all stack modules
+        init(x, vals, session)
+      })
     }
   )
 }
