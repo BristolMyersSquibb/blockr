@@ -489,21 +489,25 @@ generate_server.result_field <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
 
-      opts <- reactiveVal(list_workspace_stacks())
+      get_result <- function() {
+        get_stack_result(
+          get_workspace_stack(input[["select-stack"]])
+        )
+      }
+
+      result_hash <- function() {
+        rlang::hash(get_result())
+      }
+
+      opts <- reactivePoll(100, session, list_workspace_stacks,
+                           list_workspace_stacks)
 
       observeEvent(
         opts(),
         updateSelectInput(session, input_ids(x, id), choices = opts())
       )
 
-      id <- "select-stack"
-
-      reactive({
-        log_trace("selecting stack ", input[[id]], " in result server")
-        get_workspace_stack(input[[id]]) |>
-          get_stack_result()
-      }) |>
-        bindEvent(input[[id]])
+      reactivePoll(100, session, result_hash, get_result)
     })
   }
 }
