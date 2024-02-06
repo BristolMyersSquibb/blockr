@@ -29,7 +29,35 @@ test_that("workspace", {
   expect_s3_class(get_workspace_stack("stack1"), "stack")
   expect_s3_class(get_workspace_stack("stack2"), "stack")
 
-  rm_workspace_stack("stack2")
+  expect_warning(
+    add_workspace_stack("stack2", stack2)
+  )
+
+  expect_length(get_workspace_stacks(), 2L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
+
+  add_workspace_stack("stack2", stack2, force = TRUE)
+
+  expect_length(get_workspace_stacks(), 2L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
+
+  set_workspace_stack("stack2", stack2)
+
+  expect_length(get_workspace_stacks(), 2L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
+
+  expect_warning(
+    set_workspace_stack("stack3", new_stack())
+  )
+
+  expect_length(get_workspace_stacks(), 3L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2", "stack3"))
+
+  rm_workspace_stacks(c("stack2", "stack3"))
+
+  expect_warning(
+    rm_workspace_stack("stack2")
+  )
 
   expect_length(get_workspace_stacks(), 1L)
   expect_identical(get_workspace_title(), "")
