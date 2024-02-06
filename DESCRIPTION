@@ -37,7 +37,8 @@ Imports:
     jsonlite,
     constructive,
     shinyFiles,
-    memuse
+    memuse,
+    haven
 Remotes:
     blockr-org/blockr.data,
     DivadNojnarg/DiagrammeR

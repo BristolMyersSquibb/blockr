@@ -4,6 +4,8 @@
 \alias{ui_input.keyvalue_field}
 \alias{server_output}
 \alias{server_output.block}
+\alias{server_output.upload_block}
+\alias{server_output.filesbrowser_block}
 \alias{server_output.plot_block}
 \alias{server_code}
 \alias{server_code.block}
@@ -55,6 +57,8 @@
 \alias{ui_update.list_field}
 \alias{uiOutputBlock}
 \alias{uiOutputBlock.block}
+\alias{uiOutputBlock.upload_block}
+\alias{uiOutputBlock.filesbrowser_block}
 \alias{uiOutputBlock.plot_block}
 \alias{uiCode}
 \alias{uiCode.block}
@@ -65,6 +69,10 @@
 server_output(x, result, output)
 
 \method{server_output}{block}(x, result, output)
+
+\method{server_output}{upload_block}(x, result, output)
+
+\method{server_output}{filesbrowser_block}(x, result, output)
 
 \method{server_output}{plot_block}(x, result, output)
 
@@ -167,6 +175,10 @@ ui_update(x, session, id, name)
 uiOutputBlock(x, ns)
 
 \method{uiOutputBlock}{block}(x, ns)
+
+\method{uiOutputBlock}{upload_block}(x, ns)
+
+\method{uiOutputBlock}{filesbrowser_block}(x, ns)
 
 \method{uiOutputBlock}{plot_block}(x, ns)
 

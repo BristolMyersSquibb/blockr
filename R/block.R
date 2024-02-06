@@ -19,7 +19,8 @@
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
   stopifnot(
-    is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
+    is.list(fields),
+    all(lgl_ply(fields, is_field)),
     is.language(expr),
     is_string(name)
   )
@@ -102,8 +103,20 @@ generate_code.group_by_block <- generate_code.arrange_block
 #' @rdname new_block
 #' @export
 generate_code.transform_block <- function(x) {
+
   if (!is_initialized(x)) {
     return(quote(identity()))
+  }
+
+  NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+generate_code.data_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(data.frame()))
   }
 
   NextMethod()
@@ -202,24 +215,16 @@ data_block <- function(...) {
 #' @export
 new_upload_block <- function(...) {
 
-  read_data <- function(dat) {
-    if (length(dat) == 0) {
-      return(data.frame())
-    }
-
-    data_func <- utils::read.csv # TO DO switch
-    bquote(
-      .(read_func)(.(path)),
-      list(read_func = data_func, path = dat$datapath)
-    )
+  data_path <- function(file) {
+    if (length(file)) file$datapath else character()
   }
 
   new_block(
     fields = list(
-      dat = new_upload_field(),
-      expression = new_hidden_field(read_data)
+      file = new_upload_field(),
+      expression = new_hidden_field(data_path)
     ),
-    expr = quote(.(expression)),
+    expr = quote(c(.(expression))),
     ...,
     class = c("upload_block", "data_block")
   )
@@ -235,27 +240,24 @@ upload_block <- function(...) {
 #' @param volumes Paths accessible by the shinyFiles browser.
 #' @export
 new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
-  read_data <- function(dat) {
-    if (length(dat) == 0 || is.integer(dat) || length(dat$files) == 0) {
-      cat("No files have been selected yet.")
-      return(data.frame())
+
+  data_path <- function(file) {
+
+    if (length(file) == 0 || is.integer(file) || length(file$files) == 0) {
+      return(character())
     }
 
-    files <- shinyFiles::parseFilePaths(volumes, dat)
-    data_func <- utils::read.csv # TO DO switch
+    files <- shinyFiles::parseFilePaths(volumes, file)
 
-    bquote(
-      .(read_func)(.(path)),
-      list(read_func = data_func, path = files$datapath)
-    )
+    unname(files$datapath)
   }
 
   new_block(
     fields = list(
-      dat = new_filesbrowser_field(volumes = volumes),
-      expression = new_hidden_field(read_data)
+      file = new_filesbrowser_field(volumes = volumes),
+      expression = new_hidden_field(data_path)
     ),
-    expr = quote(.(expression)),
+    expr = quote(c(.(expression))),
     ...,
     class = c("filesbrowser_block", "data_block")
   )
@@ -265,6 +267,92 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 #' @export
 filesbrowser_block <- function(...) {
   initialize_block(new_filesbrowser_block(...))
+}
+
+#' @rdname new_block
+#' @keywords internal
+#' @note Useful to build other parser blocks
+new_parser_block <- function(data, expr, fields = list(), ...,
+                             class = character()) {
+
+  safe_expr <- function(data) {
+    if (length(data)) {
+      expr
+    } else {
+      quote(identity())
+    }
+  }
+
+  new_block(
+    fields = c(
+      fields,
+      list(expression = new_hidden_field(safe_expr))
+    ),
+    expr = quote(.(expression)),
+    ...,
+    class = c(class, "parser_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+new_csv_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(utils::read.csv()), class = "csv_block")
+}
+
+#' @rdname new_block
+#' @export
+csv_block <- function(data, ...) {
+  initialize_block(new_csv_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_rds_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(readRDS()), class = "rds_block")
+}
+
+#' @rdname new_block
+#' @export
+rds_block <- function(data, ...) {
+  initialize_block(new_rds_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_json_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(jsonlite::fromJSON()),
+                   class = "json_block")
+}
+
+#' @rdname new_block
+#' @export
+json_block <- function(data, ...) {
+  initialize_block(new_json_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_sas_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(haven::read_sas()), class = "sas_block")
+}
+
+#' @rdname new_block
+#' @export
+sas_block <- function(data, ...) {
+  initialize_block(new_sas_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_xpt_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(haven::read_xpt()), class = "xpt_block")
+}
+
+#' @rdname new_block
+#' @export
+xpt_block <- function(data, ...) {
+  initialize_block(new_xpt_block(data, ...), data)
 }
 
 #' @rdname new_block

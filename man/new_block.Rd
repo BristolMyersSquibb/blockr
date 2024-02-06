@@ -10,6 +10,7 @@
 \alias{generate_code.block}
 \alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
+\alias{generate_code.data_block}
 \alias{generate_code.call}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
@@ -22,6 +23,17 @@
 \alias{upload_block}
 \alias{new_filesbrowser_block}
 \alias{filesbrowser_block}
+\alias{new_parser_block}
+\alias{new_csv_block}
+\alias{csv_block}
+\alias{new_rds_block}
+\alias{rds_block}
+\alias{new_json_block}
+\alias{json_block}
+\alias{new_sas_block}
+\alias{sas_block}
+\alias{new_xpt_block}
+\alias{xpt_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -66,6 +78,8 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
+\method{generate_code}{data_block}(x)
+
 \method{generate_code}{call}(x)
 
 evaluate_block(x, ...)
@@ -93,6 +107,28 @@ upload_block(...)
 new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
+
+new_parser_block(data, expr, fields = list(), ..., class = character())
+
+new_csv_block(data, ...)
+
+csv_block(data, ...)
+
+new_rds_block(data, ...)
+
+rds_block(data, ...)
+
+new_json_block(data, ...)
+
+json_block(data, ...)
+
+new_sas_block(data, ...)
+
+sas_block(data, ...)
+
+new_xpt_block(data, ...)
+
+xpt_block(data, ...)
 
 \method{initialize_block}{data_block}(x, ...)
 
@@ -213,3 +249,7 @@ Blocks consist of a set of fields, an expression that defines what the block
 produces (given the result of the previous block combined with user input),
 plus some meta data.
 }
+\note{
+Useful to build other parser blocks
+}
+\keyword{internal}
