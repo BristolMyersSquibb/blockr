@@ -92,10 +92,7 @@ initialize_field.field <- function(x, env = list()) {
 eval_set_field_value <- function(x, env) {
   for (cmp in names(x)[lgl_ply(x, is.function)]) {
     fun <- x[[cmp]]
-    tmp <- do.call(fun, env[methods::formalArgs(fun)])
-    if (length(tmp) > 0) {
-      value(x, cmp) <- tmp
-    }
+    value(x, cmp) <- do.call(fun, env[methods::formalArgs(fun)])
   }
 
   x
