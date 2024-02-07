@@ -19,7 +19,8 @@
 new_block <- function(fields, expr, name = rand_names(), ...,
                       class = character()) {
   stopifnot(
-    is.list(fields), length(fields) >= 1L, all(lgl_ply(fields, is_field)),
+    is.list(fields),
+    all(lgl_ply(fields, is_field)),
     is.language(expr),
     is_string(name)
   )
@@ -102,8 +103,20 @@ generate_code.group_by_block <- generate_code.arrange_block
 #' @rdname new_block
 #' @export
 generate_code.transform_block <- function(x) {
+
   if (!is_initialized(x)) {
     return(quote(identity()))
+  }
+
+  NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+generate_code.data_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(data.frame()))
   }
 
   NextMethod()
@@ -202,24 +215,16 @@ data_block <- function(...) {
 #' @export
 new_upload_block <- function(...) {
 
-  read_data <- function(dat) {
-    if (length(dat) == 0) {
-      return(data.frame())
-    }
-
-    data_func <- utils::read.csv # TO DO switch
-    bquote(
-      .(read_func)(.(path)),
-      list(read_func = data_func, path = dat$datapath)
-    )
+  data_path <- function(file) {
+    if (length(file)) file$datapath else character()
   }
 
   new_block(
     fields = list(
-      dat = new_upload_field(),
-      expression = new_hidden_field(read_data)
+      file = new_upload_field(),
+      expression = new_hidden_field(data_path)
     ),
-    expr = quote(.(expression)),
+    expr = quote(c(.(expression))),
     ...,
     class = c("upload_block", "data_block")
   )
@@ -235,27 +240,24 @@ upload_block <- function(...) {
 #' @param volumes Paths accessible by the shinyFiles browser.
 #' @export
 new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
-  read_data <- function(dat) {
-    if (length(dat) == 0 || is.integer(dat) || length(dat$files) == 0) {
-      cat("No files have been selected yet.")
-      return(data.frame())
+
+  data_path <- function(file) {
+
+    if (length(file) == 0 || is.integer(file) || length(file$files) == 0) {
+      return(character())
     }
 
-    files <- shinyFiles::parseFilePaths(volumes, dat)
-    data_func <- utils::read.csv # TO DO switch
+    files <- shinyFiles::parseFilePaths(volumes, file)
 
-    bquote(
-      .(read_func)(.(path)),
-      list(read_func = data_func, path = files$datapath)
-    )
+    unname(files$datapath)
   }
 
   new_block(
     fields = list(
-      dat = new_filesbrowser_field(volumes = volumes),
-      expression = new_hidden_field(read_data)
+      file = new_filesbrowser_field(volumes = volumes),
+      expression = new_hidden_field(data_path)
     ),
-    expr = quote(.(expression)),
+    expr = quote(c(.(expression))),
     ...,
     class = c("filesbrowser_block", "data_block")
   )
@@ -265,6 +267,114 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 #' @export
 filesbrowser_block <- function(...) {
   initialize_block(new_filesbrowser_block(...))
+}
+
+#' @rdname new_block
+#' @keywords internal
+#' @note Useful to build other parser blocks
+new_parser_block <- function(data, expr, fields = list(), ...,
+                             class = character()) {
+
+  safe_expr <- function(data) {
+    if (length(data)) {
+      expr
+    } else {
+      quote(identity())
+    }
+  }
+
+  new_block(
+    fields = c(
+      fields,
+      list(expression = new_hidden_field(safe_expr))
+    ),
+    expr = quote(.(expression)),
+    ...,
+    class = c(class, "parser_block", "transform_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+new_csv_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(utils::read.csv()), class = "csv_block")
+}
+
+#' @rdname new_block
+#' @export
+csv_block <- function(data, ...) {
+  initialize_block(new_csv_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_rds_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(readRDS()), class = "rds_block")
+}
+
+#' @rdname new_block
+#' @export
+rds_block <- function(data, ...) {
+  initialize_block(new_rds_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_json_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(jsonlite::fromJSON()),
+                   class = "json_block")
+}
+
+#' @rdname new_block
+#' @export
+json_block <- function(data, ...) {
+  initialize_block(new_json_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_sas_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(haven::read_sas()), class = "sas_block")
+}
+
+#' @rdname new_block
+#' @export
+sas_block <- function(data, ...) {
+  initialize_block(new_sas_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_xpt_block <- function(data, ...) {
+  new_parser_block(data, expr = quote(haven::read_xpt()), class = "xpt_block")
+}
+
+#' @rdname new_block
+#' @export
+xpt_block <- function(data, ...) {
+  initialize_block(new_xpt_block(data, ...), data)
+}
+
+#' @rdname new_block
+#' @export
+new_result_block <- function(...) {
+
+  fields <- list(
+    stack = new_result_field()
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(stack)),
+    ...,
+    class = c("result_block", "data_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+result_block <- function(...) {
+  initialize_block(new_result_block(...))
 }
 
 #' @rdname new_block
@@ -586,72 +696,44 @@ group_by_block <- function(data, ...) {
   initialize_block(new_group_by_block(data, ...), data)
 }
 
+#' @param y Second dataset for join
+#' @param type Join type
+#' @param by Join columns
+#'
 #' @rdname new_block
-#' @param data Input data coming from previous block.
-#' @param y Second data block.
-#' @param type Join type.
-#' @param by_col If you know in advance which column you want
-#' to join
 #' @export
-new_join_block <- function(
-    data,
-    y = data(package = "blockr.data")$result[, "Item"],
-    type = character(),
-    by_col = character(),
-    ...) {
-  # by depends on selected dataset and the input data.
-  choices <- intersect(
-    colnames(data),
-    colnames(eval(as.name(y)))
-  )
+new_join_block <- function(data, y = NULL, type = character(),
+                           by = character(), ...) {
 
-  default <- if (length(choices) == 0) {
-    character()
+  by_choices <- function(data, y) {
+    intersect(colnames(data), colnames(y))
+  }
+
+  if (!length(by) && not_null(y)) {
+    by <- by_choices(data, y)[1L]
+  }
+
+  join_types <- c("left", "inner", "right", "full", "semi", "anti")
+
+  if (length(type)) {
+    type <- match.arg(type, join_types)
   } else {
-    if (length(by_col) > 0) {
-      by_col
-    } else {
-      choices[[1]]
-    }
+    type <- join_types[1L]
   }
-
-  join_expr <- function(data, join_func, y, by) {
-    if (length(by) == 0) stop("Nothing to merge, restoring defaults.")
-    bquote(
-      .(join_func)(y = .(y), by = .(by)),
-      list(join_func = as.name(join_func), y = as.name(y), by = by)
-    )
-  }
-
-  join_types <- c(
-    "left",
-    "inner",
-    "right",
-    "full",
-    "semi",
-    "anti"
-  )
-
-  if (length(type) == 0) type <- join_types[1]
 
   fields <- list(
     join_func = new_select_field(
       paste(type, "join", sep = "_"),
-      paste(join_types, "join", sep = "_")
+      paste(join_types, "join", sep = "_"),
+      type = "name"
     ),
-    y = new_select_field(y[[1]], y),
-    by = new_select_field(default, choices, multiple = TRUE),
-    expression = new_hidden_field(join_expr)
+    y = new_result_field(y),
+    by = new_select_field(by, by_choices, multiple = TRUE)
   )
-
-  attr(fields$y, "type") <- "name"
-  # TO DO: expression is ugly: try to get rid of get and
-  # unlist.
-  expr <- quote(.(expression))
 
   new_block(
     fields = fields,
-    expr = expr,
+    expr = quote(.(join_func)(y = .(y), by = .(by))),
     ...,
     class = c("join_block", "transform_block", "submit_block")
   )

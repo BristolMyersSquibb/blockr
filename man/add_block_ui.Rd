@@ -13,6 +13,6 @@ that it can be used when the stack is the top level element.}
 \description{
 Useful to allow stack to add blocks to it.
 The selected block can be accessed through \code{input$selected_block}.
-Combined to the blocks registry API, this allows to select a block from R like
-\code{available_blocks()[[input$selected_block]]}.
+Combined to the blocks registry API, this allows to select a block from R
+like \code{available_blocks()[[input$selected_block]]}.
 }

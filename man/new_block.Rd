@@ -10,6 +10,7 @@
 \alias{generate_code.block}
 \alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
+\alias{generate_code.data_block}
 \alias{generate_code.call}
 \alias{evaluate_block}
 \alias{evaluate_block.data_block}
@@ -22,6 +23,19 @@
 \alias{upload_block}
 \alias{new_filesbrowser_block}
 \alias{filesbrowser_block}
+\alias{new_parser_block}
+\alias{new_csv_block}
+\alias{csv_block}
+\alias{new_rds_block}
+\alias{rds_block}
+\alias{new_json_block}
+\alias{json_block}
+\alias{new_sas_block}
+\alias{sas_block}
+\alias{new_xpt_block}
+\alias{xpt_block}
+\alias{new_result_block}
+\alias{result_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -66,6 +80,8 @@ generate_code(x)
 
 \method{generate_code}{transform_block}(x)
 
+\method{generate_code}{data_block}(x)
+
 \method{generate_code}{call}(x)
 
 evaluate_block(x, ...)
@@ -93,6 +109,32 @@ upload_block(...)
 new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
 
 filesbrowser_block(...)
+
+new_parser_block(data, expr, fields = list(), ..., class = character())
+
+new_csv_block(data, ...)
+
+csv_block(data, ...)
+
+new_rds_block(data, ...)
+
+rds_block(data, ...)
+
+new_json_block(data, ...)
+
+json_block(data, ...)
+
+new_sas_block(data, ...)
+
+sas_block(data, ...)
+
+new_xpt_block(data, ...)
+
+xpt_block(data, ...)
+
+new_result_block(...)
+
+result_block(...)
 
 \method{initialize_block}{data_block}(x, ...)
 
@@ -127,13 +169,7 @@ new_group_by_block(data, columns = colnames(data)[1], ...)
 
 group_by_block(data, ...)
 
-new_join_block(
-  data,
-  y = data(package = "blockr.data")$result[, "Item"],
-  type = character(),
-  by_col = character(),
-  ...
-)
+new_join_block(data, y = NULL, type = character(), by = character(), ...)
 
 join_block(data, ...)
 
@@ -195,12 +231,12 @@ you can also pass predefined selected column for each summary.
 Therefore when not of length 0, columns should have the same length
 as func.}
 
-\item{y}{Second data block.}
+\item{y}{For unit testing. Leave NULL.}
 
 \item{type}{Join type.}
 
-\item{by_col}{If you know in advance which column you want
-to join}
+\item{by}{If you know in advance which column you want
+to join.}
 
 \item{n_rows}{Number of rows to return.}
 
@@ -213,3 +249,7 @@ Blocks consist of a set of fields, an expression that defines what the block
 produces (given the result of the previous block combined with user input),
 plus some meta data.
 }
+\note{
+Useful to build other parser blocks
+}
+\keyword{internal}

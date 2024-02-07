@@ -1,6 +1,13 @@
 test_that("mutate-block", {
+
+  withr::local_options(BLOCKR_LOG_LEVEL = "error")
+
   data <- datasets::iris
-  block <- mutate_block(data, value = c(newcol = "2 * Petal.Length", newcol2 = "3 * Petal.Length"))
+
+  block <- mutate_block(
+    data,
+    value = c(newcol = "2 * Petal.Length", newcol2 = "3 * Petal.Length")
+  )
 
   expect_s3_class(block, "mutate_block")
   expect_type(block, "list")
@@ -13,6 +20,8 @@ test_that("mutate-block", {
 })
 
 test_that("mutate_module_server handles input correctly", {
+
+  withr::local_options(BLOCKR_LOG_LEVEL = "error")
 
   # wrap generate_server
   # id as first argument, so we can test via shiny::testSever

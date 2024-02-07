@@ -5,33 +5,50 @@
 #' @param ... An ordered set of blocks (each argument is required to inherit
 #' from `"block"`)
 #' @param title Stack title
+#' @param name Stack name
 #'
 #' @export
-new_stack <- function(..., title = "Stack") {
+new_stack <- function(..., title = "Stack", name = rand_names()) {
+
   ctors <- c(...)
   names <- names(ctors)
 
-  if (!length(ctors)) {
-    return(structure(list(), title = title, name = rand_names(), class = "stack"))
+  stopifnot(is_string(title), is_string(name))
+
+  if (length(ctors)) {
+
+    blocks <- vector("list", length(ctors))
+
+    blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
+    temp <- evaluate_block(blocks[[1L]])
+
+    for (i in seq_along(ctors)[-1L]) {
+      temp <- evaluate_block(
+        blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
+        data = temp
+      )
+    }
+
+  } else {
+
+    blocks <- list()
+    temp <- list()
   }
 
-  blocks <- vector("list", length(ctors))
+  stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
-  temp <- evaluate_block(blocks[[1L]])
+  structure(blocks, title = title, name = name, result = temp,
+            class = "stack")
+}
 
-  for (i in seq_along(ctors)[-1L]) {
-    temp <- evaluate_block(
-      blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
-      data = temp
-    )
-  }
+set_stack_blocks <- function(stack, blocks, result) {
 
-  stopifnot(
-    is.list(blocks), length(blocks) >= 1L, all(lgl_ply(blocks, is_block))
-  )
+  stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks, title = title, name = rand_names(), class = "stack")
+  attributes(blocks) <- attributes(stack)
+  attr(blocks, "result") <- result
+
+  blocks
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -39,6 +56,42 @@ new_stack <- function(..., title = "Stack") {
 #' @export
 is_stack <- function(x) {
   inherits(x, "stack")
+}
+
+#' @rdname new_stack
+#' @export
+get_stack_name <- function(x) {
+  stopifnot(is_stack(x))
+  attr(x, "name")
+}
+
+get_stack_result <- function(stack) {
+  stopifnot(is_stack(stack))
+  attr(stack, "result")
+}
+
+#' @param x An object inheriting form `"stack"`
+#' @rdname new_stack
+#' @export
+set_stack_name <- function(x, name) {
+  stopifnot(is_stack(x), is_string(name))
+  attr(x, "name") <- name
+  x
+}
+
+#' @rdname new_stack
+#' @export
+set_stack_title <- function(x, title) {
+  stopifnot(is_stack(x), is_string(title))
+  attr(x, "title") <- title
+  x
+}
+
+#' @rdname new_stack
+#' @export
+get_stack_title <- function(x) {
+  stopifnot(is_stack(x))
+  attr(x, "title")
 }
 
 #' @rdname new_stack
@@ -113,10 +166,11 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  if (is.null(position)) {
-    # inject new block + pass in data from previous block
+  if (is.null(position) || position > length(stack)) {
     position <- length(stack)
   }
+
+  log_debug("ADD BLOCK (position ", position + 1, ")")
 
   if (position < 1L) {
     position <- 1L
@@ -135,13 +189,13 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  if (!length(stack))
+  if (!length(stack)) {
     tmp <- do.call(block, list())
-  else
+  } else {
     tmp <- do.call(block, list(data = data, position = position))
+  }
 
-  stack <- append(stack, list(tmp), position)
-  invisible(stack)
+  set_stack_blocks(stack, append(stack, list(tmp), position), data)
 }
 
 #' Move blocks within a stack
@@ -174,30 +228,17 @@ move_block <- function(stack, from, to) {
 }
 
 #' @param stack An object inheriting form `"stack"`
+#' @param id Stack ID
+#'
 #' @rdname new_stack
 #' @export
-serve_stack <- function(stack) {
-  ui <- bslib::page_fluid(generate_ui(stack))
+serve_stack <- function(stack, id = "my_stack") {
+
+  ui <- bslib::page_fluid(generate_ui(stack, id))
 
   server <- function(input, output, session) {
-    generate_server(stack)
+    generate_server(stack, id)
   }
 
   shinyApp(ui, server)
-}
-
-#' Title
-#' Ge and set title.
-#' @param stack A stack.
-#' @param title Title to set.
-#' @name title
-#' @keywords internal
-set_title <- function(stack, title) {
-  attr(stack, "title") <- title
-  stack
-}
-
-#' @rdname title
-get_title <- function(stack) {
-  attr(stack, "title")
 }

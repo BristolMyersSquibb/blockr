@@ -35,7 +35,11 @@ Imports:
     htmltools,
     shinyAce,
     jsonlite,
-    shinyFiles
+    constructive,
+    shinyFiles,
+    memuse,
+    haven,
+    rlang
 Remotes:
     blockr-org/blockr.data,
     DivadNojnarg/DiagrammeR
@@ -46,6 +50,7 @@ Suggests:
     testthat (>= 3.0.0),
     shinytest2,
     pkgload,
-    htmlwidgets
+    htmlwidgets,
+    withr
 Config/testthat/edition: 3
 VignetteBuilder: knitr

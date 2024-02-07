@@ -1,18 +1,18 @@
-library(shiny)
-library(blockr.data)
 library(blockr)
 
-stack <- new_stack(data_block)
-shinyApp(
+stack <- new_stack()
+id <- "mystack"
+
+shiny::shinyApp(
   ui = bslib::page_fluid(
     add_block_ui(),
-    generate_ui(stack, id = "mystack")
+    generate_ui(stack, id)
   ),
   server = function(input, output, session) {
     vals <- reactiveValues(new_block = NULL)
     stack <- generate_server(
       stack,
-      id = "mystack",
+      id,
       new_block = reactive(vals$new_block)
     )
 
