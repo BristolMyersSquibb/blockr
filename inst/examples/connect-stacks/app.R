@@ -17,12 +17,8 @@ ae_data_block <- function(...) {
   ))
 }
 
-stacks <- list(
-  new_stack(lab_data_block, head_block),
-  new_stack(ae_data_block, join_block)
+serve_workspace(
+  stack1 = new_stack(lab_data_block, head_block),
+  stack2 = new_stack(ae_data_block, join_block),
+  title = "My workspace"
 )
-names(stacks) <- paste("stack", 1:2, sep = "_")
-
-do.call(set_workspace, args = c(stacks, list(title = "My workspace")))
-
-serve_workspace(clear = FALSE)
