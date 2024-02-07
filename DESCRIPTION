@@ -38,6 +38,7 @@ Imports:
     constructive,
     shinyFiles,
     memuse,
+    haven,
     rlang
 Remotes:
     blockr-org/blockr.data,
