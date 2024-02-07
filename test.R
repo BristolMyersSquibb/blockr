@@ -9,15 +9,11 @@ stack <- new_stack(
 
 ui <- fluidPage(
   theme = bslib::bs_theme(5L),
-  useBlockr(),
-  uiOutput("stack")
+  generate_ui(stack)
 )
 
 server <- function(input, output, session) {
-  output$stack <- renderUI({
-    generate_ui(stack)
-  })
-  x <- generate_server(stack)
+  generate_server(stack)
 }
 
 shinyApp(ui, server)

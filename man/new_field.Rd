@@ -11,9 +11,9 @@
 \alias{validate_field.string_field}
 \alias{new_string_field}
 \alias{string_field}
-\alias{validate_field.select_field}
 \alias{new_select_field}
 \alias{select_field}
+\alias{validate_field.select_field}
 \alias{new_code_field}
 \alias{code_field}
 \alias{validate_field.code_field}
@@ -47,6 +47,9 @@
 \alias{new_list_field}
 \alias{list_field}
 \alias{validate_field.list_field}
+\alias{new_result_field}
+\alias{result_field}
+\alias{validate_field.result_field}
 \alias{new_keyvalue_field}
 \alias{keyvalue_field}
 \alias{validate_field.keyvalue_field}
@@ -81,8 +84,6 @@ new_string_field(value = character(), ...)
 
 string_field(...)
 
-\method{validate_field}{select_field}(x)
-
 new_select_field(
   value = character(),
   choices = character(),
@@ -91,6 +92,8 @@ new_select_field(
 )
 
 select_field(...)
+
+\method{validate_field}{select_field}(x)
 
 new_code_field(value = character(), ...)
 
@@ -162,6 +165,12 @@ new_list_field(value = list(), sub_fields = list(), ...)
 list_field(...)
 
 \method{validate_field}{list_field}(x)
+
+new_result_field(value = list(), ...)
+
+result_field(...)
+
+\method{validate_field}{result_field}(x)
 
 new_keyvalue_field(
   value = NULL,

@@ -92,7 +92,7 @@ register_blocks <- function(constructor, name, description, classes, input,
     classes <- list(classes)
   }
 
-  Map(
+  res <- Map(
     register_block,
     constructor = constructor,
     name = name,
@@ -102,6 +102,8 @@ register_blocks <- function(constructor, name, description, classes, input,
     output = output,
     package = package
   )
+
+  invisible(res)
 }
 
 list_blocks <- function() {

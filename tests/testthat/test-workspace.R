@@ -1,5 +1,9 @@
 test_that("workspace", {
 
+  withr::local_options(BLOCKR_LOG_LEVEL = "error")
+
+  withr::defer(clear_workspace_stacks())
+
   expect_s3_class(get_workspace(), "workspace")
 
   stack1 <- new_stack(
@@ -20,7 +24,7 @@ test_that("workspace", {
     new_select_block
   )
 
-  add_workpace_stack("stack2", stack2)
+  add_workspace_stack("stack2", stack2)
 
   expect_length(get_workspace_stacks(), 2L)
   expect_identical(get_workspace_title(), "")
@@ -29,7 +33,35 @@ test_that("workspace", {
   expect_s3_class(get_workspace_stack("stack1"), "stack")
   expect_s3_class(get_workspace_stack("stack2"), "stack")
 
-  rm_workspace_stack("stack2")
+  expect_warning(
+    add_workspace_stack("stack2", stack2)
+  )
+
+  expect_length(get_workspace_stacks(), 2L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
+
+  add_workspace_stack("stack2", stack2, force = TRUE)
+
+  expect_length(get_workspace_stacks(), 2L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
+
+  set_workspace_stack("stack2", stack2)
+
+  expect_length(get_workspace_stacks(), 2L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
+
+  expect_warning(
+    set_workspace_stack("stack3", new_stack())
+  )
+
+  expect_length(get_workspace_stacks(), 3L)
+  expect_setequal(list_workspace_stacks(), c("stack1", "stack2", "stack3"))
+
+  rm_workspace_stacks(c("stack2", "stack3"))
+
+  expect_warning(
+    rm_workspace_stack("stack2")
+  )
 
   expect_length(get_workspace_stacks(), 1L)
   expect_identical(get_workspace_title(), "")
@@ -56,4 +88,13 @@ test_that("workspace", {
 
   set_workspace_settings("{\"foo\": \"bar\"}")
   expect_identical(get_workspace_settings(), list(foo = "bar"))
+
+  clear_workspace()
+
+  expect_length(get_workspace_stacks(), 0L)
+  expect_identical(get_workspace_title(), "")
+  expect_identical(get_workspace_settings(), list())
+
+  app <- serve_workspace(my_stack = new_stack(data_block))
+  expect_s3_class(app, "shiny.appobj")
 })

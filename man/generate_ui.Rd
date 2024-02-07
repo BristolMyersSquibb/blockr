@@ -4,8 +4,9 @@
 \alias{ui_input.keyvalue_field}
 \alias{server_output}
 \alias{server_output.block}
+\alias{server_output.upload_block}
+\alias{server_output.filesbrowser_block}
 \alias{server_output.plot_block}
-\alias{server_output.ggiraph_block}
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
@@ -16,6 +17,10 @@
 \alias{block_code}
 \alias{block_code.block}
 \alias{block_header}
+\alias{data_info}
+\alias{data_info.block}
+\alias{data_info.data_block}
+\alias{data_info.transform_block}
 \alias{remove_button}
 \alias{remove_button.block}
 \alias{generate_ui.block}
@@ -34,6 +39,7 @@
 \alias{ui_input.submit_field}
 \alias{ui_input.upload_field}
 \alias{ui_input.filesbrowser_field}
+\alias{ui_input.result_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -58,8 +64,9 @@
 \alias{ui_update.list_field}
 \alias{uiOutputBlock}
 \alias{uiOutputBlock.block}
+\alias{uiOutputBlock.upload_block}
+\alias{uiOutputBlock.filesbrowser_block}
 \alias{uiOutputBlock.plot_block}
-\alias{uiOutputBlock.ggiraph_block}
 \alias{uiCode}
 \alias{uiCode.block}
 \title{UI}
@@ -70,9 +77,11 @@ server_output(x, result, output)
 
 \method{server_output}{block}(x, result, output)
 
-\method{server_output}{plot_block}(x, result, output)
+\method{server_output}{upload_block}(x, result, output)
 
-\method{server_output}{ggiraph_block}(x, result, output)
+\method{server_output}{filesbrowser_block}(x, result, output)
+
+\method{server_output}{plot_block}(x, result, output)
 
 server_code(x, state, output)
 
@@ -94,6 +103,14 @@ block_code(x, ...)
 
 block_header(x, ...)
 
+data_info(x, ...)
+
+\method{data_info}{block}(x, ns, ...)
+
+\method{data_info}{data_block}(x, ns, ...)
+
+\method{data_info}{transform_block}(x, ns, ...)
+
 remove_button(x, ...)
 
 \method{remove_button}{block}(x, id, ...)
@@ -106,13 +123,13 @@ inject_remove_button(x, ...)
 
 \method{inject_remove_button}{block}(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...)
 
-\method{inject_remove_button}{stack}(x, ns, ...)
+\method{inject_remove_button}{stack}(x, id, ...)
 
 \method{remove_button}{stack}(x, id, ...)
 
 stack_header(x, ...)
 
-\method{generate_ui}{workspace}(x, id = NULL, ...)
+\method{generate_ui}{workspace}(x, id, ...)
 
 ui_input(x, id, name)
 
@@ -129,6 +146,8 @@ ui_input(x, id, name)
 \method{ui_input}{upload_field}(x, id, name)
 
 \method{ui_input}{filesbrowser_field}(x, id, name)
+
+\method{ui_input}{result_field}(x, id, name)
 
 input_ids(x, ...)
 
@@ -178,9 +197,11 @@ uiOutputBlock(x, ns)
 
 \method{uiOutputBlock}{block}(x, ns)
 
-\method{uiOutputBlock}{plot_block}(x, ns)
+\method{uiOutputBlock}{upload_block}(x, ns)
 
-\method{uiOutputBlock}{ggiraph_block}(x, ns)
+\method{uiOutputBlock}{filesbrowser_block}(x, ns)
+
+\method{uiOutputBlock}{plot_block}(x, ns)
 
 uiCode(x, ns)
 
@@ -189,7 +210,7 @@ uiCode(x, ns)
 \arguments{
 \item{x}{Object for which to generate UI components}
 
-\item{id}{UI IDs}
+\item{id}{Parent ID}
 
 \item{name}{Field name}
 

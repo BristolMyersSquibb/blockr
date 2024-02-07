@@ -2,42 +2,68 @@
 % Please edit documentation in R/workspace.R
 \name{set_workspace}
 \alias{set_workspace}
-\alias{add_workpace_stack}
+\alias{restore_workspace}
+\alias{get_workspace}
+\alias{is_workspace}
+\alias{add_workspace_stack}
+\alias{set_workspace_stack}
+\alias{rm_workspace_stacks}
 \alias{rm_workspace_stack}
 \alias{set_workspace_title}
 \alias{set_workspace_settings}
 \alias{list_workspace_stacks}
-\alias{get_workspace}
 \alias{get_workspace_stack}
 \alias{get_workspace_stacks}
 \alias{get_workspace_title}
 \alias{get_workspace_settings}
+\alias{serve_workspace}
 \title{Workspace}
 \usage{
-set_workspace(..., title = "", settings = NULL, force = FALSE)
+set_workspace(
+  ...,
+  title = "",
+  settings = NULL,
+  force = FALSE,
+  workspace = get_workspace()
+)
 
-add_workpace_stack(name, stack, force = FALSE)
-
-rm_workspace_stack(name, force = FALSE)
-
-set_workspace_title(title)
-
-set_workspace_settings(settings)
-
-list_workspace_stacks()
+restore_workspace(x, force = FALSE, workspace = get_workspace())
 
 get_workspace()
 
-get_workspace_stack(name)
+is_workspace(x)
 
-get_workspace_stacks(names = list_workspace_stacks())
+add_workspace_stack(name, stack, force = FALSE, workspace = get_workspace())
 
-get_workspace_title()
+set_workspace_stack(name, stack, force = FALSE, workspace = get_workspace())
 
-get_workspace_settings()
+rm_workspace_stacks(name, force = FALSE, workspace = get_workspace())
+
+rm_workspace_stack(name, force = FALSE, workspace = get_workspace())
+
+set_workspace_title(title, workspace = get_workspace())
+
+set_workspace_settings(settings, workspace = get_workspace())
+
+list_workspace_stacks(workspace = get_workspace())
+
+get_workspace_stack(name, workspace = get_workspace())
+
+get_workspace_stacks(names = NULL, workspace = get_workspace())
+
+get_workspace_title(workspace = get_workspace())
+
+get_workspace_settings(workspace = get_workspace())
+
+serve_workspace(
+  ...,
+  clear = NULL,
+  id = "myworkspace",
+  workspace = get_workspace()
+)
 }
 \arguments{
-\item{...}{A set of of stacks}
+\item{...}{Passed to \code{set_workspace()}}
 
 \item{title}{The workspace title}
 
@@ -45,11 +71,19 @@ get_workspace_settings()
 
 \item{force}{Force overwrite existing stacks (otherwise may throw warning)}
 
+\item{workspace}{The workspace environment}
+
+\item{x}{(Workspace) object}
+
 \item{name}{Stack name}
 
 \item{stack}{A single stack}
 
 \item{names}{Stack names}
+
+\item{clear}{Clear current worspace}
+
+\item{id}{Workspace ID}
 }
 \description{
 Stacks all live in a singleton workspace.

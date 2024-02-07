@@ -90,14 +90,6 @@ data %>% plot_block + layer_block
 All the process is described in the following, which should 
 highlight the __flexibility__ provided by `{blockr}`.
 
-```{r, eval=TRUE, echo=FALSE}
-note_box(
-  "Notice that the current {blockr} plot_block isn't built layer by layer but as a huge monolitic structure", #nolint
-  "which is certainly less flexible than what we show here.",
-  color = "primary"
-)
-```
-
 ### New block helpers
 
 ```{r, eval=TRUE, echo=FALSE}

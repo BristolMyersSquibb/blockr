@@ -80,7 +80,7 @@ generate_server.keyvalue_field <- function(x, ...) {
 
       observe({
         if (!identical(r_value(), r_value_user())) {
-          message("redraw")
+          log_debug("redraw")
           output$kv <- renderUI({
             # isolate here is needed, despite bindEvent(), for some reason
             keyvalue_ui(
