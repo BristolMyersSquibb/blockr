@@ -134,7 +134,7 @@ rm_workspace_stacks <- function(name, force = FALSE,
 
   if (!isTRUE(force) && !all(exst)) {
     warning("stack(s) ", name[!exst], " does/do not exist")
-    invisible(FALSE)
+    return(invisible(FALSE))
   }
 
   rm(list = name, envir = workspace, inherits = FALSE)
