@@ -241,7 +241,7 @@ add_block_ui <- function(ns = identity) {
 
   add_block_ui_id <- ns("add")
 
-  message("Adding \"add block\" UI with ID ", add_block_ui_id)
+  log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
 
   div(
     class = "d-flex justify-content-center",

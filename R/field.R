@@ -61,11 +61,18 @@ update_field <- function(x, new, env = list()) {
 #' @rdname new_field
 #' @export
 update_field.field <- function(x, new, env = list()) {
+
   x <- eval_set_field_value(x, env)
 
   value(x) <- new
 
-  validate_field(x)
+  res <- validate_field(x)
+
+  if (is_initialized(res)) {
+    return(res)
+  }
+
+  eval_set_field_value(res, env)
 }
 
 #' @rdname new_field
@@ -120,12 +127,6 @@ new_string_field <- function(value = character(), ...) {
 #' @export
 string_field <- function(...) validate_field(new_string_field(...))
 
-#' @rdname new_field
-#' @export
-validate_field.select_field <- function(x) {
-  x
-}
-
 #' @param choices Set of permissible values
 #' @param multiple Allow multiple selections
 #' @rdname new_field
@@ -141,6 +142,19 @@ new_select_field <- function(value = character(), choices = character(),
 #' @rdname new_field
 #' @export
 select_field <- function(...) validate_field(new_select_field(...))
+
+#' @rdname new_field
+#' @export
+validate_field.select_field <- function(x) {
+
+  val <- value(x)
+
+  if (length(val) && !all(val %in% value(x, "choices"))) {
+    value(x) <- character()
+  }
+
+  x
+}
 
 #' @rdname new_field
 #' @export

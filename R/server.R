@@ -21,7 +21,6 @@ update_blk <- function(b, value, is_srv, input, data) {
         value[-which(names(value) == field)]
       )
       b[[field]] <- update_field(b[[field]], value[[field]], env)
-      if (identical(input[[field]], value(b[[field]]))) next
     }
   }
   b
@@ -592,7 +591,7 @@ inject_block <- function(input, vals, id) {
 
   listener_id <- sprintf("%s-add", id)
 
-  message("Setting up \"add block\" listener with ID ", listener_id)
+  log_debug("Setting up \"add block\" listener with ID ", listener_id)
 
   observeEvent(input[[listener_id]], {
     # Reset to avoid re-adding existing blocks to stacks

@@ -11,9 +11,9 @@
 \alias{validate_field.string_field}
 \alias{new_string_field}
 \alias{string_field}
-\alias{validate_field.select_field}
 \alias{new_select_field}
 \alias{select_field}
+\alias{validate_field.select_field}
 \alias{new_switch_field}
 \alias{switch_field}
 \alias{validate_field.switch_field}
@@ -81,8 +81,6 @@ new_string_field(value = character(), ...)
 
 string_field(...)
 
-\method{validate_field}{select_field}(x)
-
 new_select_field(
   value = character(),
   choices = character(),
@@ -91,6 +89,8 @@ new_select_field(
 )
 
 select_field(...)
+
+\method{validate_field}{select_field}(x)
 
 new_switch_field(value = FALSE, ...)
 
