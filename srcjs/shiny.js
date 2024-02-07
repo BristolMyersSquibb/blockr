@@ -1,5 +1,4 @@
 import { collapse, toggleOutputInput, handleIcons } from "./collapse.js";
-import { remove } from "./remove-stack.js";
 import { title } from "./stack-title.js";
 import { renderLocked } from "./lock.js";
 import { tooltip } from "./tooltips.js";
@@ -7,7 +6,6 @@ import { tooltip } from "./tooltips.js";
 window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
   const stack = `#${msg.stack}`;
   setTimeout(() => {
-    remove(stack);
     collapse(stack);
     title(stack, msg.stack);
     renderLocked(stack, msg.locked);

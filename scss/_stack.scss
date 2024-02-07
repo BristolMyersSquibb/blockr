@@ -17,11 +17,27 @@ html {
       }
     }
 
+    .stack-add-block {
+      color: var(--bs-gray);
+      cursor: pointer;
+      &:hover {
+        color: var(--bs-warning);
+      }
+    }
+
     .stack-copy-code {
       color: var(--bs-gray);
       cursor: pointer;
       &:hover {
         color: var(--bs-info);
+      }
+    }
+
+    .stack-remove {
+      color: var(--bs-gray);
+      cursor: pointer;
+      &:hover {
+        color: var(--bs-danger);
       }
     }
 
@@ -34,6 +50,7 @@ html {
 
     .stack-remove,
     .stack-copy-code,
+    .stack-add-block,
     .stack-edit-toggle{
       opacity: 0;
     }
@@ -41,6 +58,7 @@ html {
     &:hover{
       .stack-remove,
       .stack-copy-code,
+      .stack-add-block,
       .stack-edit-toggle {
         opacity: 1;
       }

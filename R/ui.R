@@ -221,20 +221,17 @@ add_block_ui <- function(ns = identity) {
 
   message("Adding \"add block\" UI with ID ", add_block_ui_id)
 
-  div(
-    class = "d-flex justify-content-center",
-    tags$button(
-      type = "button",
-      "Add a new block",
-      class = "btn btn-primary",
-      class = "my-2",
+  tagList(
+    tags$a(
+      icon("plus"),
+      class = "stack-add-block text-decoration-none",
       `data-bs-toggle` = "offcanvas",
       `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
       `aria-controls` = ns("addBlockCanvas")
     ),
     off_canvas(
       id = ns("addBlockCanvas"),
-      title = "My blocks",
+      title = "Blocks",
       position = "bottom",
       radioButtons(
         ns("selected_block"),
@@ -329,7 +326,7 @@ inject_remove_button.stack <- function(x, id, ...) {
     add_block_ui(ns)
   )
 
-  div(class = "col m-1", tmp)
+  div(class = "col m-1", ui)
 }
 
 #' @rdname generate_ui
@@ -362,6 +359,14 @@ stack_header.stack <- function(x, title, ns, ...) {
         class = "flex-shrink-1",
         div(
           class = "stack-tools",
+          actionLink(
+            ns("remove"),
+            class = "text-decoration-none stack-remove",
+            `data-bs-toggle` = "tooltip",
+            `data-bs-title` = "Remove stack",
+            icon("trash")
+          ),
+          add_block_ui(ns),
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
