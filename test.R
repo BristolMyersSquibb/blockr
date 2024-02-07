@@ -4,7 +4,7 @@ library(shiny)
 
 stack <- new_stack(
   data_block,
-  code_plot_block
+  code_transform_block
 )
 
 ui <- fluidPage(

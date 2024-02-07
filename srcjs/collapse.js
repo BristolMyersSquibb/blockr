@@ -148,8 +148,7 @@ export const showLastOutput = (el) => {
   $lastOutput.trigger("shown");
 
   // we have a loading state
-  // because some block validations have no last output
-  const tableId = $lastOutput.find(".datatables").first().attr("id");
+  let tableId = $lastOutput.find(".shiny-bound-output").first().attr("id");
 
   $(document).on("shiny:value", (event) => {
     if (event.name !== tableId) {
