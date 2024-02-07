@@ -696,72 +696,44 @@ group_by_block <- function(data, ...) {
   initialize_block(new_group_by_block(data, ...), data)
 }
 
+#' @param y Second dataset for join
+#' @param type Join type
+#' @param by Join columns
+#'
 #' @rdname new_block
-#' @param data Input data coming from previous block.
-#' @param data_merge For unit testing. Leave NULL.
-#' @param type Join type.
-#' @param by_col If you know in advance which column you want
-#' to join.
 #' @export
-new_join_block <- function(
-    data,
-    data_merge = NULL,
-    type = character(),
-    by_col = character(),
-    ...) {
-  # by depends on selected dataset and the input data.
+new_join_block <- function(data, y = NULL, type = character(),
+                           by = character(), ...) {
+
   by_choices <- function(data, y) {
-    intersect(
-      colnames(data),
-      colnames(y)
-    )
+    intersect(colnames(data), colnames(y))
   }
 
-  default <- function(data, y) {
-    if (length(by_col) == 0) by_choices(data, y)[1] else by_col
+  if (!length(by) && not_null(y)) {
+    by <- by_choices(data, y)[1L]
   }
 
-  # Capture user input
-  if (!is.null(data_merge)) data_merge <- substitute(data_merge)
+  join_types <- c("left", "inner", "right", "full", "semi", "anti")
 
-  join_expr <- function(data, join_func, y, by) {
-    if (length(by) == 0 || length(join_func) == 0) return(quote(TRUE))
-    bquote(
-      .(join_func)(y = .(y), by = .(by)),
-      list(join_func = as.name(join_func), y = y, by = by)
-    )
+  if (length(type)) {
+    type <- match.arg(type, join_types)
+  } else {
+    type <- join_types[1L]
   }
-
-  join_types <- c(
-    "left",
-    "inner",
-    "right",
-    "full",
-    "semi",
-    "anti"
-  )
-
-  if (length(type) == 0) type <- join_types[1]
 
   fields <- list(
     join_func = new_select_field(
       paste(type, "join", sep = "_"),
-      paste(join_types, "join", sep = "_")
+      paste(join_types, "join", sep = "_"),
+      type = "name"
     ),
-    y = new_result_field(value = if (!is.null(data_merge)) data_merge),
-    by = new_select_field(
-      value = if (!is.null(data_merge)) default,
-      choices = by_choices,
-      multiple = TRUE
-    ),
-    expression = new_hidden_field(join_expr)
+    y = new_result_field(y),
+    by = new_select_field(by, by_choices, multiple = TRUE)
   )
-
-  expr <- quote(.(expression))
 
   new_block(
     fields = fields,
-    expr = expr,
+    expr = quote(.(join_func)(y = .(y), by = .(by))),
     ...,
     class = c("join_block", "transform_block", "submit_block")
   )

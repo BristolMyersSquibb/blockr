@@ -169,13 +169,7 @@ new_group_by_block(data, columns = colnames(data)[1], ...)
 
 group_by_block(data, ...)
 
-new_join_block(
-  data,
-  data_merge = NULL,
-  type = character(),
-  by_col = character(),
-  ...
-)
+new_join_block(data, y = NULL, type = character(), by = character(), ...)
 
 join_block(data, ...)
 
@@ -237,11 +231,11 @@ you can also pass predefined selected column for each summary.
 Therefore when not of length 0, columns should have the same length
 as func.}
 
-\item{data_merge}{For unit testing. Leave NULL.}
+\item{y}{For unit testing. Leave NULL.}
 
 \item{type}{Join type.}
 
-\item{by_col}{If you know in advance which column you want
+\item{by}{If you know in advance which column you want
 to join.}
 
 \item{n_rows}{Number of rows to return.}
