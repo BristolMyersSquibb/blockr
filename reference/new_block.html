@@ -153,6 +153,10 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">xpt_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">new_result_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">result_block</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for data_block</span></span>
 <span><span class="fu">initialize_block</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -187,13 +191,7 @@ plus some meta data.</p>
 <span></span>
 <span><span class="fu">group_by_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_join_block</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
-<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"blockr.data"</span><span class="op">)</span><span class="op">$</span><span class="va">result</span><span class="op">[</span>, <span class="st">"Item"</span><span class="op">]</span>,</span>
-<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  by_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">new_join_block</span><span class="op">(</span><span class="va">data</span>, y <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">join_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -295,16 +293,16 @@ as func.</p></dd>
 
 
 <dt>y</dt>
-<dd><p>Second data block.</p></dd>
+<dd><p>For unit testing. Leave NULL.</p></dd>
 
 
 <dt>type</dt>
 <dd><p>Join type.</p></dd>
 
 
-<dt>by_col</dt>
+<dt>by</dt>
 <dd><p>If you know in advance which column you want
-to join</p></dd>
+to join.</p></dd>
 
 
 <dt>n_rows</dt>
