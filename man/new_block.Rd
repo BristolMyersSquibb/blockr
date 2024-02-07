@@ -136,13 +136,7 @@ new_group_by_block(data, columns = colnames(data)[1], ...)
 
 group_by_block(data, ...)
 
-new_join_block(
-  data,
-  y = data(package = "blockr.data")$result[, "Item"],
-  type = character(),
-  by_col = character(),
-  ...
-)
+new_join_block(data, type = character(), by_col = character(), ...)
 
 join_block(data, ...)
 
@@ -204,12 +198,10 @@ you can also pass predefined selected column for each summary.
 Therefore when not of length 0, columns should have the same length
 as func.}
 
-\item{y}{Second data block.}
-
 \item{type}{Join type.}
 
 \item{by_col}{If you know in advance which column you want
-to join}
+to join.}
 
 \item{n_rows}{Number of rows to return.}
 

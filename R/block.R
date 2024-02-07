@@ -622,38 +622,37 @@ group_by_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @param data Input data coming from previous block.
-#' @param y Second data block.
+#' @param data_merge For unit testing. Leave NULL.
 #' @param type Join type.
 #' @param by_col If you know in advance which column you want
-#' to join
+#' to join.
 #' @export
 new_join_block <- function(
     data,
-    y = data(package = "blockr.data")$result[, "Item"],
+    data_merge = NULL,
     type = character(),
     by_col = character(),
     ...) {
   # by depends on selected dataset and the input data.
-  choices <- intersect(
-    colnames(data),
-    colnames(eval(as.name(y)))
-  )
-
-  default <- if (length(choices) == 0) {
-    character()
-  } else {
-    if (length(by_col) > 0) {
-      by_col
-    } else {
-      choices[[1]]
-    }
+  by_choices <- function(data, y) {
+    intersect(
+      colnames(data),
+      colnames(y)
+    )
   }
 
+  default <- function(data, y) {
+    if (length(by_col) == 0) by_choices(data, y)[1] else by_col
+  }
+
+  # Capture user input
+  if (!is.null(data_merge)) data_merge <- substitute(data_merge)
+
   join_expr <- function(data, join_func, y, by) {
-    if (length(by) == 0) stop("Nothing to merge, restoring defaults.")
+    if (length(by) == 0 || length(join_func) == 0) return(quote(TRUE))
     bquote(
       .(join_func)(y = .(y), by = .(by)),
-      list(join_func = as.name(join_func), y = as.name(y), by = by)
+      list(join_func = as.name(join_func), y = y, by = by)
     )
   }
 
@@ -673,14 +672,15 @@ new_join_block <- function(
       paste(type, "join", sep = "_"),
       paste(join_types, "join", sep = "_")
     ),
-    y = new_select_field(y[[1]], y),
-    by = new_select_field(default, choices, multiple = TRUE),
+    y = new_result_field(value = if (!is.null(data_merge)) data_merge),
+    by = new_select_field(
+      value = if (!is.null(data_merge)) default,
+      choices = by_choices,
+      multiple = TRUE
+    ),
     expression = new_hidden_field(join_expr)
   )
 
-  attr(fields$y, "type") <- "name"
-  # TO DO: expression is ugly: try to get rid of get and
-  # unlist.
   expr <- quote(.(expression))
 
   new_block(

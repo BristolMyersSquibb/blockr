@@ -80,7 +80,11 @@ test_that("group_by blocks", {
 })
 
 test_that("join blocks", {
-  block <- join_block(band_members, y = "band_instruments", type = "left")
+  block <- join_block(
+    band_members,
+    data_merge = band_instruments,
+    type = "left"
+  )
 
   expect_s3_class(block, "join_block")
   expect_type(block, "list")
@@ -89,7 +93,11 @@ test_that("join blocks", {
 
   expect_equal(nrow(res), 3)
 
-  block <- join_block(band_members, y = "band_instruments", type = "inner")
+  block <- join_block(
+    band_members,
+    data_merge = band_instruments,
+    type = "inner",
+  )
   res <- evaluate_block(block, band_members)
   expect_equal(nrow(res), 2)
 })
