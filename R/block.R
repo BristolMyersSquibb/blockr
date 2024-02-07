@@ -417,7 +417,7 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
       )
     }
 
-    if (!length(columns)) {
+    if (!length(columns) || !all(columns %in% colnames(data))) {
       return(list())
     }
 
@@ -456,6 +456,10 @@ new_filter_block <- function(data, columns = colnames(data)[1L],
     }
 
     cols <- names(values)
+
+    if (!all(cols %in% colnames(data))) {
+      return(list())
+    }
 
     Reduce(
       function(x, y) bquote(.(lhs) | .(rhs), list(lhs = x, rhs = y)),

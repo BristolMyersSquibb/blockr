@@ -90,9 +90,18 @@ initialize_field.field <- function(x, env = list()) {
 }
 
 eval_set_field_value <- function(x, env) {
+
   for (cmp in names(x)[lgl_ply(x, is.function)]) {
+
     fun <- x[[cmp]]
-    value(x, cmp) <- do.call(fun, env[methods::formalArgs(fun)])
+
+    res <- try(
+      do.call(fun, env[methods::formalArgs(fun)])
+    )
+
+    if (!inherits(res, "try-error")) {
+      value(x, cmp) <- res
+    }
   }
 
   x
