@@ -237,6 +237,15 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
   id <- coal(id, get_stack_name(x))
 
+  get_block_val <- function(b) b$block()
+
+  get_block_vals <- function(x) lapply(x, get_block_val)
+
+  get_last_block_data <- function(x) {
+    len <- length(x)
+    if (len) x[[len]]$data() else list()
+  }
+
   moduleServer(
     id = id,
     function(input, output, session) {
@@ -331,12 +340,19 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
-      observeEvent(lapply(vals$blocks, \(b) b$block()), {
-        vals$stack <- set_stack_blocks(
-          vals$stack,
-          lapply(vals$blocks, \(b) b$block())
-        )
-      })
+      observeEvent(
+        c(
+          get_block_vals(vals$blocks),
+          get_last_block_data(vals$blocks)
+        ),
+        {
+          vals$stack <- set_stack_blocks(
+            vals$stack,
+            get_block_vals(vals$blocks),
+            get_last_block_data(vals$blocks)
+          )
+        }
+      )
 
       observeEvent(vals$stack, {
         message("UPDADING WORKSPACE with stack ", id)

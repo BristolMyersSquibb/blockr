@@ -525,6 +525,24 @@ ui_input.filesbrowser_field <- function(x, id, name) {
 
 #' @rdname generate_ui
 #' @export
+ui_input.result_field <- function(x, id, name) {
+
+  ns <- NS(input_ids(x, id))
+
+  selectizeInput(
+    ns("select-stack"),
+    name,
+    list_workspace_stacks(),
+    value(x),
+    options = list(
+      dropdownParent = "body",
+      placeholder = "Please select an option below"
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }

@@ -357,6 +357,28 @@ xpt_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
+new_result_block <- function(...) {
+
+  fields <- list(
+    stack = new_result_field()
+  )
+
+  new_block(
+    fields = fields,
+    expr = quote(.(stack)),
+    ...,
+    class = c("result_block", "data_block")
+  )
+}
+
+#' @rdname new_block
+#' @export
+result_block <- function(...) {
+  initialize_block(new_result_block(...))
+}
+
+#' @rdname new_block
+#' @export
 initialize_block.data_block <- function(x, ...) {
   env <- list()
 
@@ -674,72 +696,44 @@ group_by_block <- function(data, ...) {
   initialize_block(new_group_by_block(data, ...), data)
 }
 
+#' @param y Second dataset for join
+#' @param type Join type
+#' @param by Join columns
+#'
 #' @rdname new_block
-#' @param data Input data coming from previous block.
-#' @param y Second data block.
-#' @param type Join type.
-#' @param by_col If you know in advance which column you want
-#' to join
 #' @export
-new_join_block <- function(
-    data,
-    y = data(package = "blockr.data")$result[, "Item"],
-    type = character(),
-    by_col = character(),
-    ...) {
-  # by depends on selected dataset and the input data.
-  choices <- intersect(
-    colnames(data),
-    colnames(eval(as.name(y)))
-  )
+new_join_block <- function(data, y = NULL, type = character(),
+                           by = character(), ...) {
 
-  default <- if (length(choices) == 0) {
-    character()
+  by_choices <- function(data, y) {
+    intersect(colnames(data), colnames(y))
+  }
+
+  if (!length(by) && not_null(y)) {
+    by <- by_choices(data, y)[1L]
+  }
+
+  join_types <- c("left", "inner", "right", "full", "semi", "anti")
+
+  if (length(type)) {
+    type <- match.arg(type, join_types)
   } else {
-    if (length(by_col) > 0) {
-      by_col
-    } else {
-      choices[[1]]
-    }
+    type <- join_types[1L]
   }
-
-  join_expr <- function(data, join_func, y, by) {
-    if (length(by) == 0) stop("Nothing to merge, restoring defaults.")
-    bquote(
-      .(join_func)(y = .(y), by = .(by)),
-      list(join_func = as.name(join_func), y = as.name(y), by = by)
-    )
-  }
-
-  join_types <- c(
-    "left",
-    "inner",
-    "right",
-    "full",
-    "semi",
-    "anti"
-  )
-
-  if (length(type) == 0) type <- join_types[1]
 
   fields <- list(
     join_func = new_select_field(
       paste(type, "join", sep = "_"),
-      paste(join_types, "join", sep = "_")
+      paste(join_types, "join", sep = "_"),
+      type = "name"
     ),
-    y = new_select_field(y[[1]], y),
-    by = new_select_field(default, choices, multiple = TRUE),
-    expression = new_hidden_field(join_expr)
+    y = new_result_field(y),
+    by = new_select_field(by, by_choices, multiple = TRUE)
   )
-
-  attr(fields$y, "type") <- "name"
-  # TO DO: expression is ugly: try to get rid of get and
-  # unlist.
-  expr <- quote(.(expression))
 
   new_block(
     fields = fields,
-    expr = expr,
+    expr = quote(.(join_func)(y = .(y), by = .(by))),
     ...,
     class = c("join_block", "transform_block", "submit_block")
   )

@@ -464,3 +464,69 @@ update_sub_fields <- function(sub, val) {
 
   sub
 }
+
+#' @rdname new_field
+#' @export
+new_result_field <- function(value = list(), ...) {
+  new_field(value, ..., class = "result_field")
+}
+
+#' @rdname new_field
+#' @export
+result_field <- function(...) {
+  validate_field(new_result_field(...))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.result_field <- function(x) {
+  x
+}
+
+#' @rdname generate_server
+#' @export
+generate_server.result_field <- function(x, ...) {
+  function(id, init = NULL, data = NULL) {
+    moduleServer(id, function(input, output, session) {
+
+      get_result <- function() {
+
+        inp <- input[["select-stack"]]
+
+        if (length(inp) && inp %in% list_workspace_stacks()) {
+
+          get_stack_result(
+            get_workspace_stack(inp)
+          )
+
+        } else {
+
+          data.frame()
+        }
+      }
+
+      result_hash <- function() {
+        rlang::hash(get_result())
+      }
+
+      current_stack <- function() {
+        res <- strsplit(session$ns(NULL), "-")[[1L]]
+        res[length(res) - 2L]
+      }
+
+      stack_opts <- function() {
+        setdiff(list_workspace_stacks(), current_stack())
+      }
+
+      opts <- reactivePoll(100, session, stack_opts, stack_opts)
+
+      observeEvent(
+        opts(),
+        updateSelectInput(session, "select-stack", choices = opts(),
+                          selected = input[["select-stack"]])
+      )
+
+      reactivePoll(100, session, result_hash, get_result)
+    })
+  }
+}
