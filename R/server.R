@@ -171,13 +171,15 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       output$code <- server_code(x, blk, output)
 
-      output$nrow <- renderText({
-        prettyNum(nrow(out_dat()), big.mark = ",")
-      })
+      if (display != "plot") {
+        output$nrow <- renderText({
+          prettyNum(nrow(out_dat()), big.mark = ",")
+        })
 
-      output$ncol <- renderText({
-        prettyNum(ncol(out_dat()), big.mark = ",")
-      })
+        output$ncol <- renderText({
+          prettyNum(ncol(out_dat()), big.mark = ",")
+        })
+      }
 
       # TO DO: cleanup module inputs (UI and server side)
       # and observers. PR 119

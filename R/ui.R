@@ -136,23 +136,45 @@ block_header.block <- function(x, ns, hidden_class, ...) {
           class = "fw-bold m-0"
         )
       ),
-      div(
-        class = "flex-grow-1",
-        span(
-          class = "block-feedback text-muted",
-          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
-          "rows |",
-          class = "block-feedback text-muted",
-          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
-          "cols"
-        )
-      ),
+      data_info(x, ns),
       div(
         class = "block-tools flex-shrink-1"
       )
     )
   )
 }
+
+#' @rdname generate_ui
+#' @export
+data_info <- function(x, ...) {
+  UseMethod("data_info")
+}
+
+#' @rdname generate_ui
+#' @export
+data_info.block <- function(x, ns, ...) {
+  NULL
+}
+
+#' @rdname generate_ui
+#' @export
+data_info.data_block <- function(x, ns, ...) {
+  div(
+    class = "flex-grow-1",
+    span(
+      class = "block-feedback text-muted",
+      span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
+      "rows |",
+      class = "block-feedback text-muted",
+      span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
+      "cols"
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+data_info.transform_block <- data_info.data_block
 
 #' @rdname generate_ui
 #' @export

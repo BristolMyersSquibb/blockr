@@ -17,6 +17,10 @@
 \alias{block_code}
 \alias{block_code.block}
 \alias{block_header}
+\alias{data_info}
+\alias{data_info.block}
+\alias{data_info.data_block}
+\alias{data_info.transform_block}
 \alias{remove_button}
 \alias{remove_button.block}
 \alias{generate_ui.block}
@@ -95,6 +99,14 @@ block_code(x, ...)
 \method{block_code}{block}(x, ns, inputs_hidden, ...)
 
 block_header(x, ...)
+
+data_info(x, ...)
+
+\method{data_info}{block}(x, ns, ...)
+
+\method{data_info}{data_block}(x, ns, ...)
+
+\method{data_info}{transform_block}(x, ns, ...)
 
 remove_button(x, ...)
 
