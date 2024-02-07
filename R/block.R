@@ -396,13 +396,11 @@ initialize_block.data_block <- function(x, ...) {
 #' @param filter_fun Default filter fun for the expression.
 #' @rdname new_block
 #' @export
-new_filter_block <- function(
-    data,
-    columns = colnames(data)[1L],
-    values = character(),
-    filter_fun = "==",
-    ...) {
+new_filter_block <- function(data, columns = colnames(data)[1L],
+                             values = character(), filter_fun = "==", ...) {
+
   sub_fields <- function(data, columns) {
+
     determine_field <- function(x) {
       switch(class(x),
         factor = select_field,
@@ -419,6 +417,10 @@ new_filter_block <- function(
       )
     }
 
+    if (!length(columns)) {
+      return(list())
+    }
+
     cols <- data[, columns, drop = FALSE]
 
     ctor <- lapply(cols, determine_field)
@@ -429,7 +431,9 @@ new_filter_block <- function(
 
 
   filter_exps <- function(data, values, filter_func) {
+
     filter_exp <- function(cls, col, val) {
+
       if (is.null(val)) {
         return(quote(TRUE))
       }
@@ -447,6 +451,10 @@ new_filter_block <- function(
       )
     }
 
+    if (!length(values)) {
+      return(list())
+    }
+
     cols <- names(values)
 
     Reduce(
@@ -462,28 +470,15 @@ new_filter_block <- function(
     values = new_list_field(values, sub_fields),
     filter_func = new_select_field(
       filter_fun,
-      choices = c(
-        "==",
-        "!=",
-        "!startsWith",
-        "startsWith",
-        "grepl",
-        ">",
-        "<",
-        ">=",
-        "<="
-      )
+      choices = c("==", "!=", "!startsWith", "startsWith", "grepl", ">", "<",
+                  ">=", "<=")
     ),
     expression = new_hidden_field(filter_exps)
   )
 
-  expr <- quote(
-    dplyr::filter(.(expression))
-  )
-
   new_block(
     fields = fields,
-    expr = expr,
+    expr = quote(dplyr::filter(.(expression))),
     ...,
     class = c("filter_block", "transform_block", "submit_block")
   )
