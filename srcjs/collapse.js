@@ -23,8 +23,12 @@ export const handleIcons = (stack) => {
         .toggleClass("fa-chevron-up fa-chevron-down");
     });
 
-  $(stack).find(".stack-edit-toggle").addClass("blockr-bound");
-  $(stack).find(".block-output-toggle").addClass("blockr-bound");
+  $(stack)
+    .find(".stack-edit-toggle:not(.blockr-bound)")
+    .addClass("blockr-bound");
+  $(stack)
+    .find(".block-output-toggle:not(.blockr-bound)")
+    .addClass("blockr-bound");
 };
 
 export const toggleOutputInput = (stack) => {
@@ -146,13 +150,12 @@ const editor = (stack) => {
 export const showLastOutput = (el) => {
   const $block = $(el).find(".block").last();
 
-  $block.removeClass("d-none");
   const $lastOutput = $block.find(".block-output");
   const $lastTitle = $block.find(".block-title");
+  const $lastInputs = $block.find(".block-inputs");
 
   $lastTitle.addClass("d-none");
-  $lastOutput.removeClass("d-none");
-  $lastOutput.trigger("shown");
+  $lastInputs.addClass("d-none");
 
   // hide togglers
   $block.find(".block-code-toggle").addClass("d-none");

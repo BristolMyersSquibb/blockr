@@ -290,8 +290,8 @@ generate_ui.stack <- function(x, id = NULL, ...) {
       div(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
-        lapply(x, \(b) {
-          inject_remove_button(b, ns)
+        lapply(seq_along(x), \(i) {
+          inject_remove_button(x[[i]], ns, .hidden = i != length(x))
         })
       )
     ),
