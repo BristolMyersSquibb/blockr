@@ -116,7 +116,11 @@ upload_field(...)
 
 \method{validate_field}{upload_field}(x)
 
-new_filesbrowser_field(value = character(), ...)
+new_filesbrowser_field(
+  value = character(),
+  volumes = c(home = path.expand("~")),
+  ...
+)
 
 filesbrowser_field(...)
 
@@ -204,6 +208,8 @@ feature. Default to FALSE. Not yet used.}
 \item{multiple}{Allow multiple selections}
 
 \item{min, max}{Slider boundaries (inclusive)}
+
+\item{volumes}{Paths accessible by the shinyFiles browser.}
 
 \item{name}{Field component name}
 

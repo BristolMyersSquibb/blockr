@@ -215,16 +215,9 @@ data_block <- function(...) {
 #' @export
 new_upload_block <- function(...) {
 
-  data_path <- function(file) {
-    if (length(file)) file$datapath else character()
-  }
-
   new_block(
-    fields = list(
-      file = new_upload_field(),
-      expression = new_hidden_field(data_path)
-    ),
-    expr = quote(c(.(expression))),
+    fields = list(file = new_upload_field()),
+    expr = quote(.(file)),
     ...,
     class = c("upload_block", "data_block")
   )
@@ -241,23 +234,9 @@ upload_block <- function(...) {
 #' @export
 new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 
-  data_path <- function(file) {
-
-    if (length(file) == 0 || is.integer(file) || length(file$files) == 0) {
-      return(character())
-    }
-
-    files <- shinyFiles::parseFilePaths(volumes, file)
-
-    unname(files$datapath)
-  }
-
   new_block(
-    fields = list(
-      file = new_filesbrowser_field(volumes = volumes),
-      expression = new_hidden_field(data_path)
-    ),
-    expr = quote(c(.(expression))),
+    fields = list(file = new_filesbrowser_field(volumes = volumes)),
+    expr = quote(.(file)),
     ...,
     class = c("filesbrowser_block", "data_block")
   )

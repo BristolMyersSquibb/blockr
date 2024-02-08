@@ -263,11 +263,7 @@ validate_field.submit_field <- function(x) {
 #' @rdname new_field
 #' @export
 new_upload_field <- function(value = character(), ...) {
-  new_field(
-    value,
-    ...,
-    class = "upload_field"
-  )
+  new_field(value, ..., class = "upload_field")
 }
 
 #' @rdname new_field
@@ -279,17 +275,25 @@ upload_field <- function(...) {
 #' @rdname new_field
 #' @export
 validate_field.upload_field <- function(x) {
+
+  val <- value(x)
+
+  if ("datapath" %in% names(val) && file.exists(val$datapath)) {
+    value(x) <- val$datapath
+  } else {
+    value(x) <- character()
+  }
+
   x
 }
 
+#' @param volumes Paths accessible by the shinyFiles browser.
 #' @rdname new_field
 #' @export
-new_filesbrowser_field <- function(value = character(), ...) {
-  new_field(
-    value,
-    ...,
-    class = "filesbrowser_field"
-  )
+new_filesbrowser_field <- function(value = character(),
+                                   volumes = c(home = path.expand("~")), ...) {
+
+  new_field(value, volumes = volumes, ..., class = "filesbrowser_field")
 }
 
 #' @rdname new_field
@@ -301,6 +305,24 @@ filesbrowser_field <- function(...) {
 #' @rdname new_field
 #' @export
 validate_field.filesbrowser_field <- function(x) {
+
+  val <- value(x)
+
+  if (is.list(val) && "files" %in% names(val) && length(val$files)) {
+
+    tmp <- shinyFiles::parseFilePaths(value(x, "volumes"), val)
+
+    if ("datapath" %in% names(tmp) && file.exists(tmp$datapath)) {
+      value(x) <- unname(tmp$datapath)
+    } else {
+      value(x) <- character()
+    }
+
+  } else {
+
+    value(x) <- character()
+  }
+
   x
 }
 
