@@ -124,6 +124,17 @@ generate_code.data_block <- function(x) {
 
 #' @rdname new_block
 #' @export
+generate_code.plot_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(identity()))
+  }
+
+  NextMethod()
+}
+
+#' @rdname new_block
+#' @export
 generate_code.call <- function(x) {
   x
 }
@@ -155,7 +166,13 @@ evaluate_block.transform_block <- function(x, data, ...) {
 #' @param data Result from previous block
 #' @rdname new_block
 #' @export
-evaluate_block.plot_block <- evaluate_block.transform_block
+evaluate_block.plot_block <- function(x, data, ...) {
+  stopifnot(...length() == 0L)
+  eval(
+    substitute(data %>% expr, list(expr = generate_code(x))),
+    list(data = data)
+  )
+}
 
 #' @param data Result from previous block
 #' @rdname new_block

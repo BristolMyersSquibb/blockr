@@ -480,12 +480,19 @@ ui_input.string_field <- function(x, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_input.select_field <- function(x, id, name) {
+
+  opts <- list(
+    dropdownParent = "body",
+    placeholder = "Please select an option below"
+  )
+
+  if (!isTRUE(value(x, "multiple"))) {
+    opts <- c(opts, list(maxItems = 1L))
+  }
+
   selectizeInput(
-    input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple"),
-    options = list(
-      dropdownParent = "body",
-      placeholder = "Please select an option below"
-    )
+    input_ids(x, id), name, value(x, "choices"), value(x), multiple = TRUE,
+    options = opts
   )
 }
 
