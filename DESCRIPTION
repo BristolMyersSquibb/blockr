@@ -28,19 +28,20 @@ Imports:
     shiny,
     dplyr,
     utils,
-    ggplot2,
     bslib,
     methods,
     DT,
     blockr.data,
     htmltools,
-    ggiraph,
     shinyAce,
     jsonlite,
-    shinyFiles
+    constructive,
+    shinyFiles,
+    memuse,
+    haven,
+    rlang
 Remotes:
     blockr-org/blockr.data,
-    blockr-org/bmsui,
     DivadNojnarg/DiagrammeR
 Suggests: 
     knitr,
@@ -49,6 +50,7 @@ Suggests:
     testthat (>= 3.0.0),
     shinytest2,
     pkgload,
-    htmlwidgets
+    htmlwidgets,
+    withr
 Config/testthat/edition: 3
 VignetteBuilder: knitr

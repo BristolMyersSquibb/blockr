@@ -46,7 +46,7 @@ test_that("3rd party blocks can be registrerd (pkg)", {
   expect_false("head_block" %in% list_blocks())
 
   pkgload::load_all(pkg_dir, attach = FALSE, export_all = FALSE,
-                    attach_testthat = FALSE)
+                    attach_testthat = FALSE, quiet = TRUE)
 
   withr::defer(pkgload::unload(pkg_nme))
   withr::local_envvar(TESTTHAT_PKG = pkg_nme)

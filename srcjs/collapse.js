@@ -41,10 +41,9 @@ export const toggleOutputInput = (stack) => {
       $(btn).on("click", (event) => {
         const $block = $(event.target).closest(".block");
 
-        const outputVisible = $block.find(".block-output").is(":visible");
         const inputVisible = $block.find(".block-inputs").is(":visible");
 
-        let toggle = outputVisible || inputVisible;
+        let toggle = inputVisible;
 
         if (toggle) {
           $block.find(".block-inputs").addClass("d-none");
@@ -91,14 +90,6 @@ const editor = (stack) => {
 
         $block.find(".block-code-toggle").removeClass("d-none");
         $block.find(".block-output-toggle").removeClass("d-none");
-        $block
-          .find(".block-output-toggle")
-          .find("i")
-          .addClass("fa-chevron-down");
-        $block
-          .find(".block-output-toggle")
-          .find("i")
-          .removeClass("fa-chevron-up");
 
         if (index == $blocks.length - 1) {
           $block.find(".block-output").addClass("show");
@@ -158,10 +149,6 @@ export const showLastOutput = (el) => {
   $block.removeClass("d-none");
   const $lastOutput = $block.find(".block-output");
   const $lastTitle = $block.find(".block-title");
-
-  $block
-    .find(".block-output-toggle i")
-    .toggleClass("fa-chevron-up fa-chevron-down");
 
   $lastTitle.addClass("d-none");
   $lastOutput.removeClass("d-none");
