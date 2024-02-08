@@ -391,92 +391,79 @@ initialize_block.data_block <- function(x, ...) {
 }
 
 #' @param data Tabular data to filter (rows)
-#' @param columns Definition of the equality filter.
-#' @param values Definition of the equality filter.
-#' @param filter_fun Default filter fun for the expression.
+#' @param column,value Filter inputs
+#' @param filter_fun Filter function
+#'
 #' @rdname new_block
 #' @export
-new_filter_block <- function(data, columns = colnames(data)[1L],
-                             values = character(), filter_fun = "==", ...) {
+new_filter_block <- function(data, column = colnames(data)[1L],
+                             value = character(), filter_fun = character(),
+                             ...) {
 
-  sub_fields <- function(data, columns) {
+  sub_field <- function(data, column) {
 
-    determine_field <- function(x) {
-      switch(class(x),
-        factor = select_field,
-        numeric = range_field,
-        string_field
-      )
-    }
-
-    field_args <- function(x) {
-      switch(class(x),
-        factor = list(levels(x)[1L], choices = levels(x)),
-        numeric = list(range(x), min = min(x), max = max(x)),
-        list()
-      )
-    }
-
-    if (!length(columns) || !all(columns %in% colnames(data))) {
+    if (!length(column) || !column %in% colnames(data)) {
       return(list())
     }
 
-    cols <- data[, columns, drop = FALSE]
+    col <- data[[column]]
 
-    ctor <- lapply(cols, determine_field)
-    args <- lapply(cols, field_args)
+    res <- switch(
+      class(col),
+      factor = select_field(levels(col)[1L], choices = levels(col),
+                            multiple = TRUE),
+      numeric = range_field(range(x), min = min(x), max = max(x)),
+      string_field()
+    )
 
-    Map(do.call, ctor, args)
+    list(res)
   }
 
+  filter_choices <- function(data, column) {
 
-  filter_exps <- function(data, values, filter_func) {
-
-    filter_exp <- function(cls, col, val) {
-
-      if (is.null(val)) {
-        return(quote(TRUE))
-      }
-
-      switch(cls,
-        numeric = bquote(
-          dplyr::between(.(column), ..(values)),
-          list(column = as.name(col), values = val),
-          splice = TRUE
-        ),
-        bquote(
-          eval(call(.(filter_func), .(column), .(value))),
-          list(column = as.name(col), value = val, filter_func = filter_func)
-        )
-      )
+    if (!length(column) || !column %in% colnames(data)) {
+      return(character())
     }
 
-    if (!length(values)) {
-      return(list())
+    col <- data[[column]]
+
+    switch(
+      class(col),
+      factor = c("==", "%in%"),
+      numeric = "dplyr::between",
+      character = c("==", "startsWith", "grepl"),
+      integer = c("==", ">", "<"),
+      "=="
+    )
+  }
+
+  filter_exps <- function(data, column, value, filter_func) {
+
+    if (!length(value) || !column %in% colnames(data)) {
+      return(quote(TRUE))
     }
 
-    cols <- names(values)
+    args <- list(col = as.name(data[[column]]), val = value)
 
-    if (!all(cols %in% colnames(data))) {
-      return(list())
-    }
-
-    Reduce(
-      function(x, y) bquote(.(lhs) | .(rhs), list(lhs = x, rhs = y)),
-      Map(filter_exp, chr_ply(data[, cols, drop = FALSE], class), cols, values)
+    switch(
+      filter_func,
+      `==` = bquote(.(col) == .(val), args),
+      `%in%` = bquote(.(col) %in% .(val), args),
+      `<` = bquote(.(col) < .(val), args),
+      `>` = bquote(.(col) > .(val), args),
+      `dplyr::between` = bquote(dplyr::between(.(col), ..(val)), args,
+                                splice = TRUE),
+      startsWith = bquote(startsWith(.(col), .(val)), args),
+      grepl = bquote(grepl(.(val), .(col)), args)
     )
   }
 
   col_choices <- function(data) colnames(data)
 
   fields <- list(
-    columns = new_select_field(columns, col_choices, multiple = TRUE),
-    values = new_list_field(values, sub_fields),
-    filter_func = new_select_field(
-      filter_fun,
-      choices = c("==", "!=", "!startsWith", "startsWith", "grepl", ">", "<",
-                  ">=", "<=")
-    ),
+    column = new_select_field(column, col_choices),
+    value = new_list_field(value, sub_field),
+    filter_func = new_select_field(filter_fun, filter_choices),
     expression = new_hidden_field(filter_exps)
   )
 
