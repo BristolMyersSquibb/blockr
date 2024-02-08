@@ -231,12 +231,11 @@ you can also pass predefined selected column for each summary.
 Therefore when not of length 0, columns should have the same length
 as func.}
 
-\item{y}{For unit testing. Leave NULL.}
+\item{y}{Second dataset for join}
 
-\item{type}{Join type.}
+\item{type}{Join type}
 
-\item{by}{If you know in advance which column you want
-to join.}
+\item{by}{Join columns}
 
 \item{n_rows}{Number of rows to return.}
 

@@ -20,7 +20,7 @@ test_that("available blocks", {
     expect_length(dsc, 1L)
   }
 
-  blk <- construct_block(names(blocks)[1L])
+  blk <- construct_block("dataset_block")
 
   expect_s3_class(blk, "block")
 
@@ -43,7 +43,7 @@ test_that("3rd party blocks can be registrerd (pkg)", {
   pkg_dir <- system.file("testdata", "test.registry", package = "blockr")
   pkg_nme <- pkgload::pkg_name(pkg_dir)
 
-  expect_false("head_block" %in% list_blocks())
+  expect_false("dummy_block" %in% list_blocks())
 
   pkgload::load_all(pkg_dir, attach = FALSE, export_all = FALSE,
                     attach_testthat = FALSE, quiet = TRUE)
@@ -51,39 +51,37 @@ test_that("3rd party blocks can be registrerd (pkg)", {
   withr::defer(pkgload::unload(pkg_nme))
   withr::local_envvar(TESTTHAT_PKG = pkg_nme)
 
-  expect_true("head_block" %in% list_blocks())
+  expect_true("dummy_block" %in% list_blocks())
 })
 
 test_that("3rd party blocks can be registrerd (script)", {
 
-  expect_false("head_block" %in% list_blocks())
+  expect_false("dummy_block" %in% list_blocks())
 
-  new_head_block <- function(data, n_rows = numeric()) {
+  new_dummy_block <- function(data) {
 
     new_block(
-      fields = list(
-        n_rows = new_numeric_field(n_rows, 1L, 100L)
-      ),
-      expr = quote(head(n = .(n_rows))),
-      class = c("head_block", "transform_block")
+      fields = list(),
+      expr = quote(identity),
+      class = c("dummy_block", "transform_block")
     )
   }
 
   register_block(
-    new_head_block, "head block", "return first n rows",
-    c("head_block", "transform_block"), "data.frame", "data.frame"
+    new_dummy_block, "Dummy block", "return first n rows",
+    c("dummy_block", "transform_block"), "data.frame", "data.frame"
   )
 
-  expect_true("head_block" %in% list_blocks())
+  expect_true("dummy_block" %in% list_blocks())
 
   expect_warning(
     register_block(
-      new_head_block, "head block", "return first n rows",
-      c("head_block", "transform_block"), "data.frame", "data.frame"
+      new_dummy_block, "dummy block", "return first n rows",
+      c("dummy_block", "transform_block"), "data.frame", "data.frame"
     )
   )
 
-  unregister_blocks("head_block")
+  unregister_blocks("dummy_block")
 
-  expect_false("head_block" %in% list_blocks())
+  expect_false("dummy_block" %in% list_blocks())
 })
