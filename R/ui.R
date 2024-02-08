@@ -372,6 +372,17 @@ stack_header <- function(x, ...) {
 
 #' @importFrom shiny icon tags div
 stack_header.stack <- function(x, title, ns, ...) {
+  icon <- iconEdit()
+
+  edit_class <- "text-decoration-none stack-edit-toggle"
+
+  # the stack is empty we render it editable (open)
+  # with correct icon
+  if (!length(x)) {
+    edit_class <- sprintf("%s editable", edit_class)
+    icon <- iconEditable()
+  }
+
   div(
     class = "card-header",
     div(
@@ -392,8 +403,8 @@ stack_header.stack <- function(x, title, ns, ...) {
             iconCode()
           ),
           tags$a(
-            class = "text-decoration-none stack-edit-toggle",
-            iconEdit()
+            class = edit_class,
+            icon
           )
         )
       )
@@ -814,6 +825,11 @@ iconCode <- function() {
 #' @importFrom shiny icon
 iconEdit <- function() {
   icon("chevron-up")
+}
+
+#' @importFrom shiny icon
+iconEditable <- function() {
+  icon("chevron-down")
 }
 
 #' @importFrom shiny icon
