@@ -2,6 +2,11 @@ test_that("add_block works", {
 
   withr::local_options(BLOCKR_LOG_LEVEL = "error")
 
+  stack <- new_stack()
+  expect_error(
+    stack |> add_block(select_block)
+  )
+
   stack <- new_stack(data_block) |>
     add_block(select_block)
 
