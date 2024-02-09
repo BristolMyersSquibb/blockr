@@ -64,8 +64,8 @@ update_field.field <- function(x, new, env = list()) {
 
   x <- eval_set_field_value(x, env)
 
-  if (!length(new)) {
-     return(validate_field(x))
+  if (is.null(new)) {
+    return(validate_field(x))
   }
 
   value(x) <- new
