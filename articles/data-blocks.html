@@ -147,12 +147,26 @@ package. In the next part, we see how to import data from a file.</p>
 <div class="section level3">
 <h3 id="reading-data-from-files">Reading data from files<a class="anchor" aria-label="anchor" href="#reading-data-from-files"></a>
 </h3>
+<p><code>{blockr}</code> exposes 2 extra data blocks which have to be
+combined with one of the 5 following data <strong>parser</strong>
+blocks:</p>
+<ul>
+<li>
+<code>xpt_block</code>, reads xpt files.</li>
+<li>
+<code>sas_block</code>, reads sas7bdat files.</li>
+<li>
+<code>rds_block</code>, reads rds files.</li>
+<li>
+<code>json_block</code>, reads json files.</li>
+<li>
+<code>csv_block</code>, reads csv files.</li>
+</ul>
 <div class="section level4">
 <h4 id="upload-data">Upload data<a class="anchor" aria-label="anchor" href="#upload-data"></a>
 </h4>
 <p>If you want to load data from any location on your computer,
-<code><a href="../reference/new_block.html">upload_block()</a></code> is what you need. At the moment, it only
-supports csv files but other format will be added. Since the
+<code><a href="../reference/new_block.html">upload_block()</a></code> is what you need. Since the
 <code><a href="../reference/new_block.html">upload_block()</a></code> temporarily moves the data in a custom
 location, we recognize that it might not be always possible for security
 reasons.</p>
@@ -161,12 +175,13 @@ reasons.</p>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">upload_block</span>,</span>
+<span>  <span class="va">csv_block</span>,</span>
 <span>  <span class="va">select_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
 <div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQdUUSgAE0zo8VxAopl2OG44AlIq0QlAuMDGhgA3OGyE8T4ciT8wAF8AXSA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJQQgZGQdUUSgAE2zo8VxAooJ2ADcq0Qlawpl2OG44AlIWk0C4roZGuFyufLzxOLAAXwBdIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><span class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></span>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
@@ -175,10 +190,11 @@ reasons.</p>
 <div class="section level4">
 <h4 id="files-browser-block">Files browser block<a class="anchor" aria-label="anchor" href="#files-browser-block"></a>
 </h4>
-<p><code><a href="../reference/new_block.html">filesbrowser_block()</a></code> can read data (csv only for now)
-from the server file system. It means that if no data is available on
-the server, you won’t see anything. You can customize the accessible
-locations as follows, through the <code>volumes</code> parameter:</p>
+<p><code><a href="../reference/new_block.html">filesbrowser_block()</a></code> can read data from the
+<strong>server file system</strong>. It means that if no data is
+available on the server, you won’t see anything. You can customize the
+accessible locations as follows, through the <code>volumes</code>
+parameter:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_filesbrowser_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">filesbrowser_block</a></span><span class="op">(</span></span>
@@ -195,12 +211,13 @@ feature (upload button).</p>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">filesbrowser_block</span>,</span>
+<span>  <span class="va">csv_block</span>,</span>
 <span>  <span class="va">select_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
 <div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQAzFm44dkYianY4Bkzo8VxAopla8oJSBtEJQLjA2oYANzhshPE+HIk-MABfXHBoeCoAeW5wmFQWAnZMgHFYCowdobxCEnJKZDgAEztXCFxb+5JMlhunu9IHzIcGblw4TgYVwBDs4VBRAcZAimWK3Cgll+-0h0NIsIgYlwOQYXRuUHITwgN0y+MJxE2cG+31eZLguBY7AAEnBuDdAgBGAAcAE4AGwyADKDhg8AYMjWGy2O1wHNw+meNI4+jl3P5uAAgvY2FB5SwYIiKvp4Yj2Po9lgAKIYVAQSy4C2W2QCjWoBhlWUAVhkrvdAIFgGQCGQcgDMPrdHs5PIADNGhSKxRL1pttuxcAAmeWKh5mzMcmPR3AABTCjL1BssRpNljNADEsBqbXbcPWNbh2xyACwyACyUHCMiD6a5Es6RDodWaEHz0e7wtFdSTUtTuBDWa+Of0a5nndwgtIGBkABkoWX9PrDWbq2aAKqCxu2+13ttd3v99vBmQAKQc60HMnTAUADkiBGGAJwYKcZxHedE0lFMZU9dcXmVJDoNwE9iRIctL2NBEa3NAAhLAm3tPZiNlMMf3Wdt0wAdnDP1-xDDlR1IcdJyjDl03jBdxXg6U0z5ZClTNYT824vd2IkDQiG4GAcMrK98LNQUAHVrUfPcNOdb9fwhei9JomRvT7AchwY6iIS4gVYMXASV09QsFQ3EgzSc2UeQ5YTCLqYJHnPCsqxU81LRIrS9jC9tcEAFAJcBA0gZA0VkbhkG4HDgGR2JkagwijdM4zs-jk0E3A6JEzdyvzArNTIWgGFQChFOC019EIy0j1I3B2qPWVuw1BxLAcThVzjAahpG9Mw19Mp-24oUFHIcDOOnHl0znBN7JKlcuQqtz9F26rdxLd000C3Dr30VsutbWRvSsjNLP02RuzM-9DIe-KYM24rlxlHk9uVAHqt2jUYE4Op8QU86lLw1qgMtAARLqEcRjMRwe+bxuG0hZQYt6gyxwacagnkQx4oqlwQtMOWc7N9tpzzyYwpQfTtVkKma5TWufLrn1GoyIVfbGRpDOMrLm-riZGqMQ1sn6qdKjk5RclCzWVpmfL8tgubhgjIvC5sDdkViRdx7yfWl825pdK3Sc7QqFYcxCVfp1DVR5B3cBZbh2DYcQWF1y7awASSAm6w+iuKEqSlK0oyrKiByvLVs7Da+MVxzM1V0T9E9PNPd3TCbmwmGWv14iuvIrAo-iohEuStl48y7LcqkVPvoz52aezt31YLztduL0uL1hy7q6rij0x5QW+stibccAwXJfnkmo3z3i4O2mVQ0B9Xtx5fPvdZP2IADoOQtD8OtKvzzZ5kaa7dfCWgwf1eZdWz15a77ead3HPNxdk8l-XAPZWR0ChAwdIF9WoajvF1OBgoMw8RAmBCCsgRyIzgAQOAy1ILphQaBXBEF-wyEwdg4hK18x8kdj-P6NMkIAIZmhfkhYsBEANDAgiIcAAqD5my8LbOmb0ZtZSsUFItSh+CRFWzmuIyReDSZ8nTlvehsphJMOVN5TyyjcA8KIOIcIRAuFmi-EWa+zYzFAVlHGFYY50HrTYhxSCyt3rdjsexdBUY+Sd1UdTPGe8VRVX5LtAAwiwBw+JUo3Eyj2AAlwAD22MYsu3MCI9ktAADS6hkzJsoeIeOcY9Jx6D5oWRKVQnkdEKZO1-rKXamj1aHSqZmHsAAfiABBkoBVHuXOsWA9g3QGRmW2C8xELVQEtBxoycZyImVMypdFv5+KVgDRpKpgZVOEj2C4DA4k8BMfoUJGoLH2mOdYjkT1jKmyfhjfSpCbljKjFyWhKyVw1XWTVfMLzQFKHEEMXUqS9a3iwIKPmoK74PTfqIgqy9X6PyeatLkKitpqPTK7Vyyp0WeWRSzZQGp2blDOr0tJt57x83vOjWeRMxkyAFC-YMPFRHPN8ai-xBDAkcu+btCRUIARAsugAaRWIbe0wqa6XPmVI2QBT7GTklRIyZUjSGys8ZUtam82WlSmpyg+a1uphBwaIaAhzLSCiLF1M1RYMz3WejIGeMLuwMvte-XGUZ+Sat+uy-+fd9DrU8uqLUCIyCApJcC-QvMtL83zPfKWYzYXOrjWvCABVYyeszjKYRnKkKpsLIKcINx0gQgFSFRBCC7xeilYoz8hTSlhkVQs8Ur9WK1pWqmlFXrtUaN9YBDMsZdxag0DqQ5joq5Wkoq6jMDqn6sSHNOxFqbWWdscmudZno1yLu6nAFgAArNg9oS2tVCUyU5uBj3WLIZOxxojAwASTR-Aq81Kbd1wJ6H1mL3K7kfZmYePSgqkqIqKh0U8rlCyZXbYRcLGWTsCI+5ZWrHJrN9Z6AGcHcBYFcGlTKX4oDpBYAwFJYbLrEX4faEjd0r2PJJmGIcVGH3Rlhc+upfIMVq30CxvtNV9GGMI-+8NViupWIzFRe5BVsWXrNgBBjcp0VQYk7IsTcpYMMY7RmoSq7fV8g3Sp4spZiV8eDg2IZbZ2xxWU8OdNL7dHrN0WJoerMCWViJYcyNzZ+amanAVcmlm6khmqYEvzmYvOZkIqdOguH6SHoImWrSiDa75W7GpNg5Bl2ZqQx+v1mz-WhI0LAEgLAEmHOujfBsGYnW4YcGECEJkZC1noAwSrEQRnfgq1V0h3Y6uMEa9ZVaFmktkAQzKMWAXCwgz3Lh8QiUdnulIAAL0OYKG8IcuqLZDuMzrDWqt41q-V7r4zCYzw23t2WPF+spbU6uVjucWJMx-VAcQmUiwIjBB8KLZLSO4H5jIDru2tuhh211rb3ZCbeiO1t2WAozuDbTMzdZzN8xywdGEGAjIummBOpcAODAulNTe6FIDxs6UA8201i2YOmu3rJ79prUYHYyCh6ltMnpGHIZYV7A4DAUfsDRxjigWOcd-ouiFA2VcooeZjo3aJCdW4p3zGnenyXoevu7RlkBcvdyhIsN8aAaUADkYNGqzdm7xoXrVBFdUEbXCXcd0otyTm3WnI4GcXZDBpjLrvPKD3G2fKbFg7Dzbx6tlbS2BY4YgHty95OIRixa+Htrr8RxR9JhvZ3L6QzvrY+n4BmYVjsFEIcoCIqUYisrUnyDSfXxDlB9Tnr+Yv4K4G4z1cLP3csJAZr3EOo9cG7gEbk3Y8Qrm60pbpeYeI-V8B010frWIikInyT2vrCG-nbTyrzP4lWF7gAI6VeoDIAAajwcoxaiMhVc0+Sl3Jid7YsxXmeQ5E816UYlxXTe-MBeCbokOEAOBdYkIcuBHhctHhKdWPCPQ7J-D6GfcyQoCAyfRfHxZfJXEMBpX1FAnRXaPYeQTEEQSLU-VqYrZsW6InCvR-eA3AYHYMMghfUmapJAt-dLTPTZfzQUNARQAjQ5ATLSITN+CvMMJPGjYMfgp-KMJZegi7L2dZL2fMJZXAb-X-Brf-PHQA4Al6a-P7efPbQQjkTQ8HJFOMVPOpTsK7TcYwnFQsI8e7R7Z7d4FzclKNS-YQ8gxxCvHiIcH7cg55F-RvCQ3uDLTsAuXFVghgKAHdOAIYfvPpfQAATRvEGS0liL2AwXUNJzgJoIYgOxSMXy5Cd1fwkLdzY07APhyLPR4EsC2zx3OS6nOQnTL2oL23+wfyyNJg1UMLUTTkCQ6PzH1Q1G4AglICGDKHKCKyMxKzbEj0gKcJoJHCHCmOO1Wk9nEJfU7Bb0KJYU9gwiGLgFyz4gLyLy0kLwlR4jLwYlcPelOJEIWNyJ8OWLX1zk7A3x5F2iAkRFw0iIAy4MsXMVkAuOcOOKfwyIAn+M8JTVjFOzyOWPKikPKlTUzFYO4ESksIexkHCVIBPwMzP3sLc0pQmOcI8JoPvzvWaOU2jEhwhKMMYPuNQ1jGEn0XdExEOSHwET4RsWaKXgr1nQAgFCT2U1piWLqU9ChOQxhOjEZkP06ShBGEgkqJOWqJOXyTZPqL+zcIAiVJp1BNfDaP8U9FQNV12kfV3EFDECHUOSwHgS0jNKQRkF+JoKmmaNvTtJ5I1OuJX2YzpgyxoT7W5GLCBBIEsBy1wwPXwIInFS6nFVkDSJv10KaxmIAmjJ6zE3BJuOYz8LYz5CCwYxC23T3WbEqJPWqJPTULLzjDL3ehLMuLEzJOTLUX83WX80rNATKDeNMA721ygG70pD70ZL4QtxZJIMgOBJoMoIIWJM-gFEtB3wqHRBYFwwoN1MKOaRAX3BMFknkgWw0hWx0j5J-GgUlR3PpFcUJiemgSjFJJkG-xSwIB4AJFuAoM6M8lJM1G1BNTx1HQinHRHJmgBAAjfAMiZQjG4BVV-KnDmAAF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJQQgZGQAzFm44dkYianY4Bmzo8VxAooJ2ADcG0Qlmwpla8oJSLpNAuNqGdrhcrny88TiwAF9ccGh4KgB5bnCYVBY27IBxWAqMNva8QhJySmQ4ABM7VwhcR+eSbJYHt6fSF+yDgY3Fw4TgYVwBDs4UhRAcZAi2WK3CglkBwNh8NIiIgYlwiQYwweUHIbwgD2yxNJxD2cH+-0+VLguBY7AAEnBuA9AgBGAAcAE4AGwyADKDhg8AYMm2u32bVwPNw+neDI4+iV-OFuAAgvY2FBlSwYKiKvpkaj2PojlgAKIYVAQSy4G222QinWoBhlRUAVhknu9IJFgGQCGQ8gDMAa9Pt5AoADPGxRKpTKdnsDuxcAAmZWql5W3M8hPx3AABTCrKNJssZotlitADEsDqHU7cM2dbhuzyACwyACyUHCMjD2b5MqGRDodV6xfj-fFkrqablmdwEbzfwL+k3897uFFpAwMgAMnCq-pjaarfWrQBVUWtx3Ox9dvuD4fd8MyABSDh2UcZGzEUADkiCmGAZwYOcEwnJdU1lDMFV9LcPnVVD5z5XBz3JEhqxvc0UQba0ACEsDbZ0jnIxUo3-HZu2zAB2aMgyAiMeUnUhp1nOMeWzZNl2lJD5SzIU0LVK1xOLfjD24iQNCIbgYAI2tb2Iq1RQAdXtF9Dx090-wAmFmKMhiZH9IcRzHFj6JhPiRQQlcRPXX1SxVbcSCtNzFQFHlxNIupgleK8azrDTrVtCi9KOKLu1wQAUAlwcDSBkDROQeGQHgcOAZG4mRqDCONsyTJzhPTUTcCYiSd2q4sSt1MhaAYVAKFU8LLX0UjbVPSjcG609FX7HUHEsBxOA3JMRrGibsyjQMyiA-ixQUcgoN4iB6sXFNnIq9dsI89CrWwrby0rLNQsIu99E7PrO1kf07JzWzjNkfsrKA0ynuK+CdvKtcFQFGqvP0IH6uwnUYE4OpiRUy61KIzrQNtAARPrkZRnMJye5bpvG0hFRYj6w1x0b8dgiMBLK1dkKzHl3PzEH6d8ymcKUAMnU5Cp2vUzq3z6t9JrMmEPzxiaIyTOyluGsmJrjCNHL+mnKp5JVDskjVNQFBX+qCtgecRkjYui9tjdkTixYJ-yA1lq2lo9W3YN7UqlZclC1cZjCted3AOW4dg2HEFgDeuxsAElQLuiP4qSlK0oyrKcryogCqKzaBV7bahOV1zc3VndfSLDOD1wh58PhjqjfIvrqKwGPkqIVL0q5RPcvywqpHT3tfuzt26bzz2rVk4tu7ZvCQuvBHrtrmuaOzAVhaGm2ZoJkDhel5fybjQvBMQvaFUjYH1UP4tC99zkA4gIOQ4i8PI70u-fMXmR5sdj8pbDF-N7l9PfUV3v950wPPnJmB5T7iQHJyOgcIGCZBvp1HUj4+qINFDmAS4FILQVkBOFGcACBwHWjBbM6CIIEOgkBGQOC8FkI2sWIULsAEAzpqhEBx9MLClLFgIgJp4EkTDgAFWfO2ARXZsz+ktoqTiopVo0KIeI22S0pEyMIbBIUWc95MMVOJVhQ9pLCgPPwog4hwhEF4VaX8ZZ77tgsaBRUSZNhTiwdmfsDjuJYNVp9FxjjaHCh7ho2mhMj5Dzqr43AABhFgDhiSZQeLlAcABLgAHgcUxFdeYkQHLaAAGn1TJWTFQCVcTxIhLEinuIEjZLixTYJMSpq7QBioDqDw1CdAUtTcADgAD8QAIOlCeYV0lNiwEcO6wycwOxXpIlaqA1pOImfjRR0zZk+KYv-fxKsgY6I1GDNpECbgMHiTwMx+gwk6isc6U5tieQvXMhbN+2NjIULuZMuMfIGHrPXA1LZDVixvI6UocQ7RDRpMNg+LAooBbgqfk9L+EiSrr0-q-F56c+TqN2po7MHtPLqkxb5VFbNlA6k5uUC6k9K4PifALJ8WNF6k0mTIEUH9wwCQka8vx6KAnEKCfoLlvzsLSLhCCEF10ADSmwTbOjFXXa5SzZGyEKd4mCMrpEzNkRQhVbifECjqYwzlm5vl7gFNq-qYR8GiGgMc20ooyx9StWWHMj1XoyAXnC-sTLnXfwJnGYUu8OWVWcdygNxZtR6hRGQYFZLBn6H5npQWxZn4y0mfC91iat4QBKomX1-1OUsOaWInMiZSyinCA8TIMJhURRQcgx8fpZUqJ-GU2ckY63kM-pxRtMFAgZrRdm-12i83iW7bqfUFqK2dVdDXO0tFPU5hdW-TiY453Iozey3trl9XNN9JuFdusWAACs2DOjHSRMJbJznhLPdgmdziZ2hmAqmn+JVlrUz7rgX0wDN0HifbmUu5dI2grIhKl0c8bkixZY7MRCLmUzq7fGa2L6Gm+k2ZuoGT7xJYFcFlXKv4oCZBYAwVJ-7rrkSEc6EjD1r3PPJlGMcVHH3xnhQhzRQosVHX0CxgtDVDHGMIwMgDNi+o2JzHRR5JVcWUM9cBBjSpMVQYk5bKTuLYM3qYwEoUG7sVSW3Qxg8FZvSkr46HFsoyuzdiSsp1dOcFRqO5TZsT2FzyEuJdzY9FLSO4EFmZ3oJVKZZqs1mCM7StmBdzD53MpF9N0Fw8yVz+gq16RQfXYq-YtJsHIGuhU89A07IDWEjQsASAsEScc26D8Ww5jdbhhwYQYQWRkI2egDBqsRHGX+KrNWKH9ga4wZr9l07jhkKlsgfr1wS25WN8Gh5cPiFSgOCwdgABexzRT3jDn1FbYcpndaazVwm9XGu9amSTBe23DvywEkN9L-mNysY1hxFmP6oDiFymWFEUIfixZje2QWMgusHd28207u3+wk39EDlr8sRSXZGwqVmwWi46xOAwGArJemmD07cIODBeltVi8bGucUGX7Z6wDkU4OYR3utuTp2SZocZazL6XNmn9CM98j7JHKP2Bo4xxQLHOP+lXQivjmKcUvNx2bjEpO7c04jxS2lmHDP+3M7-mzg8YSLD-GgFlAA5JDVqC2Fu8cF51ERfURH13FwnbKbcU4dzjN3Qb8v6cbg02xiMhrR6imm7N+bpAluxY2+t1bQscMQEOxJ6nEs2th465-Cc1Pt4Xad9diMH7mep98mfTY7BRDHNAuK9G4ra3U8g9Tj8Y4wf-Yh7-KHyfX0RiZ279hKv1eEgNDrvXcADdG6nhFU3elzdr1D+HyvJOWtD-axECho+dvV7obTuvDSdbBb0fQw8ABHar1AZAADUeDlHLURiKX3XzUv5MT2fJl49V5FgvMc1+x99boXL4bzvAvjZCTZsOEAOA9Z6LFxBfhatfhWdaPcPE7G-Z6MA2PIoCAx-VRCcOnFPJpdPVpIUbCI4eQXEEQGLI-TqUrdse6InMvB-S-XAEHcMUgs7dOWpR3V-FPZDdPHZdpL3dACwHvclfQATPSITL+MvKMSPJaAQyAuMVZOgq7V9H2LZH2YsVZXAb-X-Jrf-PAkiQA4At6C-Q7HkGfQ7GjcMHQ3bV5BfegyQ27HcXsLWP5U8J7F7N7b4Y5E-DzM-YQ+Am9MvCpe9TQwwlFF-CQhpXsAeZnAIvFA8L3BgKAPdOAdoDgqNAATXvBGT0niKOCvTLzgLIJYmOy8LnwFD5EQMX00V7Fdw1iKLxWwjCR4EsF21i0uT6kuWnRLyoIBz0IGwT3Tm1XEIV3ILTzY0zl8mNR1G4GglIHaDKHKBK2MzKy7Aj0gLmmyJhAnDHBcLIO9V8K6N7EbxKPYQzhwjGLgHyyEjzwLz0nz2lQEhLxYncM+kuJEPaPyJMP8KV16L0VyOSlRFwxiP40sUE0sVkBuNcPOMgMyOAkBPgNgwY06Od17GqmkOqgzVzC924FSmsOexkAiVIEP0M2P0pVjWpRmNcL+3gLv08LaIzVrweMKMYN6NQ0THEkMW9FxGOX72EUETsXmNazLwXWAjJ1uKfWML8M0V9BhM3ThLg1LD3x6ThCmBghqLOTqLOQKXZNaMgOWnv3ZNgw-CQNfV9BQLYx1ILT7EPDEA0GDliywCQT0nNNQRkH+LILmOpzvXtN5Lg3uIFLUwZmZzXyfWwjLDBBIEsDy1wyPRUKtClT6ilVkHSMO1L0gMWOAgMOrzEyTwpLU0CLYyFFCwY3CzgH3UPWOVPXPQLI0JLyTBL0+lLOdLXi1IaSC2aXaTEwgTKA+NMFb01ygA71pG7yZMETN1ZOINmNBLIIoOIXVJrxkFtE3wqGxBYFw3IN1JKNaRVyPBMEUmUmWx0nWwMnpiMjgRlX-F3K5L3PhGZDjHjBFG-3SwIB4BJEeHIO5TAQTHEj1BNNHRDOtDtEnTdBHIWhBGAk-BMhZRjG4HVX-N6GWAAF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><span class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></span>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
@@ -208,6 +225,32 @@ feature (upload button).</p>
 <p>Note that in a later release, we plan to merge
 <code><a href="../reference/new_block.html">filesbrowser_block()</a></code> and <code><a href="../reference/new_block.html">upload_block()</a></code> into a
 single variable block.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="reading-data-from-another-stack">Reading data from another stack<a class="anchor" aria-label="anchor" href="#reading-data-from-another-stack"></a>
+</h3>
+<p><code><a href="../reference/new_block.html">result_block()</a></code> allows to read data from another stack.
+From the below code, the first stack contains a
+<code><a href="../reference/new_block.html">data_block()</a></code> from which the n-th first rows are pulled by
+the <code><a href="../reference/new_block.html">head_block()</a></code>. In the second stack, we can reuse this
+smaller dataset. If you dynamically add a third stack, you can also
+select the third stack output as input of the second stack (it appears
+in the result block select input).</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/set_workspace.html">serve_workspace</a></span><span class="op">(</span></span>
+<span>  stack1 <span class="op">=</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">data_block</span>, <span class="va">head_block</span><span class="op">)</span>,</span>
+<span>  stack2 <span class="op">=</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">result_block</span><span class="op">)</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"My workspace"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhA9jgGADc4AH1qC3F2VCgCOEEIGRlOPPEARlUZCDhqNNKJPgATKC406PFZDTgoJvbRCT9cQOKG8QAmKpq6sb55dgduUn6TIZGZUjtuOCqhAFlwmUyGbNz8oUC4sABfAF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><span class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></span>
+</bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
 </div>
 </div>
