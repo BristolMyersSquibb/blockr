@@ -168,7 +168,6 @@ evaluate_block.transform_block <- function(x, data, ...) {
 #' @export
 evaluate_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
-  browser()
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
     list(data = data)
