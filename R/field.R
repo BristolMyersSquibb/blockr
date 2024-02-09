@@ -64,6 +64,10 @@ update_field.field <- function(x, new, env = list()) {
 
   x <- eval_set_field_value(x, env)
 
+  if (is.null(new)) {
+    return(validate_field(x))
+  }
+
   value(x) <- new
 
   res <- validate_field(x)
