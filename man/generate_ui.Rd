@@ -17,6 +17,10 @@
 \alias{block_code}
 \alias{block_code.block}
 \alias{block_header}
+\alias{data_info}
+\alias{data_info.block}
+\alias{data_info.data_block}
+\alias{data_info.transform_block}
 \alias{remove_button}
 \alias{remove_button.block}
 \alias{generate_ui.block}
@@ -35,6 +39,7 @@
 \alias{ui_input.submit_field}
 \alias{ui_input.upload_field}
 \alias{ui_input.filesbrowser_field}
+\alias{ui_input.result_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
@@ -96,6 +101,14 @@ block_code(x, ...)
 
 block_header(x, ...)
 
+data_info(x, ...)
+
+\method{data_info}{block}(x, ns, ...)
+
+\method{data_info}{data_block}(x, ns, ...)
+
+\method{data_info}{transform_block}(x, ns, ...)
+
 remove_button(x, ...)
 
 \method{remove_button}{block}(x, id, ...)
@@ -131,6 +144,8 @@ ui_input(x, id, name)
 \method{ui_input}{upload_field}(x, id, name)
 
 \method{ui_input}{filesbrowser_field}(x, id, name)
+
+\method{ui_input}{result_field}(x, id, name)
 
 input_ids(x, ...)
 

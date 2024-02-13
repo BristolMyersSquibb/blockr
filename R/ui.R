@@ -136,23 +136,45 @@ block_header.block <- function(x, ns, hidden_class, ...) {
           class = "fw-bold m-0"
         )
       ),
-      div(
-        class = "flex-grow-1",
-        span(
-          class = "block-feedback text-muted",
-          span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
-          "rows |",
-          class = "block-feedback text-muted",
-          span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
-          "cols"
-        )
-      ),
+      data_info(x, ns),
       div(
         class = "block-tools flex-shrink-1"
       )
     )
   )
 }
+
+#' @rdname generate_ui
+#' @export
+data_info <- function(x, ...) {
+  UseMethod("data_info")
+}
+
+#' @rdname generate_ui
+#' @export
+data_info.block <- function(x, ns, ...) {
+  NULL
+}
+
+#' @rdname generate_ui
+#' @export
+data_info.data_block <- function(x, ns, ...) {
+  div(
+    class = "flex-grow-1",
+    span(
+      class = "block-feedback text-muted",
+      span(textOutput(ns("nrow"), inline = TRUE), class = "fw-bold"),
+      "rows |",
+      class = "block-feedback text-muted",
+      span(textOutput(ns("ncol"), inline = TRUE), class = "fw-bold"),
+      "cols"
+    )
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+data_info.transform_block <- data_info.data_block
 
 #' @rdname generate_ui
 #' @export
@@ -219,7 +241,7 @@ add_block_ui <- function(ns = identity) {
 
   add_block_ui_id <- ns("add")
 
-  message("Adding \"add block\" UI with ID ", add_block_ui_id)
+  log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
 
   tagList(
     tags$a(
@@ -265,8 +287,8 @@ generate_ui.stack <- function(x, id = NULL, ...) {
       div(
         class = "card-body p-1",
         id = sprintf("%s-body", id),
-        lapply(x, \(b) {
-          inject_remove_button(b, ns)
+        lapply(seq_along(x), \(i) {
+          inject_remove_button(x[[i]], ns, .hidden = i != length(x))
         })
       )
     ),
@@ -347,6 +369,17 @@ stack_header <- function(x, ...) {
 
 #' @importFrom shiny icon tags div
 stack_header.stack <- function(x, title, ns, ...) {
+  icon <- iconEdit()
+
+  edit_class <- "text-decoration-none stack-edit-toggle"
+
+  # the stack is empty we render it editable (open)
+  # with correct icon
+  if (!length(x)) {
+    edit_class <- sprintf("%s editable", edit_class)
+    icon <- iconEditable()
+  }
+
   div(
     class = "card-header",
     div(
@@ -375,8 +408,8 @@ stack_header.stack <- function(x, title, ns, ...) {
             iconCode()
           ),
           tags$a(
-            class = "text-decoration-none stack-edit-toggle",
-            iconEdit()
+            class = edit_class,
+            icon
           )
         )
       )
@@ -503,6 +536,24 @@ ui_input.filesbrowser_field <- function(x, id, name) {
     label = "File select",
     title = "Please select a file",
     multiple = FALSE
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input.result_field <- function(x, id, name) {
+
+  ns <- NS(input_ids(x, id))
+
+  selectizeInput(
+    ns("select-stack"),
+    name,
+    list_workspace_stacks(),
+    value(x),
+    options = list(
+      dropdownParent = "body",
+      placeholder = "Please select an option below"
+    )
   )
 }
 
@@ -779,6 +830,11 @@ iconCode <- function() {
 #' @importFrom shiny icon
 iconEdit <- function() {
   icon("chevron-up")
+}
+
+#' @importFrom shiny icon
+iconEditable <- function() {
+  icon("chevron-down")
 }
 
 #' @importFrom shiny icon

@@ -10,6 +10,7 @@
 \alias{generate_code.block}
 \alias{generate_code.arrange_block}
 \alias{generate_code.transform_block}
+\alias{generate_code.plot_block}
 \alias{generate_code.data_block}
 \alias{generate_code.call}
 \alias{evaluate_block}
@@ -34,6 +35,8 @@
 \alias{sas_block}
 \alias{new_xpt_block}
 \alias{xpt_block}
+\alias{new_result_block}
+\alias{result_block}
 \alias{initialize_block.data_block}
 \alias{new_filter_block}
 \alias{filter_block}
@@ -77,6 +80,8 @@ generate_code(x)
 \method{generate_code}{arrange_block}(x)
 
 \method{generate_code}{transform_block}(x)
+
+\method{generate_code}{plot_block}(x)
 
 \method{generate_code}{data_block}(x)
 
@@ -130,6 +135,10 @@ new_xpt_block(data, ...)
 
 xpt_block(data, ...)
 
+new_result_block(...)
+
+result_block(...)
+
 \method{initialize_block}{data_block}(x, ...)
 
 new_filter_block(
@@ -163,13 +172,7 @@ new_group_by_block(data, columns = colnames(data)[1], ...)
 
 group_by_block(data, ...)
 
-new_join_block(
-  data,
-  y = data(package = "blockr.data")$result[, "Item"],
-  type = character(),
-  by_col = character(),
-  ...
-)
+new_join_block(data, y = NULL, type = character(), by = character(), ...)
 
 join_block(data, ...)
 
@@ -231,12 +234,11 @@ you can also pass predefined selected column for each summary.
 Therefore when not of length 0, columns should have the same length
 as func.}
 
-\item{y}{Second data block.}
+\item{y}{Second dataset for join}
 
-\item{type}{Join type.}
+\item{type}{Join type}
 
-\item{by_col}{If you know in advance which column you want
-to join}
+\item{by}{Join columns}
 
 \item{n_rows}{Number of rows to return.}
 

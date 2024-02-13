@@ -1,5 +1,7 @@
 test_that("simple data_block with keyvalue field", {
 
+  withr::local_options(BLOCKR_LOG_LEVEL = "error")
+
   new_df_block <- function(cols = list(), ...) {
     handle_error <- function(e) {
       warning(e)

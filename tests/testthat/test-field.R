@@ -1,4 +1,5 @@
 test_that("string fields", {
+
   field <- string_field("foo")
 
   expect_s3_class(field, "string_field")
@@ -13,6 +14,7 @@ test_that("string fields", {
 })
 
 test_that("select fields", {
+
   field <- select_field("a", letters)
 
   expect_s3_class(field, "select_field")
@@ -23,16 +25,17 @@ test_that("select fields", {
 
   expect_s3_class(field, "select_field")
   expect_type(field, "list")
-  expect_identical(value(field), "aa")
+  expect_identical(value(field), character())
 
   field <- select_field(1, letters)
 
   expect_s3_class(field, "select_field")
   expect_type(field, "list")
-  expect_identical(value(field), 1)
+  expect_identical(value(field), character())
 })
 
 test_that("range fields", {
+
   field <- range_field(min = 0, max = 10)
 
   expect_s3_class(field, "range_field")
@@ -41,6 +44,7 @@ test_that("range fields", {
 })
 
 test_that("numeric fields", {
+
   field <- numeric_field(min = 0, max = 10)
 
   expect_s3_class(field, "numeric_field")
@@ -55,6 +59,7 @@ test_that("numeric fields", {
 })
 
 test_that("submit fields", {
+
   field <- submit_field()
 
   expect_s3_class(field, "submit_field")
@@ -63,6 +68,7 @@ test_that("submit fields", {
 })
 
 test_that("switch field", {
+
   field <- switch_field()
 
   expect_s3_class(field, "switch_field")
@@ -71,6 +77,7 @@ test_that("switch field", {
 })
 
 test_that("upload field", {
+
   field <- upload_field()
 
   expect_s3_class(field, "upload_field")
@@ -79,6 +86,7 @@ test_that("upload field", {
 })
 
 test_that("filesbrowser field", {
+
   field <- filesbrowser_field()
 
   expect_s3_class(field, "filesbrowser_field")

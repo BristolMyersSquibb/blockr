@@ -32,18 +32,21 @@ new_stack <- function(..., title = "Stack", name = rand_names()) {
   } else {
 
     blocks <- list()
+    temp <- list()
   }
 
   stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks, title = title, name = name, class = "stack")
+  structure(blocks, title = title, name = name, result = temp,
+            class = "stack")
 }
 
-set_stack_blocks <- function(stack, blocks) {
+set_stack_blocks <- function(stack, blocks, result) {
 
   stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
 
   attributes(blocks) <- attributes(stack)
+  attr(blocks, "result") <- result
 
   blocks
 }
@@ -62,6 +65,12 @@ get_stack_name <- function(x) {
   attr(x, "name")
 }
 
+get_stack_result <- function(stack) {
+  stopifnot(is_stack(stack))
+  attr(stack, "result")
+}
+
+#' @param x An object inheriting form `"stack"`
 #' @rdname new_stack
 #' @export
 set_stack_name <- function(x, name) {
@@ -157,22 +166,11 @@ add_block <- function(stack, block, position = NULL) {
     }
   }
 
-  if (length(stack) > 0L) {
-    last <- stack[[length(stack)]]
-    # For now, we won't be able to insert a block
-    # after a plot block. In a later version, we may imagine
-    # have multiple block plot per stack so we'll have to revisit
-    # this ...
-    if (inherits(last, "plot_block")) {
-      stop("Can't insert a block below a plot block.")
-    }
-  }
-
   if (is.null(position) || position > length(stack)) {
     position <- length(stack)
   }
 
-  message("ADD BLOCK (position ", position + 1, ")")
+  log_debug("ADD BLOCK (position ", position + 1, ")")
 
   if (position < 1L) {
     position <- 1L
@@ -197,7 +195,7 @@ add_block <- function(stack, block, position = NULL) {
     tmp <- do.call(block, list(data = data, position = position))
   }
 
-  set_stack_blocks(stack, append(stack, list(tmp), position))
+  set_stack_blocks(stack, append(stack, list(tmp), position), data)
 }
 
 #' Move blocks within a stack

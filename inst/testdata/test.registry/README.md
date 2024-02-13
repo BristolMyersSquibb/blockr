@@ -24,7 +24,7 @@ library(blockr)
 library(test.registry)
 stack <- new_stack(
   data_block,
-  new_head_block
+  new_dummy_block
 )
 serve_stack(stack)
 ```

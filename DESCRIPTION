@@ -38,7 +38,8 @@ Imports:
     constructive,
     shinyFiles,
     memuse,
-    haven
+    haven,
+    rlang
 Remotes:
     blockr-org/blockr.data,
     DivadNojnarg/DiagrammeR

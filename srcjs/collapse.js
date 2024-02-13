@@ -3,6 +3,7 @@ export const collapse = (stack) => {
   showLastOutputs(stack);
   toggleOutputInput(stack);
   handleIcons(stack);
+  handleBlockError(stack);
 };
 
 export const handleIcons = (stack) => {
@@ -22,8 +23,12 @@ export const handleIcons = (stack) => {
         .toggleClass("fa-chevron-up fa-chevron-down");
     });
 
-  $(stack).find(".stack-edit-toggle").addClass("blockr-bound");
-  $(stack).find(".block-output-toggle").addClass("blockr-bound");
+  $(stack)
+    .find(".stack-edit-toggle:not(.blockr-bound)")
+    .addClass("blockr-bound");
+  $(stack)
+    .find(".block-output-toggle:not(.blockr-bound)")
+    .addClass("blockr-bound");
 };
 
 export const toggleOutputInput = (stack) => {
@@ -40,10 +45,9 @@ export const toggleOutputInput = (stack) => {
       $(btn).on("click", (event) => {
         const $block = $(event.target).closest(".block");
 
-        const outputVisible = $block.find(".block-output").is(":visible");
-        const inputVisible = $block.find(".block-input").is(":visible");
+        const inputVisible = $block.find(".block-inputs").is(":visible");
 
-        const toggle = outputVisible || inputVisible;
+        let toggle = inputVisible;
 
         if (toggle) {
           $block.find(".block-inputs").addClass("d-none");
@@ -78,8 +82,8 @@ const editor = (stack) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
 
-    $(event.currentTarget).toggleClass("etidable");
-    const editable = $(event.currentTarget).hasClass("etidable");
+    $(event.currentTarget).toggleClass("editable");
+    const editable = $(event.currentTarget).hasClass("editable");
 
     $blocks.each((index, block) => {
       const $block = $(block);
@@ -87,6 +91,9 @@ const editor = (stack) => {
       if (editable) {
         $block.removeClass("d-none");
         $block.find(".block-title").removeClass("d-none");
+
+        $block.find(".block-code-toggle").removeClass("d-none");
+        $block.find(".block-output-toggle").removeClass("d-none");
 
         if (index == $blocks.length - 1) {
           $block.find(".block-output").addClass("show");
@@ -107,6 +114,14 @@ const editor = (stack) => {
         $block.find(".block-loading").addClass("d-none");
         return;
       }
+
+      $block.find(".block-code-toggle").addClass("d-none");
+      $block.find(".block-output-toggle").addClass("d-none");
+      $block.find(".block-output-toggle").find("i").addClass("fa-chevron-up");
+      $block
+        .find(".block-output-toggle")
+        .find("i")
+        .removeClass("fa-chevron-down");
 
       $block.find(".block-title").addClass("d-none");
       if (index == $blocks.length - 1) {
@@ -135,21 +150,20 @@ const editor = (stack) => {
 export const showLastOutput = (el) => {
   const $block = $(el).find(".block").last();
 
-  $block.removeClass("d-none");
   const $lastOutput = $block.find(".block-output");
   const $lastTitle = $block.find(".block-title");
-
-  $block
-    .find(".block-output-toggle i")
-    .toggleClass("fa-chevron-up fa-chevron-down");
+  const $lastInputs = $block.find(".block-inputs");
 
   $lastTitle.addClass("d-none");
-  $lastOutput.removeClass("d-none");
-  $lastOutput.trigger("shown");
+  $lastInputs.addClass("d-none");
+
+  // hide togglers
+  $block.find(".block-code-toggle").addClass("d-none");
+  $block.find(".block-output-toggle").addClass("d-none");
 
   // we have a loading state
   // because some block validations have no last output
-  const tableId = $lastOutput.find(".datatables").first().attr("id");
+  const tableId = $lastOutput.find(".shiny-bound-output").first().attr("id");
 
   $(document).on("shiny:value", (event) => {
     if (event.name !== tableId) {
@@ -164,4 +178,19 @@ const showLastOutputs = (stack) => {
   $(stack).each((_, el) => {
     showLastOutput(el);
   });
+};
+
+const handleBlockError = (stack) => {
+  let hasError = false;
+  $(stack)
+    .find(".block>.card")
+    .each((_index, block) => {
+      if (!$(block).hasClass("border-danger")) return;
+
+      hasError = true;
+    });
+
+  if (!hasError) return;
+
+  $(stack).find(".stack-edit-toggle").trigger("click");
 };

@@ -1,5 +1,7 @@
 test_that("workspace", {
 
+  withr::local_options(BLOCKR_LOG_LEVEL = "error")
+
   withr::defer(clear_workspace_stacks())
 
   expect_s3_class(get_workspace(), "workspace")

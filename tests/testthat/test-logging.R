@@ -1,6 +1,9 @@
 test_that("cnd logger works", {
 
-  withr::local_options(BLOCKR_LOGGER = cnd_logger)
+  withr::local_options(
+    BLOCKR_LOGGER = cnd_logger,
+    BLOCKR_LOG_LEVEL = NULL
+  )
 
   withr::with_options(
     list(BLOCKR_DEV = FALSE),

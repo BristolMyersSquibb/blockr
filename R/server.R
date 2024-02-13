@@ -21,7 +21,6 @@ update_blk <- function(b, value, is_srv, input, data) {
         value[-which(names(value) == field)]
       )
       b[[field]] <- update_field(b[[field]], value[[field]], env)
-      if (identical(input[[field]], value(b[[field]]))) next
     }
   }
   b
@@ -171,13 +170,15 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       output$code <- server_code(x, blk, output)
 
-      output$nrow <- renderText({
-        prettyNum(nrow(out_dat()), big.mark = ",")
-      })
+      if (display != "plot") {
+        output$nrow <- renderText({
+          prettyNum(nrow(out_dat()), big.mark = ",")
+        })
 
-      output$ncol <- renderText({
-        prettyNum(ncol(out_dat()), big.mark = ",")
-      })
+        output$ncol <- renderText({
+          prettyNum(ncol(out_dat()), big.mark = ",")
+        })
+      }
 
       # TO DO: cleanup module inputs (UI and server side)
       # and observers. PR 119
@@ -235,6 +236,15 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
   id <- coal(id, get_stack_name(x))
 
+  get_block_val <- function(b) b$block()
+
+  get_block_vals <- function(x) lapply(x, get_block_val)
+
+  get_last_block_data <- function(x) {
+    len <- length(x)
+    if (len) x[[len]]$data() else list()
+  }
+
   moduleServer(
     id = id,
     function(input, output, session) {
@@ -275,12 +285,19 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
-      observeEvent(lapply(vals$blocks, \(b) b$block()), {
-        vals$stack <- set_stack_blocks(
-          vals$stack,
-          lapply(vals$blocks, \(b) b$block())
-        )
-      })
+      observeEvent(
+        c(
+          get_block_vals(vals$blocks),
+          get_last_block_data(vals$blocks)
+        ),
+        {
+          vals$stack <- set_stack_blocks(
+            vals$stack,
+            get_block_vals(vals$blocks),
+            get_last_block_data(vals$blocks)
+          )
+        }
+      )
 
       observeEvent(vals$stack, {
         message("UPDADING WORKSPACE with stack ", id)
@@ -538,7 +555,7 @@ inject_block <- function(input, vals, id) {
 
   listener_id <- sprintf("%s-add", id)
 
-  message("Setting up \"add block\" listener with ID ", listener_id)
+  log_debug("Setting up \"add block\" listener with ID ", listener_id)
 
   observeEvent(input[[listener_id]], {
     # Reset to avoid re-adding existing blocks to stacks
