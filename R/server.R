@@ -404,7 +404,7 @@ generate_server.workspace <- function(x, id, ...) {
     if (s$removed) s
   }
 
-  are_stack_removed <- function(stacks) {
+  are_stacks_removed <- function(stacks) {
     dropNulls(lapply(stacks, is_stack_removed))
   }
 
@@ -420,9 +420,8 @@ generate_server.workspace <- function(x, id, ...) {
       output$n_stacks <- renderText(length(vals$stacks))
 
       # Listen when stack are removed
-      observeEvent(req(length(are_stack_removed(vals$stacks)) > 0), {
-        to_remove <- are_stack_removed(vals$stacks)
-        print(to_remove)
+      observeEvent(req(length(are_stacks_removed(vals$stacks)) > 0), {
+        to_remove <- are_stacks_removed(vals$stacks)
         vals$stacks[[names(to_remove)]] <- NULL
       })
 
