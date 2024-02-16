@@ -20,12 +20,11 @@ shiny::shinyApp(
       vals$new_block <- NULL
       # Always append to stack
       loc <- length(stack$blocks)
-      block <- available_blocks()[[input$selected_block]]
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will
       # go at the end)
       vals$new_block <- list(
-        block = block,
+        block = input$selected_block,
         position = loc
       )
     })

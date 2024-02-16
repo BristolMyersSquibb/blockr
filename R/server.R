@@ -264,9 +264,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         },
         {
           # Update stack
-          block_to_add <- new_block()$block
+          block_to_add <- available_blocks()[[new_block()$block]] # block ctor
           position <- new_block()$position
-
           vals$stack <- add_block(vals$stack, block_to_add, position)
 
           # Call module
