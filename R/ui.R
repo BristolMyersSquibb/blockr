@@ -340,11 +340,7 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
 #' @export
 #' @rdname generate_ui
 inject_remove_button.stack <- function(x, id, ...) {
-
-  ui <- generate_ui(x, id)
-  ns <- NS(id)
-
-  tagList(add_block_ui(ns), ui)
+  stop("Not implemented")
 }
 
 #' @rdname generate_ui
