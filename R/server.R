@@ -454,7 +454,7 @@ generate_server.workspace <- function(x, id, ...) {
 
         el <- get_workspace_stack(stack_id, workspace = x)
 
-        stack_ui <- inject_remove_button(el, session$ns(stack_id))
+        stack_ui <- generate_ui(el, session$ns(stack_id))
 
         insertUI(
           selector = if (length(vals$stacks) == 0) {
@@ -532,16 +532,12 @@ init.workspace <- function(x, vals, session, ...) {
 
     lapply(names(stacks), \(nme) {
 
-      handle_remove(stacks[[nme]], vals, nme, workspace = x)
-
       vals$stacks[[nme]] <- generate_server(
         stacks[[nme]],
         id = nme,
         new_block = reactive(vals$new_block[[nme]])
       )
 
-      # To dynamically insert blocks
-      # inject_block(input, vals, nme)
     })
   })
 }

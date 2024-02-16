@@ -288,7 +288,12 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(seq_along(x), \(i) {
-          inject_remove_button(x[[i]], ns, .hidden = i != length(x))
+          hidden <- i != length(x)
+
+          if (getOption("BLOCKR_DEV", FALSE))
+            hidden <- FALSE
+
+          inject_remove_button(x[[i]], ns, .hidden = hidden)
         })
       )
     ),
@@ -339,16 +344,7 @@ inject_remove_button.stack <- function(x, id, ...) {
   ui <- generate_ui(x, id)
   ns <- NS(id)
 
-  rm_btn <- remove_button(x, ns("remove-stack"))
-
-  tmp <- htmltools::tagQuery(ui)$find(".stack-tools")$prepend(rm_btn)$allTags()
-
-  tmp[[1]] <- tagAppendChildren(
-    tmp[[1]],
-    add_block_ui(ns)
-  )
-
-  div(class = "col m-1", ui)
+  tagList(add_block_ui(ns), ui)
 }
 
 #' @rdname generate_ui
@@ -420,26 +416,21 @@ stack_header.stack <- function(x, title, ns, ...) {
 #' @rdname generate_ui
 #' @export
 generate_ui.workspace <- function(x, id, ...) {
-
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
 
   stacks <- get_workspace_stacks(workspace = x)
 
-  if (length(stacks) > 0) {
-
+  stack_ui <- NULL
+  if (length(stacks) > 0)
     stack_ui <- div(
       class = "row stacks",
       lapply(seq_along(stacks), \(i) {
-        inject_remove_button(stacks[[i]], ns(names(stacks)[i]))
+        ns <- NS(id)
+        div(class = "col", generate_ui(stacks[[i]], ns(names(stacks)[i])))
       })
     )
-
-  } else {
-
-    stack_ui <- NULL
-  }
 
   tagList(
     div(
