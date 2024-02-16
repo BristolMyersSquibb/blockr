@@ -427,8 +427,11 @@ generate_ui.workspace <- function(x, id, ...) {
     stack_ui <- div(
       class = "row stacks",
       lapply(seq_along(stacks), \(i) {
-        ns <- NS(id)
-        div(class = "col", generate_ui(stacks[[i]], ns(names(stacks)[i])))
+        div(
+          class = "col stack-col",
+          id = sprintf("%sStackCol", names(stacks)[i]),
+          generate_ui(stacks[[i]], ns(names(stacks)[i]))
+        )
       })
     )
 

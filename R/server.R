@@ -423,6 +423,9 @@ generate_server.workspace <- function(x, id, ...) {
       observeEvent(req(length(are_stacks_removed(vals$stacks)) > 0), {
         to_remove <- are_stacks_removed(vals$stacks)
         vals$stacks[[names(to_remove)]] <- NULL
+        removeUI(
+          sprintf("#%sStackCol", names(to_remove))
+        )
       })
 
       # Add stack
