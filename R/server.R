@@ -454,7 +454,10 @@ generate_server.workspace <- function(x, id, ...) {
 
         el <- get_workspace_stack(stack_id, workspace = x)
 
-        stack_ui <- generate_ui(el, session$ns(stack_id))
+        stack_ui <- div(
+          class = "col",
+          generate_ui(el, session$ns(stack_id))
+        )
 
         insertUI(
           selector = if (length(vals$stacks) == 0) {
@@ -483,7 +486,7 @@ generate_server.workspace <- function(x, id, ...) {
         )
 
         # Handle new block injection
-        inject_block(input, vals, stack_id)
+        # inject_block(input, vals, stack_id)
       })
 
       # Clear all stacks
