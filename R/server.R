@@ -251,7 +251,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       vals <- reactiveValues(
         stack = x,
-        blocks = vector("list", length(x))
+        blocks = vector("list", length(x)),
+        removed = FALSE
       )
 
       init(x, vals, session)
@@ -309,7 +310,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         removeUI(
           sprintf("#%s", session$ns(NULL))
         )
-
+        vals$removed <- TRUE
         rm_workspace_stack(id, workspace = workspace)
       })
 
@@ -392,43 +393,20 @@ handle_remove.block <- function(x, vals,
   })
 }
 
-#' Attach an observeEvent to the given stack
-#'
-#' Necessary to be able to remove the stack from the workspace.
-#'
-#' @param id Stack ID
-#' @param workspace The workspace
-#' @export
-#' @rdname generate_server
-handle_remove.stack <- function(x, vals, id,
-                                session = getDefaultReactiveDomain(),
-                                workspace = get_workspace(), ...) {
-
-  input <- session$input
-
-  ns <- NS(id)
-
-  observeEvent(input[[ns("remove")]], {
-    # We can't remove the data block if there are downstream consumers...
-    stacks <- get_workspace_stacks()
-    to_remove <- which(chr_ply(stacks, \(x) attr(x, "name")) == id)
-    log_debug("REMOVING STACK ", to_remove)
-    # Remove UI is done from JS
-    # TO DO: this isn't very consistent with what we have for blocks
-    # Remove stack UI is handled on the JS side and not on the R side.
-    # To be consistent and align between block and stacks we should choose
-    # only 1 way to remove elements.
-    vals$stacks[[id]] <- NULL
-    rm_workspace_stack(id, workspace = workspace)
-  })
-}
-
 #' @rdname generate_server
 #' @param id Unique module id. Useful when the workspace is called as a module.
 #' @export
 generate_server.workspace <- function(x, id, ...) {
 
   stopifnot(...length() == 0L)
+
+  is_stack_removed <- function(s) {
+    if (s$removed) s
+  }
+
+  are_stack_removed <- function(stacks) {
+    dropNulls(lapply(stacks, is_stack_removed))
+  }
 
   moduleServer(
     id = id,
@@ -440,6 +418,13 @@ generate_server.workspace <- function(x, id, ...) {
       init(x, vals, session)
 
       output$n_stacks <- renderText(length(vals$stacks))
+
+      # Listen when stack are removed
+      observeEvent(req(length(are_stack_removed(vals$stacks)) > 0), {
+        to_remove <- are_stack_removed(vals$stacks)
+        print(to_remove)
+        vals$stacks[[names(to_remove)]] <- NULL
+      })
 
       # Add stack
       observeEvent(input$add_stack, {
@@ -474,9 +459,6 @@ generate_server.workspace <- function(x, id, ...) {
             stack_ui
           }
         )
-
-        # Handle remove for newly added stacks
-        handle_remove(el, vals, stack_id, workspace = x)
 
         # Invoke server
         vals$stacks[[stack_id]] <- generate_server(
