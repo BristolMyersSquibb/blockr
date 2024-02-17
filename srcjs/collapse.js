@@ -194,3 +194,17 @@ const handleBlockError = (stack) => {
 
   $(stack).find(".stack-edit-toggle").trigger("click");
 };
+
+export const collapsePreviousBlocks = (stack) => {
+  const btns = $(stack).find(".block-output-toggle");
+
+  const n = btns.length;
+
+  $(btns).each((index, btn) => {
+    if (index + 1 == n) return;
+    const isCollapsed = $(btn).find("i").hasClass("fa-chevron-down");
+    if (isCollapsed) return;
+
+    $(btn).trigger("click");
+  });
+};
