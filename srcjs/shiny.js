@@ -2,7 +2,7 @@ import {
   collapse,
   toggleOutputInput,
   handleIcons,
-  collapsePreviousBlocks,
+  collapseOtherBlocks,
 } from "./collapse.js";
 import { remove } from "./remove-stack.js";
 import { title } from "./stack-title.js";
@@ -31,7 +31,7 @@ window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   setTimeout(() => {
     toggleOutputInput(stack);
     handleIcons(stack);
-    collapsePreviousBlocks(stack);
+    collapseOtherBlocks(stack, msg.block);
   }, 500);
 });
 
