@@ -292,6 +292,8 @@ construct_block <- function(block, ...) {
 #'
 #' @export
 add_block_ui <- function(ns = identity) {
+  if (!getOption("BLOCKR_ADD_BLOCK", TRUE))
+    return()
 
   add_block_ui_id <- ns("add")
 
@@ -342,6 +344,9 @@ add_block_server <- function(
   session,
   registry = available_blocks
 ) {
+  if (!getOption("BLOCKR_ADD_BLOCK", TRUE))
+    return()
+
   observe({
     search <- session$registerDataObj(
       rand_names(),

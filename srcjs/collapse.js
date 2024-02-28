@@ -85,16 +85,12 @@ const editor = (stack) => {
     $(event.currentTarget).toggleClass("editable");
     const editable = $(event.currentTarget).hasClass("editable");
 
+    const addStack = $(event.target).closest(".stack").find(".stack-add-block");
+
     if (!editable) {
-      $(event.target)
-        .closest(".stack")
-        .find(".stack-add-block")
-        .addClass("d-none");
+      addStack.addClass("d-none");
     } else {
-      $(event.target)
-        .closest(".stack")
-        .find(".stack-add-block")
-        .removeClass("d-none");
+      addStack.removeClass("d-none");
     }
 
     $blocks.each((index, block) => {

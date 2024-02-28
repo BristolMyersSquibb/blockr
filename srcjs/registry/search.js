@@ -21,7 +21,7 @@ const search = (params) => {
     const queryNode = $(`#${params.ns}-query`);
     const query = String(queryNode?.val());
 
-    $(target).closest(".blockr-registry").find(".block-list-wrapper").html("");
+    $(`#${params.ns}-scrollable-child`).html("");
 
     if (query == "") {
       fetch(`${params.scroll}&min=1&max=10`)
