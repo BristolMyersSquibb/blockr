@@ -315,7 +315,7 @@ add_block_ui <- function(ns = identity) {
       position = "start",
       p(
         "Click on a block to add it to the stack.",
-        class = "text-muted"
+        class = "text-muted small"
       ),
       div(
         id = ns("blockrRegistry"),
