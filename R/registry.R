@@ -309,6 +309,10 @@ add_block_ui <- function(ns = identity) {
       id = ns("addBlockCanvas"),
       title = "Blocks",
       position = "start",
+      p(
+        "Click on a block to add it to the stack.",
+        class = "text-muted"
+      ),
       div(
         id = ns("blockrRegistry"),
         class = "blockr-registry",
