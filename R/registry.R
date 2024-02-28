@@ -297,10 +297,14 @@ add_block_ui <- function(ns = identity) {
 
   add_block_ui_id <- ns("add")
 
+  hidden_class <- ""
+  if (getOption("BLOCKR_DEV", FALSE))
+    hidden_class <- "d-none"
+
   tagList(
     tags$a(
       icon("plus"),
-      class = "stack-add-block text-decoration-none d-none",
+      class = sprintf("stack-add-block text-decoration-none %s", hidden_class) |> trimws(),
       `data-bs-toggle` = "offcanvas",
       `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
       `aria-controls` = ns("addBlockCanvas")
