@@ -287,6 +287,7 @@ construct_block <- function(block, ...) {
 #' Combined to the blocks registry API, this allows to select a block from R
 #' like \code{available_blocks()[[input$selected_block]]}.
 #'
+#' @param x The stack object.
 #' @param ns Stack namespace. Default to \link{identity} so
 #' that it can be used when the stack is the top level element.
 #'

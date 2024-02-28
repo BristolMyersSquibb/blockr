@@ -7,6 +7,8 @@
 add_block_ui(x, ns = identity)
 }
 \arguments{
+\item{x}{The stack object.}
+
 \item{ns}{Stack namespace. Default to \link{identity} so
 that it can be used when the stack is the top level element.}
 }
