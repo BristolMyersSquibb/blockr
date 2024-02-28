@@ -64,6 +64,15 @@ html {
       }
     }
 
+    @media (max-width: 576px) {
+      .stack-remove,
+      .stack-copy-code,
+      .stack-add-block,
+      .stack-edit-toggle {
+        opacity: 1;
+      }
+    }
+
     .card-header {
       .d-flex {
         height: 1.5rem;

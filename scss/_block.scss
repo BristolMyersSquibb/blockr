@@ -62,6 +62,15 @@ html {
         opacity: 1;
       }
     }
+
+    @media (max-width: 576px) {
+      .block-remove,
+      .block-output-toggle,
+      .block-edit-toggle,
+      .block-code-toggle {
+        opacity: 1;
+      }
+    }
   }
 }
 
