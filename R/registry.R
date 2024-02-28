@@ -291,14 +291,18 @@ construct_block <- function(block, ...) {
 #' that it can be used when the stack is the top level element.
 #'
 #' @export
-add_block_ui <- function(ns = identity) {
+add_block_ui <- function(x, ns = identity) {
   if (!getOption("BLOCKR_ADD_BLOCK", TRUE))
     return()
 
   add_block_ui_id <- ns("add")
 
+  # either we're on dev mode and we show the add block button
+  # or we have blocks on the stack already and we hide the button
+  # otherwise the stack is empty in which case it is rendered as
+  # expanded and we show the button
   hidden_class <- ""
-  if (getOption("BLOCKR_DEV", FALSE))
+  if (getOption("BLOCKR_DEV", FALSE) || length(x) > 0L)
     hidden_class <- "d-none"
 
   tagList(

@@ -36,9 +36,9 @@ export const description = () => {
 };
 
 const highlight = (el) => {
-  $(el).addClass("rounded border border-primary p-1 my-1");
+  $(el).addClass("rounded border border-dark-subtle p-1 my-1");
 };
 
 const downlight = (el) => {
-  $(el).removeClass("rounded border border-primary p-1 my-1");
+  $(el).removeClass("rounded border border-dark-subtle p-1 my-1");
 };

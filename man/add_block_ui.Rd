@@ -4,7 +4,7 @@
 \alias{add_block_ui}
 \title{Add block UI interface}
 \usage{
-add_block_ui(ns = identity)
+add_block_ui(x, ns = identity)
 }
 \arguments{
 \item{ns}{Stack namespace. Default to \link{identity} so
