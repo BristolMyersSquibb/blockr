@@ -85,6 +85,18 @@ const editor = (stack) => {
     $(event.currentTarget).toggleClass("editable");
     const editable = $(event.currentTarget).hasClass("editable");
 
+    if (!editable) {
+      $(event.target)
+        .closest(".stack")
+        .find(".stack-add-block")
+        .addClass("d-none");
+    } else {
+      $(event.target)
+        .closest(".stack")
+        .find(".stack-add-block")
+        .removeClass("d-none");
+    }
+
     $blocks.each((index, block) => {
       const $block = $(block);
 

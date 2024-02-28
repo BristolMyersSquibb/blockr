@@ -298,7 +298,7 @@ add_block_ui <- function(ns = identity) {
   tagList(
     tags$a(
       icon("plus"),
-      class = "stack-add-block text-decoration-none",
+      class = "stack-add-block text-decoration-none d-none",
       `data-bs-toggle` = "offcanvas",
       `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
       `aria-controls` = ns("addBlockCanvas")
