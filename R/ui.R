@@ -226,50 +226,6 @@ generate_ui.block <- function(x, id, ...,
   )
 }
 
-#' Add block UI interface
-#'
-#' Useful to allow stack to add blocks to it.
-#' The selected block can be accessed through `input$selected_block`.
-#' Combined to the blocks registry API, this allows to select a block from R
-#' like \code{available_blocks()[[input$selected_block]]}.
-#'
-#' @param ns Stack namespace. Default to \link{identity} so
-#' that it can be used when the stack is the top level element.
-#'
-#' @export
-add_block_ui <- function(ns = identity) {
-
-  add_block_ui_id <- ns("add")
-
-  log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
-
-  tagList(
-    tags$a(
-      icon("plus"),
-      class = "stack-add-block text-decoration-none",
-      `data-bs-toggle` = "offcanvas",
-      `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
-      `aria-controls` = ns("addBlockCanvas")
-    ),
-    off_canvas(
-      id = ns("addBlockCanvas"),
-      title = "Blocks",
-      position = "bottom",
-      radioButtons(
-        ns("selected_block"),
-        "Choose a block",
-        choices = names(available_blocks()),
-        inline = TRUE
-      ),
-      actionButton(
-        add_block_ui_id,
-        icon("plus"),
-        `data-bs-dismiss` = "offcanvas"
-      )
-    )
-  )
-}
-
 #' @rdname generate_ui
 #' @export
 generate_ui.stack <- function(x, id = NULL, ...) {

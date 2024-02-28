@@ -279,3 +279,179 @@ construct_block <- function(block, ...) {
 
   block(...)
 }
+
+#' Add block UI interface
+#'
+#' Useful to allow stack to add blocks to it.
+#' The selected block can be accessed through `input$selected_block`.
+#' Combined to the blocks registry API, this allows to select a block from R
+#' like \code{available_blocks()[[input$selected_block]]}.
+#'
+#' @param ns Stack namespace. Default to \link{identity} so
+#' that it can be used when the stack is the top level element.
+#'
+#' @export
+add_block_ui <- function(ns = identity) {
+
+  add_block_ui_id <- ns("add")
+
+  tagList(
+    tags$a(
+      icon("plus"),
+      class = "stack-add-block text-decoration-none",
+      `data-bs-toggle` = "offcanvas",
+      `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
+      `aria-controls` = ns("addBlockCanvas")
+    ),
+    off_canvas(
+      id = ns("addBlockCanvas"),
+      title = "Blocks",
+      position = "start",
+      div(
+        id = ns("blockrRegistry"),
+        class = "blockr-registry",
+        div(
+          class = "input-group mb-2",
+          tags$input(
+            id = ns("query"),
+            type = "text",
+            class = "form-control form-control-sm",
+            placeholder = "search"
+          ),
+          tags$button(
+            id = ns("search"),
+            class = "btn btn-primary btn-sm",
+            icon("search")
+          )
+        ),
+        div(
+          id = ns("scrollable"),
+          class = "blockr-registry-list",
+          style = "min-height:40rem;max-height:85vh;overflow-y:scroll;",
+          div(
+            id = ns("scrollable-child")
+          )
+        ),
+        tags$p(class = "blockr-description w-100 m-0 p-0")
+      )
+    )
+  )
+}
+
+add_block_server <- function(
+  session,
+  registry = available_blocks
+) {
+  observe({
+    search <- session$registerDataObj(
+      rand_names(),
+      list(
+        registry = registry() |> add_block_index() |> sort_registry()
+      ),
+      search_registry
+    )
+
+    scroll <- session$registerDataObj(
+      rand_names(),
+      list(
+        registry = registry() |> add_block_index() |> sort_registry()
+      ),
+      scroll_registry
+    )
+
+    session$sendCustomMessage(
+      "blockr-registry-endpoints",
+      list(
+        id = session$ns("addBlockCanvas"),
+        ns = session$ns(NULL),
+        scroll = scroll,
+        search = search,
+        delay = 750
+      )
+    )
+  })
+}
+
+scroll_registry <- function(data, req) {
+  query <- parseQueryString(req$QUERY_STRING)
+  min <- as.integer(query$min)
+  max <- query$max
+
+  if (!length(max))
+    max <- min + 5L
+
+  max <- as.integer(max)
+
+  if (min >= length(data$registry))
+    return(
+      shiny::httpResponse(
+        200L,
+        content_type = "application/json",
+        content = jsonlite::toJSON(list(), auto_unbox = TRUE)
+      )
+    )
+
+  if (max > length(data$registry))
+    max <- length(data$registry)
+
+  blocks <- data$registry[min:max] |>
+    lapply(\(x) {
+      list(
+        name = block_name(x),
+        index = get_block_index(x),
+        description = block_descr(x),
+        classes = attr(x, "classes"),
+        icon = ...block_icon(x) |> as.character()
+      )
+    })
+
+  blocks <- blocks[sapply(blocks, length) > 0] |>
+    unname()
+
+  shiny::httpResponse(
+    200L,
+    content_type = "application/json",
+    content = jsonlite::toJSON(blocks, auto_unbox = TRUE, dataframe = "rows", force = TRUE)
+  )
+}
+
+search_registry <- function(data, req) {
+  query <- parseQueryString(req$QUERY_STRING)
+
+  blocks <- data$registry |>
+    lapply(\(x) {
+      name <- block_name(x)
+      description <- block_descr(x)
+
+      obj <- list(
+        name = name,
+        index = get_block_index(x),
+        description = description,
+        classes = attr(x, "classes"),
+        icon = ...block_icon(x) |> as.character()
+      )
+
+      if (grepl(query$query, name))
+        return(obj)
+
+      if (grepl(query$query, description))
+        return(obj)
+
+      return(NULL)
+    })
+
+  blocks <- blocks[sapply(blocks, length) > 0] |>
+    unname()
+
+  shiny::httpResponse(
+    200L,
+    content_type = "application/json",
+    content = jsonlite::toJSON(blocks, auto_unbox = TRUE, dataframe = "rows", force = TRUE)
+  )
+}
+
+# TODO export block_icon from blockr
+...block_icon <- function(x){ # nolint
+  class(x) <- attr(x, "classes")
+  utils::getFromNamespace("block_icon", "blockr")(x)
+}

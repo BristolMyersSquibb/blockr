@@ -1,4 +1,4 @@
-devtools::load_all()
+library(blockr)
 
 corrplot_block <- function(data, ...) {
   fields <- list(

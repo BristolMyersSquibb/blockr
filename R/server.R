@@ -315,9 +315,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       })
 
       observeEvent(input$add, {
-        print(available_blocks()[[input$selected_block]])
         add_block_stack(
-          block_to_add = available_blocks()[[input$selected_block]],
+          block_to_add = available_blocks()[[input$add]],
           position = NULL,
           vals = vals
         )
@@ -333,6 +332,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
           )
         )
       })
+
+      add_block_server(session)
 
       vals
     }
@@ -543,7 +544,7 @@ inject_block <- function(input, vals, id) {
   observeEvent(input[[listener_id]], {
     # Reset to avoid re-adding existing blocks to stacks
     vals$new_block <- NULL
-    block <- available_blocks()[[input[[sprintf("%s-selected_block", id)]]]]
+    block <- available_blocks()[[input[[sprintf("%s-add", id)]]]]
     # add_block expect the current stack, the block to add and its position
     # (NULL is fine for the position, in that case the block will
     # go at the end)
