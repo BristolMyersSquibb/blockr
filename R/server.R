@@ -442,7 +442,7 @@ generate_server.workspace <- function(x, id, ...) {
         el <- get_workspace_stack(stack_id, workspace = x)
 
         stack_ui <- div(
-          class = "col",
+          class = "col stack-col",
           generate_ui(el, session$ns(stack_id))
         )
 

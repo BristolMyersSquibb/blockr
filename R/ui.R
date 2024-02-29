@@ -432,6 +432,7 @@ generate_ui.workspace <- function(x, id, ...) {
     )
 
   tagList(
+    workspaceDeps(),
     div(
       class = "d-flex justify-content-center",
       actionButton(
