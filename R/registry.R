@@ -327,16 +327,12 @@ add_block_ui <- function(x, ns = identity) {
         class = "blockr-registry",
         div(
           class = "input-group mb-2",
+          div(class = "input-group-text", icon("search")),
           tags$input(
             id = ns("query"),
             type = "text",
             class = "form-control form-control-sm",
             placeholder = "search"
-          ),
-          tags$button(
-            id = ns("search"),
-            class = "btn btn-primary btn-sm",
-            icon("search")
           )
         ),
         div(

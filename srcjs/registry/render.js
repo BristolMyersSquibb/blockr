@@ -19,6 +19,13 @@ const createPill = (block) => {
 };
 
 export const renderPills = (params, data) => {
+  if (data.length === 0) {
+    $(`#${params.ns}-scrollable-child`).html(
+      "<p class='text-muted'>No blocks found</p>",
+    );
+    return;
+  }
+
   const pills = createPills(data);
   $(`#${params.ns}-scrollable-child`).append(pills);
   description();
