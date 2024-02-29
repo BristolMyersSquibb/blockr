@@ -422,13 +422,16 @@ registry_sorter <- function(block) {
   if ("data_block" %in% cl)
     return(1)
 
-  if ("transform_block" %in% cl)
+  if ("parser_block" %in% cl)
     return(2)
 
-  if ("plot_block" %in% cl)
+  if ("transform_block" %in% cl)
     return(3)
 
-  return(4)
+  if ("plot_block" %in% cl)
+    return(4)
+
+  return(5)
 }
 
 sort_registry <- function(blocks) {

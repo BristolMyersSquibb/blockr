@@ -27,6 +27,8 @@ export const renderPills = (params, data) => {
 };
 
 const blockColor = (block) => {
+  if (block.classes.includes("parser_block")) return "info";
+
   if (block.classes.includes("data_block")) return "primary";
 
   if (block.classes.includes("transform_block")) return "secondary";
