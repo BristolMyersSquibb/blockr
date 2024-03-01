@@ -466,7 +466,7 @@ generate_server.workspace <- function(x, id, ...) {
       observeEvent(input$clear_stacks, {
         clear_workspace_stacks(workspace = x)
         vals$stacks <- NULL
-        removeUI(".stacks")
+        removeUI(".stack-col", multiple = TRUE)
       })
 
       # Serialize
