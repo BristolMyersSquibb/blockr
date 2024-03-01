@@ -421,10 +421,10 @@ generate_ui.workspace <- function(x, id, ...) {
   stack_ui <- NULL
   if (length(stacks) > 0)
     stack_ui <- div(
-      class = "row stacks",
+      class = "d-flex stacks flex-wrap",
       lapply(seq_along(stacks), \(i) {
         div(
-          class = "col stack-col",
+          class = "flex-grow-1 stack-col m-1",
           id = sprintf("%sStackCol", names(stacks)[i]),
           generate_ui(stacks[[i]], ns(names(stacks)[i]))
         )

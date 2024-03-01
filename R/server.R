@@ -442,24 +442,13 @@ generate_server.workspace <- function(x, id, ...) {
         el <- get_workspace_stack(stack_id, workspace = x)
 
         stack_ui <- div(
-          class = "col stack-col",
+          class = "flex-grow-1 stack-col m-1",
           generate_ui(el, session$ns(stack_id))
         )
 
         insertUI(
-          selector = if (length(vals$stacks) == 0) {
-            ".workspace"
-          } else {
-            ".stacks"
-          },
-          ui = if (length(vals$stacks) == 0) {
-            div(
-              class = "row stacks",
-              stack_ui
-            )
-          } else {
-            stack_ui
-          }
+          selector = ".stacks",
+          ui = stack_ui
         )
 
         # Invoke server
