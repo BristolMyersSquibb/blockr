@@ -257,7 +257,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       init(x, vals, session)
 
-      # For advanced usage. Add new block when not using 
+      # For advanced usage. Add new block when not using
       # the stack UI/add button from blockr.
       observeEvent(
         {
