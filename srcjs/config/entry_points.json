@@ -1,4 +1,4 @@
 {
   "index": "./srcjs/index.js",
-  "lock": "./srcjs/lock.js"
+  "workspace": "./srcjs/workspace/index.js"
 }

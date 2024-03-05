@@ -243,20 +243,17 @@ add_block_ui <- function(ns = identity) {
 
   log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
 
-  div(
-    class = "d-flex justify-content-center",
-    tags$button(
-      type = "button",
-      "Add a new block",
-      class = "btn btn-primary",
-      class = "my-2",
+  tagList(
+    tags$a(
+      icon("plus"),
+      class = "stack-add-block text-decoration-none",
       `data-bs-toggle` = "offcanvas",
       `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
       `aria-controls` = ns("addBlockCanvas")
     ),
     off_canvas(
       id = ns("addBlockCanvas"),
-      title = "My blocks",
+      title = "Blocks",
       position = "bottom",
       radioButtons(
         ns("selected_block"),
@@ -291,7 +288,12 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         class = "card-body p-1",
         id = sprintf("%s-body", id),
         lapply(seq_along(x), \(i) {
-          inject_remove_button(x[[i]], ns, .hidden = i != length(x))
+          hidden <- i != length(x)
+
+          if (getOption("BLOCKR_DEV", FALSE))
+            hidden <- FALSE
+
+          inject_remove_button(x[[i]], ns, .hidden = hidden)
         })
       )
     ),
@@ -338,20 +340,7 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
 #' @export
 #' @rdname generate_ui
 inject_remove_button.stack <- function(x, id, ...) {
-
-  ui <- generate_ui(x, id)
-  ns <- NS(id)
-
-  rm_btn <- remove_button(x, ns("remove-stack"))
-
-  tmp <- htmltools::tagQuery(ui)$find(".stack-tools")$prepend(rm_btn)$allTags()
-
-  tmp[[1]] <- tagAppendChildren(
-    tmp[[1]],
-    add_block_ui(ns)
-  )
-
-  div(class = "col m-1", tmp)
+  stop("Not implemented")
 }
 
 #' @rdname generate_ui
@@ -396,6 +385,14 @@ stack_header.stack <- function(x, title, ns, ...) {
         div(
           class = "stack-tools",
           actionLink(
+            ns("remove"),
+            class = "text-decoration-none stack-remove",
+            `data-bs-toggle` = "tooltip",
+            `data-bs-title` = "Remove stack",
+            icon("trash")
+          ),
+          add_block_ui(ns),
+          actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
             `data-bs-toggle` = "tooltip",
@@ -415,28 +412,27 @@ stack_header.stack <- function(x, title, ns, ...) {
 #' @rdname generate_ui
 #' @export
 generate_ui.workspace <- function(x, id, ...) {
-
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
 
   stacks <- get_workspace_stacks(workspace = x)
 
-  if (length(stacks) > 0) {
-
+  stack_ui <- NULL
+  if (length(stacks) > 0)
     stack_ui <- div(
-      class = "row stacks",
+      class = "d-flex stacks flex-wrap",
       lapply(seq_along(stacks), \(i) {
-        inject_remove_button(stacks[[i]], ns(names(stacks)[i]))
+        div(
+          class = "flex-grow-1 stack-col m-1",
+          id = sprintf("%sStackCol", names(stacks)[i]),
+          generate_ui(stacks[[i]], ns(names(stacks)[i]))
+        )
       })
     )
 
-  } else {
-
-    stack_ui <- NULL
-  }
-
   tagList(
+    workspaceDeps(),
     div(
       class = "d-flex justify-content-center",
       actionButton(

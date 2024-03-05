@@ -21,6 +21,17 @@ highlightDeps <- function() {
   )
 }
 
+#' @importFrom htmltools htmlDependency
+workspaceDeps <- function() {
+  htmlDependency(
+    "blockr-workspace",
+    version = utils::packageVersion("blockr"),
+    src = "assets",
+    package = "blockr",
+    script = "workspace.js"
+  )
+}
+
 #' Use Blockr
 #' Imports blockr dependencies
 #' @export
