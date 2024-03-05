@@ -39,7 +39,7 @@ test_that("stacks", {
 test_that("serve stacks", {
   skip_on_cran()
   driver <- shinytest2::AppDriver$new(
-    system.file("examples/add-blocks", package = "blockr"),
+    system.file("examples/stack", package = "blockr"),
     name = "app-starts"
   )
   socket_state <- driver$get_js("Shiny.shinyapp.$socket.readyState")
