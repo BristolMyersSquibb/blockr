@@ -118,45 +118,45 @@ internal <strong>blocks</strong> with
 function as it is not exported anyway. This makes the
 <strong>registry</strong> environment ready to be queried by
 <code><a href="../reference/available_blocks.html">available_blocks()</a></code>. A truncated output example below:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>dataset_block</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(...) {</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">initialize_block</span>(<span class="fu">new_data_block</span>(...))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>environment<span class="sc">:</span> namespace<span class="sc">:</span>blockr<span class="sc">&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"name"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data block"</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"description"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"choose a dataset"</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"classes"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"dataset_block"</span> <span class="st">"data_block"</span>   </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"input"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="cn">NA</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"output"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data.frame"</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"package"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"blockr"</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"class"</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"block_descr"</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>select_block</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(data, ...) {</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">initialize_block</span>(<span class="fu">new_select_block</span>(data, ...), data)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>environment<span class="sc">:</span> namespace<span class="sc">:</span>blockr<span class="sc">&gt;</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"name"</span>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"select block"</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"description"</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"select columns in a table"</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"classes"</span>)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"select_block"</span>    <span class="st">"transform_block"</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"input"</span>)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data.frame"</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"output"</span>)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data.frame"</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"package"</span>)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"blockr"</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"class"</span>)</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"block_descr"</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">$</span>dataset_block</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">function</span>(...) {</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">initialize_block</span>(<span class="fu">new_data_block</span>(...))</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="sc">&lt;</span>environment<span class="sc">:</span> namespace<span class="sc">:</span>blockr<span class="sc">&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"name"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data block"</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"description"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"choose a dataset"</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"classes"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"dataset_block"</span> <span class="st">"data_block"</span>   </span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"input"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>[<span class="dv">1</span>] <span class="cn">NA</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"output"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data.frame"</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"package"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"blockr"</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"class"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"block_descr"</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="sc">$</span>select_block</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="cf">function</span>(data, ...) {</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  <span class="fu">initialize_block</span>(<span class="fu">new_select_block</span>(data, ...), data)</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>}</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="sc">&lt;</span>environment<span class="sc">:</span> namespace<span class="sc">:</span>blockr<span class="sc">&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"name"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"select block"</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"description"</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"select columns in a table"</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"classes"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"select_block"</span>    <span class="st">"transform_block"</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"input"</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data.frame"</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"output"</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"data.frame"</span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"package"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"blockr"</span></span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"class"</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"block_descr"</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="../reference/available_blocks.html">available_blocks</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "arrange_block"      "csv_block"          "dataset_block"     </span></span>

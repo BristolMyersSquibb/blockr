@@ -108,18 +108,18 @@ Then, we add <strong>geoms</strong>, like <code><a href="https://ggplot2.tidyver
 Geoms also accept custom <strong>mappings</strong> (overwrite mappings
 passed to the first <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code> call), data, as well as other
 parameters. As a result, there are many ways to build a ggplot:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>, <span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>) <span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>) <span class="sc">+</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>) <span class="sc">+</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>, <span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>) <span class="sc">+</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>, <span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># 1</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>, <span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>) <span class="sc">+</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># 2</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>) <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co"># 3</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>, <span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">&lt;</span>DATA<span class="sc">&gt;</span>, <span class="at">mapping =</span> <span class="sc">&lt;</span>MAPPING<span class="sc">&gt;</span>)</span></code></pre></div>
 <p>In this tutorial, we go for the first option.</p>
 </div>
 <div class="section level3">
@@ -177,7 +177,7 @@ these block layer must have the <code>plot_layer_block</code> class:</p>
 replaced <code>%&gt;%</code> by <code>+</code>. Nothing more! As a side
 note, if you had to develop your own method in a test script, you could
 register it and test it with:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.S3method</span>(<span class="st">"&lt;GENERIC&gt;"</span>, <span class="st">"&lt;CLASS&gt;"</span>, <span class="sc">&lt;</span>METHOD<span class="sc">&gt;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">.S3method</span>(<span class="st">"&lt;GENERIC&gt;"</span>, <span class="st">"&lt;CLASS&gt;"</span>, <span class="sc">&lt;</span>METHOD<span class="sc">&gt;</span>)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="generate-a-valid-stack-code">Generate a valid stack code<a class="anchor" aria-label="anchor" href="#generate-a-valid-stack-code"></a>
@@ -492,7 +492,7 @@ Below is a possible implementation of an interactive
 <span>    <span class="co"># to get the initial data</span></span>
 <span>    <span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">carname</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://davidgohel.github.io/ggiraph/reference/geom_point_interactive.html" class="external-link">geom_point_interactive</a></span><span class="op">(</span></span>
+<span>      <span class="fu">geom_point_interactive</span><span class="op">(</span></span>
 <span>        <span class="co"># Pass in new data</span></span>
 <span>        data <span class="op">=</span> <span class="va">new_data</span>,</span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -545,7 +545,7 @@ Below is a possible implementation of an interactive
 <span>      pointsize <span class="op">=</span> <span class="fu"><a href="../reference/new_field.html">new_numeric_field</a></span><span class="op">(</span><span class="fl">12</span>, min <span class="op">=</span> <span class="fl">1</span>, max <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://davidgohel.github.io/ggiraph/reference/girafe.html" class="external-link">girafe</a></span><span class="op">(</span>ggobj <span class="op">=</span> <span class="va">data</span>, pointsize <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">pointsize</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="fu">girafe</span><span class="op">(</span>ggobj <span class="op">=</span> <span class="va">data</span>, pointsize <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">pointsize</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggiraph_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
