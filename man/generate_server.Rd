@@ -10,7 +10,6 @@
 \alias{generate_server.stack}
 \alias{handle_remove}
 \alias{handle_remove.block}
-\alias{handle_remove.stack}
 \alias{generate_server.workspace}
 \alias{init}
 \alias{init.workspace}
@@ -41,15 +40,6 @@ handle_remove(x, ...)
 
 \method{handle_remove}{block}(x, vals, session = getDefaultReactiveDomain(), ...)
 
-\method{handle_remove}{stack}(
-  x,
-  vals,
-  id,
-  session = getDefaultReactiveDomain(),
-  workspace = get_workspace(),
-  ...
-)
-
 \method{generate_server}{workspace}(x, id, ...)
 
 init(x, ...)
@@ -69,7 +59,7 @@ init(x, ...)
 
 \item{new_block}{For dynamically inserted blocks.}
 
-\item{workspace}{The workspace}
+\item{workspace}{Stack workspace}
 
 \item{vals}{Internal reactive values.}
 
@@ -81,8 +71,6 @@ Generic for server generation
 Generic for stack/block removal
 
 Necessary to be able to remove the block from the stack.
-
-Necessary to be able to remove the stack from the workspace.
 
 Handle initialisation of workspace, stacks, ...
 }
