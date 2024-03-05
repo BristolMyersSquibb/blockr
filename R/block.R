@@ -185,6 +185,16 @@ evaluate_block.plot_layer_block <- function(x, data, ...) {
   )
 }
 
+evaluate_block_safe <- function(x, ...) {
+  tryCatch(
+    evaluate_block(x, ...),
+    error = function(e) {
+      write_log("Error in block: ", x$name, level = "error")
+      e
+    }
+  )
+}
+
 #' @rdname new_block
 #' @param dat Multiple datasets.
 #' @param selected Selected dataset.

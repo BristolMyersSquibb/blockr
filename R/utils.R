@@ -287,13 +287,9 @@ secure <- function(expr) {
 #'
 #' @keywords internal
 validate_inputs <- function(blk, is_valid, session) {
+  # silent dependence, should we replace with session$input?
   input <- get("input", parent.frame())
   ns <- session$ns
-
-  # Reset
-  is_valid$block <- TRUE
-  is_valid$inputs <- list()
-  is_valid$message <- NULL
 
   inputs_to_validate <- unlst(input_ids(blk))
   to_exclude <- which(inputs_to_validate %in% c("expression", "submit"))
@@ -302,24 +298,16 @@ validate_inputs <- function(blk, is_valid, session) {
   }
 
   lapply(inputs_to_validate, function(el) {
-    is_valid$input[[el]] <- TRUE
     val <- input[[el]]
+    valid <- TRUE
     if (length(val) == 0 || (length(val) > 0 && (all(nchar(val) == 0) || any(is.na(val))))) {
-      is_valid$message <- c(
-        is_valid$message,
-        sprintf("Error: input '%s' is not valid.", el)
-      )
-      is_valid$input[[el]] <- FALSE
-      is_valid$block <- FALSE
+      valid <- FALSE
     }
 
-    # Input border is red (danger) if invalid
-    session$sendCustomMessage(
-      "validate-input",
-      list(
-        state = is_valid$input[[el]],
-        id = ns(el)
-      )
+    is_valid$push(
+      message = sprintf("Error: input '%s' is not valid.", el),
+      el = el,
+      valid = valid
     )
   })
 }

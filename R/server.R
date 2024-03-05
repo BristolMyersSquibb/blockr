@@ -60,13 +60,10 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       ns <- session$ns
       blk <- reactiveVal(x)
       obs <- list()
+
       # block and inputs are booleans. message is a character vector.
-      is_valid <- reactiveValues(
-        block = TRUE,
-        input = list(),
-        message = NULL,
-        error = NULL
-      )
+      is_valid <- ErrorStack$new()
+      error_check <- reactiveVal(FALSE)
 
       ns <- session$ns
 
@@ -127,16 +124,16 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       if (display != "plot") {
         obs$validate_inputs <- observeEvent(r_values(), {
           log_debug("Validating block ", class(x)[[1]])
-          blk_no_srv <- blk()
-          blk_no_srv[is_srv] <- NULL    # to keep class etc
-          validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
-
           # Block will have a red border if any nested input is invalid
           # since blocks can be collapsed and people won't see the input
           # elements.
-          validate_block(blk(), is_valid, session)
+          error_check(!error_check())
         })
       }
+
+      observeEvent(error_check(), {
+        is_valid$handle_errors(blk(), session)
+      })
 
       # For submit blocks like filter, summarise,
       # join that can have computationally intense tasks
@@ -144,20 +141,20 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # the action button before doing anything.
       out_dat <- if ("submit_block" %in% class(x)) {
         eventReactive(input$submit, {
-          req(is_valid$block)
+          req(is_valid$valid)
           if (is.null(in_dat())) {
-            evaluate_block(blk())
+            evaluate_block_safe(blk())
           } else {
-            evaluate_block(blk(), data = in_dat())
+            evaluate_block_safe(blk(), data = in_dat())
           }
         })
       } else {
         reactive({
-          req(is_valid$block)
+          req(is_valid$valid)
           if (is.null(in_dat()) && !inherits(x, "transform_block")) {
-            evaluate_block(blk())
+            evaluate_block_safe(blk())
           } else {
-            evaluate_block(blk(), data = in_dat())
+            evaluate_block_safe(blk(), data = in_dat())
           }
         })
       }

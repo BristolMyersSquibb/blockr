@@ -1,52 +1,33 @@
 devtools::load_all()
 
-corrplot_block <- function(data, ...) {
-  fields <- list(
-    method = new_select_field("circle", choices= c("circle", "square", "ellipse", "number", "shade", "color", "pie")),
-    type = new_select_field("full", choices= c("full", "lower", "upper")),
-    order = new_select_field("original",choices= c("original", "AOE", "FPC", "hclust", "alphabet")),
-    title = new_string_field()
-  )
-  new_block(
-    fields = fields,
-    expr = quote({
-      corr_matrix <- data |>
-        dplyr::select_if(is.numeric) |>
-        purrr::discard(~ all(is.na(.))) |>  # removed those column which have all NA Values
-        na.omit() |>  # removed the rows containing na values
-        stats::cor()
+stack <- new_stack(data_block)
+id <- "mystack"
 
-      corrplot::corrplot(corr_matrix, method = .(method), type = .(type),
-                         order = .(order), addrect = 2, tl.col = "black", tl.srt = 45,
-                         diag = FALSE,
-                         title = .(title)
-      ) #
-    }),
-    ...,
-    class = c("corrplot_block", "plot_block")
-  )
-}
-
-stack <- new_stack(
-  data_block
-)
-
-library(shiny)
-
-ui <- fluidPage(
-  theme = bslib::bs_theme(version = 5),
-  actionButton("add", "Add"),
-  generate_ui(stack)
-)
-
-server <- function(input, output, session) {
-  nb <- eventReactive(input$add, {
-     list(
-      block = corrplot_block,
-      position = NULL
+shiny::shinyApp(
+  ui = bslib::page_fluid(
+    add_block_ui(),
+    generate_ui(stack, id)
+  ),
+  server = function(input, output, session) {
+    vals <- reactiveValues(new_block = NULL)
+    stack <- generate_server(
+      stack,
+      id,
+      new_block = reactive(vals$new_block)
     )
-  })
-  generate_server(stack, new_block = nb)
-}
 
-shinyApp(ui, server)
+    observeEvent(input$add, {
+      vals$new_block <- NULL
+      # Always append to stack
+      loc <- length(stack$blocks)
+      block <- available_blocks()[[input$selected_block]]
+      # add_block expect the current stack, the block to add and its position
+      # (NULL is fine for the position, in that case the block will
+      # go at the end)
+      vals$new_block <- list(
+        block = block,
+        position = loc
+      )
+    })
+  }
+)
