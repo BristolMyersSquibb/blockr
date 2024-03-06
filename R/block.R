@@ -190,10 +190,10 @@ evaluate_block.plot_layer_block <- function(x, data, ...) {
 #' @param selected Selected dataset.
 #' @export
 new_data_block <- function(
-    ...,
-    dat = as.environment("package:datasets"),
-    selected = character(),
-    field_dataset = "Dataset"
+  ...,
+  dat = as.environment("package:datasets"),
+  selected = character(),
+  field_dataset = "Dataset"
 ) {
   is_dataset_eligible <- function(x) {
     inherits(
