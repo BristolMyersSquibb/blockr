@@ -100,16 +100,21 @@ evaluate_block(x, ...)
 new_data_block(
   ...,
   dat = as.environment("package:datasets"),
-  selected = character()
+  selected = character(),
+  field_dataset = "Dataset"
 )
 
 data_block(...)
 
-new_upload_block(...)
+new_upload_block(..., field_file = "File")
 
 upload_block(...)
 
-new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
+new_filesbrowser_block(
+  volumes = c(home = path.expand("~")),
+  ...,
+  field_file = "File"
+)
 
 filesbrowser_block(...)
 
@@ -135,7 +140,7 @@ new_xpt_block(data, ...)
 
 xpt_block(data, ...)
 
-new_result_block(...)
+new_result_block(..., field_stack = "Stack")
 
 result_block(...)
 
@@ -146,37 +151,72 @@ new_filter_block(
   columns = colnames(data)[1L],
   values = character(),
   filter_fun = "==",
-  ...
+  ...,
+  field_columns = "Columns",
+  field_filter_fun = "Comparison",
+  field_values = "Value"
 )
 
 filter_block(data, ...)
 
-new_select_block(data, columns = colnames(data)[1], ...)
+new_select_block(
+  data,
+  columns = colnames(data)[1],
+  ...,
+  field_columns = "Columns"
+)
 
 new_summarize_block(
   data,
   func = c("mean", "se"),
   default_columns = character(),
-  ...
+  ...,
+  field_columns = "Columns",
+  field_funcs = "Functions"
 )
 
 summarize_block(data, ...)
 
 select_block(data, ...)
 
-new_arrange_block(data, columns = colnames(data)[1], ...)
+new_arrange_block(
+  data,
+  columns = colnames(data)[1],
+  ...,
+  field_columns = "Columns"
+)
 
 arrange_block(data, ...)
 
-new_group_by_block(data, columns = colnames(data)[1], ...)
+new_group_by_block(
+  data,
+  columns = colnames(data)[1],
+  ...,
+  field_columns = "Columns"
+)
 
 group_by_block(data, ...)
 
-new_join_block(data, y = NULL, type = character(), by = character(), ...)
+new_join_block(
+  data,
+  y = NULL,
+  type = character(),
+  by = character(),
+  ...,
+  field_join_func = "Type",
+  field_y = "Stack",
+  field_by = "By"
+)
 
 join_block(data, ...)
 
-new_head_block(data, n_rows = numeric(), n_rows_min = 1L, ...)
+new_head_block(
+  data,
+  n_rows = numeric(),
+  n_rows_min = 1L,
+  ...,
+  field_n_rows = "Number of rows"
+)
 
 head_block(data, ...)
 

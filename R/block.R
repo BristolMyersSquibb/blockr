@@ -737,10 +737,7 @@ new_group_by_block <- function(data, columns = colnames(data)[1], ..., field_col
 #' @export
 group_by_block <- function(
   data,
-  ...,
-  field_join_func = "Type",
-  field_y = "Stack",
-  field_by = "By"
+  ...
 ) {
   initialize_block(new_group_by_block(data, ...), data)
 }
@@ -751,8 +748,16 @@ group_by_block <- function(
 #'
 #' @rdname new_block
 #' @export
-new_join_block <- function(data, y = NULL, type = character(),
-                           by = character(), ...) {
+new_join_block <- function(
+  data,
+  y = NULL,
+  type = character(),
+  by = character(),
+  ...,
+  field_join_func = "Type",
+  field_y = "Stack",
+  field_by = "By"
+) {
 
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
