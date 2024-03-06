@@ -190,11 +190,9 @@ evaluate_block.plot_layer_block <- function(x, data, ...) {
 #' @param selected Selected dataset.
 #' @export
 new_data_block <- function(
-  ...,
-  dat = as.environment("package:datasets"),
-  selected = character(),
-  field_dataset = "Dataset"
-) {
+    ...,
+    dat = as.environment("package:datasets"),
+    selected = character()) {
   is_dataset_eligible <- function(x) {
     inherits(
       get(x, envir = dat, inherits = FALSE),
@@ -211,7 +209,7 @@ new_data_block <- function(
     dataset = new_select_field(
       selected,
       datasets,
-      title = field_dataset
+      title = "Dataset"
     )
   )
 
@@ -236,7 +234,7 @@ data_block <- function(...) {
 
 #' @rdname new_block
 #' @export
-new_upload_block <- function(..., field_file = "File") {
+new_upload_block <- function(...) {
 
   data_path <- function(file) {
     if (length(file)) file$datapath else character()
@@ -244,7 +242,7 @@ new_upload_block <- function(..., field_file = "File") {
 
   new_block(
     fields = list(
-      file = new_upload_field(title = field_file),
+      file = new_upload_field(title = "File"),
       expression = new_hidden_field(data_path)
     ),
     expr = quote(c(.(expression))),
@@ -262,7 +260,7 @@ upload_block <- function(...) {
 #' @rdname new_block
 #' @param volumes Paths accessible by the shinyFiles browser.
 #' @export
-new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ..., field_file = "File") {
+new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 
   data_path <- function(file) {
 
@@ -277,7 +275,7 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ..., fi
 
   new_block(
     fields = list(
-      file = new_filesbrowser_field(volumes = volumes, title = field_file),
+      file = new_filesbrowser_field(volumes = volumes, title = "File"),
       expression = new_hidden_field(data_path)
     ),
     expr = quote(c(.(expression))),
@@ -380,10 +378,10 @@ xpt_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
-new_result_block <- function(..., field_stack = "Stack") {
+new_result_block <- function(...) {
 
   fields <- list(
-    stack = new_result_field(title = field_stack)
+    stack = new_result_field(title = "Stack")
   )
 
   new_block(
@@ -420,15 +418,11 @@ initialize_block.data_block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 new_filter_block <- function(
-  data,
-  columns = colnames(data)[1L],
-  values = character(),
-  filter_fun = "==",
-  ...,
-  field_columns = "Columns",
-  field_filter_fun = "Comparison",
-  field_values = "Value"
-) {
+    data,
+    columns = colnames(data)[1L],
+    values = character(),
+    filter_fun = "==",
+    ...) {
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
@@ -485,7 +479,7 @@ new_filter_block <- function(
   col_choices <- function(data) colnames(data)
 
   fields <- list(
-    columns = new_select_field(columns, col_choices, multiple = TRUE, title = field_columns),
+    columns = new_select_field(columns, col_choices, multiple = TRUE, title = "Columns"),
     filter_func = new_select_field(
       filter_fun,
       choices = c(
@@ -499,9 +493,9 @@ new_filter_block <- function(
         ">=",
         "<="
       ),
-      title = field_filter_fun
+      title = "Comparison"
     ),
-    values = new_list_field(values, sub_fields, title = field_values),
+    values = new_list_field(values, sub_fields, title = "Value"),
     expression = new_hidden_field(filter_exps)
   )
 
@@ -527,12 +521,12 @@ filter_block <- function(data, ...) {
 #' @param columns Column(s) to select.
 #' @rdname new_block
 #' @export
-new_select_block <- function(data, columns = colnames(data)[1], ..., field_columns = "Columns") {
+new_select_block <- function(data, columns = colnames(data)[1], ...) {
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, title = field_columns)
+    columns = new_select_field(columns, all_cols, multiple = TRUE, title = "Columns")
   )
 
   new_block(
@@ -554,13 +548,10 @@ new_select_block <- function(data, columns = colnames(data)[1], ..., field_colum
 #' @rdname new_block
 #' @export
 new_summarize_block <- function(
-  data,
-  func = c("mean", "se"),
-  default_columns = character(),
-  ...,
-  field_columns = "Columns",
-  field_funcs = "Functions"
-) {
+    data,
+    func = c("mean", "se"),
+    default_columns = character(),
+    ...) {
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -649,8 +640,8 @@ new_summarize_block <- function(
   )
 
   fields <- list(
-    funcs = new_select_field(func, func_choices, multiple = TRUE, title = field_funcs),
-    columns = new_list_field(sub_fields = sub_fields, title = field_columns),
+    funcs = new_select_field(func, func_choices, multiple = TRUE, title = "Functions"),
+    columns = new_list_field(sub_fields = sub_fields, title = "Columns"),
     expression = new_hidden_field(summarize_expr)
   )
 
@@ -679,18 +670,12 @@ select_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
-new_arrange_block <- function(data, columns = colnames(data)[1], ..., field_columns = "Columns") {
+new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
   all_cols <- function(data) colnames(data)
 
   # Type as name for arrange and group_by
   fields <- list(
-    columns = new_select_field(
-      columns,
-      all_cols,
-      multiple = TRUE,
-      type = "name",
-      title = field_columns
-    )
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
   )
 
   new_block(
@@ -709,18 +694,12 @@ arrange_block <- function(data, ...) {
 
 #' @rdname new_block
 #' @export
-new_group_by_block <- function(data, columns = colnames(data)[1], ..., field_columns = "Columns") {
+new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(
-      columns,
-      all_cols,
-      multiple = TRUE,
-      type = "name",
-      title = field_columns
-    )
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
   )
 
   new_block(
@@ -735,10 +714,7 @@ new_group_by_block <- function(data, columns = colnames(data)[1], ..., field_col
 
 #' @rdname new_block
 #' @export
-group_by_block <- function(
-  data,
-  ...
-) {
+group_by_block <- function(data, ...) {
   initialize_block(new_group_by_block(data, ...), data)
 }
 
@@ -748,16 +724,8 @@ group_by_block <- function(
 #'
 #' @rdname new_block
 #' @export
-new_join_block <- function(
-  data,
-  y = NULL,
-  type = character(),
-  by = character(),
-  ...,
-  field_join_func = "Type",
-  field_y = "Stack",
-  field_by = "By"
-) {
+new_join_block <- function(data, y = NULL, type = character(),
+                           by = character(), ...) {
 
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
@@ -780,10 +748,10 @@ new_join_block <- function(
       paste(type, "join", sep = "_"),
       paste(join_types, "join", sep = "_"),
       type = "name",
-      title = field_join_func
+      title = "Type"
     ),
-    y = new_result_field(y, title = field_y),
-    by = new_select_field(by, by_choices, multiple = TRUE, title = field_by)
+    y = new_result_field(y, title = "Stack"),
+    by = new_select_field(by, by_choices, multiple = TRUE, title = "By")
   )
 
   new_block(
@@ -805,12 +773,10 @@ join_block <- function(data, ...) {
 #' @param n_rows_min Minimum number of rows.
 #' @export
 new_head_block <- function(
-  data,
-  n_rows = numeric(),
-  n_rows_min = 1L,
-  ...,
-  field_n_rows = "Number of rows"
-) {
+    data,
+    n_rows = numeric(),
+    n_rows_min = 1L,
+    ...) {
   tmp_expr <- function(n_rows) {
     bquote(
       head(n = .(n_rows)),
@@ -819,7 +785,7 @@ new_head_block <- function(
   }
 
   fields <- list(
-    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data), title = field_n_rows),
+    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data), title = "Number of rows"),
     expression = new_hidden_field(tmp_expr)
   )
 
