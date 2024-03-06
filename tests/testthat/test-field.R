@@ -93,3 +93,11 @@ test_that("filesbrowser field", {
   expect_type(field, "list")
   expect_identical(value(field), character(0))
 })
+
+test_that("field name", {
+  blk <- data_block()
+  expect_equal(get_field_names(blk), "Dataset")
+
+  expect_equal(get_field_name(new_switch_field(), "xxx"), "xxx")
+  expect_equal(get_field_name(new_switch_field(title = "xxx"), ""), "xxx")
+})

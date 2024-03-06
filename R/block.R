@@ -206,7 +206,11 @@ new_data_block <- function(
   if (length(selected) == 0) selected <- datasets[1]
 
   fields <- list(
-    dataset = new_select_field(selected, datasets)
+    dataset = new_select_field(
+      selected,
+      datasets,
+      title = "Dataset"
+    )
   )
 
   expr <- substitute(
@@ -238,7 +242,7 @@ new_upload_block <- function(...) {
 
   new_block(
     fields = list(
-      file = new_upload_field(),
+      file = new_upload_field(title = "File"),
       expression = new_hidden_field(data_path)
     ),
     expr = quote(c(.(expression))),
@@ -271,7 +275,7 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 
   new_block(
     fields = list(
-      file = new_filesbrowser_field(volumes = volumes),
+      file = new_filesbrowser_field(volumes = volumes, title = "File"),
       expression = new_hidden_field(data_path)
     ),
     expr = quote(c(.(expression))),
@@ -377,7 +381,7 @@ xpt_block <- function(data, ...) {
 new_result_block <- function(...) {
 
   fields <- list(
-    stack = new_result_field()
+    stack = new_result_field(title = "Stack")
   )
 
   new_block(
@@ -475,8 +479,7 @@ new_filter_block <- function(
   col_choices <- function(data) colnames(data)
 
   fields <- list(
-    columns = new_select_field(columns, col_choices, multiple = TRUE),
-    values = new_list_field(values, sub_fields),
+    columns = new_select_field(columns, col_choices, multiple = TRUE, title = "Columns"),
     filter_func = new_select_field(
       filter_fun,
       choices = c(
@@ -489,8 +492,10 @@ new_filter_block <- function(
         "<",
         ">=",
         "<="
-      )
+      ),
+      title = "Comparison"
     ),
+    values = new_list_field(values, sub_fields, title = "Value"),
     expression = new_hidden_field(filter_exps)
   )
 
@@ -521,7 +526,7 @@ new_select_block <- function(data, columns = colnames(data)[1], ...) {
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE)
+    columns = new_select_field(columns, all_cols, multiple = TRUE, title = "Columns")
   )
 
   new_block(
@@ -635,8 +640,8 @@ new_summarize_block <- function(
   )
 
   fields <- list(
-    funcs = new_select_field(func, func_choices, multiple = TRUE),
-    columns = new_list_field(sub_fields = sub_fields),
+    funcs = new_select_field(func, func_choices, multiple = TRUE, title = "Functions"),
+    columns = new_list_field(sub_fields = sub_fields, title = "Columns"),
     expression = new_hidden_field(summarize_expr)
   )
 
@@ -670,7 +675,7 @@ new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
 
   # Type as name for arrange and group_by
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
   )
 
   new_block(
@@ -694,7 +699,7 @@ new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name")
+    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
   )
 
   new_block(
@@ -742,10 +747,11 @@ new_join_block <- function(data, y = NULL, type = character(),
     join_func = new_select_field(
       paste(type, "join", sep = "_"),
       paste(join_types, "join", sep = "_"),
-      type = "name"
+      type = "name",
+      title = "Type"
     ),
-    y = new_result_field(y),
-    by = new_select_field(by, by_choices, multiple = TRUE)
+    y = new_result_field(y, title = "Stack"),
+    by = new_select_field(by, by_choices, multiple = TRUE, title = "By")
   )
 
   new_block(
@@ -779,7 +785,7 @@ new_head_block <- function(
   }
 
   fields <- list(
-    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data)),
+    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data), title = "Number of rows"),
     expression = new_hidden_field(tmp_expr)
   )
 
