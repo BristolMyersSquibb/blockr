@@ -7,7 +7,7 @@
 #' @param dat Multiple datasets.
 #' @param selected Selected dataset.
 #' @export
-#' @rdname data-block
+#' @rdname data_block
 new_data_block <- function(
     ...,
     dat = as.environment("package:datasets"),
@@ -41,7 +41,7 @@ new_data_block <- function(
   )
 }
 
-#' @rdname data-block
+#' @rdname data_block
 #' @export
 data_block <- function(...) {
   initialize_block(new_data_block(...))
@@ -54,7 +54,7 @@ data_block <- function(...) {
 #'
 #' @inheritParams new_block
 #' @export
-#' @rdname upload-block
+#' @rdname upload_block
 new_upload_block <- function(...) {
   data_path <- function(file) {
     if (length(file)) file$datapath else character()
@@ -71,7 +71,7 @@ new_upload_block <- function(...) {
   )
 }
 
-#' @rdname upload-block
+#' @rdname upload_block
 #' @export
 upload_block <- function(...) {
   initialize_block(new_upload_block(...))
@@ -411,13 +411,19 @@ select_block <- function(data, ...) {
   initialize_block(new_select_block(data, ...), data)
 }
 
-#' @param data Tabular data in which to perform summarise.
+#' Summarize block
+#'
+#' This block provides access to \link[dplyr]{summarize} verb and
+#' returns a dataframe with the transformed columns.
+#'
+#' @inheritParams new_block
+#' @inheritParams select_block
 #' @param func Summarize function to apply.
 #' @param default_columns If you know in advance each function to apply,
 #' you can also pass predefined selected column for each summary.
 #' Therefore when not of length 0, columns should have the same length
 #' as func.
-#' @rdname new_block
+#' @rdname summarize_block
 #' @export
 new_summarize_block <- function(
     data,
@@ -528,13 +534,20 @@ new_summarize_block <- function(
   )
 }
 
-#' @rdname new_block
+#' @rdname summarize_block
 #' @export
 summarize_block <- function(data, ...) {
   initialize_block(new_summarize_block(data, ...), data)
 }
 
-#' @rdname new_block
+#' Arrange block
+#'
+#' This block provides access to \link[dplyr]{arrange} verb and
+#' returns a dataframe.
+#'
+#' @inheritParams new_block
+#' @inheritParams select_block
+#' @rdname arrange_block
 #' @export
 new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
   all_cols <- function(data) colnames(data)
@@ -552,13 +565,20 @@ new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
   )
 }
 
-#' @rdname new_block
+#' @rdname arrange_block
 #' @export
 arrange_block <- function(data, ...) {
   initialize_block(new_arrange_block(data, ...), data)
 }
 
-#' @rdname new_block
+#' Group by block
+#'
+#' This block provides access to \link[dplyr]{group_by} verb and
+#' returns a dataframe.
+#'
+#' @inheritParams new_block
+#' @inheritParams select_block
+#' @rdname group_by_block
 #' @export
 new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
   all_cols <- function(data) colnames(data)
@@ -578,17 +598,24 @@ new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
   )
 }
 
-#' @rdname new_block
+#' @rdname group_by_block
 #' @export
 group_by_block <- function(data, ...) {
   initialize_block(new_group_by_block(data, ...), data)
 }
 
-#' @param y Second dataset for join
-#' @param type Join type
-#' @param by Join columns
+#' Join block
 #'
-#' @rdname new_block
+#' This block provides access to the dplyr join verbs and
+#' returns a dataframe. This blocks is made to work with multiple
+#' stack as the `y` parameter expects a dataframe from another stack.
+#'
+#' @inheritParams new_block
+#' @param y Second dataset for join.
+#' @param type Join type.
+#' @param by Join columns.
+#'
+#' @rdname join_block
 #' @export
 new_join_block <- function(data, y = NULL, type = character(),
                            by = character(), ...) {
@@ -626,13 +653,19 @@ new_join_block <- function(data, y = NULL, type = character(),
   )
 }
 
-#' @rdname new_block
+#' @rdname join_block
 #' @export
 join_block <- function(data, ...) {
   initialize_block(new_join_block(data, ...), data)
 }
 
-#' @rdname new_block
+#' Head block
+#'
+#' This allows to select the first n rows of the input dataframe.
+#'
+#' @inheritParams new_block
+#' @inheritParams select_block
+#' @rdname head_block
 #' @param n_rows Number of rows to return.
 #' @param n_rows_min Minimum number of rows.
 #' @export
@@ -661,7 +694,7 @@ new_head_block <- function(
   )
 }
 
-#' @rdname new_block
+#' @rdname head_block
 #' @export
 head_block <- function(data, ...) {
   initialize_block(new_head_block(data, ...), data)
