@@ -26,7 +26,7 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
     ui_input,
     x,
     id = chr_ply(names(x), ns),
-    name = names(x)
+    name = get_field_names(x)
   )
 
   div(
@@ -629,21 +629,21 @@ ui_update <- function(x, session, id, name) {
 #' @rdname generate_ui
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
-  updateTextInput(session, input_ids(x, id), name, value(x))
+  updateTextInput(session, input_ids(x, id), get_field_name(x, name), value(x))
 }
 
 #' @rdname generate_ui
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
   updateSelectInput(
-    session, input_ids(x, id), name, value(x, "choices"), value(x)
+    session, input_ids(x, id), get_field_name(x, name), value(x, "choices"), value(x)
   )
 }
 
 #' @rdname generate_ui
 #' @export
 ui_update.switch_field <- function(x, session, id, name) {
-  bslib::update_switch(input_ids(x, id), name, value(x), session)
+  bslib::update_switch(input_ids(x, id), get_field_name(x, name), value(x), session)
 }
 
 #' @rdname generate_ui
@@ -663,7 +663,7 @@ ui_update.variable_field <- function(x, session, id, name) {
 
   insertUI(
     selector = paste0("#", ns_id, "_cont"),
-    ui = ui_input(field, ns_id, name),
+    ui = ui_input(field, ns_id, get_field_name(x, name)),
     session = session
   )
 }
@@ -672,7 +672,7 @@ ui_update.variable_field <- function(x, session, id, name) {
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
   updateSliderInput(
-    session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
+    session, input_ids(x, id), get_field_name(x, name), value(x), value(x, "min"), value(x, "max")
   )
 }
 
@@ -680,7 +680,7 @@ ui_update.range_field <- function(x, session, id, name) {
 #' @export
 ui_update.numeric_field <- function(x, session, id, name) {
   updateNumericInput(
-    session, input_ids(x, id), name, value(x), value(x, "min"), value(x, "max")
+    session, input_ids(x, id), get_field_name(x, name), value(x), value(x, "min"), value(x, "max")
   )
 }
 
@@ -738,7 +738,7 @@ ui_update.list_field <- function(x, session, id, name) {
     ui = do.call(
       tagList,
       map(
-        ui_input, fields, input_ids(x, ns_id), paste0(name, "_", names(fields))
+        ui_input, fields, input_ids(x, ns_id), paste0(name, ": ", names(fields))
       )
     ),
     session = session
