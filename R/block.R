@@ -420,14 +420,14 @@ initialize_block.data_block <- function(x, ...) {
 #' @rdname new_block
 #' @export
 new_filter_block <- function(
-    data,
-    columns = colnames(data)[1L],
-    values = character(),
-    filter_fun = "==",
-    ...,
-    field_columns = "Columns",
-    field_filter_fun = "Comparison",
-    field_values = "Value"
+  data,
+  columns = colnames(data)[1L],
+  values = character(),
+  filter_fun = "==",
+  ...,
+  field_columns = "Columns",
+  field_filter_fun = "Comparison",
+  field_values = "Value"
 ) {
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
