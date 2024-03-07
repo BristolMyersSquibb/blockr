@@ -20,5 +20,5 @@ sass:
 	Rscript dev/sass.R
 
 dev: bundle_dev 
-	Rscript test.R
+	Rscript inst/examples/workspace/app.R
 

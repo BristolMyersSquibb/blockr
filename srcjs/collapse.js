@@ -106,8 +106,8 @@ const editor = (stack) => {
           );
           code.hide();
 
-          $block.find(".block-inputs").addClass("d-none");
-          $block.find(".block-inputs").trigger("hidden");
+          $block.find(".block-inputs").removeClass("d-none");
+          $block.find(".block-inputs").trigger("shown");
           return;
         }
 
@@ -200,6 +200,7 @@ export const collapseOtherBlocks = (stack, block) => {
 
   $(btns).each((_index, btn) => {
     if ($(btn).closest(".block").data("value") == `${block}-block`) return;
+
     const isCollapsed = $(btn).find("i").hasClass("fa-chevron-down");
     if (isCollapsed) return;
 

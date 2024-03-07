@@ -26,6 +26,7 @@ const handleLock = () => {
   $(".stack-copy-code").toggle();
   $(".block-code-toggle").toggle();
   $(".block-output-toggle").toggle();
+  $(".stack-tools").toggle();
   $(".block-remove").toggle();
 
   $(".stack-title").off();
