@@ -10,9 +10,10 @@ new_switch_field(value = FALSE, ...)
 switch_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Switch fields are translated into \link[bslib]{input_switch}

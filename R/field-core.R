@@ -203,3 +203,21 @@ update_sub_fields <- function(sub, val) {
 
   sub
 }
+
+get_field_name <- function(field, name = "") {
+  title <- attr(field, "title")
+
+  if (title == "") {
+    return(name)
+  }
+
+  title
+}
+
+get_field_names <- function(x) {
+  titles <- character(length(x))
+  for (i in seq_along(x)) {
+    titles[i] <- get_field_name(x[[i]], names(x)[i])
+  }
+  titles
+}

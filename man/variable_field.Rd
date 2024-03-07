@@ -15,13 +15,14 @@ new_variable_field(
 variable_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
 \item{field}{Field type}
 
 \item{components}{Variable list of field components}
 
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Variable field is intended to conditionally display

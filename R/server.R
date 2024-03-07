@@ -1,6 +1,6 @@
-#' Server
-#'
 #' Generic for server generation
+#'
+#' Calls shiny modules for the given element (workspace, stack, block).
 #'
 #' @param x Object for which to generate a [moduleServer()]
 #' @param ... Generic consistency
@@ -387,11 +387,10 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 #'
 #' Generic for stack/block removal
 #'
-#' @param x Element.
-#' @param ... Generic consistency.
+#' @inheritParams generate_server
 #'
 #' @export
-#' @rdname generate_server
+#' @rdname handle_remove
 handle_remove <- function(x, ...) {
   UseMethod("handle_remove")
 }
@@ -403,7 +402,7 @@ handle_remove <- function(x, ...) {
 #' @param vals Internal reactive values.
 #' @param session Shiny session object.
 #' @export
-#' @rdname generate_server
+#' @rdname handle_remove
 handle_remove.block <- function(x, vals,
                                 session = getDefaultReactiveDomain(), ...) {
   input <- session$input
@@ -529,19 +528,16 @@ generate_server.workspace <- function(x, id, ...) {
 #'
 #' Handle initialisation of workspace, stacks, ...
 #'
-#' @param x Element.
-#' @param ... Generic consistency.
+#' @inheritParams generate_server
 #'
 #' @export
-#' @rdname generate_server
+#' @rdname init
 init <- function(x, ...) {
   UseMethod("init")
 }
 
-#' Init stacks server
-#'
 #' @export
-#' @rdname generate_server
+#' @rdname init
 init.workspace <- function(x, vals, session, ...) {
   input <- session$input
   stacks <- get_workspace_stacks(workspace = x)
@@ -578,10 +574,8 @@ inject_block <- function(input, vals, id) {
   })
 }
 
-#' Init blocks server
-#'
 #' @export
-#' @rdname generate_server
+#' @rdname init
 init.stack <- function(x, vals, ...) {
   observeEvent(TRUE, {
     for (i in seq_along(x)) {
@@ -617,15 +611,22 @@ init_block <- function(i, vals) {
   )
 }
 
+#' Server output generic
+#'
+#' Generate block server output. Needed on the UI
+#' side. This is generally a table containing the
+#' processed block data.
+#'
+#' @param x Block.
 #' @param output Shiny output
 #' @param result Block result
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output <- function(x, result, output) {
   UseMethod("server_output", x)
 }
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.block <- function(x, result, output) {
   DT::renderDT(
@@ -643,37 +644,41 @@ server_output.block <- function(x, result, output) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.upload_block <- function(x, result, output) {
   shiny::renderPrint(result())
 }
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.filesbrowser_block <- server_output.upload_block
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.plot_block <- function(x, result, output) {
   shiny::renderPlot(result())
 }
 
+#' Server code generic
+#'
+#' Generate the server code output.
+#'
+#' @inheritParams server_output
 #' @param state Block state
-#' @rdname generate_ui
+#' @rdname server_code
 #' @export
 server_code <- function(x, state, output) {
   UseMethod("server_code", x)
 }
 
-#' @rdname generate_ui
+#' @rdname server_code
 #' @export
 server_code.block <- function(x, state, output) {
   shiny::renderPrint(
     cat(deparse(generate_code(state())), sep = "\n")
   )
 }
-
 
 add_block_stack <- function(
     block_to_add,

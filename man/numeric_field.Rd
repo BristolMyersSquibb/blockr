@@ -10,11 +10,14 @@ new_numeric_field(value = numeric(), min = numeric(), max = numeric(), ...)
 numeric_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
-\item{min, max}{Slider boundaries (inclusive)}
+\item{min}{Minimum allowed value}
 
-\item{...}{Further field components}
+\item{max}{Maximum allowed value}
+
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Numeric fields are translated into \link[shiny]{numericInput}

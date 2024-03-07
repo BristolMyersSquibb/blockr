@@ -498,20 +498,28 @@ generate_ui.workspace <- function(x, id, ...) {
   )
 }
 
-#' @param name Field name
-#' @rdname generate_ui
+#' UI input generic
+#'
+#' For a given field, generates the corresponding
+#' shiny input tag. All \link{ui_update} updates
+#' the corresponding input on the server side. \link{input_ids}
+#' is reponsible for finding the element id.
+#'
+#' @inheritParams generate_ui
+#' @param name Field name.
+#' @rdname ui_input
 #' @export
 ui_input <- function(x, id, name) {
   UseMethod("ui_input", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.string_field <- function(x, id, name) {
   textInput(input_ids(x, id), name, value(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.select_field <- function(x, id, name) {
   selectizeInput(
@@ -523,13 +531,13 @@ ui_input.select_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.switch_field <- function(x, id, name) {
   bslib::input_switch(input_ids(x, id), name, value(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.numeric_field <- function(x, id, name) {
   numericInput(
@@ -537,7 +545,7 @@ ui_input.numeric_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.submit_field <- function(x, id, name) {
   actionButton(
@@ -548,7 +556,7 @@ ui_input.submit_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.upload_field <- function(x, id, name) {
   fileInput(
@@ -557,7 +565,7 @@ ui_input.upload_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.filesbrowser_field <- function(x, id, name) {
   shinyFiles::shinyFilesButton(
@@ -568,7 +576,7 @@ ui_input.filesbrowser_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.result_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
@@ -585,19 +593,19 @@ ui_input.result_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 input_ids.block <- function(x, ...) {
   Map(input_ids, x, names(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 input_ids.field <- function(x, name, ...) {
   name
@@ -610,7 +618,7 @@ input_ids.list_field <- function(x, name, ...) {
   set_names(paste0(name, "_", sub_names), sub_names)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.variable_field <- function(x, id, name) {
   field <- validate_field(
@@ -623,7 +631,7 @@ ui_input.variable_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.range_field <- function(x, id, name) {
   sliderInput(
@@ -631,13 +639,13 @@ ui_input.range_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.hidden_field <- function(x, id, name) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.list_field <- function(x, id, name) {
   fields <- lapply(
@@ -657,19 +665,19 @@ ui_input.list_field <- function(x, id, name) {
 }
 
 #' @param session Shiny session
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update <- function(x, session, id, name) {
   UseMethod("ui_update", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
   updateTextInput(session, input_ids(x, id), get_field_name(x, name), value(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
   updateSelectInput(
@@ -677,13 +685,13 @@ ui_update.select_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.switch_field <- function(x, session, id, name) {
   bslib::update_switch(input_ids(x, id), get_field_name(x, name), value(x), session)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.variable_field <- function(x, session, id, name) {
   ns <- session$ns
@@ -705,7 +713,7 @@ ui_update.variable_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
   updateSliderInput(
@@ -713,7 +721,7 @@ ui_update.range_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.numeric_field <- function(x, session, id, name) {
   updateNumericInput(
@@ -721,7 +729,7 @@ ui_update.numeric_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.submit_field <- function(x, session, id, name) {
   updateActionButton(
@@ -731,13 +739,13 @@ ui_update.submit_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.upload_field <- function(x, session, id, name) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.filesbrowser_field <- function(x, session, id, name) {
   shinyFiles::shinyFileChoose(
@@ -747,13 +755,13 @@ ui_update.filesbrowser_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.hidden_field <- function(x, session, id, name) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.list_field <- function(x, session, id, name) {
   ns <- session$ns

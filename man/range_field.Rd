@@ -10,11 +10,12 @@ new_range_field(value = numeric(), min = numeric(), max = numeric(), ...)
 range_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
 \item{min, max}{Slider boundaries (inclusive)}
 
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Range fields are translated into \link[shiny]{sliderInput}.

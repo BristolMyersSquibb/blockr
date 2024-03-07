@@ -10,9 +10,10 @@ new_hidden_field(value = expression(), ...)
 hidden_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Hidden field is useful to host complex expression in

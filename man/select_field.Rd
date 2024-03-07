@@ -15,13 +15,20 @@ new_select_field(
 select_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
-\item{choices}{Set of permissible values}
+\item{choices}{List of values to select from. If elements of the list are
+named, then that name --- rather than the value --- is displayed to the
+user. It's also possible to group related inputs by providing a named list
+whose elements are (either named or unnamed) lists, vectors, or factors. In
+this case, the outermost names will be used as the group labels (leveraging
+the \verb{<optgroup>} HTML tag) for the elements in the respective sublist. See
+the example section for a small demo of this feature.}
 
-\item{multiple}{Allow multiple selections}
+\item{multiple}{Is selection of multiple items allowed?}
 
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Select fields are translated into \link[shiny]{selectInput}

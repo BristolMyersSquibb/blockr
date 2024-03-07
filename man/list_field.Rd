@@ -10,11 +10,12 @@ new_list_field(value = list(), sub_fields = list(), ...)
 list_field(...)
 }
 \arguments{
-\item{value}{Field value}
+\item{value}{Default text input value.}
 
 \item{sub_fields}{Fields contained in \code{list_field}}
 
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 A field that can contain subfields. See \link{slider_block} for

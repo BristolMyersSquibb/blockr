@@ -10,7 +10,8 @@ new_submit_field(...)
 submit_field(...)
 }
 \arguments{
-\item{...}{Further field components}
+\item{...}{Other parameters passed to \link{new_field} and may be needed
+by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Submit fields are translated into \link[shiny]{actionButton}
