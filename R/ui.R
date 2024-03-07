@@ -360,7 +360,7 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
   htmltools::tagQuery(tmp)$
     find(".block-tools")$
     prepend(remove_button(x, ns(sprintf("remove-block-%s", id))))$
-    allTags()
+    allTags() # nolint
 }
 
 #' Inject remove button into stack header
