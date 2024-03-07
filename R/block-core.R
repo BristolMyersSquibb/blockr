@@ -46,6 +46,54 @@ is_block <- function(x) {
   inherits(x, "block")
 }
 
+#' Initialize block generic
+#'
+#' Initializes all fields composing the block.
+#'
+#' @seealso See \link{initialize_field}.
+#' @rdname initialize_block
+#' @inheritParams evaluate_block
+#' @returns The block element.
+#' @export
+initialize_block <- function(x, ...) {
+  UseMethod("initialize_block")
+}
+
+#' @rdname initialize_block
+#' @export
+initialize_block.data_block <- function(x, ...) {
+  env <- list()
+
+  for (field in names(x)) {
+    x[[field]] <- initialize_field(x[[field]], env)
+    env <- c(env, set_names(list(value(x[[field]])), field))
+  }
+
+  x
+}
+
+#' @rdname initialize_block
+#' @export
+initialize_block.transform_block <- function(x, data, ...) {
+  env <- list(data = data)
+
+  for (field in names(x)) {
+    x[[field]] <- initialize_field(x[[field]], env)
+    env <- c(env, set_names(list(value(x[[field]])), field))
+  }
+
+  x
+}
+
+#' @rdname initialize_block
+#' @export
+initialize_block.default <- initialize_block.transform_block
+
+#' @rdname initialize_block
+#' @export
+initialize_block.plot_block <- initialize_block.transform_block
+
+
 #' S3 generic for initialization
 #'
 #' Checks if a block or field (currently implemented methods)
@@ -194,53 +242,6 @@ evaluate_block.plot_layer_block <- function(x, data, ...) {
     list(data = data)
   )
 }
-
-#' Initialize block generic
-#'
-#' Initializes all fields composing the block.
-#'
-#' @seealso See \link{initialize_field}.
-#' @rdname initialize_block
-#' @inheritParams evaluate_block
-#' @returns The block element.
-#' @export
-initialize_block <- function(x, ...) {
-  UseMethod("initialize_block")
-}
-
-#' @rdname initialize_block
-#' @export
-initialize_block.data_block <- function(x, ...) {
-  env <- list()
-
-  for (field in names(x)) {
-    x[[field]] <- initialize_field(x[[field]], env)
-    env <- c(env, set_names(list(value(x[[field]])), field))
-  }
-
-  x
-}
-
-#' @rdname initialize_block
-#' @export
-initialize_block.transform_block <- function(x, data, ...) {
-  env <- list(data = data)
-
-  for (field in names(x)) {
-    x[[field]] <- initialize_field(x[[field]], env)
-    env <- c(env, set_names(list(value(x[[field]])), field))
-  }
-
-  x
-}
-
-#' @rdname initialize_block
-#' @export
-initialize_block.default <- initialize_block.transform_block
-
-#' @rdname initialize_block
-#' @export
-initialize_block.plot_block <- initialize_block.transform_block
 
 #' Update fields generic
 #'
