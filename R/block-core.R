@@ -55,7 +55,7 @@ is_initialized.block <- function(x) {
 #' Generate code generic
 #'
 #' For a given block, generate the code contained
-#' in the `expr`` attribute. Needed by \link{evaluate_block}
+#' in the `expr` attribute. Needed by \link{evaluate_block}
 #' and \link{block_combiner} to generate the entire stack code.
 #'
 #' @rdname generate_code

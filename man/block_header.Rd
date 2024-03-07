@@ -14,6 +14,8 @@ block_header(x, ...)
 
 \item{...}{Generic consistency}
 
+\item{ns}{Module namespace}
+
 \item{hidden_class}{TBD.}
 }
 \description{

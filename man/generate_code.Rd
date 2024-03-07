@@ -29,6 +29,6 @@ generate_code(x)
 }
 \description{
 For a given block, generate the code contained
-in the `expr`` attribute. Needed by \link{evaluate_block}
+in the \code{expr} attribute. Needed by \link{evaluate_block}
 and \link{block_combiner} to generate the entire stack code.
 }

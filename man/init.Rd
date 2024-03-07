@@ -16,6 +16,10 @@ init(x, ...)
 \item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
 
 \item{...}{Generic consistency}
+
+\item{vals}{Internal reactive values.}
+
+\item{session}{Shiny session object.}
 }
 \description{
 Handle initialisation of workspace, stacks, ...

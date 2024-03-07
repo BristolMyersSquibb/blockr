@@ -14,6 +14,8 @@ block_body(x, ...)
 
 \item{...}{Generic consistency}
 
+\item{ns}{Module namespace}
+
 \item{inputs_hidden}{For styling purposes: CSS class to apply
 when the block is collapsed.}
 }

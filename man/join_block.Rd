@@ -10,6 +10,8 @@ new_join_block(data, y = NULL, type = character(), by = character(), ...)
 join_block(data, ...)
 }
 \arguments{
+\item{data}{Tabular data in which to select some columns.}
+
 \item{y}{Second dataset for join.}
 
 \item{type}{Join type.}

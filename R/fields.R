@@ -32,7 +32,8 @@ validate_field.string_field <- function(x) {
 #' Select fields are translated into \link[shiny]{selectInput}
 #'
 #' @inheritParams new_string_field
-#' @inheritParams shiny::selectInput
+#' @param choices Select choices
+#' @param multiple Allow multiple selection
 #' @rdname select_field
 #' @export
 new_select_field <- function(value = character(), choices = character(),
@@ -346,7 +347,7 @@ validate_field.hidden_field <- function(x) {
 
 #' List field constructor
 #'
-#' A field that can contain subfields. See \link{slider_block} for
+#' A field that can contain subfields. See \link{filter_block} for
 #' a usecase.
 #'
 #' @inheritParams new_string_field

@@ -9,6 +9,11 @@ uiCode(x, ns)
 
 \method{uiCode}{block}(x, ns)
 }
+\arguments{
+\item{x}{Object for which to generate UI components}
+
+\item{ns}{Module namespace}
+}
 \description{
 Generate ui to copy block code and output
 the code content.

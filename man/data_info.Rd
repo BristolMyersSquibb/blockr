@@ -19,6 +19,8 @@ data_info(x, ...)
 \item{x}{Object for which to generate UI components}
 
 \item{...}{Generic consistency}
+
+\item{ns}{Module namespace}
 }
 \description{
 Generic for creating the data info tags,

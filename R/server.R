@@ -529,6 +529,7 @@ generate_server.workspace <- function(x, id, ...) {
 #' Handle initialisation of workspace, stacks, ...
 #'
 #' @inheritParams generate_server
+#' @inheritParams handle_remove
 #'
 #' @export
 #' @rdname init

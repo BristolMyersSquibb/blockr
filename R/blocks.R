@@ -616,6 +616,7 @@ group_by_block <- function(data, ...) {
 #' stack as the `y` parameter expects a dataframe from another stack.
 #'
 #' @inheritParams new_block
+#' @inheritParams select_block
 #' @param y Second dataset for join.
 #' @param type Join type.
 #' @param by Join columns.

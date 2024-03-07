@@ -18,6 +18,6 @@ list_field(...)
 by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
-A field that can contain subfields. See \link{slider_block} for
+A field that can contain subfields. See \link{filter_block} for
 a usecase.
 }

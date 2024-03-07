@@ -1,6 +1,8 @@
-#' Key Value Field
+#' Key Value Field server
 #'
-#' @rdname generate_server
+#' Server module
+#'
+#' @rdname keyvalue_field
 #' @export
 generate_server.keyvalue_field <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
@@ -61,14 +63,18 @@ generate_server.keyvalue_field <- function(x, ...) {
       r_to_be_removed <- reactive({
         rms <- get_rms("pl_", input)
         to_be_rm <- names(rms[rms > 0])
-        if (identical(length(to_be_rm), 0L)) return()
+        if (identical(length(to_be_rm), 0L)) {
+          return()
+        }
         ans <- as.integer(gsub("_rm$", "", gsub("^pl_", "", to_be_rm)))
         ans
       })
       observe({
         req(r_to_be_removed())
         # keep one expression
-        if (length(r_value()) <= 1) return()
+        if (length(r_value()) <= 1) {
+          return()
+        }
         r_value(r_value()[-r_to_be_removed()])
       }) |>
         bindEvent(r_to_be_removed())
@@ -112,7 +118,8 @@ generate_server.keyvalue_field <- function(x, ...) {
   }
 }
 
-#' @rdname generate_ui
+#' @inheritParams ui_input
+#' @rdname keyvalue_field
 #' @export
 ui_input.keyvalue_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
@@ -121,9 +128,14 @@ ui_input.keyvalue_field <- function(x, id, name) {
   )
 }
 
-#' @rdname new_field
+#' Key value field constructor
+#'
+#' TBD
+#' @inheritParams new_field
+#' @inheritParams select_field
 #' @param submit Should a 'submit button' be shown?
 #' @param key How to display the 'key' field
+#' @rdname keyvalue_field
 #' @export
 new_keyvalue_field <- function(
     value = NULL,
@@ -141,13 +153,13 @@ new_keyvalue_field <- function(
   )
 }
 
-#' @rdname new_field
+#' @rdname keyvalue_field
 #' @export
 keyvalue_field <- function(...) {
   validate_field(new_keyvalue_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.keyvalue_field <- function(x) {
   x
@@ -203,8 +215,6 @@ exprs_ui <- function(id = "",
                      delete_button = TRUE,
                      key = c("suggest", "empty", "none"),
                      auto_complete_list = NULL) {
-
-
   key <- match.arg(key)
 
   div(
@@ -295,7 +305,6 @@ keyvalue_ui <- function(value,
                         key,
                         auto_complete_list = NULL,
                         ns = function(x) x) {
-
   names <- names(value)
   values <- unname(value)
   ids <- ns(paste0("pl_", seq(value)))

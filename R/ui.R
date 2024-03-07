@@ -7,6 +7,7 @@
 #' @param .hidden Whether to initialise the block hidden.
 #'
 #' @export
+#' @rdname generate_ui
 generate_ui <- function(x, ...) {
   UseMethod("generate_ui")
 }
@@ -23,6 +24,7 @@ ui_fields <- function(x, ...) {
 }
 
 #' @rdname ui_fields
+#' @param ns Module namespace
 #' @param inputs_hidden For styling purposes: CSS class to apply
 #' when the block is collapsed.
 #' @export
@@ -208,6 +210,7 @@ data_info.transform_block <- data_info.data_block
 #' Generic for creating block remove button.
 #'
 #' @inheritParams ui_fields
+#' @inheritParams inject_remove_button
 #' @rdname remove_button
 #' @export
 remove_button <- function(x, ...) {
@@ -389,6 +392,7 @@ remove_button.stack <- function(x, id, ...) {
 #' Generic for creating stack header.
 #'
 #' @inheritParams ui_fields
+#' @param title Stack title.
 #' @rdname stack_header
 #' @export
 stack_header <- function(x, ...) {
@@ -612,6 +616,7 @@ input_ids.field <- function(x, name, ...) {
 }
 
 #' @rdname generate_ui
+#' @param name Input name.
 #' @export
 input_ids.list_field <- function(x, name, ...) {
   sub_names <- names(value(x, "sub_fields"))
@@ -829,6 +834,7 @@ uiOutputBlock.plot_block <- function(x, ns) {
 #' the code content.
 #'
 #' @rdname uiCode
+#' @inheritParams ui_fields
 #' @export
 uiCode <- function(x, ns) {
   UseMethod("uiCode", x)

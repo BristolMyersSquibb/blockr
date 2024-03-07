@@ -16,6 +16,8 @@ remove_button(x, ...)
 \item{x}{Object for which to generate UI components}
 
 \item{...}{Generic consistency}
+
+\item{id}{Parent ID}
 }
 \description{
 Generic for creating block remove button.
