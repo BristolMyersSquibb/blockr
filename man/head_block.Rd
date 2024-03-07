@@ -10,7 +10,7 @@ new_head_block(data, n_rows = numeric(), n_rows_min = 1L, ...)
 head_block(data, ...)
 }
 \arguments{
-\item{data}{Block input data}
+\item{data}{Tabular data in which to select some columns.}
 
 \item{n_rows}{Number of rows to return.}
 

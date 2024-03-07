@@ -39,38 +39,33 @@ new_block <- function(fields, expr, name = rand_names(), ...,
   )
 }
 
-#' @param x An object inheriting form `"block"`
+#' @param x An object inheriting from `"block"`
 #' @rdname new_block
 #' @export
 is_block <- function(x) {
   inherits(x, "block")
 }
 
-#' @rdname new_block
-#' @export
-is_initialized <- function(x) {
-  UseMethod("is_initialized")
-}
-
-#' @rdname new_block
+#' @rdname initialize
 #' @export
 is_initialized.block <- function(x) {
   all(lgl_ply(x, is_initialized))
 }
 
-#' @rdname new_block
-#' @export
-initialize_block <- function(x, ...) {
-  UseMethod("initialize_block")
-}
-
-#' @rdname new_block
+#' Generate code generic
+#'
+#' For a given block, generate the code contained
+#' in the `expr`` attribute. Needed by \link{evaluate_block}
+#' and \link{block_combiner} to generate the entire stack code.
+#'
+#' @rdname generate_code
+#' @inheritParams new_block
 #' @export
 generate_code <- function(x) {
   UseMethod("generate_code")
 }
 
-#' @rdname new_block
+#' @rdname generate_code
 #' @export
 generate_code.block <- function(x) {
   do.call(
@@ -83,7 +78,7 @@ generate_code.block <- function(x) {
   )
 }
 
-#' @rdname new_block
+#' @rdname generate_code
 #' @export
 generate_code.arrange_block <- function(x) {
   where <- lapply(x, type_trans)
@@ -100,7 +95,7 @@ generate_code.arrange_block <- function(x) {
 
 generate_code.group_by_block <- generate_code.arrange_block
 
-#' @rdname new_block
+#' @rdname generate_code
 #' @export
 generate_code.transform_block <- function(x) {
   if (!is_initialized(x)) {
@@ -110,7 +105,7 @@ generate_code.transform_block <- function(x) {
   NextMethod()
 }
 
-#' @rdname new_block
+#' @rdname generate_code
 #' @export
 generate_code.plot_block <- function(x) {
   if (!is_initialized(x)) {
@@ -120,7 +115,7 @@ generate_code.plot_block <- function(x) {
   NextMethod()
 }
 
-#' @rdname new_block
+#' @rdname generate_code
 #' @export
 generate_code.data_block <- function(x) {
   if (!is_initialized(x)) {
@@ -130,19 +125,26 @@ generate_code.data_block <- function(x) {
   NextMethod()
 }
 
-#' @rdname new_block
+#' @rdname generate_code
 #' @export
 generate_code.call <- function(x) {
   x
 }
 
-#' @rdname new_block
+#' Evaluate a block generic
+#'
+#' Calls \link{generate_code} and evaluate it
+#' in the relevant environment.
+#'
+#' @rdname evaluate_block
+#' @inherit new_block
+#' @param ... For generic consistency.
 #' @export
 evaluate_block <- function(x, ...) {
   UseMethod("evaluate_block")
 }
 
-#' @rdname new_block
+#' @rdname evaluate_block
 #' @export
 evaluate_block.data_block <- function(x, ...) {
   stopifnot(...length() == 0L)
@@ -150,7 +152,7 @@ evaluate_block.data_block <- function(x, ...) {
 }
 
 #' @param data Result from previous block
-#' @rdname new_block
+#' @rdname evaluate_block
 #' @export
 evaluate_block.transform_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
@@ -160,8 +162,7 @@ evaluate_block.transform_block <- function(x, data, ...) {
   )
 }
 
-#' @param data Result from previous block
-#' @rdname new_block
+#' @rdname evaluate_block
 #' @export
 evaluate_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
@@ -171,8 +172,7 @@ evaluate_block.plot_block <- function(x, data, ...) {
   )
 }
 
-#' @param data Result from previous block
-#' @rdname new_block
+#' @rdname evaluate_block
 #' @export
 evaluate_block.plot_layer_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
@@ -182,7 +182,20 @@ evaluate_block.plot_layer_block <- function(x, data, ...) {
   )
 }
 
-#' @rdname new_block
+#' Initialize block generic
+#'
+#' Initializes all fields composing the block.
+#'
+#' @seealso See \link{initialize_field}.
+#' @rdname initialize_block
+#' @inheritParams evaluate_block
+#' @returns The block element.
+#' @export
+initialize_block <- function(x, ...) {
+  UseMethod("initialize_block")
+}
+
+#' @rdname initialize_block
 #' @export
 initialize_block.data_block <- function(x, ...) {
   env <- list()
@@ -195,7 +208,7 @@ initialize_block.data_block <- function(x, ...) {
   x
 }
 
-#' @rdname new_block
+#' @rdname initialize_block
 #' @export
 initialize_block.transform_block <- function(x, data, ...) {
   env <- list(data = data)
@@ -208,22 +221,28 @@ initialize_block.transform_block <- function(x, data, ...) {
   x
 }
 
-#' @rdname new_block
+#' @rdname initialize_block
 #' @export
 initialize_block.default <- initialize_block.transform_block
 
-#' @rdname new_block
+#' @rdname initialize_block
 #' @export
 initialize_block.plot_block <- initialize_block.transform_block
 
-#' @rdname new_block
+#' Update fields generic
+#'
+#' For a block, update all its fields.
+#'
+#' @seealso See \link{update_field}.
+#' @inheritParams initialize_block
+#' @rdname update_fields
 #' @export
 update_fields <- function(x, ...) {
   UseMethod("update_fields")
 }
 
 #' @param session Shiny session
-#' @rdname new_block
+#' @rdname update_fields
 #' @export
 update_fields.data_block <- function(x, session, ...) {
   args <- list(...)
@@ -241,7 +260,7 @@ update_fields.data_block <- function(x, session, ...) {
 }
 
 #' @param data Block input data
-#' @rdname new_block
+#' @rdname update_fields
 #' @export
 update_fields.transform_block <- function(x, session, data, ...) {
   args <- list(...)
@@ -261,6 +280,6 @@ update_fields.transform_block <- function(x, session, data, ...) {
   x
 }
 
-#' @rdname new_block
+#' @rdname update_fields
 #' @export
 update_fields.plot_block <- update_fields.transform_block

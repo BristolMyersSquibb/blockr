@@ -10,7 +10,7 @@ new_arrange_block(data, columns = colnames(data)[1], ...)
 arrange_block(data, ...)
 }
 \arguments{
-\item{data}{Block input data}
+\item{data}{Tabular data in which to select some columns.}
 
 \item{columns}{Column(s) to select.}
 

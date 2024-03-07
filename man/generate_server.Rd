@@ -22,6 +22,8 @@
 
 generate_server(x, ...)
 
+\method{generate_server}{result_field}(x, ...)
+
 \method{generate_server}{data_block}(x, id, ...)
 
 \method{generate_server}{transform_block}(x, in_dat, id, ...)

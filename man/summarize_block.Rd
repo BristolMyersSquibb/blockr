@@ -15,7 +15,7 @@ new_summarize_block(
 summarize_block(data, ...)
 }
 \arguments{
-\item{data}{Block input data}
+\item{data}{Tabular data in which to select some columns.}
 
 \item{func}{Summarize function to apply.}
 

@@ -1,14 +1,21 @@
-#' @rdname new_field
+#' String field constructor
+#'
+#' String fields are translated into \link[shiny]{textInput}
+#'
+#' @param value Default text input value.
+#' @param ... Other parameters passed to \link{new_field} and may be needed
+#' by \link{ui_input} to pass more options to the related shiny input.
+#' @rdname string_field
 #' @export
 new_string_field <- function(value = character(), ...) {
   new_field(value, ..., class = "string_field")
 }
 
-#' @rdname new_field
+#' @rdname string_field
 #' @export
 string_field <- function(...) validate_field(new_string_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.string_field <- function(x) {
   val <- value(x)
@@ -20,9 +27,13 @@ validate_field.string_field <- function(x) {
   x
 }
 
-#' @param choices Set of permissible values
-#' @param multiple Allow multiple selections
-#' @rdname new_field
+#' Select field constructor
+#'
+#' Select fields are translated into \link[shiny]{selectInput}
+#'
+#' @inheritParams new_string_field
+#' @inheritParams shiny::selectInput
+#' @rdname select_field
 #' @export
 new_select_field <- function(value = character(), choices = character(),
                              multiple = FALSE, ...) {
@@ -32,11 +43,11 @@ new_select_field <- function(value = character(), choices = character(),
   )
 }
 
-#' @rdname new_field
+#' @rdname select_field
 #' @export
 select_field <- function(...) validate_field(new_select_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.select_field <- function(x) {
   val <- value(x)
@@ -48,17 +59,22 @@ validate_field.select_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Switch field constructor
+#'
+#' Switch fields are translated into \link[bslib]{input_switch}
+#'
+#' @inheritParams new_string_field
+#' @rdname switch_field
 #' @export
 new_switch_field <- function(value = FALSE, ...) {
   new_field(value, ..., class = "switch_field")
 }
 
-#' @rdname new_field
+#' @rdname switch_field
 #' @export
 switch_field <- function(...) validate_field(new_switch_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.switch_field <- function(x) {
   val <- value(x)
@@ -69,7 +85,13 @@ validate_field.switch_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Numeric field constructor
+#'
+#' Numeric fields are translated into \link[shiny]{numericInput}
+#'
+#' @inheritParams new_string_field
+#' @inheritParams shiny::numericInput
+#' @rdname numeric_field
 #' @export
 new_numeric_field <- function(
     value = numeric(),
@@ -79,13 +101,13 @@ new_numeric_field <- function(
   new_field(value, min = min, max = max, ..., class = "numeric_field")
 }
 
-#' @rdname new_field
+#' @rdname numeric_field
 #' @export
 numeric_field <- function(...) {
   validate_field(new_numeric_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.numeric_field <- function(x) {
   val <- value(x)
@@ -124,26 +146,36 @@ validate_field.numeric_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Submit field constructor
+#'
+#' Submit fields are translated into \link[shiny]{actionButton}
+#'
+#' @inheritParams new_string_field
+#' @rdname submit_field
 #' @export
 new_submit_field <- function(...) {
   # action buttons always start from 0
   new_field(value = 0, ..., class = "submit_field")
 }
 
-#' @rdname new_field
+#' @rdname submit_field
 #' @export
 submit_field <- function(...) {
   validate_field(new_submit_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.submit_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Upload field constructor
+#'
+#' Upload fields are translated into \link[shiny]{fileInput}
+#'
+#' @inheritParams new_string_field
+#' @rdname upload_field
 #' @export
 new_upload_field <- function(value = character(), ...) {
   new_field(
@@ -153,19 +185,24 @@ new_upload_field <- function(value = character(), ...) {
   )
 }
 
-#' @rdname new_field
+#' @rdname upload_field
 #' @export
 upload_field <- function(...) {
   validate_field(new_upload_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.upload_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Files browser field constructor
+#'
+#' Files browser fields are translated into \link[shinyFiles]{shinyFilesButton}
+#'
+#' @inheritParams new_string_field
+#' @rdname filesbrowser_field
 #' @export
 new_filesbrowser_field <- function(value = character(), ...) {
   new_field(
@@ -175,21 +212,29 @@ new_filesbrowser_field <- function(value = character(), ...) {
   )
 }
 
-#' @rdname new_field
+#' @rdname filesbrowser_field
 #' @export
 filesbrowser_field <- function(...) {
   validate_field(new_filesbrowser_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.filesbrowser_field <- function(x) {
   x
 }
 
+#' Variable field constructor
+#'
+#' Variable field is intended to conditionally display
+#' different field based on a condition.
+#'
+#' @note Currently broken. Don't use.
+#'
+#' @inheritParams new_string_field
+#' @rdname variable_field
 #' @param field Field type
 #' @param components Variable list of field components
-#' @rdname new_field
 #' @export
 new_variable_field <- function(value = character(), field = character(),
                                components = list(), ...) {
@@ -199,11 +244,11 @@ new_variable_field <- function(value = character(), field = character(),
   )
 }
 
-#' @rdname new_field
+#' @rdname variable_field
 #' @export
 variable_field <- function(...) validate_field(new_variable_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.variable_field <- function(x) {
   val <- value(x, "field")
@@ -244,19 +289,24 @@ materialize_variable_field <- function(x) {
   do.call(value(x, "field"), cmp)
 }
 
+#' Range field constructor
+#'
+#' Range fields are translated into \link[shiny]{sliderInput}.
+#'
+#' @inheritParams new_string_field
+#' @rdname range_field
 #' @param min,max Slider boundaries (inclusive)
-#' @rdname new_field
 #' @export
 new_range_field <- function(value = numeric(), min = numeric(),
                             max = numeric(), ...) {
   new_field(value, min = min, max = max, ..., class = "range_field")
 }
 
-#' @rdname new_field
+#' @rdname range_field
 #' @export
 range_field <- function(...) validate_field(new_range_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.range_field <- function(x) {
   val <- value(x)
@@ -272,41 +322,53 @@ validate_field.range_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Hidden field constructor
+#'
+#' Hidden field is useful to host complex expression in
+#' a field. See \link{filter_block} for a usecase.
+#'
+#' @inheritParams new_string_field
+#' @rdname hidden_field
 #' @export
 new_hidden_field <- function(value = expression(), ...) {
   new_field(value, ..., class = "hidden_field")
 }
 
-#' @rdname new_field
+#' @rdname hidden_field
 #' @export
 hidden_field <- function(...) validate_field(new_hidden_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.hidden_field <- function(x) {
   x
 }
 
+#' List field constructor
+#'
+#' A field that can contain subfields. See \link{slider_block} for
+#' a usecase.
+#'
+#' @inheritParams new_string_field
 #' @param sub_fields Fields contained in `list_field`
-#' @rdname new_field
+#' @rdname list_field
 #' @export
 new_list_field <- function(value = list(), sub_fields = list(), ...) {
   new_field(value, sub_fields = sub_fields, ..., class = "list_field")
 }
 
-#' @rdname new_field
+#' @rdname list_field
 #' @export
 list_field <- function(...) validate_field(new_list_field(...))
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.list_field <- function(x) {
   val <- value(x)
   sub <- value(x, "sub_fields")
 
   if (!is.list(val) || length(val) != length(sub) ||
-    !setequal(names(val), names(sub))) {
+    !setequal(names(val), names(sub))) { # nolint
     value(x) <- lst_xtr(sub, "value")
   }
 
@@ -318,65 +380,26 @@ validate_field.list_field <- function(x) {
   x
 }
 
-#' @rdname new_field
+#' Result field constructor
+#'
+#' Result field allows on to reuse the result of one stack
+#' in another stack.
+#'
+#' @inheritParams new_string_field
+#' @rdname result_field
 #' @export
 new_result_field <- function(value = list(), ...) {
   new_field(value, ..., class = "result_field")
 }
 
-#' @rdname new_field
+#' @rdname result_field
 #' @export
 result_field <- function(...) {
   validate_field(new_result_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.result_field <- function(x) {
   x
-}
-
-#' @rdname generate_server
-#' @export
-generate_server.result_field <- function(x, ...) {
-  function(id, init = NULL, data = NULL) {
-    moduleServer(id, function(input, output, session) {
-      get_result <- function() {
-        inp <- input[["select-stack"]]
-
-        if (length(inp) && inp %in% list_workspace_stacks()) {
-          get_stack_result(
-            get_workspace_stack(inp)
-          )
-        } else {
-          data.frame()
-        }
-      }
-
-      result_hash <- function() {
-        rlang::hash(get_result())
-      }
-
-      current_stack <- function() {
-        res <- strsplit(session$ns(NULL), "-")[[1L]]
-        res[length(res) - 2L]
-      }
-
-      stack_opts <- function() {
-        setdiff(list_workspace_stacks(), current_stack())
-      }
-
-      opts <- reactivePoll(100, session, stack_opts, stack_opts)
-
-      observeEvent(
-        opts(),
-        updateSelectInput(session, "select-stack",
-          choices = opts(),
-          selected = input[["select-stack"]]
-        )
-      )
-
-      reactivePoll(100, session, result_hash, get_result)
-    })
-  }
 }

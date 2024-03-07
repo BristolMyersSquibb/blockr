@@ -10,8 +10,6 @@ new_join_block(data, y = NULL, type = character(), by = character(), ...)
 join_block(data, ...)
 }
 \arguments{
-\item{data}{Block input data}
-
 \item{y}{Second dataset for join.}
 
 \item{type}{Join type.}

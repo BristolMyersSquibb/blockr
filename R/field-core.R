@@ -14,7 +14,7 @@
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
-#' @rdname field
+#' @rdname new_field
 new_field <- function(value, ..., type = c("literal", "name"),
                       title = "",
                       descr = "",
@@ -37,29 +37,67 @@ new_field <- function(value, ..., type = c("literal", "name"),
   )
 }
 
-#' @rdname new_block
+#' @rdname new_field
+#' @param x An object inheriting form `"field"`
+#' @export
+is_field <- function(x) inherits(x, "field")
+
+#' Initialize field generic
+#'
+#' TBD
+#'
+#' @rdname initialize_field
+#' @inheritParams is_field
+#' @param env Environment with data and other field values
+#' @export
+#' @returns The field.
+initialize_field <- function(x, env = list()) {
+  UseMethod("initialize_field", x)
+}
+
+#' @rdname initialize_field
+#' @export
+initialize_field.field <- function(x, env = list()) {
+  validate_field(
+    eval_set_field_value(x, env)
+  )
+}
+
+#' @rdname initialize
 #' @export
 is_initialized.field <- function(x) {
   all(lengths(values(x)) > 0)
 }
 
-#' @param x An object inheriting form `"field"`
-#' @rdname new_field
+#' Validate field generic
+#'
+#' Checks the value of a field with \link{value} and
+#' apply corrections whenever necessary.
+#'
+#' @inheritParams is_field
+#' @rdname validate_field
 #' @export
 validate_field <- function(x) {
   UseMethod("validate_field", x)
 }
 
-#' @param new Value to set
-#' @param env Environment with data and other field values
+#' Update field generic
 #'
-#' @rdname new_field
+#' Update a field with a new value.
+#' Needed by \link{update_fields} in a block. Necessary to keep
+#' the R object in sync with the Shiny interface state (input state).
+#'
+#' @inheritParams is_field
+#' @param new Value to set
+#' @inheritParams initialize_field
+#' @returns The modified field.
+#' @rdname update_field
 #' @export
 update_field <- function(x, new, env = list()) {
   UseMethod("update_field", x)
 }
 
-#' @rdname new_field
+#' @rdname update_field
 #' @export
 update_field.field <- function(x, new, env = list()) {
   x <- eval_set_field_value(x, env)
@@ -77,20 +115,6 @@ update_field.field <- function(x, new, env = list()) {
   }
 
   eval_set_field_value(res, env)
-}
-
-#' @rdname new_field
-#' @export
-initialize_field <- function(x, env = list()) {
-  UseMethod("initialize_field", x)
-}
-
-#' @rdname new_field
-#' @export
-initialize_field.field <- function(x, env = list()) {
-  validate_field(
-    eval_set_field_value(x, env)
-  )
 }
 
 eval_set_field_value <- function(x, env) {
@@ -112,8 +136,15 @@ eval_set_field_value <- function(x, env) {
   x
 }
 
+#' Get field attribute value
+#'
+#' Get the field value attribute. If it is a function,
+#' return the result attribute instead.
+#'
+#' @inheritParams is_field
 #' @param name Field component name
-#' @rdname new_field
+#' @returns Field value
+#' @rdname value
 #' @export
 value <- function(x, name = "value") {
   stopifnot(is_field(x))
@@ -127,15 +158,23 @@ value <- function(x, name = "value") {
   res
 }
 
-#' @rdname new_field
+#' Get all values from a field
+#'
+#' This calls \link{value} on all the field's names.
+#'
+#' @inheritParams value
+#' @returns A list containing all values.
 #' @export
 values <- function(x, name = names(x)) {
   set_names(lapply(name, function(n) value(x, n)), name)
 }
 
+#' Assign new value to a field attribute.
+#'
 #' @param value Field value
-#' @rdname new_field
+#' @rdname value
 #' @export
+#' @returns The field.
 `value<-` <- function(x, name = "value", value) {
   if (is.null(x)) {
     return(NULL)
@@ -151,10 +190,6 @@ values <- function(x, name = names(x)) {
 
   x
 }
-
-#' @rdname new_field
-#' @export
-is_field <- function(x) inherits(x, "field")
 
 update_sub_fields <- function(sub, val) {
   # Added this because of the join_block

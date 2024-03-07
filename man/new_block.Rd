@@ -3,29 +3,6 @@
 \name{new_block}
 \alias{new_block}
 \alias{is_block}
-\alias{is_initialized}
-\alias{is_initialized.block}
-\alias{initialize_block}
-\alias{generate_code}
-\alias{generate_code.block}
-\alias{generate_code.arrange_block}
-\alias{generate_code.transform_block}
-\alias{generate_code.plot_block}
-\alias{generate_code.data_block}
-\alias{generate_code.call}
-\alias{evaluate_block}
-\alias{evaluate_block.data_block}
-\alias{evaluate_block.transform_block}
-\alias{evaluate_block.plot_block}
-\alias{evaluate_block.plot_layer_block}
-\alias{initialize_block.data_block}
-\alias{initialize_block.transform_block}
-\alias{initialize_block.default}
-\alias{initialize_block.plot_block}
-\alias{update_fields}
-\alias{update_fields.data_block}
-\alias{update_fields.transform_block}
-\alias{update_fields.plot_block}
 \alias{is_initialized.field}
 \alias{mutate_block}
 \title{Blocks}
@@ -33,52 +10,6 @@
 new_block(fields, expr, name = rand_names(), ..., class = character())
 
 is_block(x)
-
-is_initialized(x)
-
-\method{is_initialized}{block}(x)
-
-initialize_block(x, ...)
-
-generate_code(x)
-
-\method{generate_code}{block}(x)
-
-\method{generate_code}{arrange_block}(x)
-
-\method{generate_code}{transform_block}(x)
-
-\method{generate_code}{plot_block}(x)
-
-\method{generate_code}{data_block}(x)
-
-\method{generate_code}{call}(x)
-
-evaluate_block(x, ...)
-
-\method{evaluate_block}{data_block}(x, ...)
-
-\method{evaluate_block}{transform_block}(x, data, ...)
-
-\method{evaluate_block}{plot_block}(x, data, ...)
-
-\method{evaluate_block}{plot_layer_block}(x, data, ...)
-
-\method{initialize_block}{data_block}(x, ...)
-
-\method{initialize_block}{transform_block}(x, data, ...)
-
-\method{initialize_block}{default}(x, data, ...)
-
-\method{initialize_block}{plot_block}(x, data, ...)
-
-update_fields(x, ...)
-
-\method{update_fields}{data_block}(x, session, ...)
-
-\method{update_fields}{transform_block}(x, session, data, ...)
-
-\method{update_fields}{plot_block}(x, session, data, ...)
 
 \method{is_initialized}{field}(x)
 
@@ -97,11 +28,7 @@ of the fields)}
 
 \item{class}{Block subclass}
 
-\item{x}{An object inheriting form \code{"block"}}
-
-\item{data}{Block input data}
-
-\item{session}{Shiny session}
+\item{x}{An object inheriting from \code{"block"}}
 }
 \description{
 Blocks consist of a set of fields, an expression that defines what the block
