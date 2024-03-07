@@ -10,26 +10,8 @@
 \alias{server_code}
 \alias{server_code.block}
 \alias{generate_ui}
-\alias{ui_fields}
-\alias{ui_fields.block}
-\alias{block_body}
-\alias{block_body.block}
-\alias{block_code}
-\alias{block_code.block}
-\alias{block_header}
-\alias{data_info}
-\alias{data_info.block}
-\alias{data_info.data_block}
-\alias{data_info.transform_block}
-\alias{remove_button}
-\alias{remove_button.block}
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
-\alias{inject_remove_button}
-\alias{inject_remove_button.block}
-\alias{inject_remove_button.stack}
-\alias{remove_button.stack}
-\alias{stack_header}
 \alias{generate_ui.workspace}
 \alias{ui_input}
 \alias{ui_input.string_field}
@@ -60,13 +42,6 @@
 \alias{ui_update.filesbrowser_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
-\alias{uiOutputBlock}
-\alias{uiOutputBlock.block}
-\alias{uiOutputBlock.upload_block}
-\alias{uiOutputBlock.filesbrowser_block}
-\alias{uiOutputBlock.plot_block}
-\alias{uiCode}
-\alias{uiCode.block}
 \title{UI}
 \usage{
 \method{ui_input}{keyvalue_field}(x, id, name)
@@ -87,45 +62,9 @@ server_code(x, state, output)
 
 generate_ui(x, ...)
 
-ui_fields(x, ...)
-
-\method{ui_fields}{block}(x, ns, inputs_hidden, ...)
-
-block_body(x, ...)
-
-\method{block_body}{block}(x, ns, inputs_hidden, ...)
-
-block_code(x, ...)
-
-\method{block_code}{block}(x, ns, inputs_hidden, ...)
-
-block_header(x, ...)
-
-data_info(x, ...)
-
-\method{data_info}{block}(x, ns, ...)
-
-\method{data_info}{data_block}(x, ns, ...)
-
-\method{data_info}{transform_block}(x, ns, ...)
-
-remove_button(x, ...)
-
-\method{remove_button}{block}(x, id, ...)
-
 \method{generate_ui}{block}(x, id, ..., .hidden = !getOption("BLOCKR_DEV", FALSE))
 
 \method{generate_ui}{stack}(x, id = NULL, ...)
-
-inject_remove_button(x, ...)
-
-\method{inject_remove_button}{block}(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...)
-
-\method{inject_remove_button}{stack}(x, id, ...)
-
-\method{remove_button}{stack}(x, id, ...)
-
-stack_header(x, ...)
 
 \method{generate_ui}{workspace}(x, id, ...)
 
@@ -186,25 +125,11 @@ ui_update(x, session, id, name)
 \method{ui_update}{hidden_field}(x, session, id, name)
 
 \method{ui_update}{list_field}(x, session, id, name)
-
-uiOutputBlock(x, ns)
-
-\method{uiOutputBlock}{block}(x, ns)
-
-\method{uiOutputBlock}{upload_block}(x, ns)
-
-\method{uiOutputBlock}{filesbrowser_block}(x, ns)
-
-\method{uiOutputBlock}{plot_block}(x, ns)
-
-uiCode(x, ns)
-
-\method{uiCode}{block}(x, ns)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
 
-\item{id}{Parent ID}
+\item{id}{UI IDs}
 
 \item{name}{Field name}
 
@@ -216,24 +141,10 @@ uiCode(x, ns)
 
 \item{...}{Generic consistency}
 
-\item{ns}{Output namespace}
-
-\item{inputs_hidden}{For styling purposes: CSS class to apply
-when the block is collapsed.}
-
-\item{.hidden}{Whether to initialise the block with
-hidden inputs.}
+\item{.hidden}{Whether to initialise the block hidden.}
 
 \item{session}{Shiny session}
 }
 \description{
 Generic for UI generation
-
-This has to be called from the stack parent
-namespace. This can also be called dynamically when
-inserting a new block within a stack.
-
-This has to be called from the workspace parent
-namespace. This can also be called dynamically when
-inserting a new stack within a workspace.
 }
