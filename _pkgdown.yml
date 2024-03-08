@@ -24,7 +24,176 @@ articles:
   desc: ~
   navbar: User Guide
   contents:
-  - '`data-blocks`'
-  - '`registry`'
-  - '`plot-block`'
-  - '`developer-guide`'
+  - "`data-blocks`"
+  - "`registry`"
+  - "`plot-block`"
+  - "`developer-guide`"
+
+reference:
+- title: Fields core elements
+  desc: Functions to build fields
+  contents: 
+  - "`new_field`"
+  - "`is_field`"
+  - "`initialize_field`"
+  - "`is_initialized`"
+  - "`validate_field`"
+  - "`update_field`"
+  - "`value`"
+  - "`values`"
+  - "`value<-`"
+
+- title: Fields elements
+  desc: Fields are translated into shiny inputs. They are part of blocks.
+  contents:
+  - "`string_field`"
+  - "`select_field`"
+  - "`switch_field`"
+  - "`numeric_field`"
+  - "`submit_field`"
+  - "`upload_field`"
+  - "`filesbrowser_field`"
+  - "`variable_field`"
+  - "`range_field`"
+  - "`hidden_field`"
+  - "`list_field`"
+  - "`result_field`"
+  - "`keyvalue_field`"
+
+- title: Blocks core elements
+  desc: Functions to build blocks
+  contents: 
+  - "`new_block`"
+  - "`is_block`"
+  - "`initialize_block`"
+  - "`is_initialized`"
+  - "`generate_code`"
+  - "`evaluate_block`"
+  - "`update_fields`"
+  - "`layout`"
+  - "`create_block`"
+
+- title: Blocks
+  desc: Blocks contain field. They return a dataframe
+  contents: 
+  - "`data_block`"
+  - "`upload_block`"
+  - "`filesbrowser_block`"
+  - "`new_parser_block`"
+  - "`csv_block`"
+  - "`rds_block`"
+  - "`json_block`"
+  - "`sas_block`"
+  - "`xpt_block`"
+  - "`result_block`"
+  - "`filter_block`"
+  - "`select_block`"
+  - "`summarize_block`"
+  - "`arrange_block`"
+  - "`group_by_block`"
+  - "`join_block`"
+  - "`head_block`"
+  - "`mutate_block`"
+
+- title: Stack
+  desc: Stack contains multiple block.
+  contents:
+  - "`new_stack`"
+  - "`is_stack`"
+  - "`get_stack_name`"
+  - "`set_stack_name`"
+  - "`get_stack_title`"
+  - "`set_stack_title`"
+  - "`block_combiner`"
+  - "`add_block`"
+  - "`serve_stack`"
+
+- title: Workspace
+  desc: Workspace contains multiple stacks.
+  contents:
+  - "`set_workspace`"
+  - "`is_workspace`"
+  - "`restore_workspace`"
+  - "`get_workspace`"
+  - "`add_workspace_stack`"
+  - "`get_workspace_stack`"
+  - "`get_workspace_stacks`"
+  - "`set_workspace_stack`"
+  - "`rm_workspace_stacks`"
+  - "`rm_workspace_stack`"
+  - "`get_workspace_title`"
+  - "`set_workspace_title`"
+  - "`get_workspace_settings`"
+  - "`set_workspace_settings`"
+  - "`list_workspace_stacks`"
+  - "`serve_workspace`"
+
+- title: Registry
+  desc: Registry of blocks
+  contents:
+  - "`available_blocks`"
+  - "`block_name`"
+  - "`block_descr`"
+  - "`register_block`"
+  - "`register_blocks`"
+  - "`unregister_blocks`"
+  - "`construct_block`"
+
+- title: Server utilities
+  desc: Shiny server elements
+  contents:
+  - starts_with("server")
+  - ends_with("server")
+  - "`handle_remove`"
+  - "`init`"
+
+- title: UI utilities
+  desc: Shiny ui elements
+  contents:
+  - starts_with("ui")
+  - ends_with("ui")
+  - "`block_body`"
+  - "`block_code`"
+  - "`block_header`"
+  - "`data_info`"
+  - "`remove_button`"
+  - "`inject_remove_button`"
+  - "`stack_header`"
+  - "`input_ids`"
+  - starts_with("icon")
+  - ends_with("icon")
+  - "`useBlockr`"
+  - "`off_canvas`"
+  - "`create_app_link`"
+
+- title: Serialisation utils
+  desc: To save and restore a workspace
+  contents:
+  - "`blockr_serialize`"
+  - "`blockr_deserialize`"
+  - "`from_json`"
+  - "`to_json`"
+
+- title: Workspace locking
+  desc: Utils to lock a workspace
+  contents:
+  - "`lock`"
+  - "`unlock`"
+  - "`toggle_lock`"
+  - "`is_locked`"
+  - "`observe_lock`"
+  - "`init_lock`"
+
+- title: Logging utils
+  desc: Track log messages
+  contents:
+  - "`write_log`"
+  - "`log_fatal`"
+  - "`log_error`"
+  - "`log_warn`"
+  - "`log_info`"
+  - "`log_debug`"
+  - "`log_trace`"
+  - "`as_log_level`"
+  - "`cnd_logger`"
+  - "`cat_logger`"

@@ -1,6 +1,6 @@
-#' Server
-#'
 #' Generic for server generation
+#'
+#' Calls shiny modules for the given element (workspace, stack, block).
 #'
 #' @param x Object for which to generate a [moduleServer()]
 #' @param ... Generic consistency
@@ -9,6 +9,51 @@
 #' @import shiny
 generate_server <- function(x, ...) {
   UseMethod("generate_server")
+}
+
+#' @rdname generate_server
+#' @export
+generate_server.result_field <- function(x, ...) {
+  function(id, init = NULL, data = NULL) {
+    moduleServer(id, function(input, output, session) {
+      get_result <- function() {
+        inp <- input[["select-stack"]]
+
+        if (length(inp) && inp %in% list_workspace_stacks()) {
+          get_stack_result(
+            get_workspace_stack(inp)
+          )
+        } else {
+          data.frame()
+        }
+      }
+
+      result_hash <- function() {
+        rlang::hash(get_result())
+      }
+
+      current_stack <- function() {
+        res <- strsplit(session$ns(NULL), "-")[[1L]]
+        res[length(res) - 2L]
+      }
+
+      stack_opts <- function() {
+        setdiff(list_workspace_stacks(), current_stack())
+      }
+
+      opts <- reactivePoll(100, session, stack_opts, stack_opts)
+
+      observeEvent(
+        opts(),
+        updateSelectInput(session, "select-stack",
+          choices = opts(),
+          selected = input[["select-stack"]]
+        )
+      )
+
+      reactivePoll(100, session, result_hash, get_result)
+    })
+  }
 }
 
 update_blk <- function(b, value, is_srv, input, data) {
@@ -26,7 +71,7 @@ update_blk <- function(b, value, is_srv, input, data) {
   b
 }
 
-update_ui <-  function(b, is_srv, session, l_init) {
+update_ui <- function(b, is_srv, session, l_init) {
   for (field in names(b)) {
     if (field %in% names(is_srv)[is_srv]) {
       # update reactive value that tiggers module server update
@@ -38,7 +83,6 @@ update_ui <-  function(b, is_srv, session, l_init) {
 }
 
 generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "plot")) {
-
   display <- match.arg(display)
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
@@ -85,7 +129,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # a list with reactive values (module server input)
       l_init <- lapply(x_srv, \(x) reactiveVal(x))
 
-      l_values_module <- list()  # a list with reactive values (module server output)
+      l_values_module <- list() # a list with reactive values (module server output)
       for (name in names(x_srv)) {
         l_values_module[[name]] <-
           generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
@@ -94,7 +138,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
         blk_no_srv <- blk()
-        blk_no_srv[is_srv] <- NULL    # to keep class etc
+        blk_no_srv[is_srv] <- NULL # to keep class etc
         eval(obs_expr(blk_no_srv))
       })
 
@@ -128,8 +172,8 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         obs$validate_inputs <- observeEvent(r_values(), {
           log_debug("Validating block ", class(x)[[1]])
           blk_no_srv <- blk()
-          blk_no_srv[is_srv] <- NULL    # to keep class etc
-          validate_inputs(blk_no_srv, is_valid, session)  # FIXME should not rely on input$
+          blk_no_srv[is_srv] <- NULL # to keep class etc
+          validate_inputs(blk_no_srv, is_valid, session) # FIXME should not rely on input$
 
           # Block will have a red border if any nested input is invalid
           # since blocks can be collapsed and people won't see the input
@@ -231,7 +275,6 @@ generate_server.plot_block <- function(x, in_dat, id, ...) {
 #' @export
 generate_server.stack <- function(x, id = NULL, new_block = NULL,
                                   workspace = get_workspace(), ...) {
-
   stopifnot(...length() == 0L)
 
   id <- coal(id, get_stack_name(x))
@@ -248,7 +291,6 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
   moduleServer(
     id = id,
     function(input, output, session) {
-
       vals <- reactiveValues(
         stack = x,
         blocks = vector("list", length(x)),
@@ -302,8 +344,10 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       observeEvent(vals$stack, {
         message("UPDADING WORKSPACE with stack ", id)
-        add_workspace_stack(id, vals$stack, force = TRUE,
-                            workspace = workspace)
+        add_workspace_stack(id, vals$stack,
+          force = TRUE,
+          workspace = workspace
+        )
       })
 
       observeEvent(input$remove, {
@@ -341,11 +385,10 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 #'
 #' Generic for stack/block removal
 #'
-#' @param x Element.
-#' @param ... Generic consistency.
+#' @inheritParams generate_server
 #'
 #' @export
-#' @rdname generate_server
+#' @rdname handle_remove
 handle_remove <- function(x, ...) {
   UseMethod("handle_remove")
 }
@@ -357,45 +400,46 @@ handle_remove <- function(x, ...) {
 #' @param vals Internal reactive values.
 #' @param session Shiny session object.
 #' @export
-#' @rdname generate_server
+#' @rdname handle_remove
 handle_remove.block <- function(x, vals,
                                 session = getDefaultReactiveDomain(), ...) {
-
   input <- session$input
 
   id <- attr(x, "name")
 
-  observeEvent({
-    input[[sprintf("remove-block-%s", id)]]
-  }, {
-    # We can't remove the data block if there are downstream consumers...
-    to_remove <- which(chr_ply(vals$stack, \(x) attr(x, "name")) == id)
-    message(sprintf("REMOVING BLOCK %s", to_remove))
-    removeUI(
-      selector = sprintf(
-        "[data-value='%s%s-block']",
-        session$ns(""),
-        attr(vals$stack[[to_remove]], "name")
+  observeEvent(
+    {
+      input[[sprintf("remove-block-%s", id)]]
+    },
+    {
+      # We can't remove the data block if there are downstream consumers...
+      to_remove <- which(chr_ply(vals$stack, \(x) attr(x, "name")) == id)
+      message(sprintf("REMOVING BLOCK %s", to_remove))
+      removeUI(
+        selector = sprintf(
+          "[data-value='%s%s-block']",
+          session$ns(""),
+          attr(vals$stack[[to_remove]], "name")
+        )
       )
-    )
 
-    vals$blocks[[to_remove]] <- NULL
-    # Reinitialize all the downstream stack blocks with new data ...
-    if (to_remove < length(vals$stack)) {
-      vals$stack[[to_remove]] <- NULL
-      for (i in to_remove:length(vals$stack)) {
-        attr(vals$stack[[i]], "position") <- i
-        vals$blocks[[i]] <- init_block(i, vals)
+      vals$blocks[[to_remove]] <- NULL
+      # Reinitialize all the downstream stack blocks with new data ...
+      if (to_remove < length(vals$stack)) {
+        vals$stack[[to_remove]] <- NULL
+        for (i in to_remove:length(vals$stack)) {
+          attr(vals$stack[[i]], "position") <- i
+          vals$blocks[[i]] <- init_block(i, vals)
+        }
       }
     }
-  })
+  )
 }
 
 #' @rdname generate_server
 #' @param id Unique module id. Useful when the workspace is called as a module.
 #' @export
 generate_server.workspace <- function(x, id, ...) {
-
   stopifnot(...length() == 0L)
 
   is_stack_removed <- function(s) {
@@ -409,7 +453,6 @@ generate_server.workspace <- function(x, id, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-
       vals <- reactiveValues(stacks = list(), new_block = list())
 
       # Init existing stack modules
@@ -428,7 +471,6 @@ generate_server.workspace <- function(x, id, ...) {
 
       # Add stack
       observeEvent(input$add_stack, {
-
         stck <- new_stack()
 
         stack_id <- get_stack_name(stck)
@@ -484,34 +526,28 @@ generate_server.workspace <- function(x, id, ...) {
 #'
 #' Handle initialisation of workspace, stacks, ...
 #'
-#' @param x Element.
-#' @param ... Generic consistency.
+#' @inheritParams generate_server
+#' @inheritParams handle_remove
 #'
 #' @export
-#' @rdname generate_server
+#' @rdname init
 init <- function(x, ...) {
   UseMethod("init")
 }
 
-#' Init stacks server
-#'
 #' @export
-#' @rdname generate_server
+#' @rdname init
 init.workspace <- function(x, vals, session, ...) {
-
   input <- session$input
   stacks <- get_workspace_stacks(workspace = x)
 
   observeEvent(TRUE, {
-
     lapply(names(stacks), \(nme) {
-
       vals$stacks[[nme]] <- generate_server(
         stacks[[nme]],
         id = nme,
         new_block = reactive(vals$new_block[[nme]])
       )
-
     })
   })
 }
@@ -522,7 +558,6 @@ init.workspace <- function(x, vals, session, ...) {
 #'
 #' @keywords internal
 inject_block <- function(input, vals, id) {
-
   listener_id <- sprintf("%s-add", id)
 
   log_debug("Setting up \"add block\" listener with ID ", listener_id)
@@ -538,10 +573,8 @@ inject_block <- function(input, vals, id) {
   })
 }
 
-#' Init blocks server
-#'
 #' @export
-#' @rdname generate_server
+#' @rdname init
 init.stack <- function(x, vals, ...) {
   observeEvent(TRUE, {
     for (i in seq_along(x)) {
@@ -564,7 +597,6 @@ init.stack <- function(x, vals, ...) {
 #'
 #' @keywords internal
 init_block <- function(i, vals) {
-
   generate_server(
     vals$stack[[i]],
     in_dat = if (i == 1) {
@@ -578,15 +610,22 @@ init_block <- function(i, vals) {
   )
 }
 
+#' Server output generic
+#'
+#' Generate block server output. Needed on the UI
+#' side. This is generally a table containing the
+#' processed block data.
+#'
+#' @param x Block.
 #' @param output Shiny output
 #' @param result Block result
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output <- function(x, result, output) {
   UseMethod("server_output", x)
 }
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.block <- function(x, result, output) {
   DT::renderDT(
@@ -604,30 +643,35 @@ server_output.block <- function(x, result, output) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.upload_block <- function(x, result, output) {
   shiny::renderPrint(result())
 }
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.filesbrowser_block <- server_output.upload_block
 
-#' @rdname generate_ui
+#' @rdname server_output
 #' @export
 server_output.plot_block <- function(x, result, output) {
   shiny::renderPlot(result())
 }
 
+#' Server code generic
+#'
+#' Generate the server code output.
+#'
+#' @inheritParams server_output
 #' @param state Block state
-#' @rdname generate_ui
+#' @rdname server_code
 #' @export
 server_code <- function(x, state, output) {
   UseMethod("server_code", x)
 }
 
-#' @rdname generate_ui
+#' @rdname server_code
 #' @export
 server_code.block <- function(x, state, output) {
   shiny::renderPrint(
@@ -635,13 +679,11 @@ server_code.block <- function(x, state, output) {
   )
 }
 
-
 add_block_stack <- function(
-  block_to_add,
-  position = NULL,
-  vals,
-  session = getDefaultReactiveDomain()
-) {
+    block_to_add,
+    position = NULL,
+    vals,
+    session = getDefaultReactiveDomain()) {
   vals$stack <- add_block(vals$stack, block_to_add, position)
 
   # Call module
@@ -651,8 +693,9 @@ add_block_stack <- function(
     position + 1
   }
 
-  if (p < 0L)
+  if (p < 0L) {
     p <- 1L
+  }
 
   vals$blocks[[p]] <- init_block(p, vals)
 

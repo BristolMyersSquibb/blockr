@@ -7,17 +7,24 @@
 #' @param .hidden Whether to initialise the block hidden.
 #'
 #' @export
+#' @rdname generate_ui
 generate_ui <- function(x, ...) {
   UseMethod("generate_ui")
 }
 
-#' @rdname generate_ui
+#' Block fields generic
+#'
+#' Generic for creating fields UI container
+#'
+#' @inheritParams generate_ui
+#' @rdname ui_fields
 #' @export
 ui_fields <- function(x, ...) {
   UseMethod("ui_fields", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_fields
+#' @param ns Module namespace
 #' @param inputs_hidden For styling purposes: CSS class to apply
 #' when the block is collapsed.
 #' @export
@@ -35,16 +42,20 @@ ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' Block body generic
+#'
+#' Generic for creating fields UI container
+#'
+#' @inheritParams ui_fields
+#' @rdname block_body
 #' @export
 block_body <- function(x, ...) {
   UseMethod("block_body", x)
 }
 
-#' @rdname generate_ui
+#' @rdname block_body
 #' @export
 block_body.block <- function(x, ns, inputs_hidden, ...) {
-
   result_id <- ns("outputCollapse")
 
   loading_class <- "d-none"
@@ -81,16 +92,21 @@ block_body.block <- function(x, ns, inputs_hidden, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' Block code generic
+#'
+#' Generic for creating the block code UI elements that
+#' are the toggle and the code container.
+#'
+#' @inheritParams ui_fields
+#' @rdname block_code
 #' @export
 block_code <- function(x, ...) {
   UseMethod("block_code", x)
 }
 
-#' @rdname generate_ui
+#' @rdname block_code
 #' @export
 block_code.block <- function(x, ns, inputs_hidden, ...) {
-
   code_id <- ns("codeCollapse")
 
   div(
@@ -111,13 +127,20 @@ block_code.block <- function(x, ns, inputs_hidden, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' Block header generic
+#'
+#' Generic for creating the block header.
+#'
+#' @inheritParams ui_fields
+#' @param hidden_class TBD.
+#' @rdname block_header
 #' @export
 block_header <- function(x, ...) {
   UseMethod("block_header", x)
 }
 
 #' @importFrom shiny tags div p
+#' @rdname block_header
 #' @export
 block_header.block <- function(x, ns, hidden_class, ...) {
   title <- class(x)[1] |>
@@ -144,19 +167,25 @@ block_header.block <- function(x, ns, hidden_class, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' Data info generic
+#'
+#' Generic for creating the data info tags,
+#' to display the number of columns, rows, ...
+#'
+#' @inheritParams ui_fields
+#' @rdname data_info
 #' @export
 data_info <- function(x, ...) {
   UseMethod("data_info")
 }
 
-#' @rdname generate_ui
+#' @rdname data_info
 #' @export
 data_info.block <- function(x, ns, ...) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname data_info
 #' @export
 data_info.data_block <- function(x, ns, ...) {
   div(
@@ -172,17 +201,23 @@ data_info.data_block <- function(x, ns, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname data_info
 #' @export
 data_info.transform_block <- data_info.data_block
 
-#' @rdname generate_ui
+#' Block remove generic
+#'
+#' Generic for creating block remove button.
+#'
+#' @inheritParams ui_fields
+#' @inheritParams inject_remove_button
+#' @rdname remove_button
 #' @export
 remove_button <- function(x, ...) {
   UseMethod("remove_button", x)
 }
 
-#' @rdname generate_ui
+#' @rdname remove_button
 #' @export
 remove_button.block <- function(x, id, ...) {
   actionLink(
@@ -197,7 +232,6 @@ remove_button.block <- function(x, id, ...) {
 #' @export
 generate_ui.block <- function(x, id, ...,
                               .hidden = !getOption("BLOCKR_DEV", FALSE)) {
-
   stopifnot(...length() == 0L)
 
   ns <- NS(id)
@@ -238,7 +272,6 @@ generate_ui.block <- function(x, id, ...,
 #'
 #' @export
 add_block_ui <- function(ns = identity) {
-
   add_block_ui_id <- ns("add")
 
   log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
@@ -273,7 +306,6 @@ add_block_ui <- function(ns = identity) {
 #' @rdname generate_ui
 #' @export
 generate_ui.stack <- function(x, id = NULL, ...) {
-
   stopifnot(...length() == 0L)
 
   id <- coal(id, get_stack_name(x))
@@ -290,8 +322,9 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         lapply(seq_along(x), \(i) {
           hidden <- i != length(x)
 
-          if (getOption("BLOCKR_DEV", FALSE))
+          if (getOption("BLOCKR_DEV", FALSE)) {
             hidden <- FALSE
+          }
 
           inject_remove_button(x[[i]], ns, .hidden = hidden)
         })
@@ -301,7 +334,8 @@ generate_ui.stack <- function(x, id = NULL, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' @inheritParams generate_ui
+#' @rdname inject_remove_button
 #' @export
 inject_remove_button <- function(x, ...) {
   UseMethod("inject_remove_button")
@@ -318,7 +352,7 @@ inject_remove_button <- function(x, ...) {
 #' hidden inputs.
 #'
 #' @export
-#' @rdname generate_ui
+#' @rdname inject_remove_button
 inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV", FALSE), ...) {
   id <- attr(x, "name")
   tmp <- generate_ui(x, id = ns(id), .hidden = .hidden)
@@ -326,7 +360,7 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
   htmltools::tagQuery(tmp)$
     find(".block-tools")$
     prepend(remove_button(x, ns(sprintf("remove-block-%s", id))))$
-  allTags()
+    allTags() # nolint
 }
 
 #' Inject remove button into stack header
@@ -338,12 +372,12 @@ inject_remove_button.block <- function(x, ns, .hidden = !getOption("BLOCKR_DEV",
 #' @param id Parent ID
 #'
 #' @export
-#' @rdname generate_ui
+#' @rdname inject_remove_button
 inject_remove_button.stack <- function(x, id, ...) {
   stop("Not implemented")
 }
 
-#' @rdname generate_ui
+#' @rdname remove_button
 #' @export
 remove_button.stack <- function(x, id, ...) {
   actionLink(
@@ -353,12 +387,19 @@ remove_button.stack <- function(x, id, ...) {
   )
 }
 
-#' @rdname generate_ui
+#' Stack header generic
+#'
+#' Generic for creating stack header.
+#'
+#' @inheritParams ui_fields
+#' @param title Stack title.
+#' @rdname stack_header
 #' @export
 stack_header <- function(x, ...) {
   UseMethod("stack_header", x)
 }
 
+#' @rdname stack_header
 #' @importFrom shiny icon tags div
 stack_header.stack <- function(x, title, ns, ...) {
   icon <- iconEdit()
@@ -419,7 +460,7 @@ generate_ui.workspace <- function(x, id, ...) {
   stacks <- get_workspace_stacks(workspace = x)
 
   stack_ui <- NULL
-  if (length(stacks) > 0)
+  if (length(stacks) > 0) {
     stack_ui <- div(
       class = "d-flex stacks flex-wrap",
       lapply(seq_along(stacks), \(i) {
@@ -430,6 +471,7 @@ generate_ui.workspace <- function(x, id, ...) {
         )
       })
     )
+  }
 
   tagList(
     workspaceDeps(),
@@ -460,20 +502,28 @@ generate_ui.workspace <- function(x, id, ...) {
   )
 }
 
-#' @param name Field name
-#' @rdname generate_ui
+#' UI input generic
+#'
+#' For a given field, generates the corresponding
+#' shiny input tag. All \link{ui_update} updates
+#' the corresponding input on the server side. \link{input_ids}
+#' is reponsible for finding the element id.
+#'
+#' @inheritParams generate_ui
+#' @param name Field name.
+#' @rdname ui_input
 #' @export
 ui_input <- function(x, id, name) {
   UseMethod("ui_input", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.string_field <- function(x, id, name) {
   textInput(input_ids(x, id), name, value(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.select_field <- function(x, id, name) {
   selectizeInput(
@@ -485,13 +535,13 @@ ui_input.select_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.switch_field <- function(x, id, name) {
   bslib::input_switch(input_ids(x, id), name, value(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.numeric_field <- function(x, id, name) {
   numericInput(
@@ -499,7 +549,7 @@ ui_input.numeric_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.submit_field <- function(x, id, name) {
   actionButton(
@@ -510,7 +560,7 @@ ui_input.submit_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.upload_field <- function(x, id, name) {
   fileInput(
@@ -519,7 +569,7 @@ ui_input.upload_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.filesbrowser_field <- function(x, id, name) {
   shinyFiles::shinyFilesButton(
@@ -530,10 +580,9 @@ ui_input.filesbrowser_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.result_field <- function(x, id, name) {
-
   ns <- NS(input_ids(x, id))
 
   selectizeInput(
@@ -548,32 +597,33 @@ ui_input.result_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 input_ids.block <- function(x, ...) {
   Map(input_ids, x, names(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 input_ids.field <- function(x, name, ...) {
   name
 }
 
 #' @rdname generate_ui
+#' @param name Input name.
 #' @export
 input_ids.list_field <- function(x, name, ...) {
   sub_names <- names(value(x, "sub_fields"))
   set_names(paste0(name, "_", sub_names), sub_names)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.variable_field <- function(x, id, name) {
   field <- validate_field(
@@ -586,7 +636,7 @@ ui_input.variable_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.range_field <- function(x, id, name) {
   sliderInput(
@@ -594,13 +644,13 @@ ui_input.range_field <- function(x, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.hidden_field <- function(x, id, name) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_input.list_field <- function(x, id, name) {
   fields <- lapply(
@@ -620,19 +670,19 @@ ui_input.list_field <- function(x, id, name) {
 }
 
 #' @param session Shiny session
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update <- function(x, session, id, name) {
   UseMethod("ui_update", x)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
   updateTextInput(session, input_ids(x, id), get_field_name(x, name), value(x))
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
   updateSelectInput(
@@ -640,13 +690,13 @@ ui_update.select_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.switch_field <- function(x, session, id, name) {
   bslib::update_switch(input_ids(x, id), get_field_name(x, name), value(x), session)
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.variable_field <- function(x, session, id, name) {
   ns <- session$ns
@@ -668,7 +718,7 @@ ui_update.variable_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
   updateSliderInput(
@@ -676,7 +726,7 @@ ui_update.range_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.numeric_field <- function(x, session, id, name) {
   updateNumericInput(
@@ -684,7 +734,7 @@ ui_update.numeric_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.submit_field <- function(x, session, id, name) {
   updateActionButton(
@@ -694,13 +744,13 @@ ui_update.submit_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.upload_field <- function(x, session, id, name) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.filesbrowser_field <- function(x, session, id, name) {
   shinyFiles::shinyFileChoose(
@@ -710,13 +760,13 @@ ui_update.filesbrowser_field <- function(x, session, id, name) {
   )
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.hidden_field <- function(x, session, id, name) {
   NULL
 }
 
-#' @rdname generate_ui
+#' @rdname ui_input
 #' @export
 ui_update.list_field <- function(x, session, id, name) {
   ns <- session$ns
@@ -745,60 +795,52 @@ ui_update.list_field <- function(x, session, id, name) {
   )
 }
 
-#' Custom card container
-#' @keywords internal
-div_card <- function(..., title = NULL, value) {
-  panel_tag <- bslib::accordion_panel(
-    title = if (not_null(title)) title,
-    value = value,
-    ...
-  )
-  tagAppendAttributes(panel_tag, class = "block")
-}
-
-#' Custom code container
-#' @keywords internal
-custom_verbatim_output <- function(id) {
-  tmp <- shiny::verbatimTextOutput(id)
-  tmp$attribs$style <- "max-height: 400px; overflow-y: scroll"
-  tmp
-}
+#' Render block output generic
+#'
+#' Renders the block output.
+#' @param x Block.
 #' @param ns Output namespace
-#' @rdname generate_ui
+#' @rdname uiOutputBlock
 #' @export
 uiOutputBlock <- function(x, ns) {
   UseMethod("uiOutputBlock", x)
 }
 
-#' @rdname generate_ui
+#' @rdname uiOutputBlock
 #' @export
 uiOutputBlock.block <- function(x, ns) {
   DT::dataTableOutput(ns("res"))
 }
 
-#' @rdname generate_ui
+#' @rdname uiOutputBlock
 #' @export
 uiOutputBlock.upload_block <- function(x, ns) {
   shiny::verbatimTextOutput(ns("res"))
 }
 
-#' @rdname generate_ui
+#' @rdname uiOutputBlock
 #' @export
 uiOutputBlock.filesbrowser_block <- uiOutputBlock.upload_block
 
-#' @rdname generate_ui
+#' @rdname uiOutputBlock
 #' @export
 uiOutputBlock.plot_block <- function(x, ns) {
   shiny::plotOutput(ns("plot"))
 }
 
-#' @rdname generate_ui
+#' Copy code generic
+#'
+#' Generate ui to copy block code and output
+#' the code content.
+#'
+#' @rdname uiCode
+#' @inheritParams ui_fields
 #' @export
 uiCode <- function(x, ns) {
   UseMethod("uiCode", x)
 }
 
-#' @rdname generate_ui
+#' @rdname uiCode
 #' @export
 uiCode.block <- function(x, ns) {
   div(
@@ -838,8 +880,16 @@ iconTrash <- function() {
   icon("trash")
 }
 
+#' Block icon generic
+#'
+#' Create a block icon depending in the block class
+#' @param x Object inheriting from `"block"`.
+#' @param ... For generic consistency.
+#' @export
+#' @rdname block_icon
 block_icon <- function(x, ...) UseMethod("block_icon", x)
 
+#' @rdname block_icon
 #' @export
 block_icon.default <- function(x, ...) {
   span(
@@ -849,6 +899,7 @@ block_icon.default <- function(x, ...) {
   )
 }
 
+#' @rdname block_icon
 #' @export
 block_icon.data_block <- function(x, ...) {
   span(
@@ -858,6 +909,7 @@ block_icon.data_block <- function(x, ...) {
   )
 }
 
+#' @rdname block_icon
 #' @export
 block_icon.transform_block <- function(x, ...) {
   span(
@@ -867,6 +919,7 @@ block_icon.transform_block <- function(x, ...) {
   )
 }
 
+#' @rdname block_icon
 #' @export
 block_icon.plot_block <- function(x, ...) {
   span(
