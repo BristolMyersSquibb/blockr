@@ -206,7 +206,7 @@ new_data_block <- function(
   if (length(selected) == 0) selected <- datasets[1]
 
   fields <- list(
-    dataset = new_select_field(selected, datasets, always_show = TRUE)
+    dataset = new_select_field(selected, datasets)
   )
 
   expr <- substitute(

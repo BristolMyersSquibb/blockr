@@ -194,6 +194,8 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
+      observe_lock_field(x, blk)
+
       return(
         list(
           block = blk,
@@ -315,13 +317,11 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       })
 
       observeEvent(input$add, {
-        print(available_blocks()[[input$selected_block]])
         add_block_stack(
           block_to_add = available_blocks()[[input$selected_block]],
           position = NULL,
           vals = vals
         )
-        print("done")
       })
 
       observe({

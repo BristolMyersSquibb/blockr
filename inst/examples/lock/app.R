@@ -1,6 +1,6 @@
 devtools::load_all()
 
-stack <- new_stack()
+stack <- new_stack(data_block)
 id <- "mystack"
 
 shiny::shinyApp(

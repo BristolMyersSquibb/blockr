@@ -32,7 +32,7 @@
 \alias{stack_header}
 \alias{generate_ui.workspace}
 \alias{ui_input_wrapper}
-\alias{ui_input_wrapper.field}
+\alias{ui_input_wrapper.default}
 \alias{ui_input}
 \alias{ui_input.string_field}
 \alias{ui_input.select_field}
@@ -133,7 +133,7 @@ stack_header(x, ...)
 
 ui_input_wrapper(x, id, name)
 
-\method{ui_input_wrapper}{field}(x, id, name)
+\method{ui_input_wrapper}{default}(x, id, name)
 
 ui_input(x, id, name)
 

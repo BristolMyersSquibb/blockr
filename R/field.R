@@ -11,7 +11,6 @@
 #' @param status The status of the field (experimental)
 #' @param class Field subclass
 #' @param exclude Experimental: Exclude field from being captured in the update_fields
-#' @param always_show Keep the input visible when the workspace is locked.
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
@@ -19,7 +18,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
                       title = "",
                       descr = "",
                       status = c("active", "disabled", "invisible"),
-                      class = character(), exclude = FALSE, always_show = FALSE) {
+                      class = character(), exclude = FALSE) {
   x <- list(value = value, ...)
 
   status <- match.arg(status)
@@ -34,7 +33,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
     descr = descr,
     status = status,
     exclude = exclude,
-    always_show = always_show
+    always_show = FALSE
   )
 }
 
@@ -510,6 +509,27 @@ result_field <- function(...) {
 #' @export
 validate_field.result_field <- function(x) {
   x
+}
+
+observe_lock_field <- function(
+  x,
+  blk,
+  session = shiny::getDefaultReactiveDomain(),
+  ...
+) {
+  x |>
+    names() |>
+    lapply(\(field) {
+      id <- sprintf("%sLock", field)
+
+      observeEvent(session$input[[id]], {
+        b <- as.list(blk())
+        attr(b[[field]], "always_show") <- session$input[[id]]
+        blk(b)
+      })
+    })
+
+  return(blk)
 }
 
 #' @rdname generate_server

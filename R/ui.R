@@ -469,13 +469,25 @@ ui_input_wrapper <- function(x, id, name) {
 #' @param name Field name
 #' @rdname generate_ui
 #' @export
-ui_input_wrapper.field <- function(x, id, name) {
+ui_input_wrapper.default <- function(x, id, name) {
   div(
-    id = paste0(id, "-container"),
-    class = "field-wrapper",
-    `data-blockr-show` = get_field_always_show(x) |> tolower(),
-    ui_input(x, id, name)
+    class = "blockr-input-container position-relative",
+    lockInput(paste0(input_ids(x, id), "Lock"), get_field_always_show(x)),
+    div(
+      class = "blockr-input",
+      ui_input(x, id, name),
+    )
   )
+}
+
+#' @export
+ui_input_wrapper.hidden_field <- function(x, id, name) {
+  NULL
+}
+
+#' @export
+ui_input_wrapper.submit_field <- function(x, id, name) {
+  ui_input(x, id, name)
 }
 
 #' @param name Field name
