@@ -485,11 +485,6 @@ ui_input_wrapper.hidden_field <- function(x, id, name) {
   NULL
 }
 
-#' @export
-ui_input_wrapper.submit_field <- function(x, id, name) {
-  ui_input(x, id, name)
-}
-
 #' @param name Field name
 #' @rdname generate_ui
 #' @export

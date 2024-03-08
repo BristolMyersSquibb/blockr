@@ -84,9 +84,22 @@ const moveInputs = (stack) => {
       if (detached.length === 0) return;
 
       $parent.append(`<h6 class="fw-bold">${blockTitle}</h6>`);
-      detached.forEach((detached) => {
-        $parent.append(detached);
-      });
+
+      while (detached.length > 0) {
+        const rowItems = detached.splice(0, 4);
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        rowItems.map((el) => {
+          const col = document.createElement("div");
+          col.className = "col-3";
+          col.appendChild(el[0]);
+          row.appendChild(col);
+        });
+
+        $parent.append(row);
+      }
     });
 };
 
