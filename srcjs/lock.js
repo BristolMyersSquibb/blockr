@@ -21,23 +21,8 @@ const emitEvent = (locked) => {
 const handleLock = () => {
   if (!locked) return;
 
-  $(".stack-remove").toggle();
-  $(".stack-edit-toggle").toggle();
-  $(".stack-copy-code").toggle();
-  $(".block-code-toggle").toggle();
-  $(".block-output-toggle").toggle();
-  $(".stack-tools").toggle();
-  $(".block-remove").toggle();
-
-  $(".stack-title").off();
-
   $(".stack").each((_index, el) => {
-    const $editor = $(el).find(".stack-edit-toggle");
-    const isClosed = $editor.find("i").hasClass("fa-chevron-up");
-
-    if (isClosed) return;
-
-    $editor.trigger("click");
+    lock(el);
   });
 };
 
@@ -66,4 +51,21 @@ const lock = (stack) => {
   if (isClosed) return;
 
   $editor.trigger("click");
+  moveInputs(stack);
+};
+
+const moveInputs = (stack) => {
+  $(stack)
+    .find(".card-body")
+    .first()
+    .prepend("<div class='blockr-shown-inputs p-2'></div>");
+
+  const $parent = $(stack).find(".card-body").find(".blockr-shown-inputs");
+
+  $(stack)
+    .find("[data-blockr-show='true']")
+    .each((_index, el) => {
+      const detached = $(el).detach();
+      $parent.append(detached);
+    });
 };

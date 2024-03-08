@@ -23,7 +23,7 @@ ui_fields <- function(x, ...) {
 #' @export
 ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   fields <- Map(
-    ui_input,
+    ui_input_wrapper,
     x,
     id = chr_ply(names(x), ns),
     name = names(x)
@@ -457,6 +457,24 @@ generate_ui.workspace <- function(x, id, ...) {
       ),
     ),
     div(class = "m-2 row workspace", stack_ui)
+  )
+}
+
+#' @rdname generate_ui
+#' @export
+ui_input_wrapper <- function(x, id, name) {
+  UseMethod("ui_input_wrapper", x)
+}
+
+#' @param name Field name
+#' @rdname generate_ui
+#' @export
+ui_input_wrapper.field <- function(x, id, name) {
+  div(
+    id = paste0(id, "-container"),
+    class = "field-wrapper",
+    `data-blockr-show` = get_field_always_show(x) |> tolower(),
+    ui_input(x, id, name)
   )
 }
 

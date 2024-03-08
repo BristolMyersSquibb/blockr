@@ -11,6 +11,7 @@
 #' @param status The status of the field (experimental)
 #' @param class Field subclass
 #' @param exclude Experimental: Exclude field from being captured in the update_fields
+#' @param always_show Keep the input visible when the workspace is locked.
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
@@ -18,7 +19,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
                       title = "",
                       descr = "",
                       status = c("active", "disabled", "invisible"),
-                      class = character(), exclude = FALSE) {
+                      class = character(), exclude = FALSE, always_show = FALSE) {
   x <- list(value = value, ...)
 
   status <- match.arg(status)
@@ -32,7 +33,8 @@ new_field <- function(value, ..., type = c("literal", "name"),
     title = title,
     descr = descr,
     status = status,
-    exclude = exclude
+    exclude = exclude,
+    always_show = always_show
   )
 }
 
@@ -556,4 +558,8 @@ generate_server.result_field <- function(x, ...) {
       reactivePoll(100, session, result_hash, get_result)
     })
   }
+}
+
+get_field_always_show <- function(x) {
+  attr(x, "always_show")
 }

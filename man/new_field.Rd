@@ -60,7 +60,8 @@ new_field(
   descr = "",
   status = c("active", "disabled", "invisible"),
   class = character(),
-  exclude = FALSE
+  exclude = FALSE,
+  always_show = FALSE
 )
 
 validate_field(x)
@@ -190,7 +191,9 @@ keyvalue_field(...)
 
 \item{class}{Field subclass}
 
-\item{exclude}{Experimental: Exclude field from being captured in the update_fields
+\item{exclude}{Experimental: Exclude field from being captured in the update_fields}
+
+\item{always_show}{Keep the input visible when the workspace is locked.
 feature. Default to FALSE. Not yet used.}
 
 \item{x}{An object inheriting form \code{"field"}}
