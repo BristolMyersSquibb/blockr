@@ -1,4 +1,9 @@
-import { collapse, toggleOutputInput, handleIcons } from "./collapse.js";
+import {
+  collapse,
+  toggleOutputInput,
+  handleIcons,
+  collapseOtherBlocks,
+} from "./collapse.js";
 import { title } from "./stack-title.js";
 import { renderLocked } from "./lock.js";
 import { tooltip } from "./tooltips.js";
@@ -19,12 +24,14 @@ window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
 
 window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   const stack = `#${msg.stack}`;
+  $(stack).removeClass("d-none");
+
   // TODO remove this
   // be event based/async instead of timeout
-  $(stack).removeClass("d-none");
   setTimeout(() => {
     toggleOutputInput(stack);
     handleIcons(stack);
+    collapseOtherBlocks(stack, msg.block);
   }, 500);
 });
 

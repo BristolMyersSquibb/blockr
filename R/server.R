@@ -315,13 +315,11 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       })
 
       observeEvent(input$add, {
-        print(available_blocks()[[input$selected_block]])
         add_block_stack(
           block_to_add = available_blocks()[[input$selected_block]],
           position = NULL,
           vals = vals
         )
-        print("done")
       })
 
       observe({
@@ -693,6 +691,9 @@ add_block_stack <- function(
   # trigger javascript-ui functionalities on add
   session$sendCustomMessage(
     "blockr-add-block",
-    list(stack = session$ns(NULL))
+    list(
+      stack = session$ns(NULL),
+      block = session$ns(attr(vals$stack[[p]], "name"))
+    )
   )
 }
