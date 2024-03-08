@@ -299,7 +299,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       init(x, vals, session)
 
-      # Add new block
+      # For advanced usage. Add new block when not using
+      # the stack UI/add button from blockr.
       observeEvent(
         {
           req(new_block)
@@ -360,7 +361,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       observeEvent(input$add, {
         add_block_stack(
-          block_to_add = available_blocks()[[input$selected_block]],
+          block_to_add = available_blocks()[[input$selected_block]], # pass in block constructor
           position = NULL,
           vals = vals
         )

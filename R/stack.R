@@ -181,10 +181,7 @@ add_block <- function(stack, block, position = NULL) {
   } else if (length(stack) > 1L) {
     data <- evaluate_block(stack[[1]])
     for (i in seq_along(stack)[-1L]) {
-      data <- evaluate_block(
-        do.call(class(stack[[i]])[[1]], list(data)),
-        data = data
-      )
+      data <- evaluate_block(stack[[i]], data = data)
     }
   }
 
