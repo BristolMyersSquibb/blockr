@@ -40,10 +40,25 @@
     <loc>/reference/add_block_ui.html</loc>
   </url>
   <url>
+    <loc>/reference/arrange_block.html</loc>
+  </url>
+  <url>
     <loc>/reference/available_blocks.html</loc>
   </url>
   <url>
+    <loc>/reference/block_body.html</loc>
+  </url>
+  <url>
+    <loc>/reference/block_code.html</loc>
+  </url>
+  <url>
     <loc>/reference/block_combiner.html</loc>
+  </url>
+  <url>
+    <loc>/reference/block_header.html</loc>
+  </url>
+  <url>
+    <loc>/reference/block_icon.html</loc>
   </url>
   <url>
     <loc>/reference/blockr_serialize.html</loc>
@@ -58,13 +73,28 @@
     <loc>/reference/create_modal.html</loc>
   </url>
   <url>
-    <loc>/reference/custom_verbatim_output.html</loc>
+    <loc>/reference/data_block.html</loc>
   </url>
   <url>
-    <loc>/reference/div_card.html</loc>
+    <loc>/reference/data_info.html</loc>
+  </url>
+  <url>
+    <loc>/reference/evaluate_block.html</loc>
   </url>
   <url>
     <loc>/reference/exprs_ui.html</loc>
+  </url>
+  <url>
+    <loc>/reference/filesbrowser_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/filesbrowser_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/filter_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/generate_code.html</loc>
   </url>
   <url>
     <loc>/reference/generate_server.html</loc>
@@ -73,7 +103,22 @@
     <loc>/reference/generate_ui.html</loc>
   </url>
   <url>
+    <loc>/reference/group_by_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/handle_remove.html</loc>
+  </url>
+  <url>
+    <loc>/reference/head_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/hidden_field.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/init.html</loc>
   </url>
   <url>
     <loc>/reference/init_block.html</loc>
@@ -82,10 +127,28 @@
     <loc>/reference/init_lock.html</loc>
   </url>
   <url>
+    <loc>/reference/initialize.html</loc>
+  </url>
+  <url>
+    <loc>/reference/initialize_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/initialize_field.html</loc>
+  </url>
+  <url>
     <loc>/reference/inject_block.html</loc>
   </url>
   <url>
+    <loc>/reference/inject_remove_button.html</loc>
+  </url>
+  <url>
     <loc>/reference/is_whole.html</loc>
+  </url>
+  <url>
+    <loc>/reference/join_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/keyvalue_field.html</loc>
   </url>
   <url>
     <loc>/reference/layout.html</loc>
@@ -94,10 +157,13 @@
     <loc>/reference/layout_fields.html</loc>
   </url>
   <url>
+    <loc>/reference/list_field.html</loc>
+  </url>
+  <url>
     <loc>/reference/lock.html</loc>
   </url>
   <url>
-    <loc>/reference/move_block.html</loc>
+    <loc>/reference/mutate_block.html</loc>
   </url>
   <url>
     <loc>/reference/new_block.html</loc>
@@ -109,16 +175,85 @@
     <loc>/reference/new_stack.html</loc>
   </url>
   <url>
+    <loc>/reference/numeric_field.html</loc>
+  </url>
+  <url>
     <loc>/reference/off_canvas.html</loc>
+  </url>
+  <url>
+    <loc>/reference/parser_block.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
+    <loc>/reference/range_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/remove_button.html</loc>
+  </url>
+  <url>
+    <loc>/reference/result_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/result_field.html</loc>
+  </url>
+  <url>
     <loc>/reference/secure.html</loc>
   </url>
   <url>
+    <loc>/reference/select_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/select_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/server_code.html</loc>
+  </url>
+  <url>
+    <loc>/reference/server_output.html</loc>
+  </url>
+  <url>
     <loc>/reference/set_workspace.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stack_header.html</loc>
+  </url>
+  <url>
+    <loc>/reference/string_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/submit_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summarize_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/switch_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/uiCode.html</loc>
+  </url>
+  <url>
+    <loc>/reference/uiOutputBlock.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ui_fields.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ui_input.html</loc>
+  </url>
+  <url>
+    <loc>/reference/update_field.html</loc>
+  </url>
+  <url>
+    <loc>/reference/update_fields.html</loc>
+  </url>
+  <url>
+    <loc>/reference/upload_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/upload_field.html</loc>
   </url>
   <url>
     <loc>/reference/useBlockr.html</loc>
@@ -127,7 +262,19 @@
     <loc>/reference/validate_block.html</loc>
   </url>
   <url>
+    <loc>/reference/validate_field.html</loc>
+  </url>
+  <url>
     <loc>/reference/validate_inputs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/value.html</loc>
+  </url>
+  <url>
+    <loc>/reference/values.html</loc>
+  </url>
+  <url>
+    <loc>/reference/variable_field.html</loc>
   </url>
   <url>
     <loc>/reference/write_log.html</loc>

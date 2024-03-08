@@ -60,9 +60,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="fields-core-elements">Fields core elements<a class="anchor" aria-label="anchor" href="#fields-core-elements"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Functions to build fields</p>
 
       
     </div><div id="" class="section level2">
@@ -72,65 +72,156 @@
 
       <dl><dt>
           
-          <code><a href="add_block.html">add_block()</a></code> 
+          <code><a href="new_field.html">new_field()</a></code> <code><a href="new_field.html">is_field()</a></code> 
         </dt>
-        <dd>Add block to a stack</dd>
+        <dd>Fields</dd>
       </dl><dl><dt>
           
-          <code><a href="add_block_ui.html">add_block_ui()</a></code> 
+          <code><a href="initialize_field.html">initialize_field()</a></code> 
         </dt>
-        <dd>Add block UI interface</dd>
+        <dd>Initialize field generic</dd>
       </dl><dl><dt>
           
-          <code><a href="available_blocks.html">available_blocks()</a></code> <code><a href="available_blocks.html">block_name()</a></code> <code><a href="available_blocks.html">block_descr()</a></code> <code><a href="available_blocks.html">register_block()</a></code> <code><a href="available_blocks.html">register_blocks()</a></code> <code><a href="available_blocks.html">unregister_blocks()</a></code> <code><a href="available_blocks.html">construct_block()</a></code> 
+          <code><a href="initialize.html">is_initialized()</a></code> 
         </dt>
-        <dd>Block registry</dd>
+        <dd>S3 generic for initialization</dd>
       </dl><dl><dt>
           
-          <code><a href="block_combiner.html">block_combiner()</a></code> 
+          <code><a href="validate_field.html">validate_field()</a></code> 
         </dt>
-        <dd>Combine 2 block expressions</dd>
+        <dd>Validate field generic</dd>
       </dl><dl><dt>
           
-          <code><a href="blockr_serialize.html">blockr_serialize()</a></code> <code><a href="blockr_serialize.html">blockr_deserialize()</a></code> <code><a href="blockr_serialize.html">from_json()</a></code> <code><a href="blockr_serialize.html">to_json()</a></code> 
+          <code><a href="update_field.html">update_field()</a></code> 
         </dt>
-        <dd>Serialization</dd>
+        <dd>Update field generic</dd>
       </dl><dl><dt>
           
-          <code><a href="create_app_link.html">create_app_link()</a></code> 
+          <code><a href="value.html">value()</a></code> <code><a href="value.html">`value&lt;-`()</a></code> 
         </dt>
-        <dd>Create shinylive iframe</dd>
+        <dd>Get field attribute value</dd>
       </dl><dl><dt>
           
-          <code><a href="create_block.html">create_block()</a></code> 
+          <code><a href="values.html">values()</a></code> 
         </dt>
-        <dd>Create a new block</dd>
+        <dd>Get all values from a field</dd>
+      </dl></div><div class="section level2">
+      <h2 id="fields-elements">Fields elements<a class="anchor" aria-label="anchor" href="#fields-elements"></a></h2>
+      
+      <p class="section-desc"></p><p>Fields are translated into shiny inputs. They are part of blocks.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="string_field.html">new_string_field()</a></code> <code><a href="string_field.html">string_field()</a></code> 
+        </dt>
+        <dd>String field constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="exprs_ui.html">exprs_ui()</a></code> 
+          <code><a href="select_field.html">new_select_field()</a></code> <code><a href="select_field.html">select_field()</a></code> 
         </dt>
-        <dd>Create a UI element for expressions</dd>
+        <dd>Select field constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="generate_server.html">generate_server()</a></code> <code><a href="generate_server.html">handle_remove()</a></code> <code><a href="generate_server.html">init()</a></code> 
+          <code><a href="switch_field.html">new_switch_field()</a></code> <code><a href="switch_field.html">switch_field()</a></code> 
         </dt>
-        <dd>Key Value Field</dd>
+        <dd>Switch field constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="generate_ui.html">server_output()</a></code> <code><a href="generate_ui.html">server_code()</a></code> <code><a href="generate_ui.html">generate_ui()</a></code> <code><a href="generate_ui.html">ui_fields()</a></code> <code><a href="generate_ui.html">block_body()</a></code> <code><a href="generate_ui.html">block_code()</a></code> <code><a href="generate_ui.html">block_header()</a></code> <code><a href="generate_ui.html">data_info()</a></code> <code><a href="generate_ui.html">remove_button()</a></code> <code><a href="generate_ui.html">inject_remove_button()</a></code> <code><a href="generate_ui.html">stack_header()</a></code> <code><a href="generate_ui.html">ui_input()</a></code> <code><a href="generate_ui.html">input_ids()</a></code> <code><a href="generate_ui.html">ui_update()</a></code> <code><a href="generate_ui.html">uiOutputBlock()</a></code> <code><a href="generate_ui.html">uiCode()</a></code> 
+          <code><a href="numeric_field.html">new_numeric_field()</a></code> <code><a href="numeric_field.html">numeric_field()</a></code> 
         </dt>
-        <dd>UI</dd>
+        <dd>Numeric field constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="init_lock.html">init_lock()</a></code> 
+          <code><a href="submit_field.html">new_submit_field()</a></code> <code><a href="submit_field.html">submit_field()</a></code> 
         </dt>
-        <dd>Initialise Lock
-Initialises the lock reactive value.</dd>
+        <dd>Submit field constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="is_whole.html">is_whole()</a></code> 
+          <code><a href="upload_field.html">new_upload_field()</a></code> <code><a href="upload_field.html">upload_field()</a></code> 
         </dt>
-        <dd>Check if number is whole</dd>
+        <dd>Upload field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="filesbrowser_field.html">new_filesbrowser_field()</a></code> <code><a href="filesbrowser_field.html">filesbrowser_field()</a></code> 
+        </dt>
+        <dd>Files browser field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="variable_field.html">new_variable_field()</a></code> <code><a href="variable_field.html">variable_field()</a></code> 
+        </dt>
+        <dd>Variable field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="range_field.html">new_range_field()</a></code> <code><a href="range_field.html">range_field()</a></code> 
+        </dt>
+        <dd>Range field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hidden_field.html">new_hidden_field()</a></code> <code><a href="hidden_field.html">hidden_field()</a></code> 
+        </dt>
+        <dd>Hidden field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="list_field.html">new_list_field()</a></code> <code><a href="list_field.html">list_field()</a></code> 
+        </dt>
+        <dd>List field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="result_field.html">new_result_field()</a></code> <code><a href="result_field.html">result_field()</a></code> 
+        </dt>
+        <dd>Result field constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="keyvalue_field.html">generate_server(<i>&lt;keyvalue_field&gt;</i>)</a></code> <code><a href="keyvalue_field.html">ui_input(<i>&lt;keyvalue_field&gt;</i>)</a></code> <code><a href="keyvalue_field.html">new_keyvalue_field()</a></code> <code><a href="keyvalue_field.html">keyvalue_field()</a></code> 
+        </dt>
+        <dd>Key Value Field server</dd>
+      </dl></div><div class="section level2">
+      <h2 id="blocks-core-elements">Blocks core elements<a class="anchor" aria-label="anchor" href="#blocks-core-elements"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to build blocks</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="new_block.html">new_block()</a></code> <code><a href="new_block.html">is_block()</a></code> 
+        </dt>
+        <dd>Blocks</dd>
+      </dl><dl><dt>
+          
+          <code><a href="initialize_block.html">initialize_block()</a></code> 
+        </dt>
+        <dd>Initialize block generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="initialize.html">is_initialized()</a></code> 
+        </dt>
+        <dd>S3 generic for initialization</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_code.html">generate_code()</a></code> 
+        </dt>
+        <dd>Generate code generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="evaluate_block.html">evaluate_block()</a></code> 
+        </dt>
+        <dd>Evaluate a block generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="update_fields.html">update_fields()</a></code> 
+        </dt>
+        <dd>Update fields generic</dd>
       </dl><dl><dt>
           
           <code><a href="layout.html">layout()</a></code> 
@@ -140,34 +231,270 @@ Default layout for fields, places fields on rows
 and collapses parts of inputs when there are too many.</dd>
       </dl><dl><dt>
           
-          <code><a href="lock.html">lock()</a></code> <code><a href="lock.html">unlock()</a></code> <code><a href="lock.html">toggle_lock()</a></code> <code><a href="lock.html">is_locked()</a></code> <code><a href="lock.html">observe_lock()</a></code> 
+          <code><a href="create_block.html">create_block()</a></code> 
         </dt>
-        <dd>Lock</dd>
+        <dd>Create a new block</dd>
+      </dl></div><div class="section level2">
+      <h2 id="blocks">Blocks<a class="anchor" aria-label="anchor" href="#blocks"></a></h2>
+      
+      <p class="section-desc"></p><p>Blocks contain field. They return a dataframe</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="data_block.html">new_data_block()</a></code> <code><a href="data_block.html">data_block()</a></code> 
+        </dt>
+        <dd>Data block constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="move_block.html">move_block()</a></code> 
+          <code><a href="upload_block.html">new_upload_block()</a></code> <code><a href="upload_block.html">upload_block()</a></code> 
         </dt>
-        <dd>Move blocks within a stack</dd>
+        <dd>Upload block constructor</dd>
       </dl><dl><dt>
           
-          <code><a href="new_field.html">new_field()</a></code> <code><a href="new_field.html">validate_field()</a></code> <code><a href="new_field.html">update_field()</a></code> <code><a href="new_field.html">initialize_field()</a></code> <code><a href="new_field.html">is_field()</a></code> <code><a href="new_field.html">new_string_field()</a></code> <code><a href="new_field.html">string_field()</a></code> <code><a href="new_field.html">new_select_field()</a></code> <code><a href="new_field.html">select_field()</a></code> <code><a href="new_field.html">new_switch_field()</a></code> <code><a href="new_field.html">switch_field()</a></code> <code><a href="new_field.html">new_numeric_field()</a></code> <code><a href="new_field.html">numeric_field()</a></code> <code><a href="new_field.html">new_submit_field()</a></code> <code><a href="new_field.html">submit_field()</a></code> <code><a href="new_field.html">new_upload_field()</a></code> <code><a href="new_field.html">upload_field()</a></code> <code><a href="new_field.html">new_filesbrowser_field()</a></code> <code><a href="new_field.html">filesbrowser_field()</a></code> <code><a href="new_field.html">value()</a></code> <code><a href="new_field.html">values()</a></code> <code><a href="new_field.html">`value&lt;-`()</a></code> <code><a href="new_field.html">new_variable_field()</a></code> <code><a href="new_field.html">variable_field()</a></code> <code><a href="new_field.html">new_range_field()</a></code> <code><a href="new_field.html">range_field()</a></code> <code><a href="new_field.html">new_hidden_field()</a></code> <code><a href="new_field.html">hidden_field()</a></code> <code><a href="new_field.html">new_list_field()</a></code> <code><a href="new_field.html">list_field()</a></code> <code><a href="new_field.html">new_result_field()</a></code> <code><a href="new_field.html">result_field()</a></code> <code><a href="new_field.html">new_keyvalue_field()</a></code> <code><a href="new_field.html">keyvalue_field()</a></code> 
+          <code><a href="filesbrowser_block.html">new_filesbrowser_block()</a></code> <code><a href="filesbrowser_block.html">filesbrowser_block()</a></code> 
         </dt>
-        <dd>Fields</dd>
+        <dd>Files browser block constructor</dd>
       </dl><dl><dt>
+          
+          <code><a href="parser_block.html">new_parser_block()</a></code> <code><a href="parser_block.html">new_csv_block()</a></code> <code><a href="parser_block.html">csv_block()</a></code> <code><a href="parser_block.html">new_rds_block()</a></code> <code><a href="parser_block.html">rds_block()</a></code> <code><a href="parser_block.html">new_json_block()</a></code> <code><a href="parser_block.html">json_block()</a></code> <code><a href="parser_block.html">new_sas_block()</a></code> <code><a href="parser_block.html">sas_block()</a></code> <code><a href="parser_block.html">new_xpt_block()</a></code> <code><a href="parser_block.html">xpt_block()</a></code> 
+        </dt>
+        <dd>Data parser block constructor</dd>
+      </dl><dl><dt>
+          
+          <code><a href="result_block.html">new_result_block()</a></code> <code><a href="result_block.html">result_block()</a></code> 
+        </dt>
+        <dd>Result block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="filter_block.html">new_filter_block()</a></code> <code><a href="filter_block.html">filter_block()</a></code> 
+        </dt>
+        <dd>Filter block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="select_block.html">new_select_block()</a></code> <code><a href="select_block.html">select_block()</a></code> 
+        </dt>
+        <dd>Select block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="summarize_block.html">new_summarize_block()</a></code> <code><a href="summarize_block.html">summarize_block()</a></code> 
+        </dt>
+        <dd>Summarize block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="arrange_block.html">new_arrange_block()</a></code> <code><a href="arrange_block.html">arrange_block()</a></code> 
+        </dt>
+        <dd>Arrange block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="group_by_block.html">new_group_by_block()</a></code> <code><a href="group_by_block.html">group_by_block()</a></code> 
+        </dt>
+        <dd>Group by block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="join_block.html">new_join_block()</a></code> <code><a href="join_block.html">join_block()</a></code> 
+        </dt>
+        <dd>Join block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="head_block.html">new_head_block()</a></code> <code><a href="head_block.html">head_block()</a></code> 
+        </dt>
+        <dd>Head block</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mutate_block.html">new_mutate_block()</a></code> <code><a href="mutate_block.html">mutate_block()</a></code> 
+        </dt>
+        <dd>Mutate block constructor</dd>
+      </dl></div><div class="section level2">
+      <h2 id="stack">Stack<a class="anchor" aria-label="anchor" href="#stack"></a></h2>
+      
+      <p class="section-desc"></p><p>Stack contains multiple block.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="new_stack.html">new_stack()</a></code> <code><a href="new_stack.html">is_stack()</a></code> <code><a href="new_stack.html">get_stack_name()</a></code> <code><a href="new_stack.html">set_stack_name()</a></code> <code><a href="new_stack.html">set_stack_title()</a></code> <code><a href="new_stack.html">get_stack_title()</a></code> <code><a href="new_stack.html">generate_code(<i>&lt;stack&gt;</i>)</a></code> <code><a href="new_stack.html">serve_stack()</a></code> 
         </dt>
         <dd>Stacks</dd>
       </dl><dl><dt>
           
-          <code><a href="off_canvas.html">off_canvas()</a></code> 
+          <code><a href="block_combiner.html">block_combiner()</a></code> 
         </dt>
-        <dd>Bootstrap 5 offcanvas</dd>
+        <dd>Combine 2 block expressions</dd>
       </dl><dl><dt>
+          
+          <code><a href="add_block.html">add_block()</a></code> 
+        </dt>
+        <dd>Add block to a stack</dd>
+      </dl></div><div class="section level2">
+      <h2 id="workspace">Workspace<a class="anchor" aria-label="anchor" href="#workspace"></a></h2>
+      
+      <p class="section-desc"></p><p>Workspace contains multiple stacks.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="set_workspace.html">set_workspace()</a></code> <code><a href="set_workspace.html">restore_workspace()</a></code> <code><a href="set_workspace.html">get_workspace()</a></code> <code><a href="set_workspace.html">is_workspace()</a></code> <code><a href="set_workspace.html">add_workspace_stack()</a></code> <code><a href="set_workspace.html">set_workspace_stack()</a></code> <code><a href="set_workspace.html">rm_workspace_stacks()</a></code> <code><a href="set_workspace.html">rm_workspace_stack()</a></code> <code><a href="set_workspace.html">set_workspace_title()</a></code> <code><a href="set_workspace.html">set_workspace_settings()</a></code> <code><a href="set_workspace.html">list_workspace_stacks()</a></code> <code><a href="set_workspace.html">get_workspace_stack()</a></code> <code><a href="set_workspace.html">get_workspace_stacks()</a></code> <code><a href="set_workspace.html">get_workspace_title()</a></code> <code><a href="set_workspace.html">get_workspace_settings()</a></code> <code><a href="set_workspace.html">serve_workspace()</a></code> 
         </dt>
         <dd>Workspace</dd>
+      </dl></div><div class="section level2">
+      <h2 id="registry">Registry<a class="anchor" aria-label="anchor" href="#registry"></a></h2>
+      
+      <p class="section-desc"></p><p>Registry of blocks</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="available_blocks.html">available_blocks()</a></code> <code><a href="available_blocks.html">block_name()</a></code> <code><a href="available_blocks.html">block_descr()</a></code> <code><a href="available_blocks.html">register_block()</a></code> <code><a href="available_blocks.html">register_blocks()</a></code> <code><a href="available_blocks.html">unregister_blocks()</a></code> <code><a href="available_blocks.html">construct_block()</a></code> 
+        </dt>
+        <dd>Block registry</dd>
+      </dl></div><div class="section level2">
+      <h2 id="server-utilities">Server utilities<a class="anchor" aria-label="anchor" href="#server-utilities"></a></h2>
+      
+      <p class="section-desc"></p><p>Shiny server elements</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="server_code.html">server_code()</a></code> 
+        </dt>
+        <dd>Server code generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="server_output.html">server_output()</a></code> 
+        </dt>
+        <dd>Server output generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_server.html">generate_server()</a></code> 
+        </dt>
+        <dd>Generic for server generation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="handle_remove.html">handle_remove()</a></code> 
+        </dt>
+        <dd>Remove stack/block generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="init.html">init()</a></code> 
+        </dt>
+        <dd>Generic for server initialisation</dd>
+      </dl></div><div class="section level2">
+      <h2 id="ui-utilities">UI utilities<a class="anchor" aria-label="anchor" href="#ui-utilities"></a></h2>
+      
+      <p class="section-desc"></p><p>Shiny ui elements</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="keyvalue_field.html">generate_server(<i>&lt;keyvalue_field&gt;</i>)</a></code> <code><a href="keyvalue_field.html">ui_input(<i>&lt;keyvalue_field&gt;</i>)</a></code> <code><a href="keyvalue_field.html">new_keyvalue_field()</a></code> <code><a href="keyvalue_field.html">keyvalue_field()</a></code> 
+        </dt>
+        <dd>Key Value Field server</dd>
+      </dl><dl><dt>
+          
+          <code><a href="uiCode.html">uiCode()</a></code> 
+        </dt>
+        <dd>Copy code generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="uiOutputBlock.html">uiOutputBlock()</a></code> 
+        </dt>
+        <dd>Render block output generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="ui_fields.html">ui_fields()</a></code> 
+        </dt>
+        <dd>Block fields generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="ui_input.html">ui_input()</a></code> <code><a href="ui_input.html">input_ids()</a></code> <code><a href="ui_input.html">ui_update()</a></code> 
+        </dt>
+        <dd>UI input generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="add_block_ui.html">add_block_ui()</a></code> 
+        </dt>
+        <dd>Add block UI interface</dd>
+      </dl><dl><dt>
+          
+          <code><a href="exprs_ui.html">exprs_ui()</a></code> 
+        </dt>
+        <dd>Create a UI element for expressions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_ui.html">generate_ui()</a></code> <code><a href="generate_ui.html">input_ids(<i>&lt;list_field&gt;</i>)</a></code> 
+        </dt>
+        <dd>UI</dd>
+      </dl><dl><dt>
+          
+          <code><a href="block_body.html">block_body()</a></code> 
+        </dt>
+        <dd>Block body generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="block_code.html">block_code()</a></code> 
+        </dt>
+        <dd>Block code generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="block_header.html">block_header()</a></code> 
+        </dt>
+        <dd>Block header generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="data_info.html">data_info()</a></code> 
+        </dt>
+        <dd>Data info generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="remove_button.html">remove_button()</a></code> 
+        </dt>
+        <dd>Block remove generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="inject_remove_button.html">inject_remove_button()</a></code> 
+        </dt>
+        <dd>Inject remove button into block header</dd>
+      </dl><dl><dt>
+          
+          <code><a href="stack_header.html">stack_header()</a></code> 
+        </dt>
+        <dd>Stack header generic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="block_icon.html">block_icon()</a></code> 
+        </dt>
+        <dd>Block icon generic</dd>
       </dl><dl><dt>
           
           <code><a href="useBlockr.html">useBlockr()</a></code> 
@@ -176,11 +503,71 @@ and collapses parts of inputs when there are too many.</dd>
 Imports blockr dependencies</dd>
       </dl><dl><dt>
           
+          <code><a href="off_canvas.html">off_canvas()</a></code> 
+        </dt>
+        <dd>Bootstrap 5 offcanvas</dd>
+      </dl><dl><dt>
+          
+          <code><a href="create_app_link.html">create_app_link()</a></code> 
+        </dt>
+        <dd>Create shinylive iframe</dd>
+      </dl></div><div class="section level2">
+      <h2 id="serialisation-utils">Serialisation utils<a class="anchor" aria-label="anchor" href="#serialisation-utils"></a></h2>
+      
+      <p class="section-desc"></p><p>To save and restore a workspace</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="blockr_serialize.html">blockr_serialize()</a></code> <code><a href="blockr_serialize.html">blockr_deserialize()</a></code> <code><a href="blockr_serialize.html">from_json()</a></code> <code><a href="blockr_serialize.html">to_json()</a></code> 
+        </dt>
+        <dd>Serialization</dd>
+      </dl></div><div class="section level2">
+      <h2 id="workspace-locking">Workspace locking<a class="anchor" aria-label="anchor" href="#workspace-locking"></a></h2>
+      
+      <p class="section-desc"></p><p>Utils to lock a workspace</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="lock.html">lock()</a></code> <code><a href="lock.html">unlock()</a></code> <code><a href="lock.html">toggle_lock()</a></code> <code><a href="lock.html">is_locked()</a></code> <code><a href="lock.html">observe_lock()</a></code> 
+        </dt>
+        <dd>Lock</dd>
+      </dl><dl><dt>
+          
+          <code><a href="init_lock.html">init_lock()</a></code> 
+        </dt>
+        <dd>Initialise Lock
+Initialises the lock reactive value.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="logging-utils">Logging utils<a class="anchor" aria-label="anchor" href="#logging-utils"></a></h2>
+      
+      <p class="section-desc"></p><p>Track log messages</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
           <code><a href="write_log.html">write_log()</a></code> <code><a href="write_log.html">log_fatal()</a></code> <code><a href="write_log.html">log_error()</a></code> <code><a href="write_log.html">log_warn()</a></code> <code><a href="write_log.html">log_info()</a></code> <code><a href="write_log.html">log_debug()</a></code> <code><a href="write_log.html">log_trace()</a></code> <code><a href="write_log.html">as_log_level()</a></code> <code><a href="write_log.html">cnd_logger()</a></code> <code><a href="write_log.html">cat_logger()</a></code> 
         </dt>
         <dd>Logging</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -101,7 +101,7 @@ block.</p>
 <div class="section level3">
 <h3 id="package-based-data-block">Package based data block<a class="anchor" aria-label="anchor" href="#package-based-data-block"></a>
 </h3>
-<p><code>{blockr}</code> introduces a <code><a href="../reference/new_block.html">data_block()</a></code> which
+<p><code>{blockr}</code> introduces a <code><a href="../reference/data_block.html">data_block()</a></code> which
 takes as input any package containing a (or multiple) dataset(s). This
 block is constructed as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -119,7 +119,7 @@ the <code>dat</code> parameter (in the following we leverage the
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Define the custom data block</span></span>
 <span><span class="va">custom_data_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/new_block.html">data_block</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/data_block.html">data_block</a></span><span class="op">(</span></span>
 <span>    dat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.environment.html" class="external-link">as.environment</a></span><span class="op">(</span><span class="st">"package:blockr.data"</span><span class="op">)</span>,</span>
 <span>    selected <span class="op">=</span> <span class="st">"lab"</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -139,8 +139,8 @@ the <code>dat</code> parameter (in the following we leverage the
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
 <div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">In the registry vignette, we see how to register a block in a cleaner way.</div>
-<p>In practice, you’ll always call <code><a href="../reference/new_block.html">data_block()</a></code> and not
-<code><a href="../reference/new_block.html">new_data_block()</a></code> (internal constructor).</p>
+<p>In practice, you’ll always call <code><a href="../reference/data_block.html">data_block()</a></code> and not
+<code><a href="../reference/data_block.html">new_data_block()</a></code> (internal constructor).</p>
 <p>Overall, this block is good for testing or if you get your own data
 package. In the next part, we see how to import data from a file.</p>
 </div>
@@ -166,8 +166,8 @@ blocks:</p>
 <h4 id="upload-data">Upload data<a class="anchor" aria-label="anchor" href="#upload-data"></a>
 </h4>
 <p>If you want to load data from any location on your computer,
-<code><a href="../reference/new_block.html">upload_block()</a></code> is what you need. Since the
-<code><a href="../reference/new_block.html">upload_block()</a></code> temporarily moves the data in a custom
+<code><a href="../reference/upload_block.html">upload_block()</a></code> is what you need. Since the
+<code><a href="../reference/upload_block.html">upload_block()</a></code> temporarily moves the data in a custom
 location, we recognize that it might not be always possible for security
 reasons.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -190,14 +190,14 @@ reasons.</p>
 <div class="section level4">
 <h4 id="files-browser-block">Files browser block<a class="anchor" aria-label="anchor" href="#files-browser-block"></a>
 </h4>
-<p><code><a href="../reference/new_block.html">filesbrowser_block()</a></code> can read data from the
+<p><code><a href="../reference/filesbrowser_block.html">filesbrowser_block()</a></code> can read data from the
 <strong>server file system</strong>. It means that if no data is
 available on the server, you won’t see anything. You can customize the
 accessible locations as follows, through the <code>volumes</code>
 parameter:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_filesbrowser_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/new_block.html">filesbrowser_block</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/filesbrowser_block.html">filesbrowser_block</a></span><span class="op">(</span></span>
 <span>    volumes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>vol1 <span class="op">=</span> <span class="st">"&lt;PATH1&gt;"</span>, vol2 <span class="op">=</span> <span class="st">"&lt;PATH2&gt;"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
 <span>  <span class="op">)</span></span>
@@ -223,17 +223,17 @@ feature (upload button).</p>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
 <p>Note that in a later release, we plan to merge
-<code><a href="../reference/new_block.html">filesbrowser_block()</a></code> and <code><a href="../reference/new_block.html">upload_block()</a></code> into a
+<code><a href="../reference/filesbrowser_block.html">filesbrowser_block()</a></code> and <code><a href="../reference/upload_block.html">upload_block()</a></code> into a
 single variable block.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="reading-data-from-another-stack">Reading data from another stack<a class="anchor" aria-label="anchor" href="#reading-data-from-another-stack"></a>
 </h3>
-<p><code><a href="../reference/new_block.html">result_block()</a></code> allows to read data from another stack.
+<p><code><a href="../reference/result_block.html">result_block()</a></code> allows to read data from another stack.
 From the below code, the first stack contains a
-<code><a href="../reference/new_block.html">data_block()</a></code> from which the n-th first rows are pulled by
-the <code><a href="../reference/new_block.html">head_block()</a></code>. In the second stack, we can reuse this
+<code><a href="../reference/data_block.html">data_block()</a></code> from which the n-th first rows are pulled by
+the <code><a href="../reference/head_block.html">head_block()</a></code>. In the second stack, we can reuse this
 smaller dataset. If you dynamically add a third stack, you can also
 select the third stack output as input of the second stack (it appears
 in the result block select input).</p>
