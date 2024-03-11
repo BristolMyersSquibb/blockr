@@ -38,6 +38,7 @@ layout.block <- function(x, fields, ...) {
 
 #' Check if number is whole
 #' @param n Number to check.
+#' @keywords internal
 is_whole <- \(n = 0L) {
   stopifnot(is.numeric(n))
   ((n * 10L) %% 10L) == 0L

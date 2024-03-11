@@ -26,16 +26,6 @@ library(bslib)
 
 Building blocks for data manipulation and visualization operations.
 
-```{r, eval=TRUE, echo=FALSE}
-card(
-  create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC5M6PFcQKKZdjhuOAJSCtEJQLjA+oYANzhshPE+HIk-MABfAF0gA", #nolint
-    "editor"
-  ),
-  full_screen = TRUE
-)
-```
-
 `{blockr}` has been built for webR (wasm) and is available for download with 
 `webr::install("blockr", repos = "https://blockr-org.github.io/webr-repos")`.
 
