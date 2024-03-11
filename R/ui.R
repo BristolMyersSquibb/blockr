@@ -935,6 +935,9 @@ ui_input_wrapper <- function(x, id, name) {
 
 #' @export
 ui_input_wrapper.default <- function(x, id, name) {
+  # Would be better to have the lockInput within the input label
+  # but even if we render this here all inputs labels are updated
+  # by update_field.
   div(
     class = "blockr-input-container position-relative",
     lockInput(paste0(input_ids(x, id), "Lock"), get_field_always_show(x)),
