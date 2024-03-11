@@ -502,28 +502,16 @@ generate_ui.workspace <- function(x, id, ...) {
   )
 }
 
-#' @export
-ui_input_wrapper <- function(x, id, name) {
-  UseMethod("ui_input_wrapper", x)
-}
-
-#' @export
-ui_input_wrapper.default <- function(x, id, name) {
-  div(
-    class = "blockr-input-container position-relative",
-    lockInput(paste0(input_ids(x, id), "Lock"), get_field_always_show(x)),
-    div(
-      class = "blockr-input",
-      ui_input(x, id, name),
-    )
-  )
-}
-
-#' @export
-ui_input_wrapper.hidden_field <- function(x, id, name) {
-  NULL
-}
-
+#' UI input generic
+#'
+#' For a given field, generates the corresponding
+#' shiny input tag. All \link{ui_update} updates
+#' the corresponding input on the server side. \link{input_ids}
+#' is reponsible for finding the element id.
+#'
+#' @inheritParams generate_ui
+#' @param name Field name.
+#' @rdname ui_input
 #' @export
 ui_input <- function(x, id, name) {
   UseMethod("ui_input", x)
@@ -939,4 +927,25 @@ block_icon.plot_block <- function(x, ...) {
     `data-bs-title` = "Plot block",
     icon("chart-bar")
   )
+}
+
+ui_input_wrapper <- function(x, id, name) {
+  UseMethod("ui_input_wrapper", x)
+}
+
+#' @export
+ui_input_wrapper.default <- function(x, id, name) {
+  div(
+    class = "blockr-input-container position-relative",
+    lockInput(paste0(input_ids(x, id), "Lock"), get_field_always_show(x)),
+    div(
+      class = "blockr-input",
+      ui_input(x, id, name),
+    )
+  )
+}
+
+#' @export
+ui_input_wrapper.hidden_field <- function(x, id, name) {
+  NULL
 }

@@ -33,7 +33,8 @@ new_field <- function(value, ..., type = c("literal", "name"),
     title = title,
     descr = descr,
     status = status,
-    exclude = exclude
+    exclude = exclude,
+    always_show = FALSE
   )
 }
 
@@ -220,4 +221,32 @@ get_field_names <- function(x) {
     titles[i] <- get_field_name(x[[i]], names(x)[i])
   }
   titles
+}
+
+observe_lock_field <- function(
+  x,
+  blk,
+  session = shiny::getDefaultReactiveDomain(),
+  ...
+) {
+  x |>
+    names() |>
+    lapply(\(field) {
+      id <- sprintf("%sLock", field)
+
+      observeEvent(session$input[[id]], {
+        # we can't change attributes on a reactive
+        # the attributes are present but attr(x, "name") <- 1
+        # causes an error
+        b <- as.list(blk())
+        attr(b[[field]], "always_show") <- session$input[[id]]
+        blk(b)
+      })
+    })
+
+  return(blk)
+}
+
+get_field_always_show <- function(x) {
+  attr(x, "always_show")
 }

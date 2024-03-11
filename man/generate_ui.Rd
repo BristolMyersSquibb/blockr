@@ -5,23 +5,6 @@
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
 \alias{generate_ui.workspace}
-<<<<<<< HEAD
-\alias{ui_input_wrapper}
-\alias{ui_input_wrapper.default}
-\alias{ui_input}
-\alias{ui_input.string_field}
-\alias{ui_input.select_field}
-\alias{ui_input.switch_field}
-\alias{ui_input.numeric_field}
-\alias{ui_input.submit_field}
-\alias{ui_input.upload_field}
-\alias{ui_input.filesbrowser_field}
-\alias{ui_input.result_field}
-\alias{input_ids}
-\alias{input_ids.block}
-\alias{input_ids.field}
-=======
->>>>>>> main
 \alias{input_ids.list_field}
 \title{UI}
 \usage{
@@ -33,37 +16,6 @@ generate_ui(x, ...)
 
 \method{generate_ui}{workspace}(x, id, ...)
 
-<<<<<<< HEAD
-ui_input_wrapper(x, id, name)
-
-\method{ui_input_wrapper}{default}(x, id, name)
-
-ui_input(x, id, name)
-
-\method{ui_input}{string_field}(x, id, name)
-
-\method{ui_input}{select_field}(x, id, name)
-
-\method{ui_input}{switch_field}(x, id, name)
-
-\method{ui_input}{numeric_field}(x, id, name)
-
-\method{ui_input}{submit_field}(x, id, name)
-
-\method{ui_input}{upload_field}(x, id, name)
-
-\method{ui_input}{filesbrowser_field}(x, id, name)
-
-\method{ui_input}{result_field}(x, id, name)
-
-input_ids(x, ...)
-
-\method{input_ids}{block}(x, ...)
-
-\method{input_ids}{field}(x, name, ...)
-
-=======
->>>>>>> main
 \method{input_ids}{list_field}(x, name, ...)
 }
 \arguments{

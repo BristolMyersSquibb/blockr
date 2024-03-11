@@ -2,46 +2,10 @@
 #'
 #' String fields are translated into \link[shiny]{textInput}
 #'
-#' @param value Field value
-#' @param ... Further field components
-#' @param type Field type (allowed values are `"literal"` and `"name"`)
-#' @param title A brief title for the field, primarily for display purposes.
-#' @param descr A description of the field, explaining its purpose or usage.
-#' @param status The status of the field (experimental)
-#' @param class Field subclass
-#' @param exclude Experimental: Exclude field from being captured in the update_fields
-#' feature. Default to FALSE. Not yet used.
-#'
-#' @export
-new_field <- function(value, ..., type = c("literal", "name"),
-                      title = "",
-                      descr = "",
-                      status = c("active", "disabled", "invisible"),
-                      class = character(), exclude = FALSE) {
-  x <- list(value = value, ...)
-
-  status <- match.arg(status)
-
-  stopifnot(is.list(x), length(unique(names(x))) == length(x))
-
-  structure(
-    x,
-    type = match.arg(type),
-    class = c(class, "field"),
-    title = title,
-    descr = descr,
-    status = status,
-    exclude = exclude,
-    always_show = FALSE
-  )
-}
-
-#' @rdname new_block
-#' @export
-is_initialized.field <- function(x) {
-  all(lengths(values(x)) > 0)
-}
-
+#' @param value Default text input value.
+#' @param ... Other parameters passed to \link{new_field} and may be needed
+#' by \link{ui_input} to pass more options to the related shiny input.
+#' @rdname string_field
 #' @export
 new_string_field <- function(value = character(), ...) {
   new_field(value, ..., class = "string_field")
@@ -439,80 +403,4 @@ result_field <- function(...) {
 #' @export
 validate_field.result_field <- function(x) {
   x
-}
-
-observe_lock_field <- function(
-  x,
-  blk,
-  session = shiny::getDefaultReactiveDomain(),
-  ...
-) {
-  x |>
-    names() |>
-    lapply(\(field) {
-      id <- sprintf("%sLock", field)
-
-      observeEvent(session$input[[id]], {
-        # we can't change attributes on a reactive
-        # the attributes are present but attr(x, "name") <- 1
-        # causes an error
-        b <- as.list(blk())
-        attr(b[[field]], "always_show") <- session$input[[id]]
-        blk(b)
-      })
-    })
-
-  return(blk)
-}
-
-#' @rdname generate_server
-#' @export
-generate_server.result_field <- function(x, ...) {
-  function(id, init = NULL, data = NULL) {
-    moduleServer(id, function(input, output, session) {
-
-      get_result <- function() {
-
-        inp <- input[["select-stack"]]
-
-        if (length(inp) && inp %in% list_workspace_stacks()) {
-
-          get_stack_result(
-            get_workspace_stack(inp)
-          )
-
-        } else {
-
-          data.frame()
-        }
-      }
-
-      result_hash <- function() {
-        rlang::hash(get_result())
-      }
-
-      current_stack <- function() {
-        res <- strsplit(session$ns(NULL), "-")[[1L]]
-        res[length(res) - 2L]
-      }
-
-      stack_opts <- function() {
-        setdiff(list_workspace_stacks(), current_stack())
-      }
-
-      opts <- reactivePoll(100, session, stack_opts, stack_opts)
-
-      observeEvent(
-        opts(),
-        updateSelectInput(session, "select-stack", choices = opts(),
-                          selected = input[["select-stack"]])
-      )
-
-      reactivePoll(100, session, result_hash, get_result)
-    })
-  }
-}
-
-get_field_always_show <- function(x) {
-  attr(x, "always_show")
 }
