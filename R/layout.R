@@ -10,7 +10,7 @@ layout <- function(x, fields, ...) UseMethod("layout", x)
 #' @export
 layout.block <- function(x, fields, ...) {
   # we remove hidden fields
-  fields <- fields[lgl_ply(fields, Negate(inherits), "hidden_field")]
+  fields <- fields[lgl_ply(fields, Negate(inherits), "NULL")]
 
   if (length(fields) <= 6L) {
     return(layout_fields(fields))
