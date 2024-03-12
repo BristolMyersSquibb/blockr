@@ -205,17 +205,23 @@ update_sub_fields <- function(sub, val) {
   sub
 }
 
-get_field_name <- function(field, name = "") {
-  title <- attr(field, "title")
+get_field_name <- function(x, name = "") {
+  title <- attr(x, "title")
 
   if (title == "") {
-    return(name)
+    title <- name
   }
 
-  title
+  lock <- lockInput(paste0(input_ids(x, name), "Lock"), get_field_always_show(x))
+
+  span(
+    title,
+    lock,
+    class = "field-title"
+  )
 }
 
-get_field_names <- function(x) {
+get_field_names <- function(x, ns) {
   titles <- character(length(x))
   for (i in seq_along(x)) {
     titles[i] <- get_field_name(x[[i]], names(x)[i])
