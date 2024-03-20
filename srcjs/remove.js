@@ -1,18 +1,21 @@
-export const removeStack = (stack) => {
-  $(stack)
-    .find(".stack-remove")
-    .on("click", () => {
-      $(stack)
-        .find("[data-bs-toggle='tooltip']")
-        .each((_index, el) => {
-          window.bootstrap.Tooltip.getOrCreateInstance(el).dispose();
-        });
+$(() => {
+  removeStack();
+});
 
-      const event = new CustomEvent("blockr:remove-stack", {
-        detail: {
-          stack: stack.replace("#", ""),
-        },
+const removeStack = () => {
+  $("body").on("click", ".stack-remove", () => {
+    $(event.target)
+      .closest(".stack")
+      .find("[data-bs-toggle='tooltip']")
+      .each((_index, el) => {
+        window.bootstrap.Tooltip.getOrCreateInstance(el).dispose();
       });
-      document.dispatchEvent(event);
+
+    const event = new CustomEvent("blockr:remove-stack", {
+      detail: {
+        stack: $(event.target).closest(".stack").attr("id"),
+      },
     });
+    document.dispatchEvent(event);
+  });
 };

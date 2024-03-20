@@ -1,37 +1,22 @@
-import {
-  toggleOutputInput,
-  handleIcons,
-  collapseOtherBlocks,
-  showLastOutput,
-} from "./collapse.js";
+import { collapseOtherBlocks, showLastOutput } from "./collapse.js";
 import "./stack-title.js";
 import { renderLocked } from "./lock.js";
-import { tooltip } from "./tooltips.js";
-import { removeStack } from "./remove.js";
 
 window.Shiny.addCustomMessageHandler("blockr-render-stack", (msg) => {
   const stack = `#${msg.stack}`;
-  setTimeout(() => {
-    showLastOutput(stack);
-    renderLocked(stack, msg.locked);
-    tooltip();
-    removeStack(stack);
-    const event = new CustomEvent("blockr:stack-render", { detail: msg });
-    document.dispatchEvent(event);
-  }, 750);
+  showLastOutput(stack);
+  renderLocked(stack, msg.locked);
+  const event = new CustomEvent("blockr:stack-render", { detail: msg });
+  document.dispatchEvent(event);
 });
 
 window.Shiny.addCustomMessageHandler("blockr-add-block", (msg) => {
   const stack = `#${msg.stack}`;
   $(stack).removeClass("d-none");
 
-  // TODO remove this
-  // be event based/async instead of timeout
   setTimeout(() => {
-    toggleOutputInput(stack);
-    handleIcons(stack);
     collapseOtherBlocks(stack, msg.block);
-  }, 500);
+  }, 350);
 });
 
 // Block color feedback (validation)
@@ -55,7 +40,7 @@ const changeInputBorder = (args) => {
   }
 
   // Some inputs are dynamically generated like in filter block.
-  // Adding a delay ensure they're in the DOM.
+  // Adding a delay "ensure" they're in the DOM.
   setTimeout(() => {
     if (!args.state) {
       $(sel).addClass("is-invalid");
