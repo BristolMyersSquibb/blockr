@@ -428,16 +428,12 @@ stack_header.stack <- function(x, title, ns, ...) {
           actionLink(
             ns("remove"),
             class = "text-decoration-none stack-remove",
-            `data-bs-toggle` = "tooltip",
-            `data-bs-title` = "Remove stack",
             icon("trash")
           ),
           add_block_ui(ns),
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
-            `data-bs-toggle` = "tooltip",
-            `data-bs-title` = "Copy code",
             iconCode()
           ),
           tags$a(

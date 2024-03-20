@@ -352,6 +352,42 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       })
 
       observeEvent(input$remove, {
+        showModal(
+          modalDialog(
+            title = "Remove stack",
+            p("Are you sure you want to remove this stack?"),
+            div(
+              class = "d-flex",
+              div(
+                class = "flex-grow-1",
+                actionButton(
+                  session$ns("cancelRemove"),
+                  "Cancel",
+                  class = "bg-success",
+                  icon = icon("times")
+                )
+              ),
+              div(
+                class = "flex-shrink-1",
+                actionButton(
+                  session$ns("acceptRemove"),
+                  "Confirm",
+                  class = "bg-danger",
+                  icon = icon("trash")
+                )
+              )
+            ),
+            footer = NULL
+          )
+        )
+      })
+
+      observeEvent(input$cancelRemove, {
+        removeModal()
+      })
+
+      observeEvent(input$acceptRemove, {
+        on.exit(removeModal())
         removeUI(
           sprintf("#%s", session$ns(NULL))
         )
