@@ -1,19 +1,18 @@
 import {
-  collapse,
   toggleOutputInput,
   handleIcons,
   collapseOtherBlocks,
+  showLastOutput,
 } from "./collapse.js";
-import { title } from "./stack-title.js";
+import "./stack-title.js";
 import { renderLocked } from "./lock.js";
 import { tooltip } from "./tooltips.js";
 import { removeStack } from "./remove.js";
 
-window.Shiny.addCustomMessageHandler("blockr-bind-stack", (msg) => {
+window.Shiny.addCustomMessageHandler("blockr-render-stack", (msg) => {
   const stack = `#${msg.stack}`;
   setTimeout(() => {
-    collapse(stack);
-    title(stack, msg.stack);
+    showLastOutput(stack);
     renderLocked(stack, msg.locked);
     tooltip();
     removeStack(stack);
