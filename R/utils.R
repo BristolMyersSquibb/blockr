@@ -413,3 +413,28 @@ create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) 
     `data-external` = "1"
   )
 }
+
+get_block_title <- function(x) {
+  registry <- available_blocks()
+  block <- registry[sapply(registry, \(blk) {
+    if (all(class(x)[!class(x) %in% "block"] %in% attr(blk, "classes")))
+      return(TRUE)
+
+    FALSE
+  })]
+
+  if (length(block)) {
+    name <- attr(block[[1]], "name") |>
+      (\(.) gsub("block$", "", .))() |>
+      trimws() |>
+      tools::toTitleCase()
+
+    return(name)
+  }
+
+  # fallback in case we're working with a block that is not registered
+  # e.g.: a block that is defined within the script
+  title <- class(x)[1] |>
+    (\(.) gsub("_", " ", .))() |>
+    tools::toTitleCase()
+}

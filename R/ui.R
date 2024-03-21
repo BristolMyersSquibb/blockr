@@ -143,9 +143,7 @@ block_header <- function(x, ...) {
 #' @rdname block_header
 #' @export
 block_header.block <- function(x, ns, hidden_class, ...) {
-  title <- class(x)[1] |>
-    (\(.) gsub("_.*$", "", .))() |>
-    tools::toTitleCase()
+  title <- get_block_title(x)
 
   div(
     class = sprintf("m-0 card-title block-title %s", hidden_class),
