@@ -4,8 +4,8 @@ export const unbindScroll = (params) => {
   $(`#${params.ns}-scrollable`).off("scroll");
 };
 
-export const bindScroll = (params) => {
-  fetchUntilScrollable(params);
+export const bindScroll = (params, endpoints) => {
+  fetchUntilScrollable(params, endpoints);
 
   unbindScroll(params);
 
@@ -19,41 +19,17 @@ export const bindScroll = (params) => {
     }
 
     unbindScroll(params);
-    fetchMore(params).then(() => bindScroll(params));
+    endpoints.fetchLeast().then((data) => {
+      renderPills(params, data);
+      bindScroll(params);
+    });
   });
 };
 
-async function fetchMore(params) {
-  const n = getNBlocks(params.ns);
+async function fetchUntilScrollable(params, endpoints) {
+  return endpoints.fetchLeast().then((data) => {
+    if (!data.length) return;
 
-  return fetch(`${params.scroll}&min=${n + 1}`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (!data.length) return;
-
-      renderPills(params, data);
-    });
+    renderPills(params, data);
+  });
 }
-
-async function fetchUntilScrollable(params) {
-  const n = getNBlocks(params.ns);
-
-  return fetch(`${params.scroll}&min=${n + 1}`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (!data.length) return;
-
-      renderPills(params, data);
-
-      if (
-        $(`#${params.ns}-scrollable-child`).height() <=
-        $(`#${params.ns}-scrollable`).height()
-      ) {
-        fetchUntilScrollable(params);
-      }
-    });
-}
-
-const getNBlocks = (ns) => {
-  return $(`#${ns}-scrollable`).find(".add-block").length;
-};

@@ -382,7 +382,7 @@ stack_header.stack <- function(x, title, ns, ...) {
         class = "flex-shrink-1",
         div(
           class = "stack-tools",
-          add_block_ui(ns),
+          add_block_ui(x, ns),
           actionLink(
             ns("remove"),
             class = "text-decoration-none stack-remove",

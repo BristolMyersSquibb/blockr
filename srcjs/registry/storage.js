@@ -18,5 +18,5 @@ export const getRegistry = () => {
 };
 
 export const getHash = () => {
-  return JSON.parse(localStorage.getItem(HASH));
+  return localStorage.getItem(HASH);
 };

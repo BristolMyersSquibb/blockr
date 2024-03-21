@@ -19,6 +19,7 @@ const createPill = (block) => {
 };
 
 export const renderPills = (params, data) => {
+  console.log(params);
   if (data.length === 0) {
     $(`#${params.ns}-scrollable-child`).html(
       "<p class='text-muted'>No blocks found</p>",

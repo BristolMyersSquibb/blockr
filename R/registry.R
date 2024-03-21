@@ -357,20 +357,20 @@ add_block_server <- function(
     return()
 
   observe({
-    scroll <- session$registerDataObj(
+    registry_path <- session$registerDataObj(
       rand_names(),
       list(
         registry = registry() |> add_block_index() |> sort_registry()
       ),
-      scroll_registry
+      get_registry
     )
 
-    hash <- session$registerDataObj(
+    hash_path <- session$registerDataObj(
       rand_names(),
       list(
         registry = registry()
       ),
-      scroll_registry_hash
+      get_registry_hash
     )
 
     session$sendCustomMessage(
@@ -378,19 +378,17 @@ add_block_server <- function(
       list(
         id = session$ns("addBlockCanvas"),
         ns = session$ns(NULL),
-        scroll = scroll,
-        hash = hash,
+        registry = registry_path,
+        hash = hash_path,
         delay = 250
       )
     )
   })
 }
 
-scroll_registry_hash <- function(data, req) {
-  hash <- rlang::hash(data$registry)
-
+get_registry_hash <- function(data, req) {
   payload <- list(
-    hash = hash
+    hash = rlang::hash(data$registry)
   )
 
   shiny::httpResponse(
@@ -400,29 +398,8 @@ scroll_registry_hash <- function(data, req) {
   )
 }
 
-scroll_registry <- function(data, req) {
-  query <- parseQueryString(req$QUERY_STRING)
-  min <- as.integer(query$min)
-  max <- query$max
-
-  if (!length(max))
-    max <- min + 5L
-
-  max <- as.integer(max)
-
-  if (min >= length(data$registry))
-    return(
-      shiny::httpResponse(
-        200L,
-        content_type = "application/json",
-        content = jsonlite::toJSON(list(), auto_unbox = TRUE)
-      )
-    )
-
-  if (max > length(data$registry))
-    max <- length(data$registry)
-
-  blocks <- data$registry[min:max] |>
+get_registry <- function(data, req) {
+  blocks <- data$registry |>
     lapply(\(x) {
       list(
         name = block_name(x),
@@ -437,7 +414,7 @@ scroll_registry <- function(data, req) {
     unname()
 
   payload <- list(
-    blocks = blocks,
+    registry = blocks,
     hash = rlang::hash(blocks)
   )
 
