@@ -436,5 +436,7 @@ get_block_title <- function(x) {
   # e.g.: a block that is defined within the script
   title <- class(x)[1] |>
     (\(.) gsub("_", " ", .))() |>
+    (\(.) gsub("block$", "", .))() |>
+    trimws() |>
     tools::toTitleCase()
 }
