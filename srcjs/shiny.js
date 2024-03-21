@@ -1,11 +1,13 @@
 import { collapseOtherBlocks, showLastOutput } from "./collapse.js";
 import "./stack-title.js";
 import { renderLocked } from "./lock.js";
+import { loading } from "./loading.js";
 
 window.Shiny.addCustomMessageHandler("blockr-render-stack", (msg) => {
   const stack = `#${msg.stack}`;
   showLastOutput(stack);
   renderLocked(stack, msg.locked);
+  loading(msg.stack);
   const event = new CustomEvent("blockr:stack-render", { detail: msg });
   document.dispatchEvent(event);
 });

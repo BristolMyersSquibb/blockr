@@ -59,7 +59,7 @@ block_body.block <- function(x, ns, inputs_hidden, ...) {
   result_id <- ns("outputCollapse")
 
   loading_class <- "d-none"
-  if (inputs_hidden != "") {
+  if (inputs_hidden == "") {
     loading_class <- ""
   }
 
