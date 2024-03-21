@@ -13,7 +13,7 @@ export const handleSearch = (params) => {
 
 const search = (params) => {
   let debounce;
-  return (event) => {
+  return () => {
     const queryNode = $(`#${params.ns}-query`);
     const query = String(queryNode?.val());
 

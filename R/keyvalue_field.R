@@ -1,6 +1,8 @@
-#' Key Value Field
+#' Key Value Field server
 #'
-#' @rdname generate_server
+#' Server module
+#'
+#' @rdname keyvalue_field
 #' @export
 generate_server.keyvalue_field <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
@@ -61,14 +63,18 @@ generate_server.keyvalue_field <- function(x, ...) {
       r_to_be_removed <- reactive({
         rms <- get_rms("pl_", input)
         to_be_rm <- names(rms[rms > 0])
-        if (identical(length(to_be_rm), 0L)) return()
+        if (identical(length(to_be_rm), 0L)) {
+          return()
+        }
         ans <- as.integer(gsub("_rm$", "", gsub("^pl_", "", to_be_rm)))
         ans
       })
       observe({
         req(r_to_be_removed())
         # keep one expression
-        if (length(r_value()) <= 1) return()
+        if (length(r_value()) <= 1) {
+          return()
+        }
         r_value(r_value()[-r_to_be_removed()])
       }) |>
         bindEvent(r_to_be_removed())
@@ -112,7 +118,8 @@ generate_server.keyvalue_field <- function(x, ...) {
   }
 }
 
-#' @rdname generate_ui
+#' @inheritParams ui_input
+#' @rdname keyvalue_field
 #' @export
 ui_input.keyvalue_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
@@ -121,9 +128,14 @@ ui_input.keyvalue_field <- function(x, id, name) {
   )
 }
 
-#' @rdname new_field
+#' Key value field constructor
+#'
+#' TBD
+#' @inheritParams new_field
+#' @inheritParams select_field
 #' @param submit Should a 'submit button' be shown?
 #' @param key How to display the 'key' field
+#' @rdname keyvalue_field
 #' @export
 new_keyvalue_field <- function(
     value = NULL,
@@ -141,13 +153,13 @@ new_keyvalue_field <- function(
   )
 }
 
-#' @rdname new_field
+#' @rdname keyvalue_field
 #' @export
 keyvalue_field <- function(...) {
   validate_field(new_keyvalue_field(...))
 }
 
-#' @rdname new_field
+#' @rdname validate_field
 #' @export
 validate_field.keyvalue_field <- function(x) {
   x
@@ -203,23 +215,17 @@ exprs_ui <- function(id = "",
                      delete_button = TRUE,
                      key = c("suggest", "empty", "none"),
                      auto_complete_list = NULL) {
-
-
   key <- match.arg(key)
 
   div(
     id = id,
-    class = "input-group d-flex justify-content-between mt-1 mb-3",
-    style = "border: 1px solid rgb(206, 212, 218); border-radius: 6px; margin-right: 20px;",
-    tags$style(HTML("
-      .shiny-ace {
-        border: none;
-        margin: 10px;
-      }
-    ")),
+    class = paste(
+      "input-group d-flex justify-content-between mt-1 mb-3",
+      "mutate-expression border border-dark-subtle rounded"
+    ),
     if (key != "none") {
-      span(
-        style = "width: 20%",
+      div(
+        class = "mutate-column",
         shinyAce::aceEditor(
           outputId = paste0(id, "_name"),
           # default value of 1000 may result in no update when clicking 'submit'
@@ -240,11 +246,13 @@ exprs_ui <- function(id = "",
       )
     },
     if (key != "none") {
-      span(class = "input-group-text", icon("equals"), style = "margin: -1px;")
+      div(
+        class = "input-group-text mutate-equal",
+        icon("equals")
+      )
     },
-    span(
-      # class = ""
-      style = "width: 70%",
+    div(
+      class = "mutate-code",
       shinyAce::aceEditor(
         outputId = paste0(id, "_val"),
         debounce = 300,
@@ -261,15 +269,13 @@ exprs_ui <- function(id = "",
         maxLines = 1,
         fontSize = 14,
         showLineNumbers = FALSE
-        # placeholder = "type expression, e.g., `col1 + col2`"
       )
     ),
     if (delete_button) {
       tags$button(
         id = paste0(id, "_rm"),
-        style = "margin: -1px;",
         type = "button",
-        class = "btn btn-default action-button",
+        class = "btn btn-default action-button mutate-delete",
         icon("trash-can")
       )
     }
@@ -277,25 +283,12 @@ exprs_ui <- function(id = "",
 }
 
 
-# shinyApp(
-#   ui = bslib::page_fluid(
-#     keyvalue_ui(
-#       value = c(a = "ls()",
-#       b = "ls()"),
-#       multiple = TRUE,
-#       submit = TRUE,
-#       key = "suggest"
-#     )
-#   ),
-#   server = function(input, output) {}
-# )
 keyvalue_ui <- function(value,
                         multiple,
                         submit,
                         key,
                         auto_complete_list = NULL,
                         ns = function(x) x) {
-
   names <- names(value)
   values <- unname(value)
   ids <- ns(paste0("pl_", seq(value)))
@@ -322,17 +315,15 @@ keyvalue_ui <- function(value,
       core_ui
     ),
     div(
-      style = "width: 100%; display: flex; justify-content: flex-end;",
+      class = "w-100 d-flex justify-content-end",
       div(
-        style = "margin: 0px;",
-        class = "mb-5",
+        class = "m-0 mb-5",
         if (multiple) {
           actionButton(
             ns("i_add"),
             label = NULL,
             icon = icon("plus"),
-            class = "btn btn-success",
-            style = if (submit) "margin-right: 7px"
+            class = "btn btn-success"
           )
         },
         if (submit) {

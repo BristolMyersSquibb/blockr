@@ -357,14 +357,6 @@ add_block_server <- function(
     return()
 
   observe({
-    search <- session$registerDataObj(
-      rand_names(),
-      list(
-        registry = registry() |> add_block_index() |> sort_registry()
-      ),
-      search_registry
-    )
-
     scroll <- session$registerDataObj(
       rand_names(),
       list(
@@ -373,17 +365,39 @@ add_block_server <- function(
       scroll_registry
     )
 
+    hash <- session$registerDataObj(
+      rand_names(),
+      list(
+        registry = registry()
+      ),
+      scroll_registry_hash
+    )
+
     session$sendCustomMessage(
       "blockr-registry-endpoints",
       list(
         id = session$ns("addBlockCanvas"),
         ns = session$ns(NULL),
         scroll = scroll,
-        search = search,
-        delay = 750
+        hash = hash,
+        delay = 250
       )
     )
   })
+}
+
+scroll_registry_hash <- function(data, req) {
+  hash <- rlang::hash(data$registry)
+
+  payload <- list(
+    hash = hash
+  )
+
+  shiny::httpResponse(
+    200L,
+    content_type = "application/json",
+    content = jsonlite::toJSON(payload, auto_unbox = TRUE)
+  )
 }
 
 scroll_registry <- function(data, req) {
@@ -415,57 +429,21 @@ scroll_registry <- function(data, req) {
         index = get_block_index(x),
         description = block_descr(x),
         classes = attr(x, "classes"),
-        icon = ...block_icon(x) |> as.character()
+        icon = block_icon(x) |> as.character()
       )
     })
 
   blocks <- blocks[sapply(blocks, length) > 0] |>
     unname()
 
-  shiny::httpResponse(
-    200L,
-    content_type = "application/json",
-    content = jsonlite::toJSON(blocks, auto_unbox = TRUE, dataframe = "rows", force = TRUE)
+  payload <- list(
+    blocks = blocks,
+    hash = rlang::hash(blocks)
   )
-}
-
-search_registry <- function(data, req) {
-  query <- parseQueryString(req$QUERY_STRING)
-
-  blocks <- data$registry |>
-    lapply(\(x) {
-      name <- block_name(x)
-      description <- block_descr(x)
-
-      obj <- list(
-        name = name,
-        index = get_block_index(x),
-        description = description,
-        classes = attr(x, "classes"),
-        icon = ...block_icon(x) |> as.character()
-      )
-
-      if (grepl(query$query, name))
-        return(obj)
-
-      if (grepl(query$query, description))
-        return(obj)
-
-      return(NULL)
-    })
-
-  blocks <- blocks[sapply(blocks, length) > 0] |>
-    unname()
 
   shiny::httpResponse(
     200L,
     content_type = "application/json",
-    content = jsonlite::toJSON(blocks, auto_unbox = TRUE, dataframe = "rows", force = TRUE)
+    content = jsonlite::toJSON(payload, auto_unbox = TRUE, dataframe = "rows", force = TRUE)
   )
-}
-
-# TODO export block_icon from blockr
-...block_icon <- function(x){ # nolint
-  class(x) <- attr(x, "classes")
-  utils::getFromNamespace("block_icon", "blockr")(x)
 }

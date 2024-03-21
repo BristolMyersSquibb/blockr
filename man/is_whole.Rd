@@ -12,3 +12,4 @@ is_whole(n = 0L)
 \description{
 Check if number is whole
 }
+\keyword{internal}

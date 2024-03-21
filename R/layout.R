@@ -10,7 +10,7 @@ layout <- function(x, fields, ...) UseMethod("layout", x)
 #' @export
 layout.block <- function(x, fields, ...) {
   # we remove hidden fields
-  fields <- fields[lgl_ply(fields, Negate(inherits), "hidden_field")]
+  fields <- fields[lgl_ply(fields, Negate(inherits), "NULL")]
 
   if (length(fields) <= 6L) {
     return(layout_fields(fields))
@@ -38,6 +38,7 @@ layout.block <- function(x, fields, ...) {
 
 #' Check if number is whole
 #' @param n Number to check.
+#' @keywords internal
 is_whole <- \(n = 0L) {
   stopifnot(is.numeric(n))
   ((n * 10L) %% 10L) == 0L
