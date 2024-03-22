@@ -1,84 +1,54 @@
-export const collapse = (stack) => {
-  editor(stack);
-  showLastOutputs(stack);
-  toggleOutputInput(stack);
-  handleIcons(stack);
-  handleBlockError(stack);
+$(() => {
+  editor();
+  toggleOutputInput();
+  handleIcons();
+});
+
+// handles icons collapse state
+export const handleIcons = () => {
+  $("body").on("click", ".stack-edit-toggle", (event) => {
+    $(event.currentTarget)
+      .find("i")
+      .toggleClass("fa-chevron-up fa-chevron-down");
+  });
+
+  $("body").on("click", ".block-output-toggle", (event) => {
+    $(event.currentTarget)
+      .find("i")
+      .toggleClass("fa-chevron-up fa-chevron-down");
+  });
 };
 
-export const handleIcons = (stack) => {
-  $(stack)
-    .find(".stack-edit-toggle:not(.blockr-bound)")
-    .on("click", (event) => {
-      $(event.currentTarget)
-        .find("i")
-        .toggleClass("fa-chevron-up fa-chevron-down");
-    });
+// handles the toggling of input and output
+const toggleOutputInput = () => {
+  $("body").on("click", ".block-output-toggle", (event) => {
+    const $block = $(event.target).closest(".block");
 
-  $(stack)
-    .find(".block-output-toggle:not(.blockr-bound)")
-    .on("click", (event) => {
-      $(event.currentTarget)
-        .find("i")
-        .toggleClass("fa-chevron-up fa-chevron-down");
-    });
+    const inputVisible = $block.find(".block-inputs").is(":visible");
 
-  $(stack)
-    .find(".stack-edit-toggle:not(.blockr-bound)")
-    .addClass("blockr-bound");
-  $(stack)
-    .find(".block-output-toggle:not(.blockr-bound)")
-    .addClass("blockr-bound");
+    let toggle = inputVisible;
+
+    if (toggle) {
+      $block.find(".block-inputs").addClass("d-none");
+      $block.find(".block-output").addClass("d-none");
+    } else {
+      $block.find(".block-inputs").removeClass("d-none");
+      $block.find(".block-output").removeClass("d-none");
+    }
+
+    let ev = "shown";
+    if ($block.find(".block-output").hasClass("d-none")) {
+      ev = "hidden";
+    }
+
+    $block.find(".block-inputs").trigger(ev);
+    $block.find(".block-output").trigger(ev);
+  });
 };
 
-export const toggleOutputInput = (stack) => {
-  $(stack)
-    .find(".block-output-toggle")
-    .each((_index, btn) => {
-      // already has a listener
-      if ($(btn).hasClass("block-bound")) {
-        return;
-      }
-
-      $(btn).addClass("block-bound");
-
-      $(btn).on("click", (event) => {
-        const $block = $(event.target).closest(".block");
-
-        const inputVisible = $block.find(".block-inputs").is(":visible");
-
-        let toggle = inputVisible;
-
-        if (toggle) {
-          $block.find(".block-inputs").addClass("d-none");
-          $block.find(".block-output").addClass("d-none");
-        } else {
-          $block.find(".block-inputs").removeClass("d-none");
-          $block.find(".block-output").removeClass("d-none");
-        }
-
-        let ev = "shown";
-        if ($block.find(".block-output").hasClass("d-none")) {
-          ev = "hidden";
-        }
-
-        $block.find(".block-inputs").trigger(ev);
-        $block.find(".block-output").trigger(ev);
-      });
-    });
-};
-
-const editor = (stack) => {
-  const editBtn = $(stack).find(".stack-edit-toggle");
-
-  // already has a listener
-  if ($(editBtn).hasClass("block-bound")) {
-    return;
-  }
-
-  $(editBtn).addClass("block-bound");
-
-  $(editBtn).on("click", (event) => {
+// handles the toggling of editing mode on stacks
+const editor = () => {
+  $("body").on("click", ".stack-edit-toggle", (event) => {
     const $stack = $(event.target).closest(".stack");
     const $blocks = $stack.find(".block");
 
@@ -172,27 +142,6 @@ export const showLastOutput = (el) => {
 
     $lastOutput.find(".block-loading").addClass("d-none");
   });
-};
-
-const showLastOutputs = (stack) => {
-  $(stack).each((_, el) => {
-    showLastOutput(el);
-  });
-};
-
-const handleBlockError = (stack) => {
-  let hasError = false;
-  $(stack)
-    .find(".block>.card")
-    .each((_index, block) => {
-      if (!$(block).hasClass("border-danger")) return;
-
-      hasError = true;
-    });
-
-  if (!hasError) return;
-
-  $(stack).find(".stack-edit-toggle").trigger("click");
 };
 
 export const collapseOtherBlocks = (stack, block) => {
