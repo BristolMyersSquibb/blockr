@@ -363,7 +363,6 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
                 actionButton(
                   session$ns("cancelRemove"),
                   "Cancel",
-                  class = "bg-success",
                   icon = icon("times")
                 )
               ),
