@@ -1,12 +1,11 @@
 import { description } from "./description";
-import { handleSearch } from "./search";
 
 const createPills = (blocks) => {
   return blocks.map((b) => createPill(b)).join("");
 };
 
 const createPill = (block) => {
-  const name = block.name.replace("block$", "") + block.name.slice(1);
+  const name = block.name.replace("block$", "");
   return `<p class="cursor-pointer mb-1 badge add-block bg-${blockColor(
     block,
   )} me-1"
