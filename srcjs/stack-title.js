@@ -8,9 +8,11 @@ $(() => {
   });
 
   $("body").on("click", ".stack-title-save", (event) => {
-    const $group = $(event.target).closest(".stack-title");
+    const $group = $(event.target)
+      .closest(".input-group")
+      .closest(".stack-title");
 
-    const v = $group.find(".stack-title-input").val();
+    const v = $group.find(".stack-title-input").find("input").val();
     if (v === "") {
       window.Shiny.notifications.show({
         html: "Must set a title",
