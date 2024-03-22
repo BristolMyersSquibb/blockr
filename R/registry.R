@@ -338,7 +338,6 @@ add_block_ui <- function(x, ns = identity) {
         div(
           id = ns("scrollable"),
           class = "blockr-registry-list",
-          style = "min-height:40rem;max-height:85vh;overflow-y:scroll;",
           div(
             id = ns("scrollable-child"),
             class = "scrollable-child"
