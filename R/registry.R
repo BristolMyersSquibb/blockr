@@ -331,7 +331,7 @@ add_block_ui <- function(x, ns = identity) {
           tags$input(
             id = ns("query"),
             type = "text",
-            class = "form-control form-control-sm",
+            class = "form-control form-control-sm add-block-search",
             placeholder = "search"
           )
         ),

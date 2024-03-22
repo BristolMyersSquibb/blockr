@@ -1,43 +1,35 @@
 import { renderPills } from "./render";
-import { bindScroll, unbindScroll } from "./scroll";
 
-export const bindSearch = (params) => {
-  handleSearch(params);
-};
-
-export const handleSearch = (params) => {
+export const handleSearch = (params, endpoints) => {
   $(`#${params.ns}-query`).off("keyup");
 
-  $(`#${params.ns}-query`).on("keyup", search(params));
+  $(`#${params.ns}-query`).on("keyup", search(params, endpoints));
 };
 
-const search = (params) => {
+const search = (params, endpoints) => {
   let debounce;
-  return () => {
-    const queryNode = $(`#${params.ns}-query`);
-    const query = String(queryNode?.val());
+  return (event) => {
+    const query = $(event.target).val();
 
-    $(`#${params.ns}-scrollable-child`).html("");
+    $(event.target).closest(".offcanvas").find(".scrollable-child").html("");
 
     clearTimeout(debounce);
     debounce = setTimeout(() => {
       if (query == "") {
-        fetch(`${params.scroll}&min=1&max=10`)
-          .then((res) => res.json())
-          .then((data) => {
-            renderPills(params, data);
-            bindScroll(params);
-          });
-
-        return;
+        endpoints.fetchLeast().then((data) => {
+          renderPills(params, data);
+        });
       }
 
-      fetch(`${params.search}&query=${encodeURIComponent(query)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          renderPills(params, data);
-          unbindScroll(params);
+      endpoints.fetchLeast().then((data) => {
+        data = data.filter((block) => {
+          return block.name.includes(query);
         });
+
+        if (data.length > 100) window.Shiny.notifications.show();
+
+        renderPills(params, data.slice(0, 100));
+      });
     }, 500);
   };
 };

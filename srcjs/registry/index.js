@@ -1,14 +1,14 @@
 import { description } from "./description";
-import { bindSearch } from "./search";
 import { bindScroll } from "./scroll";
 import { fetchFactory } from "./fetch";
+import { handleSearch } from "./search";
 
 $(() => {
   window.Shiny.addCustomMessageHandler("blockr-registry-endpoints", (msg) => {
     const endpoints = fetchFactory(msg);
     setTimeout(() => {
-      bindSearch(msg);
       bindScroll(msg, endpoints);
+      handleSearch(msg, endpoints);
       description();
     }, msg.delay);
   });

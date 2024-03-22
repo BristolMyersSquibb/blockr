@@ -6,6 +6,7 @@ const createPills = (blocks) => {
 };
 
 const createPill = (block) => {
+  const name = block.name.replace("block$", "") + block.name.slice(1);
   return `<p class="cursor-pointer mb-1 badge add-block bg-${blockColor(
     block,
   )} me-1"
@@ -14,12 +15,11 @@ const createPill = (block) => {
     data-name="${block.name}"
     data-description="${block.description}"
     draggable="true">
-    ${block.name}
+    ${name.replace("block$", "")}
   </p>`;
 };
 
 export const renderPills = (params, data) => {
-  console.log(params);
   if (data.length === 0) {
     $(`#${params.ns}-scrollable-child`).html(
       "<p class='text-muted'>No blocks found</p>",
@@ -30,7 +30,6 @@ export const renderPills = (params, data) => {
   const pills = createPills(data);
   $(`#${params.ns}-scrollable-child`).append(pills);
   description();
-  handleSearch(params);
   handleClick();
 };
 
