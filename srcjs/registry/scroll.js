@@ -15,11 +15,12 @@ export const bindScroll = (params, endpoints) => {
     unbindScroll(params);
     const n = getNBlocks(params.ns);
     endpoints.fetchLeast().then((data) => {
-      const to = n + BATCH;
-      if (to > data.length) return;
+      let to = n + BATCH;
+      if (to > data.length) to = data.length;
+      if (n == to) return;
 
       renderPills(params, data.slice(n, to));
-      bindScroll(params);
+      bindScroll(params, endpoints);
     });
   });
 };
@@ -30,8 +31,9 @@ async function fetchUntilScrollable(params, endpoints) {
   return endpoints.fetchLeast().then((data) => {
     if (!data.length) return;
 
-    const to = n + BATCH;
-    if (to > data.length) return;
+    let to = n + BATCH;
+    if (to > data.length) to = data.length;
+    if (n == to) return;
 
     renderPills(params, data.slice(n, to));
     if (

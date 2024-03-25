@@ -1,10 +1,18 @@
 import { getHash, getRegistry, setHash, setRegistry } from "./storage";
+// this is so we only ping the hash once per session
+// this should be switched off soon when we have a reactive registry
+let pinged_hash = false;
 
 export const fetchFactory = (params) => {
   async function fetchHash() {
+    if (pinged_hash) {
+      return new Promise((resolve) => resolve(getHash()));
+    }
+
     return fetch(params.hash)
       .then((response) => response.json())
       .then((data) => {
+        pinged_hash = true;
         return data.hash;
       });
   }
