@@ -268,3 +268,13 @@ test_that("xpt parser block", {
 
   expect_s3_class(dat, "data.frame")
 })
+
+test_that("block title", {
+  expect_equal(
+    get_block_title(data_block()),
+    tagList(
+      span("blockr", class = "badge bg-light"),
+      "Data"
+    )
+  )
+})
