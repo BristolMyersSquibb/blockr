@@ -110,7 +110,6 @@ set_names <- function(object = nm, nm) {
 }
 
 coal <- function(..., fail_null = TRUE) {
-
   for (i in seq_len(...length())) {
     x <- ...elt(i)
     if (is.null(x)) next else return(x)
@@ -417,8 +416,9 @@ create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) 
 get_block_title <- function(x) {
   registry <- available_blocks()
   block <- registry[sapply(registry, \(blk) {
-    if (all(class(x)[!class(x) %in% "block"] %in% attr(blk, "classes")))
+    if (all(class(x)[!class(x) %in% "block"] %in% attr(blk, "classes"))) {
       return(TRUE)
+    }
 
     FALSE
   })]
@@ -431,7 +431,7 @@ get_block_title <- function(x) {
 
     pkg <- attr(block[[1]], "package")
 
-    if (length(pkg))
+    if (!is.na(pkg)) {
       return(
         tagList(
           span(
@@ -441,6 +441,7 @@ get_block_title <- function(x) {
           name
         )
       )
+    }
 
     return(name)
   }
