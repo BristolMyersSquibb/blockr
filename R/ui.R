@@ -59,7 +59,7 @@ block_body.block <- function(x, ns, inputs_hidden, ...) {
   result_id <- ns("outputCollapse")
 
   loading_class <- "d-none"
-  if (inputs_hidden != "") {
+  if (inputs_hidden == "") {
     loading_class <- ""
   }
 
@@ -376,7 +376,7 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(get_stack_title(x), class = "stack-title cursor-pointer")
+        stackTitleInput(x, ns)
       ),
       div(
         class = "flex-shrink-1",
@@ -386,15 +386,11 @@ stack_header.stack <- function(x, title, ns, ...) {
           actionLink(
             ns("remove"),
             class = "text-decoration-none stack-remove",
-            `data-bs-toggle` = "tooltip",
-            `data-bs-title` = "Remove stack",
             icon("trash")
           ),
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
-            `data-bs-toggle` = "tooltip",
-            `data-bs-title` = "Copy code",
             iconCode()
           ),
           tags$a(
@@ -402,6 +398,31 @@ stack_header.stack <- function(x, title, ns, ...) {
             icon
           )
         )
+      )
+    )
+  )
+}
+
+stackTitleInput <- function(x, ns) {
+  div(
+    class = "stack-title",
+    `data-title` = get_stack_title(x),
+    span(
+      class = "cursor-pointer stack-title-display",
+      get_stack_title(x)
+    ),
+    div(
+      class = "d-none input-group stack-title-input",
+      tags$input(
+        id = ns("newTitle"),
+        type = "text",
+        class = "form-control form-control-sm",
+        value = get_stack_title(x)
+      ),
+      tags$button(
+        class = "btn btn-sm btn-success stack-title-save",
+        type = "button",
+        icon("paper-plane")
       )
     )
   )
