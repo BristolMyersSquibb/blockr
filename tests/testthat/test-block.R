@@ -270,5 +270,11 @@ test_that("xpt parser block", {
 })
 
 test_that("block title", {
-  expect_equal(get_block_title(data_block()), "Data")
+  expect_equal(
+    get_block_title(data_block()),
+    tagList(
+      span("blockr", class = "badge bg-light"),
+      "Data"
+    )
+  )
 })

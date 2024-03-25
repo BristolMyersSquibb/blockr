@@ -429,7 +429,16 @@ get_block_title <- function(x) {
       trimws() |>
       tools::toTitleCase()
 
-    return(name)
+
+    return(
+      tagList(
+        span(
+          attr(block[[1]], "package"),
+          class = "badge bg-light"
+        ),
+        name
+      )
+    )
   }
 
   # fallback in case we're working with a block that is not registered
