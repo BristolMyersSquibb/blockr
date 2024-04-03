@@ -30,10 +30,10 @@ ui_fields <- function(x, ...) {
 #' @export
 ui_fields.block <- function(x, ns, inputs_hidden, ...) {
   fields <- Map(
-    ui_input,
+    ui_input_wrapper,
     x,
     id = chr_ply(names(x), ns),
-    name = get_field_names(x, ns)
+    name = get_field_names(x)
   )
 
   div(

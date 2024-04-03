@@ -89,7 +89,7 @@ lockInput <- function(inputId, locked = FALSE) {
 
   tags$span(
     id = inputId,
-    class = "lock-input small cursor-pointer text-muted",
+    class = "lock-input small cursor-pointer text-muted position-absolute end-0",
     `data-locked` = tolower(locked),
     icon
   )
