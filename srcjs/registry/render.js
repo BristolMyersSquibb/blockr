@@ -29,7 +29,6 @@ export const renderPills = (params, data) => {
   const pills = createPills(data);
   $(`#${params.ns}-scrollable-child`).append(pills);
   description();
-  handleClick();
 };
 
 const blockColor = (block) => {
@@ -42,16 +41,15 @@ const blockColor = (block) => {
   return "info";
 };
 
-const handleClick = () => {
-  $(".add-block").off("click");
-
-  $(".add-block").on("click", (e) => {
+export const handleClick = () => {
+  $("body").on("click", ".add-block", (e) => {
     const ns = $(e.target).closest(".blockr-registry").attr("id").split("-");
     ns.pop();
 
     window.Shiny.setInputValue(
       `${ns.join("-")}-add`,
       parseInt($(e.target).data("index")),
+      { priority: "event" },
     );
 
     const id = $(e.target).closest(".offcanvas").offcanvas("hide").attr("id");
