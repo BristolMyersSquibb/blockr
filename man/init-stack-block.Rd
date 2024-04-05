@@ -10,7 +10,7 @@ init_stack_block(x, position, ...)
 
 \method{init_stack_block}{call}(x, position, ...)
 
-\method{init_stack_block}{name}(x, position)
+\method{init_stack_block}{name}(x, position, ...)
 }
 \arguments{
 \item{x}{May be a call or constructor (function).}
@@ -26,6 +26,6 @@ The evaluated block
 Allows to pass either constructors or
 block calls to a stack. The idea is to be able
 to do either \code{new_stack(data_block, select_block)} or
-\code{new_stack(data_block(selected = "iris"), select_block(data, columns = "Sepal.Length"))}.
+\code{new_stack(data_block(selected = "iris"), select_block(columns = "Sepal.Length"))}.
 }
 \keyword{internal}

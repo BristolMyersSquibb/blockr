@@ -25,7 +25,7 @@ new_stack <- function(..., title = "Stack", name = rand_names()) {
       # Use data from previous block and overwite
       # to pass to the next block ...
       temp <- evaluate_block(
-        blocks[[i]] <- init_stack_block(ctors[[i]], i),
+        blocks[[i]] <- init_stack_block(ctors[[i]], i, temp),
         data = temp
       )
     }
@@ -47,7 +47,7 @@ new_stack <- function(..., title = "Stack", name = rand_names()) {
 #' Allows to pass either constructors or
 #' block calls to a stack. The idea is to be able
 #' to do either \code{new_stack(data_block, select_block)} or
-#' \code{new_stack(data_block(selected = "iris"), select_block(data, columns = "Sepal.Length"))}.
+#' \code{new_stack(data_block(selected = "iris"), select_block(columns = "Sepal.Length"))}.
 #'
 #' @param x May be a call or constructor (function).
 #' @param position Block index (position in the stack).
@@ -65,14 +65,14 @@ init_stack_block.call <- function(x, position, ...) {
   # For Nicolas: maybe you know how to get rid of rlang here ...
   do.call(
     rlang::call_name(x),
-    c(rlang::call_args(x), position = position)
+    c(list(...), rlang::call_args(x), position = position)
   )
 }
 
 #' @rdname init-stack-block
 #' @keywords internal
-init_stack_block.name <- function(x, position) {
-  do.call(eval(x), list(position = position))
+init_stack_block.name <- function(x, position, ...) {
+  do.call(eval(x), c(list(...), list(position = position)))
 }
 
 set_stack_blocks <- function(stack, blocks, result) {
