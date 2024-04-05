@@ -36,6 +36,16 @@ html {
       }
     }
 
+    .block-download {
+      color: var(--bs-gray);
+      position: absolute;
+      top: .75rem;
+      right: 5.25rem;
+      &:hover {
+        color: var(--bs-warning);
+      }
+    }
+
     .block-remove {
       color: var(--bs-gray);
       &:hover {
@@ -50,12 +60,14 @@ html {
     .block-remove,
     .block-output-toggle,
     .block-edit-toggle,
+    .block-download,
     .block-code-toggle {
       opacity: 0;
     }
 
     &:hover{
       .block-remove,
+      .block-download,
       .block-output-toggle,
       .block-edit-toggle,
       .block-code-toggle {

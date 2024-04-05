@@ -238,6 +238,8 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
+      block_download(x, session, out_dat)
+
       return(
         list(
           block = blk,

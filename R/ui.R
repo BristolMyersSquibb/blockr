@@ -252,7 +252,8 @@ generate_ui.block <- function(x, id, ...,
         block_header(x, ns, inputs_hidden),
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
-        block_code(x, ns, inputs_hidden)
+        block_code(x, ns, inputs_hidden),
+        block_download_ui(x, ns, inputs_hidden)
       )
     )
   )
