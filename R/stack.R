@@ -9,20 +9,23 @@
 #'
 #' @export
 new_stack <- function(..., title = "Stack", name = rand_names()) {
-  ctors <- c(...)
-  names <- names(ctors)
+  # Allow to pass in calls
+  ctors <- match.call(expand.dots = FALSE)$`...`
 
   stopifnot(is_string(title), is_string(name))
 
   if (length(ctors)) {
     blocks <- vector("list", length(ctors))
-
-    blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
+    # Instantiate block
+    blocks[[1L]] <- init_stack_block(ctors[[1]], 1)
+    # Evaluate block -> get data for the next block
     temp <- evaluate_block(blocks[[1L]])
 
     for (i in seq_along(ctors)[-1L]) {
+      # Use data from previous block and overwite
+      # to pass to the next block ...
       temp <- evaluate_block(
-        blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
+        blocks[[i]] <- init_stack_block(ctors[[i]], i),
         data = temp
       )
     }
@@ -37,6 +40,39 @@ new_stack <- function(..., title = "Stack", name = rand_names()) {
     title = title, name = name, result = temp,
     class = "stack"
   )
+}
+
+#' Instantiate a block within a stack
+#'
+#' Allows to pass either constructors or
+#' block calls to a stack. The idea is to be able
+#' to do either \code{new_stack(data_block, select_block)} or
+#' \code{new_stack(data_block(selected = "iris"), select_block(data, columns = "Sepal.Length"))}.
+#'
+#' @param x May be a call or constructor (function).
+#' @param position Block index (position in the stack).
+#' @param ... For generic consistency.
+#' @returns The evaluated block
+#' @keywords internal
+#' @rdname init-stack-block
+init_stack_block <- function(x, position, ...) {
+  UseMethod("init_stack_block")
+}
+
+#' @rdname init-stack-block
+#' @keywords internal
+init_stack_block.call <- function(x, position, ...) {
+  # For Nicolas: maybe you know how to get rid of rlang here ...
+  do.call(
+    rlang::call_name(x),
+    c(rlang::call_args(x), position = position)
+  )
+}
+
+#' @rdname init-stack-block
+#' @keywords internal
+init_stack_block.name <- function(x, position) {
+  do.call(eval(x), list(position = position))
 }
 
 set_stack_blocks <- function(stack, blocks, result) {
