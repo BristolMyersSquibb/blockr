@@ -31,6 +31,10 @@ block_download_ui.transform_block <- function(x, ns, inputs_hidden, ...) {
 #' @export
 block_download_ui.data_block <- block_download_ui.transform_block
 
+#' @rdname block_download_ui
+#' @export
+block_download_ui.plot_block <- block_download_ui.transform_block
+
 block_download <- function(x, ...) {
   UseMethod("block_download", x)
 }
@@ -39,24 +43,44 @@ block_download <- function(x, ...) {
 block_download.default <- function(x, ...) {}
 
 #' @export
-block_download.block <- function(x, session, data, ...) {
+block_download.transform_block <- function(x, session, object, ...) {
   session$output$download <- downloadHandler(
     filename = function() {
       ext <- ".csv"
-      if (!is.data.frame(data()))
+      if (!is.data.frame(object()))
         ext <- "json"
 
       paste0(
         attr(x, "name"),
-        "-block",
+        "-data",
         ext
       )
     },
     content = function(file) {
-      if (!is.data.frame(data()))
-        jsonlite::write_json(data(), file)
+      if (!is.data.frame(object()))
+        jsonlite::write_json(object(), file)
       else
-        utils::write.csv(data(), file, row.names = FALSE)
+        utils::write.csv(object(), file, row.names = FALSE)
+    }
+  )
+}
+
+#' @export
+block_download.data_block <- block_download.transform_block
+
+#' @export
+block_download.plot_block <- function(x, session, object, ...) {
+  session$output$download <- downloadHandler(
+    filename = function() {
+      paste0(
+        attr(x, "name"),
+        "-plot.png"
+      )
+    },
+    content = function(file) {
+      grDevices::png(filename = tempfile())
+      object()
+      grDevices::dev.off()
     }
   )
 }

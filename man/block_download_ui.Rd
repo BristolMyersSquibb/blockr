@@ -5,6 +5,7 @@
 \alias{block_download_ui.default}
 \alias{block_download_ui.transform_block}
 \alias{block_download_ui.data_block}
+\alias{block_download_ui.plot_block}
 \title{Block download generic}
 \usage{
 block_download_ui(x, ...)
@@ -14,6 +15,8 @@ block_download_ui(x, ...)
 \method{block_download_ui}{transform_block}(x, ns, inputs_hidden, ...)
 
 \method{block_download_ui}{data_block}(x, ns, inputs_hidden, ...)
+
+\method{block_download_ui}{plot_block}(x, ns, inputs_hidden, ...)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
