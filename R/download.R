@@ -3,21 +3,21 @@
 #' Generic to create the block download button.
 #'
 #' @inheritParams ui_fields
-#' @rdname block_download_ui
+#' @rdname download_ui
 #' @export
-block_download_ui <- function(x, ...) {
-  UseMethod("block_download_ui", x)
+download_ui <- function(x, ...) {
+  UseMethod("download_ui", x)
 }
 
-#' @rdname block_download_ui
+#' @rdname download_ui
 #' @export
-block_download_ui.default <- function(x, ns, inputs_hidden, ...) {
+download_ui.default <- function(x, ns, inputs_hidden = FALSE, ...) {
   tagList()
 }
 
-#' @rdname block_download_ui
+#' @rdname download_ui
 #' @export
-block_download_ui.transform_block <- function(x, ns, inputs_hidden, ...) {
+download_ui.transform_block <- function(x, ns, inputs_hidden = FALSE, ...) {
   id <- ns("download")
 
   downloadLink(
@@ -27,60 +27,115 @@ block_download_ui.transform_block <- function(x, ns, inputs_hidden, ...) {
   )
 }
 
-#' @rdname block_download_ui
+#' @rdname download_ui
 #' @export
-block_download_ui.data_block <- block_download_ui.transform_block
+download_ui.stack <- function(x, ns, inputs_hidden = FALSE, ...) {
+  id <- ns("download")
 
-#' @rdname block_download_ui
+  downloadLink(
+    outputId = id,
+    class = sprintf("cursor-pointer text-decoration-none stack-download %s", inputs_hidden),
+    iconDownload()
+  )
+}
+
+#' @rdname download_ui
 #' @export
-block_download_ui.plot_block <- block_download_ui.transform_block
+download_ui.data_block <- download_ui.transform_block
 
-block_download <- function(x, ...) {
-  UseMethod("block_download", x)
+#' @rdname download_ui
+#' @export
+download_ui.plot_block <- download_ui.transform_block
+
+download <- function(x, ...) {
+  UseMethod("download", x)
 }
 
 #' @export
-block_download.default <- function(x, ...) {}
+download.default <- function(x, ...) {}
 
 #' @export
-block_download.transform_block <- function(x, session, object, ...) {
+download.transform_block <- function(x, session, object, ...) {
   session$output$download <- downloadHandler(
-    filename = function() {
-      ext <- ".csv"
-      if (!is.data.frame(object()))
-        ext <- "json"
-
-      paste0(
-        attr(x, "name"),
-        "-data",
-        ext
-      )
-    },
-    content = function(file) {
-      if (!is.data.frame(object()))
-        jsonlite::write_json(object(), file)
-      else
-        utils::write.csv(object(), file, row.names = FALSE)
-    }
+    filename = \() download_filename(x, object),
+    content = \(file) download_content(x, object, file)
   )
 }
 
 #' @export
-block_download.data_block <- block_download.transform_block
+download.data_block <- download.transform_block
 
 #' @export
-block_download.plot_block <- function(x, session, object, ...) {
+download.plot_block <- function(x, session, object, ...) {
   session$output$download <- downloadHandler(
-    filename = function() {
-      paste0(
-        attr(x, "name"),
-        "-plot.png"
-      )
+    filename = \() download_filename(x, object),
+    content = \(file) download_content(x, object, file)
+  )
+}
+
+download_content <- function(x, object, file, ...) {
+  UseMethod("download_content", x)
+}
+
+#' @export
+download_content.plot_block <- function(x, object, file, ...) {
+  grDevices::png(filename = tempfile())
+  object()
+  grDevices::dev.off()
+}
+
+#' @export
+download_content.transform_block <- function(x, object, file, ...) {
+  if (!is.data.frame(object()))
+    jsonlite::write_json(object(), file)
+  else
+    utils::write.csv(object(), file, row.names = FALSE)
+}
+
+#' @export
+download_content.data_block <- download_content.transform_block
+
+download_filename <- function(x, object, ...) {
+  UseMethod("download_filename", x)
+}
+
+#' @export
+download_filename.transform_block <- function(x, object, ...) {
+  ext <- ".csv"
+  if (!is.data.frame(object()))
+    ext <- "json"
+
+  paste0(
+    attr(x, "name"),
+    "-data",
+    ext
+  )
+}
+
+#' @export
+download_filename.data_block <- download_filename.transform_block
+
+#' @export
+download_filename.plot_block <- function(x, object, ...) {
+  paste0(
+    attr(x, "name"),
+    ".png"
+  )
+}
+
+#' @export
+download.stack <- function(x, session, object, vals, ...) {
+  get_last_block <- function(vals) {
+    len <- length(vals)
+    if (len) vals[[len]]$block() else list()
+  }
+
+  session$output$download <- downloadHandler(
+    filename = \() {
+      download_filename(get_last_block(vals$blocks), object)
     },
-    content = function(file) {
-      grDevices::png(filename = tempfile())
-      object()
-      grDevices::dev.off()
+    content = \(file) {
+      download_content(get_last_block(vals$blocks), object, file)
     }
   )
 }

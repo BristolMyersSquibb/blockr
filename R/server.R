@@ -238,7 +238,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
-      block_download(x, session, out_dat)
+      download(x, session, out_dat)
 
       return(
         list(
@@ -287,7 +287,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
   get_last_block_data <- function(x) {
     len <- length(x)
-    if (len) x[[len]]$data() else list()
+    if (len) x[[len]]$data else \() list()
   }
 
   moduleServer(
@@ -334,15 +334,22 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       observeEvent(
         c(
           get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)
+          get_last_block_data(vals$blocks)()
         ),
         {
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)
+            get_last_block_data(vals$blocks)()
           )
         }
+      )
+
+      download(
+        x,
+        session = session,
+        object = get_last_block_data(vals$blocks),
+        vals = vals
       )
 
       observeEvent(vals$stack, {

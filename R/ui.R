@@ -253,7 +253,7 @@ generate_ui.block <- function(x, id, ...,
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
         block_code(x, ns, inputs_hidden),
-        block_download_ui(x, ns, inputs_hidden)
+        download_ui(x, ns, inputs_hidden)
       )
     )
   )
@@ -430,6 +430,7 @@ stack_header.stack <- function(x, title, ns, ...) {
             icon("trash")
           ),
           add_block_ui(ns),
+          download_ui(x, ns),
           actionLink(
             ns("copy"),
             class = "text-decoration-none stack-copy-code",
