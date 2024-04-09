@@ -76,7 +76,7 @@ update_ui <- function(b, is_srv, session, l_init, last_input) {
     if (field == last_input$name)
       next
 
-    if(grepl("^values_", last_input$name))
+    if (grepl("^values_", last_input$name))
       next
 
     if (field %in% names(is_srv)[is_srv]) {
