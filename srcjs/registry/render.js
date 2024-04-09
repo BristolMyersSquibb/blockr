@@ -1,7 +1,23 @@
 import { description } from "./description";
+import { capitalise } from "../utils";
 
 const createPills = (blocks) => {
-  return blocks.map((b) => createPill(b)).join("");
+  let pills = [];
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    const previous_block = blocks[i - 1];
+
+    if (!previous_block) {
+      pills += `<h3>${capitalise(blockType(block))}</h3>`;
+    }
+
+    if (previous_block && blockType(block) !== blockType(previous_block)) {
+      pills += `<h3 class='mt-3'>${capitalise(blockType(block))}</h3>`;
+    }
+
+    pills += createPill(block);
+  }
+  return pills;
 };
 
 const createPill = (block) => {
@@ -31,12 +47,20 @@ export const renderPills = (params, data) => {
   description();
 };
 
+const blockType = (block) => {
+  if (block.classes.includes("parser_block")) return "parser";
+  if (block.classes.includes("data_block")) return "data";
+  if (block.classes.includes("transform_block")) return "transform";
+
+  return "visualise";
+};
+
 const blockColor = (block) => {
-  if (block.classes.includes("parser_block")) return "info";
+  const type = blockType(block);
 
-  if (block.classes.includes("data_block")) return "primary";
-
-  if (block.classes.includes("transform_block")) return "secondary";
+  if (type == "parser") return "info";
+  if (type == "data") return "primary";
+  if (type == "transform") return "secondary";
 
   return "info";
 };
