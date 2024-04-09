@@ -71,8 +71,14 @@ update_blk <- function(b, value, is_srv, input, data) {
   b
 }
 
-update_ui <- function(b, is_srv, session, l_init) {
+update_ui <- function(b, is_srv, session, l_init, last_input) {
   for (field in names(b)) {
+    if (field == last_input$name)
+      next
+
+    if(grepl("^values_", last_input$name))
+      next
+
     if (field %in% names(is_srv)[is_srv]) {
       # update reactive value that tiggers module server update
       l_init[[field]](b[[field]])
@@ -113,6 +119,11 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       )
 
       ns <- session$ns
+
+      last_input <- list(name = "")
+      observeEvent(input$lastinput, {
+        last_input <<- input$lastinput
+      })
 
       # Idea:
       # - If a field has a generate_server() method, initialize it and use
@@ -162,7 +173,13 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         log_debug("Updating block ", class(x)[[1]])
 
         # 2. Update UI
-        update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
+        update_ui(
+          b = blk(),
+          is_srv = is_srv,
+          session = session,
+          l_init = l_init,
+          last_input = last_input
+        )
         log_debug("Updating UI of block ", class(x)[[1]])
       }) |>
         bindEvent(r_values(), in_dat())
