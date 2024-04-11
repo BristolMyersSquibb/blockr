@@ -2,7 +2,7 @@
 % Please edit documentation in R/download.R
 \name{download_ui}
 \alias{download_ui}
-\alias{download_ui.default}
+\alias{download_ui.block}
 \alias{download_ui.transform_block}
 \alias{download_ui.stack}
 \alias{download_ui.data_block}
@@ -11,7 +11,7 @@
 \usage{
 download_ui(x, ...)
 
-\method{download_ui}{default}(x, ns, inputs_hidden = FALSE, ...)
+\method{download_ui}{block}(x, ns, inputs_hidden = FALSE, ...)
 
 \method{download_ui}{transform_block}(x, ns, inputs_hidden = FALSE, ...)
 

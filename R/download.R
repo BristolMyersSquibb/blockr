@@ -11,7 +11,7 @@ download_ui <- function(x, ...) {
 
 #' @rdname download_ui
 #' @export
-download_ui.default <- function(x, ns, inputs_hidden = FALSE, ...) {
+download_ui.block <- function(x, ns, inputs_hidden = FALSE, ...) {
   tagList()
 }
 
@@ -52,7 +52,7 @@ download <- function(x, ...) {
 }
 
 #' @export
-download.default <- function(x, ...) {}
+download.block <- function(x, ...) {}
 
 #' @export
 download.transform_block <- function(x, session, object, ...) {
@@ -86,10 +86,11 @@ download_content.plot_block <- function(x, object, file, ...) {
 
 #' @export
 download_content.transform_block <- function(x, object, file, ...) {
-  if (!is.data.frame(object()))
+  if (!is.data.frame(object())) {
     jsonlite::write_json(object(), file)
-  else
-    utils::write.csv(object(), file, row.names = FALSE)
+  } else {
+    utils::write.csv(downsample(object()), file, row.names = FALSE)
+  }
 }
 
 #' @export
@@ -143,4 +144,14 @@ download.stack <- function(x, session, object, vals, ...) {
 #' @importFrom shiny icon
 iconDownload <- function() {
   icon("download")
+}
+
+downsample <- function(x, n = 10000000L) {
+  size <- utils::object.size(x)
+
+  if (size < getOption("shiny.maxRequestSize", 5 * 1024 * 1024))
+    return(x)
+
+  utils::head(x, n) |>
+    downsample(n - n / 10L)
 }
