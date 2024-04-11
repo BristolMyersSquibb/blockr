@@ -428,7 +428,6 @@ stack_header.stack <- function(x, title, ns, ...) {
           icon("trash")
         ),
         add_block_ui(ns),
-        download_ui(x, ns),
         actionLink(
           ns("copy"),
           class = "text-decoration-none stack-copy-code",

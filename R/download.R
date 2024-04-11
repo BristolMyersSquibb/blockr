@@ -29,18 +29,6 @@ download_ui.transform_block <- function(x, ns, inputs_hidden = FALSE, ...) {
 
 #' @rdname download_ui
 #' @export
-download_ui.stack <- function(x, ns, inputs_hidden = FALSE, ...) {
-  id <- ns("download")
-
-  downloadLink(
-    outputId = id,
-    class = sprintf("cursor-pointer text-decoration-none stack-download %s", inputs_hidden),
-    iconDownload()
-  )
-}
-
-#' @rdname download_ui
-#' @export
 download_ui.data_block <- download_ui.transform_block
 
 #' @rdname download_ui
@@ -121,23 +109,6 @@ download_filename.plot_block <- function(x, object, ...) {
   paste0(
     attr(x, "name"),
     ".png"
-  )
-}
-
-#' @export
-download.stack <- function(x, session, object, vals, ...) {
-  get_last_block <- function(vals) {
-    len <- length(vals)
-    if (len) vals[[len]]$block() else list()
-  }
-
-  session$output$download <- downloadHandler(
-    filename = \() {
-      download_filename(get_last_block(vals$blocks), object)
-    },
-    content = \(file) {
-      download_content(get_last_block(vals$blocks), object, file)
-    }
   )
 }
 

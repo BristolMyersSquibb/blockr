@@ -345,13 +345,6 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         }
       )
 
-      download(
-        x,
-        session = session,
-        object = get_last_block_data(vals$blocks),
-        vals = vals
-      )
-
       observeEvent(vals$stack, {
         message("UPDADING WORKSPACE with stack ", id)
         add_workspace_stack(id, vals$stack,

@@ -4,7 +4,6 @@
 \alias{download_ui}
 \alias{download_ui.block}
 \alias{download_ui.transform_block}
-\alias{download_ui.stack}
 \alias{download_ui.data_block}
 \alias{download_ui.plot_block}
 \title{Block download generic}
@@ -14,8 +13,6 @@ download_ui(x, ...)
 \method{download_ui}{block}(x, ns, inputs_hidden = FALSE, ...)
 
 \method{download_ui}{transform_block}(x, ns, inputs_hidden = FALSE, ...)
-
-\method{download_ui}{stack}(x, ns, inputs_hidden = FALSE, ...)
 
 \method{download_ui}{data_block}(x, ns, inputs_hidden = FALSE, ...)
 
