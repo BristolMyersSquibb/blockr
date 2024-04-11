@@ -422,24 +422,21 @@ stack_header.stack <- function(x, title, ns, ...) {
       ),
       div(
         class = "flex-shrink-1",
-        div(
-          class = "stack-tools",
-          actionLink(
-            ns("remove"),
-            class = "text-decoration-none stack-remove",
-            icon("trash")
-          ),
-          add_block_ui(ns),
-          download_ui(x, ns),
-          actionLink(
-            ns("copy"),
-            class = "text-decoration-none stack-copy-code",
-            iconCode()
-          ),
-          tags$a(
-            class = edit_class,
-            icon
-          )
+        actionLink(
+          ns("remove"),
+          class = "text-decoration-none stack-remove",
+          icon("trash")
+        ),
+        add_block_ui(ns),
+        download_ui(x, ns),
+        actionLink(
+          ns("copy"),
+          class = "text-decoration-none stack-copy-code",
+          iconCode()
+        ),
+        tags$a(
+          class = edit_class,
+          icon
         )
       )
     )
