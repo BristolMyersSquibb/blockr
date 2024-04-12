@@ -77,7 +77,7 @@ download_content.transform_block <- function(x, object, file, ...) {
   if (!is.data.frame(object())) {
     jsonlite::write_json(object(), file)
   } else {
-    utils::write.csv(downsample(object()), file, row.names = FALSE)
+    utils::write.csv(object(), file, row.names = FALSE)
   }
 }
 
@@ -115,14 +115,4 @@ download_filename.plot_block <- function(x, object, ...) {
 #' @importFrom shiny icon
 iconDownload <- function() {
   icon("download")
-}
-
-downsample <- function(x, n = 10000000L) {
-  size <- utils::object.size(x)
-
-  if (size < getOption("shiny.maxRequestSize", 5 * 1024 * 1024))
-    return(x)
-
-  utils::head(x, n) |>
-    downsample(n - n / 10L)
 }
