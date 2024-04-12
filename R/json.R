@@ -10,16 +10,9 @@ blockr_serialize <- function(x) {
 }
 
 serialize_impl <- function(x) {
-
-  cns <- constructive::construct(
-    x,
-    constructive::opts_environment("new.env"),
-    compare = constructive::compare_options(ignore_function_env = TRUE)
-  )
-
   list(
     class = class(x),
-    payload = paste0(cns[["code"]], collapse = "\n"),
+    payload = serialize(x, NULL),
     blockr = as.character(utils::packageVersion("blockr"))
   )
 }
@@ -69,18 +62,54 @@ blockr_deserialize <- function(x) {
 
   } else {
 
-    eval(parse(text = x[["payload"]]))
+    unserialize(x[["payload"]])
   }
 }
 
 #' @rdname blockr_serialize
 #' @export
 from_json <- function(x) {
-  blockr_deserialize(jsonlite::fromJSON(x))
+
+  dec_one <- function(x) {
+    x[["payload"]] <- jsonlite::base64_dec(x[["payload"]])
+    x
+  }
+
+  tmp <- jsonlite::fromJSON(x)
+
+  stopifnot(all(c("class", "payload") %in% names(tmp)))
+
+  if (identical(tmp[["class"]], "workspace")) {
+    stopifnot("stacks" %in% names(tmp[["payload"]]))
+    tmp[["payload"]][["stacks"]] <- lapply(tmp[["payload"]][["stacks"]],
+                                           dec_one)
+  } else {
+    tmp[["payload"]] <- jsonlite::base64_dec(tmp[["payload"]])
+  }
+
+  blockr_deserialize(tmp)
 }
 
 #' @rdname blockr_serialize
 #' @export
 to_json <- function(x = get_workspace()) {
-  jsonlite::toJSON(blockr_serialize(x))
+
+  enc_one <- function(x) {
+    x[["payload"]] <- jsonlite::base64_enc(x[["payload"]])
+    x
+  }
+
+  tmp <- blockr_serialize(x)
+
+  stopifnot(all(c("class", "payload") %in% names(tmp)))
+
+  if (identical(tmp[["class"]], "workspace")) {
+    stopifnot("stacks" %in% names(tmp[["payload"]]))
+    tmp[["payload"]][["stacks"]] <- lapply(tmp[["payload"]][["stacks"]],
+                                           enc_one)
+  } else {
+    tmp[["payload"]] <- jsonlite::base64_enc(tmp[["payload"]])
+  }
+
+  jsonlite::toJSON(tmp)
 }
