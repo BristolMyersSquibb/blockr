@@ -23,7 +23,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-info"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-info" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
@@ -80,9 +80,9 @@
 
 
 <script src="blockr_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="blockr_files/d3-3.3.8/d3.min.js"></script><script src="blockr_files/dagre-0.4.0/dagre-d3.min.js"></script><script src="blockr_files/mermaid-10.6.0/dist/mermaid.slim.min.js"></script><link href="blockr_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="blockr_files/chromatography-0.1/chromatography.js"></script><script src="blockr_files/DiagrammeR-binding-1.0.10.9000/DiagrammeR.js"></script><link href="blockr_files/htmltools-fill-0.5.7/fill.css" rel="stylesheet">
-<script src="blockr_files/bslib-component-js-0.6.2/components.min.js"></script><script src="blockr_files/bslib-component-js-0.6.2/web-components.min.js" type="module"></script><link href="blockr_files/bslib-component-css-0.6.2/components.css" rel="stylesheet">
-<script src="blockr_files/bslib-tag-require-0.6.2/tag-require.js"></script><div class="row">
+<script src="blockr_files/chromatography-0.1/chromatography.js"></script><script src="blockr_files/DiagrammeR-binding-1.0.10.9000/DiagrammeR.js"></script><link href="blockr_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="blockr_files/bslib-component-js-0.7.0/components.min.js"></script><script src="blockr_files/bslib-component-js-0.7.0/web-components.min.js" type="module"></script><link href="blockr_files/bslib-component-css-0.7.0/components.css" rel="stylesheet">
+<script src="blockr_files/bslib-tag-require-0.7.0/tag-require.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>blockr</h1>
             
@@ -119,8 +119,8 @@ transformed data to produce visualizations.</li>
 <p>A <strong>stack</strong> always starts from a data block and may end
 either by a transform blocks or an output block.</p>
 <p>Note: at the moment, there is only one output block per stack.</p>
-<div id="htmlwidget-af08007ca8b569076ffe" style="width:700px;height:120px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-af08007ca8b569076ffe">{"x":{"diagram":"\n  flowchart TB\n    subgraph stack\n      input(Data);\n      transform(Transform);\n      output(Visualize);\n      input-->transform--> output;\n    end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
+<div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:120px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\n  flowchart TB\n    subgraph stack\n      input(Data);\n      transform(Transform);\n      output(Visualize);\n      input-->transform--> output;\n    end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
 </div>
 <div class="section level3">
 <h3 id="the-user-interface">The user interface<a class="anchor" aria-label="anchor" href="#the-user-interface"></a>
@@ -153,11 +153,11 @@ automatically handled by <code>{blockr}</code>.</p>
 <span>  <span class="va">filter_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-6539">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC5M6PFcQKKZADMWbnIGCtEJQLjA9jgGADc4bITxPhyJPzAAXwBdIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><span class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></span>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
 <div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">You'll notice that some blocks, such as the `filter_block` 
@@ -226,11 +226,11 @@ position in the stack (here we append).</p>
 <p>Blocks can be removed in any context. Keep in mind that a stack can’t
 contain 2 data blocks.</p>
 <div class="m-3 p-2 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">At the moment, we don't check whether removing a block breaks the pipeline.</div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-4533">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+dg02cICgkIYwyOMJBgwAEygueODQiL5UyXjAzigJGQAeUxkIOGoAfTKJPiyuBqL46NiAQXRBCBkZBxZVGTp2POZUKEs4BoAzbhGMgaGhqAyMjtEJBpG+FgyKUjs43ED1mTm6pPJ9liiuCVkjsaEYcObxf0uZPwugxk7DgDAAbqCxgsHBACKcSIcIKgHKRZEQUcjUcC4Ox2K4IH4ZCA-kMwTxlNU5HByqcIQA1HgOHF8OqNIpjAByAFUADI8+JXb5VGo3UHZeYg8GgtZXYHPcSA2UyN5qD5feXSEnrVk7ExjeQ0lgQvhk7jsAAkOs6WpKQKGRAmoIhAFEIWREZjzZsMrJiXb1qaLVbduJhTJuXytUMAMQyHrcahQL4yNCoCgZGSkIhy8o-f1DXZh7gUSz2J6581FdgC2XsylQMksbhQETzKt8PzAYBsT0g4twuDbIoAXWHUZkse9uoqcAAHmm4ZmNHAZAQHAx5GQcy8lyv2VmU1sUxAM3ZlD47Pjx7G+BGecrlAs2CuFhZdzIL-CIK9BvZsquoBBd92WoJtuGva5s3-ewV3TGsrkDS16mnUNKWCTgZSVdk1CKRUlQ-JRLxIMZdnHeCZAAXxrCjAj8MAKOHIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><span class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></span>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
 </div>
@@ -298,7 +298,7 @@ contain 2 data blocks.</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer>

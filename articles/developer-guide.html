@@ -23,7 +23,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-info"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-info" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
@@ -79,6 +79,7 @@
 
 
 
+<link href="developer-guide_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="developer-guide_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="developer-guide_files/d3-3.3.8/d3.min.js"></script><script src="developer-guide_files/dagre-0.4.0/dagre-d3.min.js"></script><script src="developer-guide_files/mermaid-10.6.0/dist/mermaid.slim.min.js"></script><link href="developer-guide_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="developer-guide_files/chromatography-0.1/chromatography.js"></script><script src="developer-guide_files/DiagrammeR-binding-1.0.10.9000/DiagrammeR.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
@@ -107,8 +108,8 @@ general idea below.</p>
 <h3 id="stack">Stack<a class="anchor" aria-label="anchor" href="#stack"></a>
 </h3>
 <p>The stack is a list of blocks.</p>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-28878db10006a83ac362" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-28878db10006a83ac362">{"x":{"diagram":"\nclassDiagram\n    class stack\n    stack : +name\n    stack : +class\n    stack : +generate_server(stack, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The stack is able to dynamically add new blocks through
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\nclassDiagram\n    class stack\n    stack : +name\n    stack : +class\n    stack : +generate_server(stack, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The stack is able to dynamically add new blocks through
 <code><a href="../reference/add_block.html">add_block()</a></code>.</p>
 <div class="section level4">
 <h4 id="modify-a-stack">Modify a stack<a class="anchor" aria-label="anchor" href="#modify-a-stack"></a>
@@ -148,8 +149,8 @@ produce the block <strong>result</strong>.</li>
 <strong>result</strong>: the block output which can be passed to
 another block.</li>
 </ul>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-6225fe155baa0b2aac09" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-6225fe155baa0b2aac09">{"x":{"diagram":"\nclassDiagram\n    class block\n    block : +name\n    block : +expr\n    block : +result\n    block : +layout\n    block : +class\n    block : +initialize_block(block)\n    block : +is_initialized(block)\n    block : +generate_code(block)\n    block : +evaluate_block(block, ...)\n    block : +generate_server(block, ...)\n    block : +update_fields(block, ...)\n"},"evals":[],"jsHooks":[]}</script><p>A block is composed of <strong>fields</strong> gathered in a list,
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"diagram":"\nclassDiagram\n    class block\n    block : +name\n    block : +expr\n    block : +result\n    block : +layout\n    block : +class\n    block : +initialize_block(block)\n    block : +is_initialized(block)\n    block : +generate_code(block)\n    block : +evaluate_block(block, ...)\n    block : +generate_server(block, ...)\n    block : +update_fields(block, ...)\n"},"evals":[],"jsHooks":[]}</script><p>A block is composed of <strong>fields</strong> gathered in a list,
 which are translated into Shiny inputs. These fields are the necessary
 elements to reconstruct the block <strong>expression</strong> and
 subsequently produce the result whenever it gets evaluated.</p>
@@ -162,8 +163,8 @@ subsequently produce the result whenever it gets evaluated.</p>
 </h4>
 <p>A field is a structure with a <strong>type</strong> and a
 <strong>class</strong>.</p>
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-94b28a7b44125e1fd39e" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-94b28a7b44125e1fd39e">{"x":{"diagram":"\nclassDiagram\n    class field\n    field : +type\n    field : +class\n    field : +initialize_field(x, env)\n    field : +validate_field(field)\n    field : +update_field(field, value, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The <code>validate_field</code> generic ensures each field has
+<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"diagram":"\nclassDiagram\n    class field\n    field : +type\n    field : +class\n    field : +initialize_field(x, env)\n    field : +validate_field(field)\n    field : +update_field(field, value, ...)\n"},"evals":[],"jsHooks":[]}</script><p>The <code>validate_field</code> generic ensures each field has
 revelant values. For instance, for a string field, which ultimately
 becomes a shiny text input, the method
 <code>validate_field.string_field</code> is responsible for checking
@@ -277,7 +278,7 @@ being the new block name.</li>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer>
