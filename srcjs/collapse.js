@@ -62,6 +62,7 @@ const editor = () => {
         $block.removeClass("d-none");
         $block.find(".block-title").removeClass("d-none");
 
+        $block.find(".block-download").removeClass("d-none");
         $block.find(".block-code-toggle").removeClass("d-none");
         $block.find(".block-output-toggle").removeClass("d-none");
 
@@ -85,6 +86,7 @@ const editor = () => {
         return;
       }
 
+      $block.find(".block-download").addClass("d-none");
       $block.find(".block-code-toggle").addClass("d-none");
       $block.find(".block-output-toggle").addClass("d-none");
       $block.find(".block-output-toggle").find("i").addClass("fa-chevron-up");
@@ -128,6 +130,7 @@ export const showLastOutput = (el) => {
   $lastInputs.addClass("d-none");
 
   // hide togglers
+  $block.find(".block-download").addClass("d-none");
   $block.find(".block-code-toggle").addClass("d-none");
   $block.find(".block-output-toggle").addClass("d-none");
 

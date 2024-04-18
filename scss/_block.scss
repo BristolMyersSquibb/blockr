@@ -6,6 +6,12 @@ html {
 
   .block {
 
+    .block-tools{
+      position: absolute;
+      top: .75rem;
+      right: 5.25rem;
+    }
+
     overflow-y: auto;
 
     .block-output {
@@ -20,7 +26,7 @@ html {
       color: var(--bs-gray);
       position: absolute;
       top: .75rem;
-      right: 2rem;
+      right: .5rem;
       &:hover {
         color: var(--bs-success);
       }
@@ -30,9 +36,19 @@ html {
       color: var(--bs-gray);
       position: absolute;
       top: .75rem;
-      right: 3.5rem;
+      right: 2rem;
       &:hover {
         color: var(--bs-info);
+      }
+    }
+
+    .block-download {
+      color: var(--bs-gray);
+      position: absolute;
+      top: .75rem;
+      right: 3.75rem;
+      &:hover {
+        color: var(--bs-warning);
       }
     }
 
@@ -50,12 +66,14 @@ html {
     .block-remove,
     .block-output-toggle,
     .block-edit-toggle,
+    .block-download,
     .block-code-toggle {
       opacity: 0;
     }
 
     &:hover{
       .block-remove,
+      .block-download,
       .block-output-toggle,
       .block-edit-toggle,
       .block-code-toggle {
