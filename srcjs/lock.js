@@ -57,10 +57,9 @@ const lock = (stack) => {
   const $editor = $stack.find(".stack-edit-toggle");
   const isClosed = $editor.find("i").hasClass("fa-chevron-up");
 
-  if (isClosed) return;
-
-  $editor.trigger("click");
   moveInputs(stack);
+  if (isClosed) return;
+  $editor.trigger("click");
 };
 
 const moveInputs = (stack) => {
