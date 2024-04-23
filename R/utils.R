@@ -110,7 +110,6 @@ set_names <- function(object = nm, nm) {
 }
 
 coal <- function(..., fail_null = TRUE) {
-
   for (i in seq_len(...length())) {
     x <- ...elt(i)
     if (is.null(x)) next else return(x)
@@ -412,4 +411,46 @@ create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) 
     allow = "autoplay",
     `data-external` = "1"
   )
+}
+
+get_block_title <- function(x) {
+  registry <- available_blocks()
+  block <- registry[sapply(registry, \(blk) {
+    if (all(class(x)[!class(x) %in% "block"] %in% attr(blk, "classes"))) {
+      return(TRUE)
+    }
+
+    FALSE
+  })]
+
+  if (length(block)) {
+    name <- attr(block[[1]], "name") |>
+      (\(.) gsub("block$", "", .))() |>
+      trimws() |>
+      tools::toTitleCase()
+
+    pkg <- attr(block[[1]], "package")
+
+    if (!is.na(pkg)) {
+      return(
+        tagList(
+          span(
+            attr(block[[1]], "package"),
+            class = "badge bg-light"
+          ),
+          name
+        )
+      )
+    }
+
+    return(name)
+  }
+
+  # fallback in case we're working with a block that is not registered
+  # e.g.: a block that is defined within the script
+  title <- class(x)[1] |>
+    (\(.) gsub("_", " ", .))() |>
+    (\(.) gsub("block$", "", .))() |>
+    trimws() |>
+    tools::toTitleCase()
 }

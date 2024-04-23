@@ -239,6 +239,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       })
 
       observe_lock_field(x, blk)
+      download(x, session, out_dat)
 
       return(
         list(
@@ -287,7 +288,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
   get_last_block_data <- function(x) {
     len <- length(x)
-    if (len) x[[len]]$data() else list()
+    if (len) x[[len]]$data else \() list()
   }
 
   moduleServer(
@@ -334,13 +335,13 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       observeEvent(
         c(
           get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)
+          get_last_block_data(vals$blocks)()
         ),
         {
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)
+            get_last_block_data(vals$blocks)()
           )
         }
       )
@@ -354,6 +355,41 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       })
 
       observeEvent(input$remove, {
+        showModal(
+          modalDialog(
+            title = "Remove stack",
+            p("Are you sure you want to remove this stack?"),
+            div(
+              class = "d-flex",
+              div(
+                class = "flex-grow-1",
+                actionButton(
+                  session$ns("cancelRemove"),
+                  "Cancel",
+                  icon = icon("times")
+                )
+              ),
+              div(
+                class = "flex-shrink-1",
+                actionButton(
+                  session$ns("acceptRemove"),
+                  "Confirm",
+                  class = "bg-danger",
+                  icon = icon("trash")
+                )
+              )
+            ),
+            footer = NULL
+          )
+        )
+      })
+
+      observeEvent(input$cancelRemove, {
+        removeModal()
+      })
+
+      observeEvent(input$acceptRemove, {
+        on.exit(removeModal())
         removeUI(
           sprintf("#%s", session$ns(NULL))
         )
@@ -371,7 +407,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       observe({
         session$sendCustomMessage(
-          "blockr-bind-stack",
+          "blockr-render-stack",
           list(
             stack = session$ns(NULL),
             locked = is_locked(session)

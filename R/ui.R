@@ -59,7 +59,7 @@ block_body.block <- function(x, ns, inputs_hidden, ...) {
   result_id <- ns("outputCollapse")
 
   loading_class <- "d-none"
-  if (inputs_hidden != "") {
+  if (inputs_hidden == "") {
     loading_class <- ""
   }
 
@@ -143,9 +143,7 @@ block_header <- function(x, ...) {
 #' @rdname block_header
 #' @export
 block_header.block <- function(x, ns, hidden_class, ...) {
-  title <- class(x)[1] |>
-    (\(.) gsub("_.*$", "", .))() |>
-    tools::toTitleCase()
+  title <- get_block_title(x)
 
   div(
     class = sprintf("m-0 card-title block-title %s", hidden_class),
@@ -254,7 +252,8 @@ generate_ui.block <- function(x, id, ...,
         block_header(x, ns, inputs_hidden),
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
-        block_code(x, ns, inputs_hidden)
+        block_code(x, ns, inputs_hidden),
+        download_ui(x, ns, inputs_hidden)
       )
     )
   )
@@ -419,32 +418,50 @@ stack_header.stack <- function(x, title, ns, ...) {
       class = "d-flex",
       div(
         class = "flex-grow-1 d-inline-flex",
-        span(get_stack_title(x), class = "stack-title cursor-pointer")
+        stackTitleInput(x, ns)
       ),
       div(
         class = "flex-shrink-1",
-        div(
-          class = "stack-tools",
-          actionLink(
-            ns("remove"),
-            class = "text-decoration-none stack-remove",
-            `data-bs-toggle` = "tooltip",
-            `data-bs-title` = "Remove stack",
-            icon("trash")
-          ),
-          add_block_ui(ns),
-          actionLink(
-            ns("copy"),
-            class = "text-decoration-none stack-copy-code",
-            `data-bs-toggle` = "tooltip",
-            `data-bs-title` = "Copy code",
-            iconCode()
-          ),
-          tags$a(
-            class = edit_class,
-            icon
-          )
+        actionLink(
+          ns("remove"),
+          class = "text-decoration-none stack-remove",
+          icon("trash")
+        ),
+        add_block_ui(ns),
+        actionLink(
+          ns("copy"),
+          class = "text-decoration-none stack-copy-code",
+          iconCode()
+        ),
+        tags$a(
+          class = edit_class,
+          icon
         )
+      )
+    )
+  )
+}
+
+stackTitleInput <- function(x, ns) {
+  div(
+    class = "stack-title",
+    `data-title` = get_stack_title(x),
+    span(
+      class = "cursor-pointer stack-title-display",
+      get_stack_title(x)
+    ),
+    div(
+      class = "d-none input-group stack-title-input",
+      tags$input(
+        id = ns("newTitle"),
+        type = "text",
+        class = "form-control form-control-sm",
+        value = get_stack_title(x)
+      ),
+      tags$button(
+        class = "btn btn-sm btn-success stack-title-save",
+        type = "button",
+        icon("paper-plane")
       )
     )
   )
