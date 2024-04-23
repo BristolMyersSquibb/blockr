@@ -77,7 +77,7 @@ const moveInputs = (stack) => {
         .find(".block-title")
         .find(".fw-bold")
         .first()
-        .text();
+        .html();
 
       const detached = [];
       $(block)
