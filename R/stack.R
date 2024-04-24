@@ -169,19 +169,26 @@ add_block <- function(stack, block, position = NULL) {
     position <- length(stack)
   }
 
-  log_debug("ADD BLOCK (position ", position + 1, ")")
-
   if (position < 1L) {
     position <- 1L
   }
 
-  # get data from the previous block
-  if (length(stack) == 1) {
-    data <- evaluate_block(stack[[position]])
-  } else if (length(stack) > 1L) {
-    data <- evaluate_block(stack[[1]])
-    for (i in seq_along(stack)[-1L]) {
-      data <- evaluate_block(stack[[i]], data = data)
+  log_debug("ADD BLOCK (position ", position + 1, ")")
+
+  stopifnot(is_count(position))
+
+  if (position == length(stack)) {
+
+    data <- get_stack_result(stack)
+
+  } else {
+
+    data <- evaluate_block(stack[[1L]])
+
+    if (position > 1L) {
+      for (i in seq.int(2L, position)) {
+        data <- evaluate_block(stack[[i]], data = data)
+      }
     }
   }
 
