@@ -63,6 +63,8 @@ const lock = (stack) => {
 };
 
 const moveInputs = (stack) => {
+  if ($(stack).find(".blockr-shown-inputs").length > 0) return;
+
   $(stack)
     .find(".card-body")
     .first()
@@ -70,6 +72,7 @@ const moveInputs = (stack) => {
 
   const $parent = $(stack).find(".card-body").find(".blockr-shown-inputs");
 
+  let n = 0;
   $(stack)
     .find(".block")
     .each((_index, block) => {
@@ -88,6 +91,7 @@ const moveInputs = (stack) => {
             .find(".blockr-input")
             .detach();
 
+          n++;
           detached.push(input);
         });
 
@@ -111,6 +115,10 @@ const moveInputs = (stack) => {
         $parent.append(row);
       }
     });
+
+  if (n > 0) return;
+
+  $(stack).find(".card-body").first().find(".blockr-shown-inputs").remove();
 };
 
 const toggleLock = (el) => {

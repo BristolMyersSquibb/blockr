@@ -11,9 +11,6 @@ shiny::shinyApp(
   server = function(input, output, session) {
     shiny::observeEvent(input$lock, {
       lock()
-      ws <- get_workspace()
-      stacks <- ls(ws)
-      print(get(stacks[1], envir = ws))
     })
 
     vals <- reactiveValues(new_block = NULL)
