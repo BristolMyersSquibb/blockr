@@ -21,7 +21,7 @@ const search = (params, endpoints) => {
 
       if (query == "") {
         endpoints.fetchLeast().then((data) => {
-          renderPills(params, data);
+          renderPills(params, data, data);
         });
         return;
       }
@@ -36,7 +36,7 @@ const search = (params, endpoints) => {
             html: "Showing only the first 100 results.",
           });
 
-        renderPills(params, data.slice(0, 100));
+        renderPills(params, data.slice(0, 100), data);
       });
     }, 500);
   };
