@@ -181,7 +181,7 @@ add_block <- function(stack, block, position = NULL) {
 
     data <- get_stack_result(stack)
 
-  } else {
+  } else if (length(stack) > 0L) {
 
     data <- evaluate_block(stack[[1L]])
 
