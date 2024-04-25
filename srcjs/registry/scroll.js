@@ -19,7 +19,7 @@ export const bindScroll = (params, endpoints) => {
       if (to > data.length) to = data.length;
       if (n == to) return;
 
-      renderPills(params, data.slice(n, to));
+      renderPills(params, data.slice(n, to), data);
       bindScroll(params, endpoints);
     });
   });
@@ -35,7 +35,7 @@ async function fetchUntilScrollable(params, endpoints) {
     if (to > data.length) to = data.length;
     if (n == to) return;
 
-    renderPills(params, data.slice(n, to));
+    renderPills(params, data.slice(n, to), data);
     if (
       $(`#${params.ns}-scrollable-child`).height() <=
       $(`#${params.ns}-scrollable`).height()
