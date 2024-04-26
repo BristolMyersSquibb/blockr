@@ -178,10 +178,12 @@ add_block <- function(stack, block, position = NULL) {
   stopifnot(is_count(position))
 
   if (position == length(stack)) {
-
     data <- get_stack_result(stack)
+  } else {
+    data <- NULL
+  }
 
-  } else if (length(stack) > 0L) {
+  if (is.null(data) && length(stack) > 0L) {
 
     data <- evaluate_block(stack[[1L]])
 
