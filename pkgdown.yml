@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.0.8
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   blockr: blockr.html
@@ -7,5 +7,5 @@ articles:
   developer-guide: developer-guide.html
   plot-block: plot-block.html
   registry: registry.html
-last_built: 2024-04-18T04:39Z
+last_built: 2024-04-26T08:56Z
 
