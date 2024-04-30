@@ -2,7 +2,6 @@
 % Please edit documentation in R/blocks.R
 \name{new_summarize_block}
 \alias{new_summarize_block}
-\alias{summarize_block}
 \title{Summarize block}
 \usage{
 new_summarize_block(
@@ -11,8 +10,6 @@ new_summarize_block(
   default_columns = character(),
   ...
 )
-
-summarize_block(data, ...)
 }
 \arguments{
 \item{data}{Tabular data in which to select some columns.}

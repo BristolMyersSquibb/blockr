@@ -2,12 +2,9 @@
 % Please edit documentation in R/mutate-block.R
 \name{new_mutate_block}
 \alias{new_mutate_block}
-\alias{mutate_block}
 \title{Mutate block constructor}
 \usage{
 new_mutate_block(data, value = NULL, ...)
-
-mutate_block(data, ...)
 }
 \arguments{
 \item{data}{Tabular data in which to select some columns.}

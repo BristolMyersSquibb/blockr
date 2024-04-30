@@ -2,12 +2,9 @@
 % Please edit documentation in R/blocks.R
 \name{new_join_block}
 \alias{new_join_block}
-\alias{join_block}
 \title{Join block}
 \usage{
 new_join_block(data, y = NULL, type = character(), by = character(), ...)
-
-join_block(data, ...)
 }
 \arguments{
 \item{data}{Tabular data in which to select some columns.}
