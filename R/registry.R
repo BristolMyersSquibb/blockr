@@ -149,7 +149,7 @@ register_blockr_blocks <- function(pkg) {
 
   register_blocks(
     constructor = c(
-      data_block,
+      dataset_block,
       result_block,
       upload_block,
       filesbrowser_block,

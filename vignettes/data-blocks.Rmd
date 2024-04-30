@@ -35,7 +35,7 @@ Data blocks are the starting point of any __stack__ and are required by any __tr
 
 ### Package based data block
 
-`{blockr}` introduces a `data_block()` which takes as input any package containing a (or multiple) dataset(s).
+`{blockr}` introduces a `dataset_block()` which takes as input any package containing a (or multiple) dataset(s).
 This block is constructed as follows:
 
 ```r
@@ -54,7 +54,7 @@ By default, the selected dataset is from the `datasets` package but you can actu
 ```r
 # Define the custom data block
 custom_data_block <- function(...) {
-  data_block(
+  dataset_block(
     dat = as.environment("package:blockr.data"),
     selected = "lab",
     ...
@@ -86,7 +86,7 @@ note_box(
 )
 ```
 
-In practice, you'll always call `data_block()` and not `new_dataset_block()` (internal constructor).
+In practice, you'll always call `dataset_block()` and not `new_dataset_block()` (internal constructor).
 
 Overall, this block is good for testing or if you get your own data package. In the next part, we see how to import
 data from a file.
@@ -178,7 +178,7 @@ a single variable block.
 ### Reading data from another stack
 
 `result_block()` allows to read data from another stack. From the below code, the first stack contains
-a `data_block()` from which the n-th first rows are pulled by the `head_block()`. In the second stack,
+a `dataset_block()` from which the n-th first rows are pulled by the `head_block()`. In the second stack,
 we can reuse this smaller dataset. If you dynamically add a third stack, you can also select the third stack
 output as input of the second stack (it appears in the result block select input).
 
@@ -186,7 +186,7 @@ output as input of the second stack (it appears in the result block select input
 library(blockr)
 
 serve_workspace(
-  stack1 = new_stack(data_block, head_block),
+  stack1 = new_stack(dataset_block, head_block),
   stack2 = new_stack(result_block),
   title = "My workspace"
 )

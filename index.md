@@ -31,7 +31,7 @@ library(blockr)
 library(blockr.data)
 
 stack <- new_stack(
-  data_block,
+  dataset_block,
   select_block
 )
 serve_stack(stack)

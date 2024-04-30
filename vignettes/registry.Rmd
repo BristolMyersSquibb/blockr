@@ -158,7 +158,7 @@ If you had to register multiple blocks:
 ```r
 register_blocks(
   constructor = c(
-    data_block, filter_block, select_block, summarize_block
+    dataset_block, filter_block, select_block, summarize_block
   ),
   name = c(
     "data block", "filter block", "select block", "summarize block"

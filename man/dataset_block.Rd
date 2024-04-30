@@ -2,7 +2,7 @@
 % Please edit documentation in R/blocks.R
 \name{new_dataset_block}
 \alias{new_dataset_block}
-\alias{data_block}
+\alias{dataset_block}
 \title{Data block constructor}
 \usage{
 new_dataset_block(
@@ -11,7 +11,7 @@ new_dataset_block(
   selected = character()
 )
 
-data_block(...)
+dataset_block(...)
 }
 \arguments{
 \item{...}{Further (metadata) attributes}

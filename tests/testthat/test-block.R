@@ -2,7 +2,7 @@ library(dplyr)
 library(blockr.data)
 
 test_that("data blocks", {
-  block <- data_block()
+  block <- dataset_block()
 
   expect_s3_class(block, "data_block")
   expect_type(block, "list")
@@ -271,7 +271,7 @@ test_that("xpt parser block", {
 
 test_that("block title", {
   expect_equal(
-    get_block_title(data_block()),
+    get_block_title(dataset_block()),
     tagList(
       span("blockr", class = "badge bg-light"),
       "Data"

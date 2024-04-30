@@ -153,15 +153,15 @@ Reduce(`+`, 1:3)
 If there are 3 blocks in the stack:
 
 ```r
-my_stack <- new_stack(data_block, filter_block, select_block)
+my_stack <- new_stack(dataset_block, filter_block, select_block)
 ```
 
 `binary_substitute` is called twice:
 
-- Once to combine x being `<data_block_EXPR>` (the data block expression) and y being `<filter_block_EXPR>`, 
-to give `<data_block_EXPR> %>% <filter_block_EXPR>`.
-- Then to combine the previous result, namely x, equal to `<data_block_EXPR> %>% <filter_block_EXPR>` with y equal to `<select_block_EXPR>`.
-- This ultimately yields: `<data_block_EXPR> %>% <filter_block_EXPR> %>% <select_block_EXPR>`
+- Once to combine x being `<dataset_block_EXPR>` (the data block expression) and y being `<filter_block_EXPR>`,
+to give `<dataset_block_EXPR> %>% <filter_block_EXPR>`.
+- Then to combine the previous result, namely x, equal to `<dataset_block_EXPR> %>% <filter_block_EXPR>` with y equal to `<select_block_EXPR>`.
+- This ultimately yields: `<dataset_block_EXPR> %>% <filter_block_EXPR> %>% <select_block_EXPR>`
 
 `substitute()` ensures we don't evaluate the generated expression and replace `x` and `y` by their respective values.
 
@@ -384,7 +384,7 @@ note_box(
 We can try it on the following stack:
 
 ```r
-stack <- new_stack(data_block, ggplot_block, geompoint_block)
+stack <- new_stack(dataset_block, ggplot_block, geompoint_block)
 serve_stack(stack)
 ```
 

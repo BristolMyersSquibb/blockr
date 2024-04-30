@@ -95,7 +95,7 @@ test_that("filesbrowser field", {
 })
 
 test_that("field name", {
-  blk <- data_block()
+  blk <- dataset_block()
   expect_equal(get_field_names(blk), "Dataset")
 
   expect_equal(get_field_name(new_switch_field(), "xxx"), "xxx")

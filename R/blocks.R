@@ -7,7 +7,7 @@
 #' @param dat Multiple datasets.
 #' @param selected Selected dataset.
 #' @export
-#' @rdname data_block
+#' @rdname dataset_block
 new_dataset_block <- function(..., dat = as.environment("package:datasets"),
                               selected = character()) {
 
@@ -44,9 +44,9 @@ new_dataset_block <- function(..., dat = as.environment("package:datasets"),
   )
 }
 
-#' @rdname data_block
+#' @rdname dataset_block
 #' @export
-data_block <- function(...) {
+dataset_block <- function(...) {
   initialize_block(new_dataset_block(...))
 }
 
