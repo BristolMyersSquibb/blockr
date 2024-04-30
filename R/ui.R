@@ -476,10 +476,9 @@ generate_ui.workspace <- function(x, id, ...) {
 
   stacks <- get_workspace_stacks(workspace = x)
 
-  stack_ui <- NULL
-  if (length(stacks) > 0) {
-    stack_ui <- div(
-      class = "d-flex stacks flex-wrap",
+  stack_ui <- div(
+    class = "d-flex stacks flex-wrap",
+    if (length(stacks) > 0) {
       lapply(seq_along(stacks), \(i) {
         div(
           class = "flex-grow-1 stack-col m-1",
@@ -487,8 +486,8 @@ generate_ui.workspace <- function(x, id, ...) {
           generate_ui(stacks[[i]], ns(names(stacks)[i]))
         )
       })
-    )
-  }
+    }
+  )
 
   tagList(
     workspaceDeps(),
