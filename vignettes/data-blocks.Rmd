@@ -39,7 +39,7 @@ Data blocks are the starting point of any __stack__ and are required by any __tr
 This block is constructed as follows:
 
 ```r
-new_data_block <- function(
+new_dataset_block <- function(
   ...,
   dat = as.environment("package:datasets"),
   selected = character()
@@ -86,7 +86,7 @@ note_box(
 )
 ```
 
-In practice, you'll always call `data_block()` and not `new_data_block()` (internal constructor).
+In practice, you'll always call `data_block()` and not `new_dataset_block()` (internal constructor).
 
 Overall, this block is good for testing or if you get your own data package. In the next part, we see how to import
 data from a file.

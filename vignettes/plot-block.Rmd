@@ -412,7 +412,7 @@ library(ggiraph)
 
 custom_data_block <- function(...) {
   initialize_block(
-    new_data_block(
+    new_dataset_block(
       ...,
       selected = "mtcars"
     )

@@ -57,7 +57,7 @@ ready to be queried by `available_blocks()`. A truncated output example below:
 ```r
 $dataset_block
 function(...) {
-  initialize_block(new_data_block(...))
+  initialize_block(new_dataset_block(...))
 }
 <environment: namespace:blockr>
 attr(,"name")

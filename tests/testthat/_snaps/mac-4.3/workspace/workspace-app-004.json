@@ -1,9 +1,0 @@
-{
-  "input": {
-    "myworkspace-add_stack": 2,
-    "myworkspace-clear_stacks": 1
-  },
-  "export": {
-    "myworkspace-stacks": 0
-  }
-}

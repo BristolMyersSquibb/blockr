@@ -6,7 +6,7 @@ test_that("workspace", {
   expect_s3_class(get_workspace(), "workspace")
 
   stack1 <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_filter_block
   )
 
@@ -19,7 +19,7 @@ test_that("workspace", {
   expect_s3_class(get_workspace_stack("stack1"), "stack")
 
   stack2 <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_select_block
   )
 

@@ -11,7 +11,7 @@ test_that("json ser/deser for fields", {
 
 test_that("json ser/deser for blocks", {
 
-  x <- new_data_block("")
+  x <- new_dataset_block("")
 
   expect_identical(from_json(to_json(x)), x)
 })
@@ -19,7 +19,7 @@ test_that("json ser/deser for blocks", {
 test_that("json ser/deser for stacks", {
 
   x <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_filter_block
   )
 
@@ -31,7 +31,7 @@ test_that("json ser/deser for the workspace", {
   withr::defer(clear_workspace_stacks())
 
   x <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_filter_block
   )
 

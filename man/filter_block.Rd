@@ -7,7 +7,7 @@
 \usage{
 new_filter_block(
   data,
-  columns = colnames(data)[1L],
+  columns = character(),
   values = character(),
   filter_fun = "==",
   ...

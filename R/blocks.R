@@ -8,8 +8,8 @@
 #' @param selected Selected dataset.
 #' @export
 #' @rdname data_block
-new_data_block <- function(..., dat = as.environment("package:datasets"),
-                           selected = character()) {
+new_dataset_block <- function(..., dat = as.environment("package:datasets"),
+                              selected = character()) {
 
   is_dataset_eligible <- function(x) {
     inherits(
@@ -47,7 +47,7 @@ new_data_block <- function(..., dat = as.environment("package:datasets"),
 #' @rdname data_block
 #' @export
 data_block <- function(...) {
-  initialize_block(new_data_block(...))
+  initialize_block(new_dataset_block(...))
 }
 
 #' Upload block constructor
@@ -398,7 +398,8 @@ new_select_block <- function(data, columns = character(), ...) {
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, title = "Columns")
+    columns = new_select_field(columns, all_cols, multiple = TRUE,
+                               title = "Columns")
   )
 
   new_block(
@@ -559,7 +560,8 @@ new_arrange_block <- function(data, columns = character(), ...) {
 
   # Type as name for arrange and group_by
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols, multiple = TRUE,
+                               type = "name", title = "Columns")
   )
 
   new_block(
@@ -687,8 +689,11 @@ new_head_block <- function(data, n_rows = numeric(), n_rows_min = 1L, ...) {
     )
   }
 
+  n_rows_max <- function(data) nrow(data)
+
   fields <- list(
-    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data), title = "Number of rows"),
+    n_rows = new_numeric_field(n_rows, n_rows_min, n_rows_max,
+                               title = "Number of rows"),
     expression = new_hidden_field(tmp_expr)
   )
 

@@ -39,7 +39,7 @@ test_that("filter blocks", {
 test_that("select blocks", {
   data <- datasets::iris
 
-  block <- select_block(data)
+  block <- select_block(data, "Species")
 
   expect_s3_class(block, "select_block")
   expect_type(block, "list")
@@ -48,14 +48,14 @@ test_that("select blocks", {
 
   expect_identical(nrow(res), nrow(data))
   expect_equal(ncol(res), 1)
-  expect_equal(colnames(res), colnames(data)[1])
+  expect_equal(colnames(res), "Species")
 })
 
 test_that("arrange blocks", {
   data <- datasets::iris
   min_sepal_len <- min(data$Sepal.Length)
 
-  block <- arrange_block(data)
+  block <- arrange_block(data, "Sepal.Length")
 
   expect_s3_class(block, "arrange_block")
   expect_type(block, "list")
@@ -64,7 +64,7 @@ test_that("arrange blocks", {
 
   expect_identical(nrow(res), nrow(data))
   expect_equal(ncol(res), ncol(data))
-  expect_equal(res[1, colnames(data)[1]], min_sepal_len)
+  expect_equal(res[1, "Sepal.Length"], min_sepal_len)
 })
 
 test_that("group_by blocks", {
@@ -281,7 +281,7 @@ test_that("block title", {
 
 test_that("blocks can be constructed with default args", {
 
-  for (block in available_blocks()) {
-    expect_s3_class(do.call(block, list()), "block")
+  for (block in names(available_blocks())) {
+    expect_s3_class(do.call(paste0("new_", block), list()), "block")
   }
 })
