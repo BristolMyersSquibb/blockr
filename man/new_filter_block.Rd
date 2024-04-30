@@ -2,7 +2,6 @@
 % Please edit documentation in R/blocks.R
 \name{new_filter_block}
 \alias{new_filter_block}
-\alias{filter_block}
 \title{Filter block}
 \usage{
 new_filter_block(
@@ -12,8 +11,6 @@ new_filter_block(
   filter_fun = "==",
   ...
 )
-
-filter_block(data, ...)
 }
 \arguments{
 \item{data}{Tabular data to filter (rows).}

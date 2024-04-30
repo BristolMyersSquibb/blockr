@@ -2,12 +2,9 @@
 % Please edit documentation in R/blocks.R
 \name{new_filesbrowser_block}
 \alias{new_filesbrowser_block}
-\alias{filesbrowser_block}
 \title{Files browser block constructor}
 \usage{
 new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
-
-filesbrowser_block(...)
 }
 \arguments{
 \item{volumes}{Paths accessible by the shinyFiles browser.}

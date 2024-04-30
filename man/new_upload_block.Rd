@@ -2,12 +2,9 @@
 % Please edit documentation in R/blocks.R
 \name{new_upload_block}
 \alias{new_upload_block}
-\alias{upload_block}
 \title{Upload block constructor}
 \usage{
 new_upload_block(...)
-
-upload_block(...)
 }
 \arguments{
 \item{...}{Further (metadata) attributes}

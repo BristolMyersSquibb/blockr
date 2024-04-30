@@ -3,38 +3,23 @@
 \name{new_parser_block}
 \alias{new_parser_block}
 \alias{new_csv_block}
-\alias{csv_block}
 \alias{new_rds_block}
-\alias{rds_block}
 \alias{new_json_block}
-\alias{json_block}
 \alias{new_sas_block}
-\alias{sas_block}
 \alias{new_xpt_block}
-\alias{xpt_block}
 \title{Data parser block constructor}
 \usage{
 new_parser_block(data, expr, fields = list(), ..., class = character())
 
 new_csv_block(data, ...)
 
-csv_block(data, ...)
-
 new_rds_block(data, ...)
-
-rds_block(data, ...)
 
 new_json_block(data, ...)
 
-json_block(data, ...)
-
 new_sas_block(data, ...)
 
-sas_block(data, ...)
-
 new_xpt_block(data, ...)
-
-xpt_block(data, ...)
 }
 \arguments{
 \item{data}{Data coming from any data reader block like \link{filesbrowser_block} and

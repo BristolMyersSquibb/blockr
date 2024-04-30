@@ -7,7 +7,6 @@
 #' @param dat Multiple datasets.
 #' @param selected Selected dataset.
 #' @export
-#' @rdname dataset_block
 new_dataset_block <- function(..., dat = as.environment("package:datasets"),
                               selected = character()) {
 
@@ -44,12 +43,6 @@ new_dataset_block <- function(..., dat = as.environment("package:datasets"),
   )
 }
 
-#' @rdname dataset_block
-#' @export
-dataset_block <- function(...) {
-  initialize_block(new_dataset_block(...))
-}
-
 #' Upload block constructor
 #'
 #' This block allows to upload data from the user files system.
@@ -57,7 +50,6 @@ dataset_block <- function(...) {
 #'
 #' @inheritParams new_block
 #' @export
-#' @rdname upload_block
 new_upload_block <- function(...) {
 
   data_path <- function(file) {
@@ -75,12 +67,6 @@ new_upload_block <- function(...) {
   )
 }
 
-#' @rdname upload_block
-#' @export
-upload_block <- function(...) {
-  initialize_block(new_upload_block(...))
-}
-
 #' Files browser block constructor
 #'
 #' This block allows browse files on the server where the app is running.
@@ -90,7 +76,6 @@ upload_block <- function(...) {
 #' @inheritParams new_block
 #' @param volumes Paths accessible by the shinyFiles browser.
 #' @export
-#' @rdname filesbrowser_block
 new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 
   data_path <- function(file) {
@@ -114,12 +99,6 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
   )
 }
 
-#' @export
-#' @rdname filesbrowser_block
-filesbrowser_block <- function(...) {
-  initialize_block(new_filesbrowser_block(...))
-}
-
 #' Data parser block constructor
 #'
 #' \code{new_parser_block}: this block allows to create any data parsing block.
@@ -129,7 +108,6 @@ filesbrowser_block <- function(...) {
 #' @param data Data coming from any data reader block like \link{filesbrowser_block} and
 #' \link{upload_block}.
 #' @export
-#' @rdname parser_block
 new_parser_block <- function(data, expr, fields = list(), ...,
                              class = character()) {
 
@@ -158,16 +136,10 @@ new_parser_block <- function(data, expr, fields = list(), ...,
 #' \link{upload_block}, reads the related CSV file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
 new_csv_block <- function(data, ...) {
   new_parser_block(data, expr = quote(utils::read.csv()), class = "csv_block")
-}
-
-#' @rdname parser_block
-#' @export
-csv_block <- function(data, ...) {
-  initialize_block(new_csv_block(data, ...), data)
 }
 
 #' RDS data parser block
@@ -176,16 +148,10 @@ csv_block <- function(data, ...) {
 #' \link{upload_block}, reads the related rds file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
 new_rds_block <- function(data, ...) {
   new_parser_block(data, expr = quote(readRDS()), class = "rds_block")
-}
-
-#' @rdname parser_block
-#' @export
-rds_block <- function(data, ...) {
-  initialize_block(new_rds_block(data, ...), data)
 }
 
 #' JSON data parser block
@@ -194,7 +160,7 @@ rds_block <- function(data, ...) {
 #' \link{upload_block}, reads the related json file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
 new_json_block <- function(data, ...) {
   new_parser_block(data,
@@ -203,28 +169,16 @@ new_json_block <- function(data, ...) {
   )
 }
 
-#' @rdname parser_block
-#' @export
-json_block <- function(data, ...) {
-  initialize_block(new_json_block(data, ...), data)
-}
-
 #' SAS data parser block
 #'
 #' \code{sas_block}: From a string given by \link{filesbrowser_block} and
 #' \link{upload_block}, reads the related SAS file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
 new_sas_block <- function(data, ...) {
   new_parser_block(data, expr = quote(haven::read_sas()), class = "sas_block")
-}
-
-#' @rdname parser_block
-#' @export
-sas_block <- function(data, ...) {
-  initialize_block(new_sas_block(data, ...), data)
 }
 
 #' XPT data parser block
@@ -233,16 +187,10 @@ sas_block <- function(data, ...) {
 #' \link{upload_block}, reads the related XPT file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
 new_xpt_block <- function(data, ...) {
   new_parser_block(data, expr = quote(haven::read_xpt()), class = "xpt_block")
-}
-
-#' @rdname parser_block
-#' @export
-xpt_block <- function(data, ...) {
-  initialize_block(new_xpt_block(data, ...), data)
 }
 
 #' Result block
@@ -251,7 +199,6 @@ xpt_block <- function(data, ...) {
 #' another one. This isn't relevant for single stack apps.
 #'
 #' @inheritParams new_block
-#' @rdname result_block
 #' @export
 new_result_block <- function(...) {
 
@@ -267,12 +214,6 @@ new_result_block <- function(...) {
   )
 }
 
-#' @rdname result_block
-#' @export
-result_block <- function(...) {
-  initialize_block(new_result_block(...))
-}
-
 #' Filter block
 #'
 #' This block provides access to \link[dplyr]{filter} verb and
@@ -283,7 +224,6 @@ result_block <- function(...) {
 #' @param columns Definition of the equality filter.
 #' @param values Definition of the equality filter.
 #' @param filter_fun Default filter fun for the expression.
-#' @rdname filter_block
 #' @export
 new_filter_block <- function(data, columns = character(), values = character(),
                              filter_fun = "==", ...) {
@@ -376,12 +316,6 @@ new_filter_block <- function(data, columns = character(), values = character(),
   )
 }
 
-#' @rdname filter_block
-#' @export
-filter_block <- function(data, ...) {
-  initialize_block(new_filter_block(data, ...), data)
-}
-
 #' Select block
 #'
 #' This block provides access to \link[dplyr]{select} verb and
@@ -390,7 +324,6 @@ filter_block <- function(data, ...) {
 #' @inheritParams new_block
 #' @param data Tabular data in which to select some columns.
 #' @param columns Column(s) to select.
-#' @rdname select_block
 #' @export
 new_select_block <- function(data, columns = character(), ...) {
 
@@ -412,25 +345,18 @@ new_select_block <- function(data, columns = character(), ...) {
   )
 }
 
-#' @rdname select_block
-#' @export
-select_block <- function(data, ...) {
-  initialize_block(new_select_block(data, ...), data)
-}
-
 #' Summarize block
 #'
 #' This block provides access to \link[dplyr]{summarize} verb and
 #' returns a dataframe with the transformed columns.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
+#' @inheritParams new_select_block
 #' @param func Summarize function to apply.
 #' @param default_columns If you know in advance each function to apply,
 #' you can also pass predefined selected column for each summary.
 #' Therefore when not of length 0, columns should have the same length
 #' as func.
-#' @rdname summarize_block
 #' @export
 new_summarize_block <- function(data, func = c("mean", "se"),
                                 default_columns = character(), ...) {
@@ -539,20 +465,13 @@ new_summarize_block <- function(data, func = c("mean", "se"),
   )
 }
 
-#' @rdname summarize_block
-#' @export
-summarize_block <- function(data, ...) {
-  initialize_block(new_summarize_block(data, ...), data)
-}
-
 #' Arrange block
 #'
 #' This block provides access to \link[dplyr]{arrange} verb and
 #' returns a dataframe.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
-#' @rdname arrange_block
+#' @inheritParams new_select_block
 #' @export
 new_arrange_block <- function(data, columns = character(), ...) {
 
@@ -572,20 +491,13 @@ new_arrange_block <- function(data, columns = character(), ...) {
   )
 }
 
-#' @rdname arrange_block
-#' @export
-arrange_block <- function(data, ...) {
-  initialize_block(new_arrange_block(data, ...), data)
-}
-
 #' Group by block
 #'
 #' This block provides access to \link[dplyr]{group_by} verb and
 #' returns a dataframe.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
-#' @rdname group_by_block
+#' @inheritParams new_select_block
 #' @export
 new_group_by_block <- function(data, columns = character(), ...) {
 
@@ -606,12 +518,6 @@ new_group_by_block <- function(data, columns = character(), ...) {
   )
 }
 
-#' @rdname group_by_block
-#' @export
-group_by_block <- function(data, ...) {
-  initialize_block(new_group_by_block(data, ...), data)
-}
-
 #' Join block
 #'
 #' This block provides access to the dplyr join verbs and
@@ -619,12 +525,11 @@ group_by_block <- function(data, ...) {
 #' stack as the `y` parameter expects a dataframe from another stack.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
+#' @inheritParams new_select_block
 #' @param y Second dataset for join.
 #' @param type Join type.
 #' @param by Join columns.
 #'
-#' @rdname join_block
 #' @export
 new_join_block <- function(data, y = NULL, type = character(),
                            by = character(), ...) {
@@ -664,19 +569,12 @@ new_join_block <- function(data, y = NULL, type = character(),
   )
 }
 
-#' @rdname join_block
-#' @export
-join_block <- function(data, ...) {
-  initialize_block(new_join_block(data, ...), data)
-}
-
 #' Head block
 #'
 #' This allows to select the first n rows of the input dataframe.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
-#' @rdname head_block
+#' @inheritParams new_select_block
 #' @param n_rows Number of rows to return.
 #' @param n_rows_min Minimum number of rows.
 #' @export
@@ -703,10 +601,4 @@ new_head_block <- function(data, n_rows = numeric(), n_rows_min = 1L, ...) {
     ...,
     class = c("head_block", "transform_block")
   )
-}
-
-#' @rdname head_block
-#' @export
-head_block <- function(data, ...) {
-  initialize_block(new_head_block(data, ...), data)
 }

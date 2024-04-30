@@ -2,12 +2,9 @@
 % Please edit documentation in R/blocks.R
 \name{new_result_block}
 \alias{new_result_block}
-\alias{result_block}
 \title{Result block}
 \usage{
 new_result_block(...)
-
-result_block(...)
 }
 \arguments{
 \item{...}{Further (metadata) attributes}
