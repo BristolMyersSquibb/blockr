@@ -278,3 +278,10 @@ test_that("block title", {
     )
   )
 })
+
+test_that("blocks can be constructed with default args", {
+
+  for (block in available_blocks()) {
+    expect_s3_class(do.call(block, list()), "block")
+  }
+})
