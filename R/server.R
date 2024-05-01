@@ -298,6 +298,12 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         blocks = vector("list", length(x)),
         removed = FALSE
       )
+      # Don't remove: needed by shinytest2
+      exportTestValues(
+        stack = vals$stack,
+        n_blocks = length(vals$blocks),
+        removed = vals$removed
+      )
 
       init(x, vals, session)
 

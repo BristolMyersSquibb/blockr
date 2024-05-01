@@ -112,23 +112,23 @@ test_that("workspace demo works", {
 
   app$expect_values(
     input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
-    export = TRUE
+    export = "myworkspace-stacks"
   )
   # Add a new stack
   app$click(selector = "#myworkspace-add_stack")
   app$expect_values(
     input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
-    export = TRUE
+    export = "myworkspace-stacks"
   )
   app$click(selector = "#myworkspace-add_stack")
   app$expect_values(
     input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
-    export = TRUE
+    export = "myworkspace-stacks"
   )
   # Clear
   app$click(selector = "#myworkspace-clear_stacks")
   app$expect_values(
     input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
-    export = TRUE
+    export = "myworkspace-stacks"
   )
 })
