@@ -344,9 +344,7 @@ test_that("block demo works", {
   app <- AppDriver$new(
     blocks_app,
     name = "block-app",
-    seed = 4323,
-    width = 992,
-    height = 1323
+    seed = 4323
   )
 
   blocks_inputs <- c(
@@ -362,11 +360,30 @@ test_that("block demo works", {
 
   blocks_exports <- chr_ply(1:3, \(i) sprintf("my_stack-block_%s-block", i))
 
+  blocks_outputs <- c(
+    "my_stack-block_1-ncol",
+    "my_stack-block_1-nrow",
+    "my_stack-block_1-res"
+  )
+
+  test_plot <- function(i) {
+    plot_obj <- app$get_values(
+      output = sprintf("my_stack-block_%s-plot", i)
+    )
+    # Verify `plot_obj()` is consistent
+    vdiffr::expect_doppelganger(
+      sprintf("check-plot-%s", i),
+      plot_obj
+    )
+  }
+
   # Only last block is uncollapsed
   app$expect_values(
     input = blocks_inputs,
     export = blocks_exports,
-    output = TRUE
+    # We have to test ggplot2 obj separately
+    # as they can't be serialized to json
+    output = blocks_outputs
   )
 
   app$click(selector = ".stack-edit-toggle")
@@ -382,8 +399,9 @@ test_that("block demo works", {
   app$expect_values(
     input = blocks_inputs,
     export = blocks_exports,
-    output = TRUE
+    output = blocks_outputs
   )
+  lapply(1:3, test_plot)
 
   # Test last block input field
   app$set_inputs("my_stack-block_3-color" = "green")
@@ -391,7 +409,7 @@ test_that("block demo works", {
   app$expect_values(
     input = blocks_inputs,
     export = blocks_exports,
-    output = TRUE
+    output = blocks_outputs
   )
 
   # Change coordinates
@@ -403,7 +421,7 @@ test_that("block demo works", {
   app$expect_values(
     input = blocks_inputs,
     export = blocks_exports,
-    output = TRUE
+    output = blocks_outputs
   )
 
   # TO DO: Change data
@@ -423,6 +441,6 @@ test_that("block demo works", {
   app$expect_values(
     input = blocks_inputs,
     export = blocks_exports,
-    output = TRUE
+    output = blocks_outputs
   )
 })
