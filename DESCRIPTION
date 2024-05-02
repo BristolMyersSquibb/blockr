@@ -51,6 +51,7 @@ Suggests:
     shinytest2,
     pkgload,
     htmlwidgets,
-    withr
+    withr,
+    ggplot2
 Config/testthat/edition: 3
 VignetteBuilder: knitr

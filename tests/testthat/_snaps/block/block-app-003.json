@@ -1,0 +1,351 @@
+{
+  "input": {
+    "my_stack-block_1-copy": 0,
+    "my_stack-block_1-dataset": "airquality",
+    "my_stack-block_2-copy": 0,
+    "my_stack-block_2-x": "Ozone",
+    "my_stack-block_2-y": "Solar.R",
+    "my_stack-block_3-color": "green",
+    "my_stack-block_3-copy": 0,
+    "my_stack-remove-block-block_1": 0,
+    "my_stack-remove-block-block_2": 0,
+    "my_stack-remove-block-block_3": 0
+  },
+  "output": {
+    "my_stack-block_1-ncol": "6",
+    "my_stack-block_1-nrow": "153",
+    "my_stack-block_1-res": {
+      "x": {
+        "style": "bootstrap5",
+        "filter": "none",
+        "vertical": false,
+        "container": "<table class=\"table table-striped table-hover row-border order-column display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Ozone<\/th>\n      <th>Solar.R<\/th>\n      <th>Wind<\/th>\n      <th>Temp<\/th>\n      <th>Month<\/th>\n      <th>Day<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>",
+        "options": {
+          "pageLength": 5,
+          "processing": false,
+          "columnDefs": [
+            {
+              "className": "dt-right",
+              "targets": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            },
+            {
+              "orderable": false,
+              "targets": 0
+            },
+            {
+              "name": " ",
+              "targets": 0
+            },
+            {
+              "name": "Ozone",
+              "targets": 1
+            },
+            {
+              "name": "Solar.R",
+              "targets": 2
+            },
+            {
+              "name": "Wind",
+              "targets": 3
+            },
+            {
+              "name": "Temp",
+              "targets": 4
+            },
+            {
+              "name": "Month",
+              "targets": 5
+            },
+            {
+              "name": "Day",
+              "targets": 6
+            }
+          ],
+          "order": [
+
+          ],
+          "autoWidth": false,
+          "orderClasses": false,
+          "lengthMenu": [
+            5,
+            10,
+            25,
+            50,
+            100
+          ],
+          "ajax": {
+            "type": "POST",
+            "data": "function(d) {\nd.search.caseInsensitive = true;\nd.search.smart = true;\nd.escape = true;\nvar encodeAmp = function(x) { x.value = x.value.replace(/&/g, \"%26\"); }\nencodeAmp(d.search);\n$.each(d.columns, function(i, v) {encodeAmp(v.search);});\n}"
+          },
+          "serverSide": true
+        },
+        "selection": {
+          "mode": "none",
+          "selected": null,
+          "target": "row",
+          "selectable": null
+        }
+      },
+      "evals": [
+        "options.ajax.data"
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "jquery",
+          "version": "3.6.0",
+          "src": {
+            "href": "jquery-3.6.0"
+          },
+          "meta": null,
+          "script": "jquery-3.6.0.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "dt-core-bootstrap5",
+          "version": "1.13.6",
+          "src": {
+            "href": "dt-core-bootstrap5-1.13.6"
+          },
+          "meta": null,
+          "script": [
+            "js/jquery.dataTables.min.js",
+            "js/dataTables.bootstrap5.min.js"
+          ],
+          "stylesheet": "css/dataTables.bootstrap5.min.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": false
+        },
+        {
+          "name": "bootstrap",
+          "version": "5.3.1",
+          "src": {
+            "href": "bootstrap-5.3.1"
+          },
+          "meta": {
+            "viewport": "width=device-width, initial-scale=1, shrink-to-fit=no"
+          },
+          "script": "bootstrap.bundle.min.js",
+          "stylesheet": "bootstrap.min.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        },
+        {
+          "name": "bs3compat",
+          "version": "0.7.0",
+          "src": {
+            "href": "bs3compat-0.7.0"
+          },
+          "meta": null,
+          "script": [
+            "transition.js",
+            "tabs.js",
+            "bs3compat.js"
+          ],
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.2.1",
+          "src": {
+            "href": "crosstalk-1.2.1"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "my_stack-block_2-plot": {
+      "src": "[image data hash: 8411a83ba27f7cc2e2e6bbe57ed04e35]",
+      "width": 932,
+      "height": 400,
+      "alt": "Plot object",
+      "coordmap": {
+        "panels": [
+          {
+            "panel": 1,
+            "row": 1,
+            "col": 1,
+            "panel_vars": {
+
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": -7.35,
+              "right": 176.35,
+              "bottom": -9.350000000000001,
+              "top": 350.35
+            },
+            "mapping": {
+              "x": "Ozone",
+              "y": "Solar.R"
+            },
+            "range": {
+              "left": 76.6451198630136,
+              "right": 1853.041095890411,
+              "bottom": 736.6929463003968,
+              "top": 10.95890410958904
+            }
+          }
+        ],
+        "dims": {
+          "width": 1864,
+          "height": 800
+        }
+      }
+    },
+    "my_stack-block_3-plot": {
+      "src": "[image data hash: 874eab5fde799eceff558b2d692d8eee]",
+      "width": 932,
+      "height": 400,
+      "alt": "Plot object",
+      "coordmap": {
+        "panels": [
+          {
+            "panel": 1,
+            "row": 1,
+            "col": 1,
+            "panel_vars": {
+
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "domain": {
+              "left": -7.35,
+              "right": 176.35,
+              "bottom": -9.350000000000001,
+              "top": 350.35
+            },
+            "mapping": {
+              "x": "Ozone",
+              "y": "Solar.R"
+            },
+            "range": {
+              "left": 76.6451198630136,
+              "right": 1853.041095890411,
+              "bottom": 736.6929463003968,
+              "top": 10.95890410958904
+            }
+          }
+        ],
+        "dims": {
+          "width": 1864,
+          "height": 800
+        }
+      }
+    }
+  },
+  "export": {
+    "my_stack-block_1-block": {
+      "dataset": {
+        "value": "airquality",
+        "choices": [
+          "BOD",
+          "CO2",
+          "ChickWeight",
+          "DNase",
+          "Formaldehyde",
+          "Indometh",
+          "InsectSprays",
+          "LifeCycleSavings",
+          "Loblolly",
+          "Orange",
+          "OrchardSprays",
+          "PlantGrowth",
+          "Puromycin",
+          "Theoph",
+          "ToothGrowth",
+          "USArrests",
+          "USJudgeRatings",
+          "airquality",
+          "anscombe",
+          "attenu",
+          "attitude",
+          "beaver1",
+          "beaver2",
+          "cars",
+          "chickwts",
+          "esoph",
+          "faithful",
+          "freeny",
+          "infert",
+          "iris",
+          "longley",
+          "morley",
+          "mtcars",
+          "npk",
+          "pressure",
+          "quakes",
+          "randu",
+          "rock",
+          "sleep",
+          "stackloss",
+          "swiss",
+          "trees",
+          "warpbreaks",
+          "women"
+        ],
+        "multiple": false
+      }
+    },
+    "my_stack-block_2-block": {
+      "x": {
+        "value": "Ozone",
+        "choices": [
+          "structure(function (data) ",
+          "colnames(data), result = c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\", ",
+          "\"Month\", \"Day\"))"
+        ],
+        "multiple": false
+      },
+      "y": {
+        "value": "Solar.R",
+        "choices": [
+          "structure(function (data) ",
+          "colnames(data), result = c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\", ",
+          "\"Month\", \"Day\"))"
+        ],
+        "multiple": false
+      }
+    },
+    "my_stack-block_3-block": {
+      "color": {
+        "value": "green",
+        "choices": [
+          "blue",
+          "green",
+          "red"
+        ],
+        "multiple": false
+      }
+    }
+  }
+}

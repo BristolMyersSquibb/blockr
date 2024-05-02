@@ -240,6 +240,14 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       download(x, session, out_dat)
 
+      # For shinytest2
+      # Note: no need to export data as
+      # they are reflected in the shinytest2
+      # output elements
+      exportTestValues(
+        block = blk()
+      )
+
       return(
         list(
           block = blk,
