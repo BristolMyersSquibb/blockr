@@ -132,3 +132,20 @@ test_that("workspace demo works", {
     export = "myworkspace-stacks"
   )
 })
+
+test_that("restore workspace works", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+  shiny_app_path <-
+    system.file("examples/restore-workspace/app.R", package = "blockr")
+  app <- AppDriver$new(
+    shiny_app_path,
+    name = "restore-workspace-app",
+    variant = platform_variant()
+  )
+
+  app$expect_values(
+    input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
+    export = "myworkspace-stacks"
+  )
+})

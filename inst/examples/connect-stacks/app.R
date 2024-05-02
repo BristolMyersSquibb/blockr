@@ -18,7 +18,7 @@ ae_data_block <- function(...) {
 }
 
 serve_workspace(
-  stack1 = new_stack(lab_data_block, head_block),
-  stack2 = new_stack(ae_data_block, join_block),
+  stack1 = new_stack(lab_data_block, head_block, name = "stack1"),
+  stack2 = new_stack(ae_data_block, join_block, name = "stack2"),
   title = "My workspace"
 )

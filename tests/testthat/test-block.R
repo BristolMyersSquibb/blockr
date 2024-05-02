@@ -344,7 +344,9 @@ test_that("block demo works", {
   app <- AppDriver$new(
     blocks_app,
     name = "block-app",
-    seed = 4323
+    seed = 4323,
+    width = 992,
+    height = 1323
   )
 
   blocks_inputs <- c(
