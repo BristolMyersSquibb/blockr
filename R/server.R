@@ -245,7 +245,9 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # they are reflected in the shinytest2
       # output elements
       exportTestValues(
-        block = blk()
+        block = blk(),
+        # res may be a ggplot object
+        res = out_dat()
       )
 
       return(

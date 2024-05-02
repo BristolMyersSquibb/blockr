@@ -367,8 +367,9 @@ test_that("block demo works", {
   )
 
   test_plot <- function(i) {
+    message("TESTING PLOTS")
     plot_obj <- app$get_values(
-      output = sprintf("my_stack-block_%s-plot", i)
+      export = sprintf("my_stack-block_%s-res", i)
     )
     # Verify `plot_obj()` is consistent
     vdiffr::expect_doppelganger(
@@ -381,9 +382,9 @@ test_that("block demo works", {
   app$expect_values(
     input = blocks_inputs,
     export = blocks_exports,
+    output = blocks_outputs
     # We have to test ggplot2 obj separately
     # as they can't be serialized to json
-    output = blocks_outputs
   )
 
   app$click(selector = ".stack-edit-toggle")
@@ -401,7 +402,8 @@ test_that("block demo works", {
     export = blocks_exports,
     output = blocks_outputs
   )
-  lapply(1:3, test_plot)
+  # Only block2 and 3 have results
+  lapply(2:3, test_plot)
 
   # Test last block input field
   app$set_inputs("my_stack-block_3-color" = "green")
