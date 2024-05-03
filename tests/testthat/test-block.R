@@ -184,7 +184,7 @@ test_that("filesbrowser block", {
   expect_s3_class(ui, "shiny.tag")
   shinyFiles_ui <- htmltools::tagQuery(ui)$
     find(".shinyFiles")$
-    selectedTags()
+    selectedTags() # nolint
 
   expect_length(shinyFiles_ui, 1)
 })
