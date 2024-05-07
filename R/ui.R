@@ -252,7 +252,8 @@ generate_ui.block <- function(x, id, ...,
         block_header(x, ns, inputs_hidden),
         div(class = "block-validation"),
         block_body(x, ns, inputs_hidden),
-        block_code(x, ns, inputs_hidden)
+        block_code(x, ns, inputs_hidden),
+        download_ui(x, ns, inputs_hidden)
       )
     )
   )
@@ -421,23 +422,20 @@ stack_header.stack <- function(x, title, ns, ...) {
       ),
       div(
         class = "flex-shrink-1",
-        div(
-          class = "stack-tools",
-          actionLink(
-            ns("remove"),
-            class = "text-decoration-none stack-remove",
-            icon("trash")
-          ),
-          add_block_ui(ns),
-          actionLink(
-            ns("copy"),
-            class = "text-decoration-none stack-copy-code",
-            iconCode()
-          ),
-          tags$a(
-            class = edit_class,
-            icon
-          )
+        actionLink(
+          ns("remove"),
+          class = "text-decoration-none stack-remove",
+          icon("trash")
+        ),
+        add_block_ui(ns),
+        actionLink(
+          ns("copy"),
+          class = "text-decoration-none stack-copy-code",
+          iconCode()
+        ),
+        tags$a(
+          class = edit_class,
+          icon
         )
       )
     )
@@ -478,10 +476,9 @@ generate_ui.workspace <- function(x, id, ...) {
 
   stacks <- get_workspace_stacks(workspace = x)
 
-  stack_ui <- NULL
-  if (length(stacks) > 0) {
-    stack_ui <- div(
-      class = "d-flex stacks flex-wrap",
+  stack_ui <- div(
+    class = "d-flex stacks flex-wrap",
+    if (length(stacks) > 0) {
       lapply(seq_along(stacks), \(i) {
         div(
           class = "flex-grow-1 stack-col m-1",
@@ -489,8 +486,8 @@ generate_ui.workspace <- function(x, id, ...) {
           generate_ui(stacks[[i]], ns(names(stacks)[i]))
         )
       })
-    )
-  }
+    }
+  )
 
   tagList(
     workspaceDeps(),

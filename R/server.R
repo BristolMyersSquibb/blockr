@@ -238,6 +238,8 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         )
       })
 
+      download(x, session, out_dat)
+
       return(
         list(
           block = blk,
@@ -285,7 +287,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
   get_last_block_data <- function(x) {
     len <- length(x)
-    if (len) x[[len]]$data() else list()
+    if (len) x[[len]]$data else \() list()
   }
 
   moduleServer(
@@ -332,13 +334,13 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       observeEvent(
         c(
           get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)
+          get_last_block_data(vals$blocks)()
         ),
         {
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)
+            get_last_block_data(vals$blocks)()
           )
         }
       )
@@ -490,11 +492,21 @@ generate_server.workspace <- function(x, id, ...) {
     id = id,
     function(input, output, session) {
       vals <- reactiveValues(stacks = list(), new_block = list())
+      # Required by shinytest2: don't remove
+      # Note: we can't check vals$stack as this is
+      # a nested reactiveVal which does not play well
+      # with shinytest2 ...
+      n_stacks <- reactive(length(vals$stacks))
+      exportTestValues(
+        stacks = {
+          n_stacks()
+        }
+      )
 
       # Init existing stack modules
       init(x, vals, session)
 
-      output$n_stacks <- renderText(length(vals$stacks))
+      output$n_stacks <- renderText(n_stacks())
 
       # Listen when stack are removed
       observeEvent(req(length(are_stacks_removed(vals$stacks)) > 0), {
