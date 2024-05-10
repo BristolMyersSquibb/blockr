@@ -11,10 +11,6 @@ new_string_field <- function(value = character(), ...) {
   new_field(value, ..., class = "string_field")
 }
 
-#' @rdname string_field
-#' @export
-string_field <- function(...) validate_field(new_string_field(...))
-
 #' @rdname validate_field
 #' @export
 validate_field.string_field <- function(x) {
@@ -44,10 +40,6 @@ new_select_field <- function(value = character(), choices = character(),
   )
 }
 
-#' @rdname select_field
-#' @export
-select_field <- function(...) validate_field(new_select_field(...))
-
 #' @rdname validate_field
 #' @export
 validate_field.select_field <- function(x) {
@@ -70,10 +62,6 @@ validate_field.select_field <- function(x) {
 new_switch_field <- function(value = FALSE, ...) {
   new_field(value, ..., class = "switch_field")
 }
-
-#' @rdname switch_field
-#' @export
-switch_field <- function(...) validate_field(new_switch_field(...))
 
 #' @rdname validate_field
 #' @export
@@ -100,12 +88,6 @@ new_numeric_field <- function(
     max = numeric(),
     ...) {
   new_field(value, min = min, max = max, ..., class = "numeric_field")
-}
-
-#' @rdname numeric_field
-#' @export
-numeric_field <- function(...) {
-  validate_field(new_numeric_field(...))
 }
 
 #' @rdname validate_field
@@ -153,12 +135,6 @@ new_submit_field <- function(...) {
   new_field(value = 0, ..., class = "submit_field")
 }
 
-#' @rdname submit_field
-#' @export
-submit_field <- function(...) {
-  validate_field(new_submit_field(...))
-}
-
 #' @rdname validate_field
 #' @export
 validate_field.submit_field <- function(x) {
@@ -178,12 +154,6 @@ new_upload_field <- function(value = character(), ...) {
     ...,
     class = "upload_field"
   )
-}
-
-#' @rdname upload_field
-#' @export
-upload_field <- function(...) {
-  validate_field(new_upload_field(...))
 }
 
 #' @rdname validate_field
@@ -208,12 +178,6 @@ new_filesbrowser_field <- function(value = character(), volumes = character(),
     ...,
     class = "filesbrowser_field"
   )
-}
-
-#' @rdname filesbrowser_field
-#' @export
-filesbrowser_field <- function(...) {
-  validate_field(new_filesbrowser_field(...))
 }
 
 #' @rdname validate_field
@@ -241,10 +205,6 @@ new_variable_field <- function(value = character(), field = character(),
     class = "variable_field"
   )
 }
-
-#' @rdname variable_field
-#' @export
-variable_field <- function(...) validate_field(new_variable_field(...))
 
 #' @rdname validate_field
 #' @export
@@ -300,10 +260,6 @@ new_range_field <- function(value = numeric(), min = numeric(),
   new_field(value, min = min, max = max, ..., class = "range_field")
 }
 
-#' @rdname range_field
-#' @export
-range_field <- function(...) validate_field(new_range_field(...))
-
 #' @rdname validate_field
 #' @export
 validate_field.range_field <- function(x) {
@@ -332,10 +288,6 @@ new_hidden_field <- function(value = expression(), ...) {
   new_field(value, ..., class = "hidden_field")
 }
 
-#' @rdname hidden_field
-#' @export
-hidden_field <- function(...) validate_field(new_hidden_field(...))
-
 #' @rdname validate_field
 #' @export
 validate_field.hidden_field <- function(x) {
@@ -354,10 +306,6 @@ validate_field.hidden_field <- function(x) {
 new_list_field <- function(value = list(), sub_fields = list(), ...) {
   new_field(value, sub_fields = sub_fields, ..., class = "list_field")
 }
-
-#' @rdname list_field
-#' @export
-list_field <- function(...) validate_field(new_list_field(...))
 
 #' @rdname validate_field
 #' @export
@@ -388,12 +336,6 @@ validate_field.list_field <- function(x) {
 #' @export
 new_result_field <- function(value = list(), ...) {
   new_field(value, ..., class = "result_field")
-}
-
-#' @rdname result_field
-#' @export
-result_field <- function(...) {
-  validate_field(new_result_field(...))
 }
 
 #' @rdname validate_field

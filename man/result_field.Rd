@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_result_field}
 \alias{new_result_field}
-\alias{result_field}
 \title{Result field constructor}
 \usage{
 new_result_field(value = list(), ...)
-
-result_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

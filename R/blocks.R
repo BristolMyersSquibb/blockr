@@ -202,9 +202,9 @@ new_filter_block <- function(columns = character(), values = character(),
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
-        factor = select_field,
-        numeric = range_field,
-        string_field
+        factor = new_select_field,
+        numeric = new_range_field,
+        new_string_field
       )
     }
 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/fields.R
 \name{new_variable_field}
 \alias{new_variable_field}
-\alias{variable_field}
 \title{Variable field constructor}
 \usage{
 new_variable_field(
@@ -11,8 +10,6 @@ new_variable_field(
   components = list(),
   ...
 )
-
-variable_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

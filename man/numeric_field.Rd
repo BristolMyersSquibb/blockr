@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_numeric_field}
 \alias{new_numeric_field}
-\alias{numeric_field}
 \title{Numeric field constructor}
 \usage{
 new_numeric_field(value = numeric(), min = numeric(), max = numeric(), ...)
-
-numeric_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}
