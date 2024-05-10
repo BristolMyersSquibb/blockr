@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_filesbrowser_field}
 \alias{new_filesbrowser_field}
-\alias{filesbrowser_field}
 \title{Files browser field constructor}
 \usage{
 new_filesbrowser_field(value = character(), volumes = character(), ...)
-
-filesbrowser_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

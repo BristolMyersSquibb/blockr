@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_hidden_field}
 \alias{new_hidden_field}
-\alias{hidden_field}
 \title{Hidden field constructor}
 \usage{
 new_hidden_field(value = expression(), ...)
-
-hidden_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

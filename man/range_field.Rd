@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_range_field}
 \alias{new_range_field}
-\alias{range_field}
 \title{Range field constructor}
 \usage{
 new_range_field(value = numeric(), min = numeric(), max = numeric(), ...)
-
-range_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}
