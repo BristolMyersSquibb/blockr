@@ -9,22 +9,19 @@
 \alias{new_xpt_block}
 \title{Data parser block constructor}
 \usage{
-new_parser_block(data, expr, fields = list(), ..., class = character())
+new_parser_block(expr, fields = list(), ..., class = character())
 
-new_csv_block(data, ...)
+new_csv_block(...)
 
-new_rds_block(data, ...)
+new_rds_block(...)
 
-new_json_block(data, ...)
+new_json_block(...)
 
-new_sas_block(data, ...)
+new_sas_block(...)
 
-new_xpt_block(data, ...)
+new_xpt_block(...)
 }
 \arguments{
-\item{data}{Data coming from any data reader block like \link{filesbrowser_block} and
-\link{upload_block}.}
-
 \item{expr}{A quoted expression (compatible with partial substitution as
 implemented in \code{\link[base:bquote]{base::bquote()}} and intended for evaluation in the context
 of the fields)}

@@ -4,18 +4,19 @@ test_that("mutate-block", {
 
   data <- datasets::iris
 
-  block <- mutate_block(
-    data,
-    value = c(newcol = "2 * Petal.Length", newcol2 = "3 * Petal.Length")
+  block <- new_mutate_block(
+    c(newcol = "2 * Petal.Length", newcol2 = "3 * Petal.Length")
   )
 
   expect_s3_class(block, "mutate_block")
   expect_type(block, "list")
 
+  block <- initialize_block(block, data)
+
   res <- evaluate_block(block, data)
   expect_true(all(c("newcol", "newcol2") %in% colnames(res)))
 
-  res_ui <- generate_ui(mutate_block(data = datasets::iris), id = "test")
+  res_ui <- generate_ui(new_mutate_block(data = datasets::iris), id = "test")
   expect_s3_class(res_ui, "shiny.tag")
 })
 
@@ -46,7 +47,7 @@ test_that("mutate_module_server handles input correctly", {
     },
     args = list(
       id = "test",
-      x = mutate_block(data = datasets::iris),
+      x = new_mutate_block(data = datasets::iris),
       in_dat = reactive(datasets::iris)
     )
   )

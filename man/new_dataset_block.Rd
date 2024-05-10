@@ -4,18 +4,14 @@
 \alias{new_dataset_block}
 \title{Data block constructor}
 \usage{
-new_dataset_block(
-  ...,
-  dat = as.environment("package:datasets"),
-  selected = character()
-)
+new_dataset_block(selected = character(), package = "datasets", ...)
 }
 \arguments{
+\item{selected}{Selected dataset}
+
+\item{package}{Name of an R package containing datasets}
+
 \item{...}{Further (metadata) attributes}
-
-\item{dat}{Multiple datasets.}
-
-\item{selected}{Selected dataset.}
 }
 \description{
 This block allows to selected data from a package,

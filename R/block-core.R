@@ -62,6 +62,7 @@ initialize_block <- function(x, ...) {
 #' @rdname initialize_block
 #' @export
 initialize_block.data_block <- function(x, ...) {
+
   env <- list()
 
   for (field in names(x)) {
@@ -74,7 +75,8 @@ initialize_block.data_block <- function(x, ...) {
 
 #' @rdname initialize_block
 #' @export
-initialize_block.transform_block <- function(x, data, ...) {
+initialize_block.block <- function(x, data, ...) {
+
   env <- list(data = data)
 
   for (field in names(x)) {
@@ -84,15 +86,6 @@ initialize_block.transform_block <- function(x, data, ...) {
 
   x
 }
-
-#' @rdname initialize_block
-#' @export
-initialize_block.default <- initialize_block.transform_block
-
-#' @rdname initialize_block
-#' @export
-initialize_block.plot_block <- initialize_block.transform_block
-
 
 #' S3 generic for initialization
 #'
@@ -142,6 +135,11 @@ generate_code.block <- function(x) {
 #' @rdname generate_code
 #' @export
 generate_code.arrange_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(identity()))
+  }
+
   where <- lapply(x, type_trans)
 
   do.call(
@@ -154,7 +152,25 @@ generate_code.arrange_block <- function(x) {
   )
 }
 
-generate_code.group_by_block <- generate_code.arrange_block
+#' @rdname generate_code
+#' @export
+generate_code.group_by_block <- function(x) {
+
+  if (!is_initialized(x)) {
+    return(quote(identity()))
+  }
+
+  where <- lapply(x, type_trans)
+
+  do.call(
+    bquote,
+    list(
+      attr(x, "expr"),
+      where = lapply(where, as.list),
+      splice = TRUE
+    )
+  )
+}
 
 #' @rdname generate_code
 #' @export
@@ -208,25 +224,19 @@ evaluate_block <- function(x, ...) {
 #' @rdname evaluate_block
 #' @export
 evaluate_block.data_block <- function(x, ...) {
+
   stopifnot(...length() == 0L)
+
   eval(generate_code(x), new.env())
 }
 
 #' @param data Result from previous block
 #' @rdname evaluate_block
 #' @export
-evaluate_block.transform_block <- function(x, data, ...) {
-  stopifnot(...length() == 0L)
-  eval(
-    substitute(data %>% expr, list(expr = generate_code(x))),
-    list(data = data)
-  )
-}
+evaluate_block.block <- function(x, data, ...) {
 
-#' @rdname evaluate_block
-#' @export
-evaluate_block.plot_block <- function(x, data, ...) {
   stopifnot(...length() == 0L)
+
   eval(
     substitute(data %>% expr, list(expr = generate_code(x))),
     list(data = data)
@@ -236,7 +246,9 @@ evaluate_block.plot_block <- function(x, data, ...) {
 #' @rdname evaluate_block
 #' @export
 evaluate_block.plot_layer_block <- function(x, data, ...) {
+
   stopifnot(...length() == 0L)
+
   eval(
     substitute(data + expr, list(expr = generate_code(x))),
     list(data = data)

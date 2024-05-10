@@ -4,11 +4,9 @@
 \alias{new_group_by_block}
 \title{Group by block}
 \usage{
-new_group_by_block(data, columns = character(), ...)
+new_group_by_block(columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{columns}{Column(s) to select.}
 
 \item{...}{Further (metadata) attributes}

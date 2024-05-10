@@ -49,7 +49,7 @@ test_that("numeric fields", {
 
   expect_s3_class(field, "numeric_field")
   expect_type(field, "list")
-  expect_identical(value(field), 0)
+  expect_identical(value(field), numeric())
 
   field <- numeric_field(value = 200, min = 0, max = 10)
   expect_identical(value(field), 10)
@@ -95,8 +95,8 @@ test_that("filesbrowser field", {
 })
 
 test_that("field name", {
-  blk <- dataset_block()
-  expect_equal(get_field_names(blk), "Dataset")
+  blk <- new_dataset_block("iris")
+  expect_equal(get_field_names(blk), c("package", "Dataset"))
 
   expect_equal(get_field_name(new_switch_field(), "xxx"), "xxx")
   expect_equal(get_field_name(new_switch_field(title = "xxx"), ""), "xxx")

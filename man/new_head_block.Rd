@@ -4,11 +4,9 @@
 \alias{new_head_block}
 \title{Head block}
 \usage{
-new_head_block(data, n_rows = numeric(), n_rows_min = 1L, ...)
+new_head_block(n_rows = numeric(), n_rows_min = 1L, ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{n_rows}{Number of rows to return.}
 
 \item{n_rows_min}{Minimum number of rows.}

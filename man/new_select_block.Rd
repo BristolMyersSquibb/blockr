@@ -4,11 +4,9 @@
 \alias{new_select_block}
 \title{Select block}
 \usage{
-new_select_block(data, columns = character(), ...)
+new_select_block(columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{columns}{Column(s) to select.}
 
 \item{...}{Further (metadata) attributes}

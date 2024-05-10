@@ -4,16 +4,9 @@
 \alias{new_summarize_block}
 \title{Summarize block}
 \usage{
-new_summarize_block(
-  data,
-  func = c("mean", "se"),
-  default_columns = character(),
-  ...
-)
+new_summarize_block(func = character(), default_columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{func}{Summarize function to apply.}
 
 \item{default_columns}{If you know in advance each function to apply,

@@ -4,40 +4,27 @@
 #' the default being datasets.
 #'
 #' @inheritParams new_block
-#' @param dat Multiple datasets.
-#' @param selected Selected dataset.
+#' @param selected Selected dataset
+#' @param package Name of an R package containing datasets
 #' @export
-new_dataset_block <- function(..., dat = as.environment("package:datasets"),
-                              selected = character()) {
+new_dataset_block <- function(selected = character(), package = "datasets",
+                              ...) {
 
-  is_dataset_eligible <- function(x) {
-    inherits(
-      get(x, envir = dat, inherits = FALSE),
-      "data.frame"
-    )
+  list_datasets <- function(package) {
+
+    datasets <- data(package = package)
+    datasets <- datasets$results[, "Item"]
+
+    gsub("\\s+\\(.+\\)$", "", datasets)
   }
 
-  datasets <- ls(envir = dat)
-  datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
-
-  if (length(selected) == 0) selected <- datasets[1]
-
-  fields <- list(
-    dataset = new_select_field(
-      selected,
-      datasets,
-      title = "Dataset"
-    )
-  )
-
-  expr <- substitute(
-    get(.(dataset), envir = data),
-    list(data = substitute(dat))
-  )
-
   new_block(
-    fields = fields,
-    expr = expr,
+    fields = list(
+      package = new_hidden_field(package, type = "name"),
+      dataset = new_select_field(selected, list_datasets,  type = "name",
+                                 title = "Dataset")
+    ),
+    expr = quote(`::`(.(package), .(dataset))),
     ...,
     class = c("dataset_block", "data_block")
   )
@@ -49,19 +36,15 @@ new_dataset_block <- function(..., dat = as.environment("package:datasets"),
 #' This block outputs a string containing the file path.
 #'
 #' @inheritParams new_block
+#' @param file_path File path
 #' @export
-new_upload_block <- function(...) {
-
-  data_path <- function(file) {
-    if (length(file)) file$datapath else character()
-  }
+new_upload_block <- function(file_path = character(), ...) {
 
   new_block(
     fields = list(
-      file = new_upload_field(title = "File"),
-      expression = new_hidden_field(data_path)
+      file = new_upload_field(file_path, title = "File")
     ),
-    expr = quote(c(.(expression))),
+    expr = quote(.(file)),
     ...,
     class = c("upload_block", "data_block")
   )
@@ -74,26 +57,17 @@ new_upload_block <- function(...) {
 #' This block outputs a string containing the file path.
 #'
 #' @inheritParams new_block
-#' @param volumes Paths accessible by the shinyFiles browser.
+#' @param volumes Paths accessible by the shinyFiles browser
 #' @export
-new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
-
-  data_path <- function(file) {
-    if (length(file) == 0 || is.integer(file) || length(file$files) == 0) {
-      return(character())
-    }
-
-    files <- shinyFiles::parseFilePaths(volumes, file)
-
-    unname(files$datapath)
-  }
+new_filesbrowser_block <- function(file_path = character(),
+                                   volumes = c(home = path.expand("~")), ...) {
 
   new_block(
     fields = list(
-      file = new_filesbrowser_field(volumes = volumes, title = "File"),
-      expression = new_hidden_field(data_path)
+      file = new_filesbrowser_field(file_path, volumes = volumes,
+                                    title = "File")
     ),
-    expr = quote(c(.(expression))),
+    expr = quote(.(file)),
     ...,
     class = c("filesbrowser_block", "data_block")
   )
@@ -105,11 +79,8 @@ new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
 #' Unless you need a new data parser, there is no need to use this directly.
 #'
 #' @inheritParams new_block
-#' @param data Data coming from any data reader block like \link{filesbrowser_block} and
-#' \link{upload_block}.
 #' @export
-new_parser_block <- function(data, expr, fields = list(), ...,
-                             class = character()) {
+new_parser_block <- function(expr, fields = list(), ..., class = character()) {
 
   safe_expr <- function(data) {
     if (length(data)) {
@@ -138,8 +109,8 @@ new_parser_block <- function(data, expr, fields = list(), ...,
 #'
 #' @rdname new_parser_block
 #' @export
-new_csv_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(utils::read.csv()), class = "csv_block")
+new_csv_block <- function(...) {
+  new_parser_block(quote(utils::read.csv()), ..., class = "csv_block")
 }
 
 #' RDS data parser block
@@ -150,8 +121,8 @@ new_csv_block <- function(data, ...) {
 #'
 #' @rdname new_parser_block
 #' @export
-new_rds_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(readRDS()), class = "rds_block")
+new_rds_block <- function(...) {
+  new_parser_block(quote(readRDS()), ..., class = "rds_block")
 }
 
 #' JSON data parser block
@@ -162,9 +133,10 @@ new_rds_block <- function(data, ...) {
 #'
 #' @rdname new_parser_block
 #' @export
-new_json_block <- function(data, ...) {
-  new_parser_block(data,
-    expr = quote(jsonlite::fromJSON()),
+new_json_block <- function(...) {
+  new_parser_block(
+    quote(jsonlite::fromJSON()),
+    ...,
     class = "json_block"
   )
 }
@@ -177,8 +149,8 @@ new_json_block <- function(data, ...) {
 #'
 #' @rdname new_parser_block
 #' @export
-new_sas_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(haven::read_sas()), class = "sas_block")
+new_sas_block <- function(...) {
+  new_parser_block(quote(haven::read_sas()), ..., class = "sas_block")
 }
 
 #' XPT data parser block
@@ -189,8 +161,8 @@ new_sas_block <- function(data, ...) {
 #'
 #' @rdname new_parser_block
 #' @export
-new_xpt_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(haven::read_xpt()), class = "xpt_block")
+new_xpt_block <- function(...) {
+  new_parser_block(quote(haven::read_xpt()), ..., class = "xpt_block")
 }
 
 #' Result block
@@ -220,12 +192,11 @@ new_result_block <- function(...) {
 #' returns the filtered data.
 #'
 #' @inheritParams new_block
-#' @param data Tabular data to filter (rows).
-#' @param columns Definition of the equality filter.
-#' @param values Definition of the equality filter.
-#' @param filter_fun Default filter fun for the expression.
+#' @param columns Columns used for filtering
+#' @param values Values used for filtering
+#' @param filter_fun Filter function for the expression
 #' @export
-new_filter_block <- function(data, columns = character(), values = character(),
+new_filter_block <- function(columns = character(), values = character(),
                              filter_fun = "==", ...) {
 
   sub_fields <- function(data, columns) {
@@ -322,10 +293,9 @@ new_filter_block <- function(data, columns = character(), values = character(),
 #' returns a dataframe with the selected columns.
 #'
 #' @inheritParams new_block
-#' @param data Tabular data in which to select some columns.
 #' @param columns Column(s) to select.
 #' @export
-new_select_block <- function(data, columns = character(), ...) {
+new_select_block <- function(columns = character(), ...) {
 
   all_cols <- function(data) colnames(data)
 
@@ -358,7 +328,7 @@ new_select_block <- function(data, columns = character(), ...) {
 #' Therefore when not of length 0, columns should have the same length
 #' as func.
 #' @export
-new_summarize_block <- function(data, func = c("mean", "se"),
+new_summarize_block <- function(func = character(),
                                 default_columns = character(), ...) {
 
   if (length(default_columns) > 0) {
@@ -473,7 +443,7 @@ new_summarize_block <- function(data, func = c("mean", "se"),
 #' @inheritParams new_block
 #' @inheritParams new_select_block
 #' @export
-new_arrange_block <- function(data, columns = character(), ...) {
+new_arrange_block <- function(columns = character(), ...) {
 
   all_cols <- function(data) colnames(data)
 
@@ -499,20 +469,19 @@ new_arrange_block <- function(data, columns = character(), ...) {
 #' @inheritParams new_block
 #' @inheritParams new_select_block
 #' @export
-new_group_by_block <- function(data, columns = character(), ...) {
+new_group_by_block <- function(columns = character(), ...) {
 
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols, multiple = TRUE,
+                               type = "name", title = "Columns")
   )
 
   new_block(
     fields = fields,
-    expr = quote(
-      dplyr::group_by(..(columns))
-    ),
+    expr = quote(dplyr::group_by(..(columns))),
     ...,
     class = c("group_by_block", "transform_block")
   )
@@ -531,15 +500,11 @@ new_group_by_block <- function(data, columns = character(), ...) {
 #' @param by Join columns.
 #'
 #' @export
-new_join_block <- function(data, y = NULL, type = character(),
-                           by = character(), ...) {
+new_join_block <- function(y = NULL, type = character(), by = character(),
+                           ...) {
 
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
-  }
-
-  if (!length(by) && not_null(y)) {
-    by <- by_choices(data, y)[1L]
   }
 
   join_types <- c("left", "inner", "right", "full", "semi", "anti")
@@ -578,26 +543,18 @@ new_join_block <- function(data, y = NULL, type = character(),
 #' @param n_rows Number of rows to return.
 #' @param n_rows_min Minimum number of rows.
 #' @export
-new_head_block <- function(data, n_rows = numeric(), n_rows_min = 1L, ...) {
-
-  tmp_expr <- function(n_rows) {
-    bquote(
-      head(n = .(n_rows)),
-      list(n_rows = n_rows)
-    )
-  }
+new_head_block <- function(n_rows = numeric(), n_rows_min = 1L, ...) {
 
   n_rows_max <- function(data) nrow(data)
 
   fields <- list(
     n_rows = new_numeric_field(n_rows, n_rows_min, n_rows_max,
-                               title = "Number of rows"),
-    expression = new_hidden_field(tmp_expr)
+                               title = "Number of rows")
   )
 
   new_block(
     fields = fields,
-    expr = quote(.(expression)),
+    expr = quote(head(n = .(n_rows))),
     ...,
     class = c("head_block", "transform_block")
   )

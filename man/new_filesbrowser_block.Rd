@@ -4,10 +4,14 @@
 \alias{new_filesbrowser_block}
 \title{Files browser block constructor}
 \usage{
-new_filesbrowser_block(volumes = c(home = path.expand("~")), ...)
+new_filesbrowser_block(
+  file_path = character(),
+  volumes = c(home = path.expand("~")),
+  ...
+)
 }
 \arguments{
-\item{volumes}{Paths accessible by the shinyFiles browser.}
+\item{volumes}{Paths accessible by the shinyFiles browser}
 
 \item{...}{Further (metadata) attributes}
 }

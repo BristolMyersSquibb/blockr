@@ -4,11 +4,9 @@
 \alias{new_arrange_block}
 \title{Arrange block}
 \usage{
-new_arrange_block(data, columns = character(), ...)
+new_arrange_block(columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{columns}{Column(s) to select.}
 
 \item{...}{Further (metadata) attributes}
