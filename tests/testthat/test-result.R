@@ -9,7 +9,7 @@ test_that("result field", {
 
 test_that("result block", {
 
-  block <- result_block()
+  block <- new_result_block()
 
   expect_s3_class(block, "result_block")
   expect_type(block, "list")
@@ -22,8 +22,8 @@ test_that("result block", {
 test_that("result server works", {
 
   set_workspace(
-    stack1 = new_stack(dataset_block),
-    stack2 = new_stack(dataset_block),
+    stack1 = new_stack(new_dataset_block),
+    stack2 = new_stack(new_dataset_block),
     force = TRUE
   )
 

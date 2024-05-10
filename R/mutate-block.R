@@ -26,9 +26,9 @@ mutate_expr <- function(value = c(a = "2.1", b = "4.5")) {
 #' Leverages the \link{keyvalue_field}
 #'
 #' @param value Default value.
-#' @inheritParams new_select_block
+#' @inheritParams new_block
 #' @export
-new_mutate_block <- function(data, value = NULL, ...) {
+new_mutate_block <- function(value = NULL, ...) {
   fields <- list(
     value = new_keyvalue_field(value = value),
     expression = new_hidden_field(mutate_expr)

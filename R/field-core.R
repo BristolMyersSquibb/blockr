@@ -20,6 +20,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
                       descr = "",
                       status = c("active", "disabled", "invisible"),
                       class = character(), exclude = FALSE) {
+
   x <- list(value = value, ...)
 
   status <- match.arg(status)
@@ -146,8 +147,11 @@ eval_set_field_value <- function(x, env) {
 #' @returns Field value
 #' @rdname value
 #' @export
-value <- function(x, name = "value") {
-  stopifnot(is_field(x))
+value <- function(x, name = "value") UseMethod("value", x)
+
+#' @rdname value
+#' @export
+value.field <- function(x, name = "value") {
 
   res <- x[[name]]
 
@@ -175,12 +179,15 @@ values <- function(x, name = names(x)) {
 #' @rdname value
 #' @export
 #' @returns The field.
-`value<-` <- function(x, name = "value", value) {
+`value<-` <- function(x, name = "value", value) UseMethod("value<-", x)
+
+#' @rdname value
+#' @export
+`value<-.field` <- function(x, name = "value", value) {
+
   if (is.null(x)) {
     return(NULL)
   }
-
-  stopifnot(is_field(x))
 
   if (is.function(x[[name]])) {
     if (!is.null(value)) attr(x[[name]], "result") <- value
@@ -189,6 +196,25 @@ values <- function(x, name = names(x)) {
   }
 
   x
+}
+
+#' @rdname value
+#' @export
+`value<-.upload_field` <- function(x, name = "value", value) {
+  NextMethod(value = value$datapath)
+}
+
+#' @rdname value
+#' @export
+`value<-.filesbrowser_field` <- function(x, name = "value", value) {
+
+  if (is.integer(value)) {
+    return(x)
+  }
+
+  files <- shinyFiles::parseFilePaths(value(x, "volumes"), value)
+
+  NextMethod(value = unname(files$datapath))
 }
 
 update_sub_fields <- function(sub, val) {

@@ -110,6 +110,7 @@ set_names <- function(object = nm, nm) {
 }
 
 coal <- function(..., fail_null = TRUE) {
+
   for (i in seq_len(...length())) {
     x <- ...elt(i)
     if (is.null(x)) next else return(x)
@@ -146,6 +147,7 @@ splice_args <- function(expr, ...) {
 }
 
 type_trans <- function(x) {
+
   res <- value(x)
 
   switch(attr(x, "type"),

@@ -124,22 +124,16 @@ validate_field.numeric_field <- function(x) {
     length(value(x, "max")) == 1L
   )
 
-  if (length(val) == 0) {
-    value(x) <- value(x, "min")
-  } else {
-    if (length(val) > 1L) {
-      value(x) <- value(x, "min")
-    } else {
-      # NA is allowed to return validation
-      # error on the client
-      if (!is.na(val)) {
-        if (!is.numeric(val) || is.nan(val) || is.infinite(val)) {
-          value(x) <- value(x, "min")
-        } else if (val < value(x, "min")) {
-          value(x) <- value(x, "min")
-        } else if (val > value(x, "max")) {
-          value(x) <- value(x, "max")
-        }
+  if (length(val) == 1L) {
+    # NA is allowed to return validation
+    # error on the client
+    if (!is.na(val)) {
+      if (!is.numeric(val) || is.nan(val) || is.infinite(val)) {
+        value(x) <- value(x, "min")
+      } else if (val < value(x, "min")) {
+        value(x) <- value(x, "min")
+      } else if (val > value(x, "max")) {
+        value(x) <- value(x, "max")
       }
     }
   }
@@ -203,11 +197,14 @@ validate_field.upload_field <- function(x) {
 #' Files browser fields are translated into \link[shinyFiles]{shinyFilesButton}
 #'
 #' @inheritParams new_string_field
+#' @param volumes Paths accessible by the shinyFiles browser
 #' @rdname filesbrowser_field
 #' @export
-new_filesbrowser_field <- function(value = character(), ...) {
+new_filesbrowser_field <- function(value = character(), volumes = character(),
+                                   ...) {
   new_field(
     value,
+    volumes = volumes,
     ...,
     class = "filesbrowser_field"
   )
@@ -326,7 +323,7 @@ validate_field.range_field <- function(x) {
 #' Hidden field constructor
 #'
 #' Hidden field is useful to host complex expression in
-#' a field. See \link{filter_block} for a usecase.
+#' a field. See \link{new_filter_block} for a usecase.
 #'
 #' @inheritParams new_string_field
 #' @rdname hidden_field
@@ -347,7 +344,7 @@ validate_field.hidden_field <- function(x) {
 
 #' List field constructor
 #'
-#' A field that can contain subfields. See \link{filter_block} for
+#' A field that can contain subfields. See \link{new_filter_block} for
 #' a usecase.
 #'
 #' @inheritParams new_string_field

@@ -2,12 +2,24 @@
 % Please edit documentation in R/field-core.R
 \name{value}
 \alias{value}
+\alias{value.field}
 \alias{value<-}
+\alias{value<-.field}
+\alias{value<-.upload_field}
+\alias{value<-.filesbrowser_field}
 \title{Get field attribute value}
 \usage{
 value(x, name = "value")
 
+\method{value}{field}(x, name = "value")
+
 value(x, name = "value") <- value
+
+\method{value}{field}(x, name = "value") <- value
+
+\method{value}{upload_field}(x, name = "value") <- value
+
+\method{value}{filesbrowser_field}(x, name = "value") <- value
 }
 \arguments{
 \item{x}{An object inheriting form \code{"field"}}

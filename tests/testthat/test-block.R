@@ -1,277 +1,385 @@
-library(dplyr)
-library(blockr.data)
-
 test_that("data blocks", {
-  block <- dataset_block()
 
-  expect_s3_class(block, "data_block")
-  expect_type(block, "list")
+  dat1 <- datasets::iris
 
-  dat <- evaluate_block(block)
+  blk1 <- new_dataset_block()
 
-  expect_s3_class(dat, "data.frame")
+  expect_s3_class(blk1, "dataset_block")
+  expect_s3_class(blk1, "data_block")
 
-  ui <- generate_ui(block, "foo")
+  blk1 <- initialize_block(blk1)
+  res1 <- evaluate_block(blk1)
 
-  expect_type(ui, "list")
-  expect_s3_class(ui, "shiny.tag")
+  expect_identical(res1, data.frame())
+
+  blk2 <- new_dataset_block("iris")
+
+  expect_s3_class(blk2, "dataset_block")
+  expect_s3_class(blk2, "data_block")
+
+  blk2 <- initialize_block(blk2)
+  res2 <- evaluate_block(blk2)
+
+  expect_identical(nrow(res2), nrow(dat1))
+  expect_identical(colnames(res2), colnames(dat1))
+
+  dat2 <- dplyr::starwars
+
+  blk3 <- new_dataset_block("starwars", package = "dplyr")
+
+  expect_s3_class(blk3, "dataset_block")
+  expect_s3_class(blk3, "data_block")
+
+  blk3 <- initialize_block(blk3)
+  res3 <- evaluate_block(blk3)
+
+  expect_identical(nrow(res3), nrow(dat2))
+  expect_identical(colnames(res3), colnames(dat2))
 })
 
 test_that("filter blocks", {
+
   data <- datasets::iris
 
-  block <- filter_block(data)
+  blk1 <- new_filter_block()
 
-  expect_s3_class(block, "filter_block")
-  expect_type(block, "list")
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "filter_block")
 
-  res <- evaluate_block(block, data)
+  blk1 <- initialize_block(blk1, data)
+  res1 <- evaluate_block(blk1, data)
 
-  expect_identical(nrow(res), nrow(data))
+  expect_identical(nrow(res1), nrow(data))
+  expect_identical(colnames(res1), colnames(data))
 
-  block <- filter_block(data, "Species", "setosa")
+  blk2 <- new_filter_block("Species", "setosa")
 
-  res <- evaluate_block(block, data)
+  expect_s3_class(blk2, "transform_block")
+  expect_s3_class(blk2, "filter_block")
 
-  expect_identical(nrow(res), nrow(data[data$Species == "setosa", ]))
+  blk2 <- initialize_block(blk2, data)
+  res2 <- evaluate_block(blk2, data)
+
+  expect_identical(nrow(res2), nrow(data[data$Species == "setosa", ]))
+  expect_identical(colnames(res2), colnames(data))
 })
 
 test_that("select blocks", {
+
   data <- datasets::iris
 
-  block <- select_block(data, "Species")
+  blk1 <- new_select_block()
 
-  expect_s3_class(block, "select_block")
-  expect_type(block, "list")
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "select_block")
 
-  res <- evaluate_block(block, data)
+  blk1 <- initialize_block(blk1, data)
+  res1 <- evaluate_block(blk1, data)
 
-  expect_identical(nrow(res), nrow(data))
-  expect_equal(ncol(res), 1)
-  expect_equal(colnames(res), "Species")
+  expect_identical(nrow(res1), nrow(data))
+  expect_identical(colnames(res1), colnames(data))
+
+  blk2 <- new_select_block("Species")
+
+  expect_s3_class(blk2, "select_block")
+  expect_type(blk2, "list")
+
+  blk2 <- initialize_block(blk2, data)
+  res2 <- evaluate_block(blk2, data)
+
+  expect_identical(nrow(res2), nrow(data))
+  expect_identical(colnames(res2), "Species")
 })
 
 test_that("arrange blocks", {
+
   data <- datasets::iris
-  min_sepal_len <- min(data$Sepal.Length)
 
-  block <- arrange_block(data, "Sepal.Length")
+  blk1 <- new_arrange_block()
 
-  expect_s3_class(block, "arrange_block")
-  expect_type(block, "list")
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "arrange_block")
 
-  res <- evaluate_block(block, data)
+  blk1 <- initialize_block(blk1, data)
+  res1 <- evaluate_block(blk1, data)
 
-  expect_identical(nrow(res), nrow(data))
-  expect_equal(ncol(res), ncol(data))
-  expect_equal(res[1, "Sepal.Length"], min_sepal_len)
+  expect_identical(data$Species, res1$Species)
+
+  blk2 <- new_arrange_block("Sepal.Length")
+
+  expect_s3_class(blk2, "transform_block")
+  expect_s3_class(blk2, "arrange_block")
+
+  blk2 <- initialize_block(blk2, data)
+  res2 <- evaluate_block(blk2, data)
+
+  expect_identical(data$Species[order(data$Sepal.Length)], res2$Species)
 })
 
 test_that("group_by blocks", {
+
   data <- datasets::iris
-  block <- group_by_block(data, columns = "Species")
 
-  expect_s3_class(block, "group_by_block")
-  expect_type(block, "list")
+  blk1 <- new_group_by_block()
 
-  res <- evaluate_block(block, data) %>% summarise(n = n())
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "group_by_block")
 
-  expect_equal(nrow(res), 3)
+  blk1 <- initialize_block(blk1, data)
+  res1 <- evaluate_block(blk1, data) %>% summarise(n = n())
+
+  expect_equal(nrow(res1), 1)
+
+  blk2 <- new_group_by_block("Species")
+
+  expect_s3_class(blk2, "transform_block")
+  expect_s3_class(blk2, "group_by_block")
+
+  blk2 <- initialize_block(blk2, data)
+  res2 <- evaluate_block(blk2, data) %>% summarise(n = n())
+
+  expect_equal(nrow(res2), 3)
 })
 
 test_that("join blocks", {
 
-  block <- join_block(
-    dplyr::band_members,
-    dplyr::band_instruments
-  )
+  datx <- dplyr::band_members
+  daty <- dplyr::band_instruments
 
-  expect_s3_class(block, "join_block")
-  expect_type(block, "list")
+  blk1 <- new_join_block()
 
-  res <- evaluate_block(block, dplyr::band_members)
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "join_block")
 
-  expect_equal(nrow(res), 3)
+  blk1 <- initialize_block(blk1, datx)
+  res1 <- evaluate_block(blk1, datx)
 
-  block <- join_block(
-    dplyr::band_members,
-    dplyr::band_instruments,
-    type = "inner",
-  )
+  expect_equal(nrow(res1), nrow(datx))
+  expect_equal(colnames(res1), colnames(datx))
 
-  res <- evaluate_block(block, dplyr::band_members)
+  blk2 <- new_join_block(daty, type = "inner", by = "name")
 
-  expect_equal(nrow(res), 2)
+  expect_s3_class(blk2, "transform_block")
+  expect_s3_class(blk2, "join_block")
+
+  blk2 <- initialize_block(blk2, datx)
+  res2 <- evaluate_block(blk2, datx)
+
+  expect_equal(nrow(res2), 2L)
+  expect_equal(colnames(res2), c("name", "band", "plays"))
 })
 
 test_that("head blocks", {
+
   data <- datasets::iris
-  # Min is 1. As 12 > 1, validate_field.numeric_field
-  # returns TRUE and does not change n_rows.
-  block <- head_block(data, n_rows = 12L)
 
-  expect_s3_class(block, "head_block")
-  expect_type(block, "list")
+  blk1 <- new_head_block()
 
-  res <- evaluate_block(block, data)
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "head_block")
 
-  expect_equal(nrow(res), 12)
+  blk1 <- initialize_block(blk1, data)
+  res1 <- evaluate_block(blk1, data)
 
-  # Now, we set n_rows to be lower than the allowed minimum which is 1.
-  # validate_field.numeric_field is responsible for restoring n_rows
-  # to an acceptable value, that is 1.
-  block <- head_block(data, n_rows = -5L)
-  res <- evaluate_block(block, data)
-  expect_equal(nrow(res), 1)
+  expect_equal(nrow(res1), nrow(data))
+  expect_equal(colnames(res1), colnames(data))
 
-  # The same above the maximum (nrow(data))
-  block <- head_block(data, n_rows = nrow(data) + 1000)
-  res <- evaluate_block(block, data)
-  expect_equal(nrow(res), nrow(data))
+  blk2 <- new_head_block(12L)
+
+  expect_s3_class(blk2, "transform_block")
+  expect_s3_class(blk2, "head_block")
+
+  blk2 <- initialize_block(blk2, data)
+  res2 <- evaluate_block(blk2, data)
+
+  expect_equal(nrow(res2), 12L)
+  expect_equal(colnames(res2), colnames(data))
 })
 
 test_that("summarize block", {
+
   data <- datasets::iris
-  block <- summarize_block(data, func = "mean", default_column = "Sepal.Length")
 
-  expect_s3_class(block, "summarize_block")
-  expect_type(block, "list")
+  blk1 <- new_summarize_block()
 
-  res <- evaluate_block(block, data)
-  expect_equal(colnames(res), toupper(block$funcs$value))
-  expect_equal(nrow(res), 1)
-  expect_equal(ncol(res), 1)
+  expect_s3_class(blk1, "transform_block")
+  expect_s3_class(blk1, "summarize_block")
 
-  expect_error(summarize_block(
-    data,
-    func = c("mean", "se"),
-    default_column = "Sepal.Length"
-  ))
+  blk1 <- initialize_block(blk1, data)
+  res1 <- evaluate_block(blk1, data)
 
-  block <- summarize_block(
-    data,
-    func = c("mean", "se"),
-    default_column = rep("Sepal.Length", 2)
-  )
-  res <- evaluate_block(block, data)
-  expect_equal(colnames(res), toupper(block$funcs$value))
-  expect_equal(nrow(res), 1)
-  expect_equal(ncol(res), 2)
+  expect_equal(nrow(res1), nrow(data))
+  expect_equal(colnames(res1), colnames(data))
+
+  blk2 <- new_summarize_block(c("mean", "sd"), rep("Sepal.Width", 2))
+
+  expect_s3_class(blk2, "transform_block")
+  expect_s3_class(blk2, "summarize_block")
+
+  blk2 <- initialize_block(blk2, data)
+  res2 <- evaluate_block(blk2, data)
+
+  expect_equal(nrow(res2), 1L)
+  expect_equal(colnames(res2), c("MEAN", "SD"))
 })
 
+
 test_that("upload block", {
-  block <- upload_block()
 
-  expect_s3_class(block, "upload_block")
-  expect_type(block, "list")
+  blk1 <- new_upload_block()
 
-  expect_length(value(block$file), 0)
+  expect_s3_class(blk1, "data_block")
+  expect_s3_class(blk1, "upload_block")
 
-  ui <- generate_ui(block, "foo")
-  expect_type(ui, "list")
-  expect_s3_class(ui, "shiny.tag")
+  blk1 <- initialize_block(blk1)
+  res1 <- evaluate_block(blk1)
+
+  expect_equal(nrow(res1), 0L)
+  expect_equal(ncol(res1), 0L)
+
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
+
+  blk2 <- new_upload_block(path)
+
+  expect_s3_class(blk2, "data_block")
+  expect_s3_class(blk2, "upload_block")
+
+  blk2 <- initialize_block(blk2)
+  res2 <- evaluate_block(blk2)
+
+  expect_equal(res2, path)
 })
 
 test_that("filesbrowser block", {
-  block <- filesbrowser_block()
 
-  expect_s3_class(block, "filesbrowser_block")
-  expect_type(block, "list")
-  field <- block$file
-  expect_identical(unname(field$volumes), path.expand("~"))
+  blk1 <- new_filesbrowser_block()
 
-  ui <- generate_ui(block, "foo")
-  expect_type(ui, "list")
-  expect_s3_class(ui, "shiny.tag")
-  shinyFiles_ui <- htmltools::tagQuery(ui)$
-    find(".shinyFiles")$
-  selectedTags()
+  expect_s3_class(blk1, "data_block")
+  expect_s3_class(blk1, "filesbrowser_block")
 
-  expect_length(shinyFiles_ui, 1)
+  blk1 <- initialize_block(blk1)
+  res1 <- evaluate_block(blk1)
+
+  expect_equal(nrow(res1), 0L)
+  expect_equal(ncol(res1), 0L)
+
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
+
+  blk2 <- new_filesbrowser_block(path)
+
+  expect_s3_class(blk2, "data_block")
+  expect_s3_class(blk2, "filesbrowser_block")
+
+  blk2 <- initialize_block(blk2)
+  res2 <- evaluate_block(blk2)
+
+  expect_equal(res2, path)
 })
 
 test_that("csv parser block", {
-  tmp_file <- tempfile(fileext = ".csv")
-  utils::write.csv(iris, tmp_file, row.names = FALSE)
-  block <- csv_block(tmp_file)
 
-  expect_s3_class(block, c("csv_block", "parser_block", "transform_block"))
-  expect_type(block, "list")
+  data <- datasets::iris
 
-  dat <- evaluate_block(block, tmp_file)
-  expect_identical(colnames(iris), colnames(dat))
-  unlink(tmp_file)
+  path <- withr::local_tempfile()
+  write.csv(data, path, row.names = FALSE)
 
-  expect_s3_class(dat, "data.frame")
+  block <- new_csv_block()
+
+  expect_s3_class(block, "parser_block")
+  expect_s3_class(block, "csv_block")
+
+  block <- initialize_block(block, path)
+  res <- evaluate_block(block, path)
+
+  expect_equal(nrow(res), nrow(data))
+  expect_equal(colnames(res), colnames(data))
 })
 
 test_that("json parser block", {
-  tmp_file <- tempfile(fileext = ".json")
-  write(jsonlite::toJSON(iris), tmp_file)
-  block <- json_block(tmp_file)
 
-  expect_s3_class(block, c("json_block", "parser_block", "transform_block"))
-  expect_type(block, "list")
+  data <- datasets::iris
 
-  dat <- evaluate_block(block, tmp_file)
-  expect_identical(colnames(iris), colnames(dat))
-  unlink(tmp_file)
+  path <- withr::local_tempfile()
+  write(jsonlite::toJSON(data), path)
 
-  expect_s3_class(dat, "data.frame")
+  block <- new_json_block()
+
+  expect_s3_class(block, "parser_block")
+  expect_s3_class(block, "json_block")
+
+  block <- initialize_block(block, path)
+  res <- evaluate_block(block, path)
+
+  expect_equal(nrow(res), nrow(data))
+  expect_equal(colnames(res), colnames(data))
 })
 
 test_that("rds parser block", {
-  tmp_file <- tempfile(fileext = ".rds")
-  saveRDS(iris, tmp_file)
-  block <- rds_block(tmp_file)
 
-  expect_s3_class(block, c("rds_block", "parser_block", "transform_block"))
-  expect_type(block, "list")
+  data <- datasets::iris
 
-  dat <- evaluate_block(block, tmp_file)
-  expect_identical(colnames(iris), colnames(dat))
-  unlink(tmp_file)
+  path <- withr::local_tempfile()
+  saveRDS(data, path)
 
-  expect_s3_class(dat, "data.frame")
+  block <- new_rds_block()
+
+  expect_s3_class(block, "parser_block")
+  expect_s3_class(block, "rds_block")
+
+  block <- initialize_block(block, path)
+  res <- evaluate_block(block, path)
+
+  expect_equal(nrow(res), nrow(data))
+  expect_equal(colnames(res), colnames(data))
 })
 
 test_that("sas parser block", {
+
   skip_on_cran()
-  tmp_file <- tempfile(fileext = ".sas7bdat")
-  tmp_dat <- iris
-  colnames(tmp_dat) <- gsub("\\.", "_", colnames(tmp_dat))
-  # Remove deprecated message from haven ...
-  suppressWarnings(haven::write_sas(tmp_dat, tmp_file))
-  block <- sas_block(tmp_file)
 
-  expect_s3_class(block, c("sas_block", "parser_block", "transform_block"))
-  expect_type(block, "list")
+  data <- datasets::iris
+  colnames(data) <- gsub("\\.", "_", colnames(data))
 
-  dat <- evaluate_block(block, tmp_file)
-  expect_identical(colnames(tmp_dat), colnames(dat))
-  unlink(tmp_file)
+  path <- withr::local_tempfile(fileext = ".sas7bdat")
+  haven::write_sas(data, path)
 
-  expect_s3_class(dat, "data.frame")
+  block <- new_sas_block()
+
+  expect_s3_class(block, "parser_block")
+  expect_s3_class(block, "sas_block")
+
+  block <- initialize_block(block, path)
+  res <- evaluate_block(block, path)
+
+  expect_equal(nrow(res), nrow(data))
+  expect_equal(colnames(res), colnames(data))
 })
 
 test_that("xpt parser block", {
-  tmp_file <- tempfile(fileext = ".xpt")
-  haven::write_xpt(mtcars, tmp_file)
-  block <- xpt_block(tmp_file)
 
-  expect_s3_class(block, c("xpt_block", "parser_block", "transform_block"))
-  expect_type(block, "list")
+  data <- datasets::iris
+  colnames(data) <- gsub("\\.", "_", colnames(data))
 
-  dat <- evaluate_block(block, tmp_file)
-  expect_identical(colnames(mtcars), colnames(dat))
-  unlink(tmp_file)
+  path <- withr::local_tempfile(fileext = ".xpt")
+  haven::write_xpt(data, path)
 
-  expect_s3_class(dat, "data.frame")
+  block <- new_xpt_block()
+
+  expect_s3_class(block, "parser_block")
+  expect_s3_class(block, "xpt_block")
+
+  block <- initialize_block(block, path)
+  res <- evaluate_block(block, path)
+
+  expect_equal(nrow(res), nrow(data))
+  expect_equal(colnames(res), colnames(data))
 })
 
 test_that("block title", {
   expect_equal(
-    get_block_title(dataset_block()),
+    get_block_title(new_dataset_block()),
     tagList(
       span("blockr", class = "badge bg-light"),
       "Data"
@@ -281,7 +389,7 @@ test_that("block title", {
 
 test_that("blocks can be constructed with default args", {
 
-  for (block in names(available_blocks())) {
-    expect_s3_class(do.call(paste0("new_", block), list()), "block")
+  for (block in available_blocks()) {
+    expect_s3_class(do.call(block, list()), "block")
   }
 })

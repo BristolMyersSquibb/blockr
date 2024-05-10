@@ -581,7 +581,8 @@ ui_input.submit_field <- function(x, id, name) {
 ui_input.upload_field <- function(x, id, name) {
   fileInput(
     input_ids(x, id),
-    name
+    name,
+    placeholder = if (length(value(x))) value(x) else "No file selected"
   )
 }
 

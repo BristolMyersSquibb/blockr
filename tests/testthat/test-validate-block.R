@@ -36,7 +36,7 @@ test_that("validate block works", {
   # Init values
   data <- iris
   input <- list("columns" = colnames(data)[[1]])
-  blk <- select_block(data)
+  blk <- new_select_block(data)
   is_valid <- list(
     block = TRUE,
     input = list(),

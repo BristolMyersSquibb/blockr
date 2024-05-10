@@ -4,9 +4,11 @@
 \alias{new_upload_block}
 \title{Upload block constructor}
 \usage{
-new_upload_block(...)
+new_upload_block(file_path = character(), ...)
 }
 \arguments{
+\item{file_path}{File path}
+
 \item{...}{Further (metadata) attributes}
 }
 \description{

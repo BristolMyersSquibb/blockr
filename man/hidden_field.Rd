@@ -17,5 +17,5 @@ by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
 Hidden field is useful to host complex expression in
-a field. See \link{filter_block} for a usecase.
+a field. See \link{new_filter_block} for a usecase.
 }

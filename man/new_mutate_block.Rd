@@ -4,11 +4,9 @@
 \alias{new_mutate_block}
 \title{Mutate block constructor}
 \usage{
-new_mutate_block(data, value = NULL, ...)
+new_mutate_block(value = NULL, ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{value}{Default value.}
 
 \item{...}{Further (metadata) attributes}

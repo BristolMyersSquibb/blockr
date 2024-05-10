@@ -3,20 +3,14 @@
 \name{initialize_block}
 \alias{initialize_block}
 \alias{initialize_block.data_block}
-\alias{initialize_block.transform_block}
-\alias{initialize_block.default}
-\alias{initialize_block.plot_block}
+\alias{initialize_block.block}
 \title{Initialize block generic}
 \usage{
 initialize_block(x, ...)
 
 \method{initialize_block}{data_block}(x, ...)
 
-\method{initialize_block}{transform_block}(x, data, ...)
-
-\method{initialize_block}{default}(x, data, ...)
-
-\method{initialize_block}{plot_block}(x, data, ...)
+\method{initialize_block}{block}(x, data, ...)
 }
 \arguments{
 \item{x}{An object inheriting from \code{"block"}}
