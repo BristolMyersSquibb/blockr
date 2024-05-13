@@ -36,23 +36,23 @@ of the fields)}
 \code{new_parser_block}: this block allows to create any data parsing block.
 Unless you need a new data parser, there is no need to use this directly.
 
-\code{csv_block}: From a string given by \link{filesbrowser_block} and
-\link{upload_block}, reads the related CSV file and returns
+\code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+\link{new_upload_block}, reads the related CSV file and returns
 a dataframe.
 
-\code{rds_block}: From a string given by \link{filesbrowser_block} and
-\link{upload_block}, reads the related rds file and returns
+\code{rds_block}: From a string given by \link{new_filesbrowser_block} and
+\link{new_upload_block}, reads the related rds file and returns
 a dataframe.
 
-\code{json_block}: From a string given by \link{filesbrowser_block} and
-\link{upload_block}, reads the related json file and returns
+\code{json_block}: From a string given by \link{new_filesbrowser_block} and
+\link{new_upload_block}, reads the related json file and returns
 a dataframe.
 
-\code{sas_block}: From a string given by \link{filesbrowser_block} and
-\link{upload_block}, reads the related SAS file and returns
+\code{sas_block}: From a string given by \link{new_filesbrowser_block} and
+\link{new_upload_block}, reads the related SAS file and returns
 a dataframe.
 
-\code{csv_block}: From a string given by \link{filesbrowser_block} and
-\link{upload_block}, reads the related XPT file and returns
+\code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+\link{new_upload_block}, reads the related XPT file and returns
 a dataframe.
 }

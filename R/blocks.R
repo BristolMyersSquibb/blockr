@@ -16,7 +16,7 @@ new_dataset_block <- function(selected = character(), package = "datasets",
 
   list_datasets <- function(package) {
 
-    datasets <- data(package = package)
+    datasets <- utils::data(package = package)
     datasets <- datasets$results[, "Item"]
 
     options <- gsub("\\s+\\(.+\\)$", "", datasets)
@@ -30,7 +30,7 @@ new_dataset_block <- function(selected = character(), package = "datasets",
       dataset = new_select_field(selected, list_datasets,  type = "name",
                                  title = "Dataset")
     ),
-    expr = quote(`::`(.(package), .(dataset))),
+    expr = as.call(c(as.symbol("::"), quote(.(package)), quote(.(dataset)))),
     ...,
     class = c("dataset_block", "data_block")
   )
@@ -62,7 +62,7 @@ new_upload_block <- function(file_path = character(), ...) {
 #' It falls back to the user file system when running locally.
 #' This block outputs a string containing the file path.
 #'
-#' @inheritParams new_block
+#' @inheritParams new_upload_block
 #' @param volumes Paths accessible by the shinyFiles browser
 #' @export
 new_filesbrowser_block <- function(file_path = character(),
@@ -109,8 +109,8 @@ new_parser_block <- function(expr, fields = list(), ..., class = character()) {
 
 #' CSV data parser block
 #'
-#' \code{csv_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related CSV file and returns
+#' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related CSV file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -121,8 +121,8 @@ new_csv_block <- function(...) {
 
 #' RDS data parser block
 #'
-#' \code{rds_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related rds file and returns
+#' \code{rds_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related rds file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -133,8 +133,8 @@ new_rds_block <- function(...) {
 
 #' JSON data parser block
 #'
-#' \code{json_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related json file and returns
+#' \code{json_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related json file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -149,8 +149,8 @@ new_json_block <- function(...) {
 
 #' SAS data parser block
 #'
-#' \code{sas_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related SAS file and returns
+#' \code{sas_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related SAS file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -161,8 +161,8 @@ new_sas_block <- function(...) {
 
 #' XPT data parser block
 #'
-#' \code{csv_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related XPT file and returns
+#' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related XPT file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block

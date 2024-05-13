@@ -11,6 +11,8 @@ new_filesbrowser_block(
 )
 }
 \arguments{
+\item{file_path}{File path}
+
 \item{volumes}{Paths accessible by the shinyFiles browser}
 
 \item{...}{Further (metadata) attributes}
