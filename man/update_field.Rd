@@ -3,11 +3,14 @@
 \name{update_field}
 \alias{update_field}
 \alias{update_field.field}
+\alias{update_field.hidden_field}
 \title{Update field generic}
 \usage{
 update_field(x, new, env = list())
 
 \method{update_field}{field}(x, new, env = list())
+
+\method{update_field}{hidden_field}(x, new, env = list())
 }
 \arguments{
 \item{x}{An object inheriting form \code{"field"}}

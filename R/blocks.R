@@ -10,12 +10,18 @@
 new_dataset_block <- function(selected = character(), package = "datasets",
                               ...) {
 
+  is_dataset_eligible <- function(x, pkg) {
+    inherits(do.call("::", list(pkg = pkg, name = x)), "data.frame")
+  }
+
   list_datasets <- function(package) {
 
     datasets <- data(package = package)
     datasets <- datasets$results[, "Item"]
 
-    gsub("\\s+\\(.+\\)$", "", datasets)
+    options <- gsub("\\s+\\(.+\\)$", "", datasets)
+
+    options[lgl_ply(options, is_dataset_eligible, package)]
   }
 
   new_block(
