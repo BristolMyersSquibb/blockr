@@ -1,5 +1,4 @@
 test_that("workspace", {
-
   withr::local_options(BLOCKR_LOG_LEVEL = "error")
 
   withr::defer(clear_workspace_stacks())
@@ -97,4 +96,39 @@ test_that("workspace", {
 
   app <- serve_workspace(my_stack = new_stack(data_block))
   expect_s3_class(app, "shiny.appobj")
+})
+
+library(shinytest2)
+test_that("workspace demo works", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+  shiny_app_path <-
+    system.file("examples/workspace/app.R", package = "blockr")
+  app <- AppDriver$new(
+    shiny_app_path,
+    name = "workspace-app",
+    variant = platform_variant()
+  )
+
+  app$expect_values(
+    input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
+    export = TRUE
+  )
+  # Add a new stack
+  app$click(selector = "#myworkspace-add_stack")
+  app$expect_values(
+    input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
+    export = TRUE
+  )
+  app$click(selector = "#myworkspace-add_stack")
+  app$expect_values(
+    input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
+    export = TRUE
+  )
+  # Clear
+  app$click(selector = "#myworkspace-clear_stacks")
+  app$expect_values(
+    input = c("myworkspace-add_stack", "myworkspace-clear_stacks"),
+    export = TRUE
+  )
 })

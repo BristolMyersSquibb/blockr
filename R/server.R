@@ -495,11 +495,21 @@ generate_server.workspace <- function(x, id, ...) {
     id = id,
     function(input, output, session) {
       vals <- reactiveValues(stacks = list(), new_block = list())
+      # Required by shinytest2: don't remove
+      # Note: we can't check vals$stack as this is
+      # a nested reactiveVal which does not play well
+      # with shinytest2 ...
+      n_stacks <- reactive(length(vals$stacks))
+      exportTestValues(
+        stacks = {
+          n_stacks()
+        }
+      )
 
       # Init existing stack modules
       init(x, vals, session)
 
-      output$n_stacks <- renderText(length(vals$stacks))
+      output$n_stacks <- renderText(n_stacks())
 
       # Listen when stack are removed
       observeEvent(req(length(are_stacks_removed(vals$stacks)) > 0), {
