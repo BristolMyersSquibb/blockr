@@ -642,6 +642,12 @@ input_ids.list_field <- function(x, name, ...) {
 
 #' @rdname ui_input
 #' @export
+input_ids.hidden_field <- function(x, name, ...) {
+  character()
+}
+
+#' @rdname ui_input
+#' @export
 ui_input.variable_field <- function(x, id, name) {
   field <- validate_field(
     materialize_variable_field(x)
