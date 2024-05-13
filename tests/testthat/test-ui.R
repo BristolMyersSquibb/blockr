@@ -1,5 +1,4 @@
 test_that("block ui can be created", {
-
   blk1 <- new_dataset_block(selected = "iris")
 
   ui <- generate_ui(blk1, "foo")
@@ -7,18 +6,17 @@ test_that("block ui can be created", {
   expect_type(ui, "list")
   expect_s3_class(ui, "shiny.tag")
 
-  withr::local_file(
-    list(iris = write.csv(iris, "iris.csv", row.names = FALSE))
-  )
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
 
-  blk2 <- new_upload_block("iris.csv")
+  blk2 <- new_upload_block(path)
 
   ui <- generate_ui(blk2, "foo")
 
   expect_type(ui, "list")
   expect_s3_class(ui, "shiny.tag")
 
-  blk3 <- new_filesbrowser_block("iris.csv")
+  blk3 <- new_filesbrowser_block(path)
 
   ui <- generate_ui(blk3, "foo")
 

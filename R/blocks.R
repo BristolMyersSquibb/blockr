@@ -9,22 +9,28 @@
 #' @export
 new_dataset_block <- function(selected = character(), package = "datasets",
                               ...) {
+  is_dataset_eligible <- function(x, pkg) {
+    inherits(do.call("::", list(pkg = pkg, name = x)), "data.frame")
+  }
 
   list_datasets <- function(package) {
-
-    datasets <- data(package = package)
+    datasets <- utils::data(package = package)
     datasets <- datasets$results[, "Item"]
 
-    gsub("\\s+\\(.+\\)$", "", datasets)
+    options <- gsub("\\s+\\(.+\\)$", "", datasets)
+
+    options[lgl_ply(options, is_dataset_eligible, package)]
   }
 
   new_block(
     fields = list(
       package = new_hidden_field(package, type = "name"),
-      dataset = new_select_field(selected, list_datasets,  type = "name",
-                                 title = "Dataset")
+      dataset = new_select_field(selected, list_datasets,
+        type = "name",
+        title = "Dataset"
+      )
     ),
-    expr = quote(`::`(.(package), .(dataset))),
+    expr = as.call(c(as.symbol("::"), quote(.(package)), quote(.(dataset)))),
     ...,
     class = c("dataset_block", "data_block")
   )
@@ -39,7 +45,6 @@ new_dataset_block <- function(selected = character(), package = "datasets",
 #' @param file_path File path
 #' @export
 new_upload_block <- function(file_path = character(), ...) {
-
   new_block(
     fields = list(
       file = new_upload_field(file_path, title = "File")
@@ -56,16 +61,17 @@ new_upload_block <- function(file_path = character(), ...) {
 #' It falls back to the user file system when running locally.
 #' This block outputs a string containing the file path.
 #'
-#' @inheritParams new_block
+#' @inheritParams new_upload_block
 #' @param volumes Paths accessible by the shinyFiles browser
 #' @export
 new_filesbrowser_block <- function(file_path = character(),
                                    volumes = c(home = path.expand("~")), ...) {
-
   new_block(
     fields = list(
-      file = new_filesbrowser_field(file_path, volumes = volumes,
-                                    title = "File")
+      file = new_filesbrowser_field(file_path,
+        volumes = volumes,
+        title = "File"
+      )
     ),
     expr = quote(.(file)),
     ...,
@@ -81,7 +87,6 @@ new_filesbrowser_block <- function(file_path = character(),
 #' @inheritParams new_block
 #' @export
 new_parser_block <- function(expr, fields = list(), ..., class = character()) {
-
   safe_expr <- function(data) {
     if (length(data)) {
       expr
@@ -103,8 +108,8 @@ new_parser_block <- function(expr, fields = list(), ..., class = character()) {
 
 #' CSV data parser block
 #'
-#' \code{csv_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related CSV file and returns
+#' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related CSV file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -115,8 +120,8 @@ new_csv_block <- function(...) {
 
 #' RDS data parser block
 #'
-#' \code{rds_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related rds file and returns
+#' \code{rds_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related rds file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -127,8 +132,8 @@ new_rds_block <- function(...) {
 
 #' JSON data parser block
 #'
-#' \code{json_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related json file and returns
+#' \code{json_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related json file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -143,8 +148,8 @@ new_json_block <- function(...) {
 
 #' SAS data parser block
 #'
-#' \code{sas_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related SAS file and returns
+#' \code{sas_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related SAS file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -155,8 +160,8 @@ new_sas_block <- function(...) {
 
 #' XPT data parser block
 #'
-#' \code{csv_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related XPT file and returns
+#' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related XPT file and returns
 #' a dataframe.
 #'
 #' @rdname new_parser_block
@@ -173,7 +178,6 @@ new_xpt_block <- function(...) {
 #' @inheritParams new_block
 #' @export
 new_result_block <- function(...) {
-
   fields <- list(
     stack = new_result_field(title = "Stack")
   )
@@ -198,7 +202,6 @@ new_result_block <- function(...) {
 #' @export
 new_filter_block <- function(columns = character(), values = character(),
                              filter_fun = "==", ...) {
-
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
@@ -296,13 +299,14 @@ new_filter_block <- function(columns = character(), values = character(),
 #' @param columns Column(s) to select.
 #' @export
 new_select_block <- function(columns = character(), ...) {
-
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE,
-                               title = "Columns")
+    columns = new_select_field(columns, all_cols,
+      multiple = TRUE,
+      title = "Columns"
+    )
   )
 
   new_block(
@@ -330,7 +334,6 @@ new_select_block <- function(columns = character(), ...) {
 #' @export
 new_summarize_block <- function(func = character(),
                                 default_columns = character(), ...) {
-
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -444,13 +447,14 @@ new_summarize_block <- function(func = character(),
 #' @inheritParams new_select_block
 #' @export
 new_arrange_block <- function(columns = character(), ...) {
-
   all_cols <- function(data) colnames(data)
 
   # Type as name for arrange and group_by
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE,
-                               type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols,
+      multiple = TRUE,
+      type = "name", title = "Columns"
+    )
   )
 
   new_block(
@@ -470,13 +474,14 @@ new_arrange_block <- function(columns = character(), ...) {
 #' @inheritParams new_select_block
 #' @export
 new_group_by_block <- function(columns = character(), ...) {
-
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE,
-                               type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols,
+      multiple = TRUE,
+      type = "name", title = "Columns"
+    )
   )
 
   new_block(
@@ -502,7 +507,6 @@ new_group_by_block <- function(columns = character(), ...) {
 #' @export
 new_join_block <- function(y = NULL, type = character(), by = character(),
                            ...) {
-
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
   }
@@ -544,12 +548,12 @@ new_join_block <- function(y = NULL, type = character(), by = character(),
 #' @param n_rows_min Minimum number of rows.
 #' @export
 new_head_block <- function(n_rows = numeric(), n_rows_min = 1L, ...) {
-
   n_rows_max <- function(data) nrow(data)
 
   fields <- list(
     n_rows = new_numeric_field(n_rows, n_rows_min, n_rows_max,
-                               title = "Number of rows")
+      title = "Number of rows"
+    )
   )
 
   new_block(

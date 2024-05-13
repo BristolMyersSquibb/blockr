@@ -118,6 +118,14 @@ update_field.field <- function(x, new, env = list()) {
   eval_set_field_value(res, env)
 }
 
+#' @rdname update_field
+#' @export
+update_field.hidden_field <- function(x, new, env = list()) {
+  validate_field(
+    eval_set_field_value(x, env)
+  )
+}
+
 eval_set_field_value <- function(x, env) {
   for (cmp in names(x)[lgl_ply(x, is.function)]) {
     fun <- x[[cmp]]

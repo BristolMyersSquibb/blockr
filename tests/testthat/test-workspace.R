@@ -106,8 +106,7 @@ test_that("workspace demo works", {
     system.file("examples/workspace/app.R", package = "blockr")
   app <- AppDriver$new(
     shiny_app_path,
-    name = "workspace-app",
-    variant = platform_variant()
+    name = "workspace-app"
   )
 
   app$expect_values(

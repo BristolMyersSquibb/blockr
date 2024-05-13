@@ -13,6 +13,7 @@
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
+\alias{input_ids.hidden_field}
 \alias{ui_input.variable_field}
 \alias{ui_input.range_field}
 \alias{ui_input.hidden_field}
@@ -54,6 +55,8 @@ input_ids(x, ...)
 \method{input_ids}{block}(x, ...)
 
 \method{input_ids}{field}(x, name, ...)
+
+\method{input_ids}{hidden_field}(x, name, ...)
 
 \method{ui_input}{variable_field}(x, id, name)
 
