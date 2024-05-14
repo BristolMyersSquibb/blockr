@@ -149,20 +149,20 @@ automatically handled by <code>{blockr}</code>.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
-<span>  <span class="va">data_block</span>,</span>
+<span>  <span class="va">dataset_block</span>,</span>
 <span>  <span class="va">filter_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-8654">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-8840">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC5M6PFcQKKZADMWbnIGCtEJQLjA9jgGADc4bITxPhyJPzAAXwBdIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC52OFJM6PFcQKKZADMWbnIGatEJQLjAioYANzhshPE+HIk-MABfAF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
-<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">You'll notice that some blocks, such as the `filter_block` 
+<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">You'll notice that some blocks, such as the `filter_block`
   have a submit button. The reason was to prevent any expansive task
-  to run without explicit user approval. That said, this feature is 
+  to run without explicit user approval. That said, this feature is
   still very much experimental and might change in the future.</div>
 <p>In the next example, we’ll see how to create an which can dynamically
 add or remove blocks.</p>
@@ -170,31 +170,36 @@ add or remove blocks.</p>
 <div class="section level3">
 <h3 id="dynamically-add-a-block">Dynamically add a block<a class="anchor" aria-label="anchor" href="#dynamically-add-a-block"></a>
 </h3>
-<p>Below is an app with an interface to dynamically add blocks. On the
-UI side, we called <code><a href="../reference/generate_ui.html">generate_ui()</a></code>, which is nothing more
-than calling the stack module UI and <code><a href="../reference/generate_server.html">generate_server()</a></code> in
-the Shiny server function. If you leave <code>id</code> NULL, the
-namespace is automatically handled.</p>
-<p>To get the list of available blocks, we leverage the
-<code>{blockr}</code> registry namely <code><a href="../reference/available_blocks.html">available_blocks()</a></code>
-which exposes the currently registered blocks. You can learn more about
-the registry in the dedicated vignette. <code><a href="../reference/add_block_ui.html">add_block_ui()</a></code> is a
-UI helper to show a button as well as the necessary interface to contain
-the new block choice. Within an <code>observer</code> we listen to the
-“add block” button. Then, we pass the new block in the
-<code>new_block</code> slot of the <code><a href="../reference/generate_server.html">generate_server()</a></code>
-function. It accepts the name of the block to insert as well as its
-position in the stack (here we append).</p>
-<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo) 
+<p>The stack exposes a helper button to add a block in the top right
+corner of the card header. It triggers an <a href="https://getbootstrap.com/docs/5.3/components/offcanvas/" class="external-link">offcanvas</a>
+UI panel, that basically allows one to select any block available in the
+registered blocks <a href="https://blockr-org.github.io/blockr/articles/registry.html" class="external-link">vignette</a>.</p>
+<p>As a side note, there’s another mechanism that works to add blocks,
+which we describe in the following. It is more verbose but allows you to
+bring your own custom UI. On the UI side, we call
+<code><a href="../reference/generate_ui.html">generate_ui()</a></code>, which is nothing more than calling the stack
+module UI and <code><a href="../reference/generate_server.html">generate_server()</a></code> in the Shiny server
+function. If you leave <code>id</code> NULL, the namespace is
+automatically handled. To get the list of available blocks, we leverage
+the <code>{blockr}</code> registry namely
+<code><a href="../reference/available_blocks.html">available_blocks()</a></code> which exposes the currently registered
+blocks. You can learn more about the registry in the dedicated <a href="https://blockr-org.github.io/blockr/articles/registry.html" class="external-link">vignette</a>.
+<code><a href="../reference/add_block_ui.html">add_block_ui()</a></code> is a UI helper to show a button as well as
+the necessary interface to contain the new block choice. Within an
+<code>observer</code> we listen to the “add block” button. Then, we pass
+the new block in the <code>new_block</code> slot of the
+<code><a href="../reference/generate_server.html">generate_server()</a></code> function. It accepts the name of the
+block to insert as well as its position in the stack (here we append and
+leave <code>NULL</code>).</p>
+<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo)
   utilises `{masonry}` (https://github.com/blockr-org/masonry) to provide
   a better user experience, allowing one to drag and drop blocks
   within the stack.</div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">data_block</span><span class="op">)</span></span>
+<span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">dataset_block</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span>
 <span>  ui <span class="op">=</span> <span class="fu">bslib</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bslib/man/page.html" class="external-link">page_fluid</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/add_block_ui.html">add_block_ui</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -209,26 +214,20 @@ position in the stack (here we append).</p>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">add</span>, <span class="op">{</span></span>
-<span>      <span class="va">vals</span><span class="op">$</span><span class="va">new_block</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
-<span>      <span class="co"># Always append to stack</span></span>
-<span>      <span class="va">loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stack</span><span class="op">$</span><span class="va">blocks</span><span class="op">)</span></span>
 <span>      <span class="va">block</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/available_blocks.html">available_blocks</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">selected_block</span><span class="op">]</span><span class="op">]</span></span>
 <span>      <span class="co"># add_block expect the current stack, the block to add and its position</span></span>
 <span>      <span class="co"># (NULL is fine for the position, in that case the block will</span></span>
 <span>      <span class="co"># go at the end)</span></span>
-<span>      <span class="va">vals</span><span class="op">$</span><span class="va">new_block</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        block <span class="op">=</span> <span class="va">block</span>,</span>
-<span>        position <span class="op">=</span> <span class="va">loc</span></span>
-<span>      <span class="op">)</span></span>
+<span>      <span class="va">vals</span><span class="op">$</span><span class="va">new_block</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>block <span class="op">=</span> <span class="va">block</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Blocks can be removed in any context. Keep in mind that a stack can’t
 contain 2 data blocks.</p>
 <div class="m-3 p-2 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">At the moment, we don't check whether removing a block breaks the pipeline.</div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-3929">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-2483">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+dg02cICgkIYwyOMJBgwAEygueODQiL5UyXjAzigJGQAeUxkIOGoAfTKJPiyuBqL46NiAQXRBCBkZBxZVGTp2POZUKEs4BoAzbhGMgaGhqAyMjtEJBpG+FgyKUjs43ED1mTm6pPJ9liiuCVkjsaEYcObxf0uZPwugxk7DgDAAbqCxgsHBACKcSIcIKgHKRZEQUcjUcC4Ox2K4IH4ZCA-kMwTxlNU5HByqcIQA1HgOHF8OqNIpjAByAFUADI8+JXb5VGo3UHZeYg8GgtZXYHPcSA2UyN5qD5feXSEnrVk7ExjeQ0lgQvhk7jsAAkOs6WpKQKGRAmoIhAFEIWREZjzZsMrJiXb1qaLVbduJhTJuXytUMAMQyHrcahQL4yNCoCgZGSkIhy8o-f1DXZh7gUSz2J6581FdgC2XsylQMksbhQETzKt8PzAYBsT0g4twuDbIoAXWHUZkse9uoqcAAHmm4ZmNHAZAQHAx5GQcy8lyv2VmU1sUxAM3ZlD47Pjx7G+BGecrlAs2CuFhZdzIL-CIK9BvZsquoBBd92WoJtuGva5s3-ewV3TGsrkDS16mnUNKWCTgZSVdk1CKRUlQ-JRLxIMZdnHeCZAAXxrCjAj8MAKOHIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJPjiWABNU9KEYcLzxIUCEjTZw5nZ6iHCAQXRBCBkZBxZVGTp2YLpmVChLOGyAM24+oq6ensnMhihybL6+KtliuJ6-XECe9jgGADczgemHCAJSVwg+NlQHUlkiN9f3mVP2dkefhkIGOSyqpRkKzO6ympwuZ22XAkuyK+xkAF9An4wOiALpAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
@@ -240,18 +239,17 @@ contain 2 data blocks.</p>
 <p>The stack can be nested within modules. This is what we do in <a href="https://github.com/blockr-org/block.demo" class="external-link"><code>{blockr.demo}</code></a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
-<span>  <span class="va">data_block</span>,</span>
+<span>  <span class="va">dataset_block</span>,</span>
 <span>  <span class="va">filter_block</span>,</span>
 <span>  <span class="va">select_block</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">block_ui</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/htmlOutput.html" class="external-link">uiOutput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"block"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/generate_ui.html">generate_ui</a></span><span class="op">(</span><span class="va">stack</span>, id <span class="op">=</span> <span class="fu">ns</span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">block_server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
@@ -259,11 +257,6 @@ contain 2 data blocks.</p>
 <span>    <span class="va">id</span>,</span>
 <span>    <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span><span class="op">{</span></span>
 <span>      <span class="va">ns</span> <span class="op">&lt;-</span> <span class="va">session</span><span class="op">$</span><span class="va">ns</span></span>
-<span></span>
-<span>      <span class="va">output</span><span class="op">$</span><span class="va">block</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">renderUI</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>        <span class="fu"><a href="../reference/generate_ui.html">generate_ui</a></span><span class="op">(</span><span class="va">stack</span>, id <span class="op">=</span> <span class="fu">ns</span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="op">}</span><span class="op">)</span></span>
-<span></span>
 <span>      <span class="fu"><a href="../reference/generate_server.html">generate_server</a></span><span class="op">(</span><span class="va">stack</span>, id <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span></span>

@@ -117,7 +117,7 @@ general idea below.</p>
 <p>To add a block to a stack, you can leverage
 <code><a href="../reference/add_block.html">add_block()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">data_block</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">dataset_block</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_block.html">add_block</a></span><span class="op">(</span><span class="va">select_block</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_block.html">add_block</a></span><span class="op">(</span><span class="va">filter_block</span>, <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p>If you specify the position (last parameter), you can add a block

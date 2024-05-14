@@ -120,7 +120,7 @@ function as it is not exported anyway. This makes the
 <code><a href="../reference/available_blocks.html">available_blocks()</a></code>. A truncated output example below:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">$</span>dataset_block</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">function</span>(...) {</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">initialize_block</span>(<span class="fu">new_data_block</span>(...))</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">initialize_block</span>(<span class="fu">new_dataset_block</span>(...))</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>}</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="sc">&lt;</span>environment<span class="sc">:</span> namespace<span class="sc">:</span>blockr<span class="sc">&gt;</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"name"</span>)</span>
@@ -178,31 +178,33 @@ registered, it <strong>overwrites</strong> the existing one.</li>
 <li>
 <code><a href="../reference/available_blocks.html">register_blocks()</a></code> to register multiple blocks.</li>
 </ul>
-<p>Let’s say you want to create a new <code>head_block</code> which
-returns the <code>n</code> first rows of the selected dataset:</p>
+<p>Let’s say you want to create a new <code>tail_block</code> which
+returns the <code>n</code> last rows of the selected dataset:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_head_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">n_rows</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">tail_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">n_rows</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">n_rows_max</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
-<span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      n_rows <span class="op">=</span> <span class="fu"><a href="../reference/numeric_field.html">new_numeric_field</a></span><span class="op">(</span><span class="va">n_rows</span>, <span class="fl">1L</span>, <span class="fl">100L</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
+<span>      fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        n_rows <span class="op">=</span> <span class="fu"><a href="../reference/numeric_field.html">new_numeric_field</a></span><span class="op">(</span><span class="va">n_rows</span>, <span class="fl">1L</span>, <span class="va">n_rows_max</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">n_rows</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tail_block"</span>, <span class="st">"transform_block"</span><span class="op">)</span>,</span>
+<span>      <span class="va">...</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">n_rows</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"head_block"</span>, <span class="st">"transform_block"</span><span class="op">)</span>,</span>
-<span>    <span class="va">...</span></span>
+<span>    <span class="va">data</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/available_blocks.html">register_block</a></span><span class="op">(</span></span>
-<span>  constructor <span class="op">=</span> <span class="va">new_head_block</span>,</span>
-<span>  name <span class="op">=</span> <span class="st">"head block"</span>,</span>
-<span>  description <span class="op">=</span> <span class="st">"return first n rows"</span>,</span>
-<span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"head_block"</span>, <span class="st">"transform_block"</span><span class="op">)</span>,</span>
+<span>  constructor <span class="op">=</span> <span class="va">tail_block</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"tail block"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"return last n rows"</span>,</span>
+<span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tail_block"</span>, <span class="st">"transform_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"data.frame"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in register_block(constructor = new_head_block, name = "head block", :</span></span>
-<span><span class="co">#&gt; block head_block already exists and will be overwritten.</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>If we now query the registry, the new block is available:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="../reference/available_blocks.html">available_blocks</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -211,12 +213,12 @@ returns the <code>n</code> first rows of the selected dataset:</p>
 <span><span class="co">#&gt;  [7] "head_block"         "join_block"         "json_block"        </span></span>
 <span><span class="co">#&gt; [10] "mutate_block"       "rds_block"          "result_block"      </span></span>
 <span><span class="co">#&gt; [13] "sas_block"          "select_block"       "summarize_block"   </span></span>
-<span><span class="co">#&gt; [16] "upload_block"       "xpt_block"</span></span></code></pre></div>
+<span><span class="co">#&gt; [16] "tail_block"         "upload_block"       "xpt_block"</span></span></code></pre></div>
 <p>We can now run the demo app to add blocks. The new
-<code>head_block</code> should be visible in the new choices:</p>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-5885">
+<code>tail_block</code> should be visible in the new choices:</p>
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-8654">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI9g02cLjg0Iio0RiMABMoLjjAiDhqAH0NOCh8iujxGQAeUxkAMwcIAlJXCD5CrlkICoYiamU1CAd4BhYCPj9ZDGW-GRBAmRkyyobBCE3NtpY4bnyJmWDOPYOD4dHx1S3yiqmZuYqjk-y+O7H2WQAjAAZQEABlBQLiN0WGwOcAAHqgGI8AI4OIjkPjVWo-R4YH4jP5+Ym4WGbAjcKDsc7zTQ1OoNaTqMCkRIcNoWGD1XLifyk-YHZYYWFxAC+gUC8lsnDgDG5JmuMmIHFZDm6Fke2yq9PlEn5m2g8EedNqMkZeFh+Tg7AIs1QPRIxrA8lIDgY+yODE4Wzkf2ksIpVPY1setLA2IZPKZQlZUHZnN1vLAMIFbFQDlIToGUAwbUS8H9AqIGfTmbUQmzufzcCEgRKKqgEmarS1nEb4n6RSgibiKTSAEF0IqHCxHnR2JlmKgoJY4B9uCPvmSZLVIyYKiO+CwrWQ7Ol9QdZ2VEuQNyw+G29TJt06YOFL0moTIU5tgwwAG6yx4dLoOvppjNZGLHRAJkYNqV6VZ1gFTZ3x4ZQWjkGpuhYT8ADUeAca0fmeBpHgAOQAVSBSFlwfZsZCPWUijnN9PwYRUbgfA8bhvcswDvB9CxuA1cJ5R55EbHpPz4ODuHYAASLUGifTZ6xuIhx1lT8AFFPzILcIFLCTV1kaCeJkMTJOk-jEKIkjl02ABiGR+24agoHvFd0AofIZFIIgwK4CRLIuMQKO4ChLHsC9vPECSGnYWSDjwxCoDglhKREOdIoWYBgAA0gJODQLujgNcJAAXUK3ybNXRMZARVA4G6dzqiVN15DILz21kew4DNfiPJXfI3LjNy7GUHw7F6UqZD4cygWvZQjjKdoNXamRhr-WQ2DqoolSpDrFrw6hEu4MbLE8jbFtc6LYPgqS+JMAKWCuXzNjwtQGhYnjlt6R5cl86LRSfcUID8MBRUKoA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI9g02cLjArhZuAH1o8RkAHlMZADMHCAJSVwg+ABMoLlkIHIYiamU1CAd4BhYCPj9ZDBG-GRBAwJkZFraOnJgoAA8ikvLK6pJ6xqgxiDntrjjpqZk2OxYeFgAvODzRCUEIaemIOGp7kyeXspY4bjqnRkwU43x+M1a7SBbw+3V6-RypT+AL4syhsgAjAAZZqQ+aLJbHF5DU7TOBLVAMVQyACODiI5D4WX4zzUGFRePYfm5uFJMgI3Cg7CBAyEzM+Emk6jApESHFKFhgEvE-l5zxeIwwfKG6nV0waXFOcQAvpN9nBbJw4AxlWDiBxZQ4qhZqeL8mrXrA4NSxVBsjJ8tJTnU4OwCH1UJtWdL5KQHAxnoLODM5FCg+qBUL2KHqaKZX7coG8NLZVB5YrlarTmxUA5SD6wAaoBhSol4OnpkQ67X62ohE2W224EJAhkHVAJKsZu8cpwJ+JDkK4KRlXEWHUp0IYOE55KwGaUmkAILoMEOFjUujsYJ0ZioKCWO6lbjnupg6aPt6Jcg5c98XfiLI65EiS6rZgwABu1rUusVQ1HwNZ1rIXY6EhMjZsKNRjBMeroVwk7FDIn7Wo0dzgVBDD-vhgFnHURKmhAfhgMaAC6QA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
@@ -225,7 +227,7 @@ returns the <code>n</code> first rows of the selected dataset:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/available_blocks.html">register_blocks</a></span><span class="op">(</span></span>
 <span>  constructor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_block</span>, <span class="va">filter_block</span>, <span class="va">select_block</span>, <span class="va">summarize_block</span></span>
+<span>    <span class="va">dataset_block</span>, <span class="va">filter_block</span>, <span class="va">select_block</span>, <span class="va">summarize_block</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"data block"</span>, <span class="st">"filter block"</span>, <span class="st">"select block"</span>, <span class="st">"summarize block"</span></span>
@@ -252,20 +254,20 @@ returns the <code>n</code> first rows of the selected dataset:</p>
 </h2>
 <p>The counterpart of <code><a href="../reference/available_blocks.html">register_block()</a></code> is
 <code><a href="../reference/available_blocks.html">unregister_blocks()</a></code>. We can remove our new
-<code>head_block</code> from the registry:</p>
+<code>tail_block</code> from the registry:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/available_blocks.html">unregister_blocks</a></span><span class="op">(</span>ids <span class="op">=</span> <span class="st">"head_block"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/available_blocks.html">unregister_blocks</a></span><span class="op">(</span>ids <span class="op">=</span> <span class="st">"tail_block"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Check it out</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="../reference/available_blocks.html">available_blocks</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "arrange_block"      "csv_block"          "dataset_block"     </span></span>
 <span><span class="co">#&gt;  [4] "filesbrowser_block" "filter_block"       "group_by_block"    </span></span>
-<span><span class="co">#&gt;  [7] "join_block"         "json_block"         "mutate_block"      </span></span>
-<span><span class="co">#&gt; [10] "rds_block"          "result_block"       "sas_block"         </span></span>
-<span><span class="co">#&gt; [13] "select_block"       "summarize_block"    "upload_block"      </span></span>
-<span><span class="co">#&gt; [16] "xpt_block"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [7] "head_block"         "join_block"         "json_block"        </span></span>
+<span><span class="co">#&gt; [10] "mutate_block"       "rds_block"          "result_block"      </span></span>
+<span><span class="co">#&gt; [13] "sas_block"          "select_block"       "summarize_block"   </span></span>
+<span><span class="co">#&gt; [16] "upload_block"       "xpt_block"</span></span></code></pre></div>
 <p>where <strong>ids</strong> is the first entry we applied in the class
-attributes when the block was created, that is <code>head_block</code>.
+attributes when the block was created, that is <code>tail_block</code>.
 If you had to remove multiple blocks at once, you can pass a vector in
 <strong>ids</strong>.</p>
 </div>
