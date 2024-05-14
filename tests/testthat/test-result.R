@@ -22,8 +22,8 @@ test_that("result block", {
 test_that("result server works", {
 
   set_workspace(
-    stack1 = new_stack(data_block),
-    stack2 = new_stack(data_block),
+    stack1 = new_stack(dataset_block),
+    stack2 = new_stack(dataset_block),
     force = TRUE
   )
 

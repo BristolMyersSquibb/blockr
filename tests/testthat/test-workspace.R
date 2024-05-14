@@ -6,7 +6,7 @@ test_that("workspace", {
   expect_s3_class(get_workspace(), "workspace")
 
   stack1 <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_filter_block
   )
 
@@ -19,7 +19,7 @@ test_that("workspace", {
   expect_s3_class(get_workspace_stack("stack1"), "stack")
 
   stack2 <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_select_block
   )
 
@@ -94,7 +94,7 @@ test_that("workspace", {
   expect_identical(get_workspace_title(), "")
   expect_identical(get_workspace_settings(), list())
 
-  app <- serve_workspace(my_stack = new_stack(data_block))
+  app <- serve_workspace(my_stack = new_stack(dataset_block))
   expect_s3_class(app, "shiny.appobj")
 })
 
@@ -106,8 +106,7 @@ test_that("workspace demo works", {
     system.file("examples/workspace/app.R", package = "blockr")
   app <- AppDriver$new(
     shiny_app_path,
-    name = "workspace-app",
-    variant = platform_variant()
+    name = "workspace-app"
   )
 
   app$expect_values(

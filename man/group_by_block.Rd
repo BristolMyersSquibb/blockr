@@ -5,7 +5,7 @@
 \alias{group_by_block}
 \title{Group by block}
 \usage{
-new_group_by_block(data, columns = colnames(data)[1], ...)
+new_group_by_block(data, columns = character(), ...)
 
 group_by_block(data, ...)
 }

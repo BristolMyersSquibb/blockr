@@ -7,7 +7,7 @@ test_that("add_block works", {
     stack |> add_block(select_block)
   )
 
-  stack <- new_stack(data_block) |>
+  stack <- new_stack(dataset_block) |>
     add_block(select_block)
 
   expect_length(stack, 2)

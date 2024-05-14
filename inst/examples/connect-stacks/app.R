@@ -2,7 +2,7 @@ library(blockr)
 library(blockr.data)
 
 lab_data_block <- function(...) {
-  initialize_block(new_data_block(
+  initialize_block(new_dataset_block(
     ...,
     dat = as.environment("package:blockr.data"),
     selected = "lab"
@@ -10,7 +10,7 @@ lab_data_block <- function(...) {
 }
 
 ae_data_block <- function(...) {
-  initialize_block(new_data_block(
+  initialize_block(new_dataset_block(
     ...,
     dat = as.environment("package:blockr.data"),
     selected = "ae"
