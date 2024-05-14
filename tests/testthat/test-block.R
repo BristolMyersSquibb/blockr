@@ -326,7 +326,7 @@ test_that("block demo works", {
 
   custom_data_block <- function(...) {
     initialize_block(
-      new_data_block(
+      new_dataset_block(
         dat = as.environment("package:datasets"),
         selected = "airquality",
         ...
