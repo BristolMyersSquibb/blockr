@@ -35,7 +35,7 @@ corrplot_block <- function(data, ...) {
 }
 
 stack <- new_stack(
-  data_block,
+  dataset_block,
   corrplot_block
 )
 

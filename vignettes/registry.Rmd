@@ -57,7 +57,7 @@ ready to be queried by `available_blocks()`. A truncated output example below:
 ```r
 $dataset_block
 function(...) {
-  initialize_block(new_data_block(...))
+  initialize_block(new_dataset_block(...))
 }
 <environment: namespace:blockr>
 attr(,"name")
@@ -107,27 +107,31 @@ To register you own blocks, user facing functions are:
 it __overwrites__ the existing one.
 - `register_blocks()` to register multiple blocks.
 
-Let's say you want to create a new `head_block` which returns the `n` first rows of the
+Let's say you want to create a new `tail_block` which returns the `n` last rows of the
 selected dataset:
 
 ```{r, eval=TRUE}
-new_head_block <- function(data, n_rows = numeric(), ...) {
+tail_block <- function(data, n_rows = numeric(), ...) {
+  n_rows_max <- function(data) nrow(data)
 
-  new_block(
-    fields = list(
-      n_rows = new_numeric_field(n_rows, 1L, 100L)
+  initialize_block(
+    new_block(
+      fields = list(
+        n_rows = new_numeric_field(n_rows, 1L, n_rows_max)
+      ),
+      expr = quote(tail(n = .(n_rows))),
+      class = c("tail_block", "transform_block"),
+      ...
     ),
-    expr = quote(head(n = .(n_rows))),
-    class = c("head_block", "transform_block"),
-    ...
+    data
   )
 }
 
 register_block(
-  constructor = new_head_block,
-  name = "head block",
-  description = "return first n rows",
-  classes = c("head_block", "transform_block"),
+  constructor = tail_block,
+  name = "tail block",
+  description = "return last n rows",
+  classes = c("tail_block", "transform_block"),
   input = "data.frame",
   output = "data.frame"
 )
@@ -139,13 +143,13 @@ If we now query the registry, the new block is available:
 names(available_blocks())
 ```
 
-We can now run the demo app to add blocks. The new `head_block` should be
+We can now run the demo app to add blocks. The new `tail_block` should be
 visible in the new choices:
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI9g02cLjg0Iio0RiMABMoLjjAiDhqAH0NOCh8iujxGQAeUxkAMwcIAlJXCD5CrlkICoYiamU1CAd4BhYCPj9ZDGW-GRBAmRkyyobBCE3NtpY4bnyJmWDOPYOD4dHx1S3yiqmZuYqjk-y+O7H2WQAjAAZQEABlBQLiN0WGwOcAAHqgGI8AI4OIjkPjVWo-R4YH4jP5+Ym4WGbAjcKDsc7zTQ1OoNaTqMCkRIcNoWGD1XLifyk-YHZYYWFxAC+gUC8lsnDgDG5JmuMmIHFZDm6Fke2yq9PlEn5m2g8EedNqMkZeFh+Tg7AIs1QPRIxrA8lIDgY+yODE4Wzkf2ksIpVPY1setLA2IZPKZQlZUHZnN1vLAMIFbFQDlIToGUAwbUS8H9AqIGfTmbUQmzufzcCEgRKKqgEmarS1nEb4n6RSgibiKTSAEF0IqHCxHnR2JlmKgoJY4B9uCPvmSZLVIyYKiO+CwrWQ7Ol9QdZ2VEuQNyw+G29TJt06YOFL0moTIU5tgwwAG6yx4dLoOvppjNZGLHRAJkYNqV6VZ1gFTZ3x4ZQWjkGpuhYT8ADUeAca0fmeBpHgAOQAVSBSFlwfZsZCPWUijnN9PwYRUbgfA8bhvcswDvB9CxuA1cJ5R55EbHpPz4ODuHYAASLUGifTZ6xuIhx1lT8AFFPzILcIFLCTV1kaCeJkMTJOk-jEKIkjl02ABiGR+24agoHvFd0AofIZFIIgwK4CRLIuMQKO4ChLHsC9vPECSGnYWSDjwxCoDglhKREOdIoWYBgAA0gJODQLujgNcJAAXUK3ybNXRMZARVA4G6dzqiVN15DILz21kew4DNfiPJXfI3LjNy7GUHw7F6UqZD4cygWvZQjjKdoNXamRhr-WQ2DqoolSpDrFrw6hEu4MbLE8jbFtc6LYPgqS+JMAKWCuXzNjwtQGhYnjlt6R5cl86LRSfcUID8MBRUKoA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI9g02cLjArhZuAH1o8RkAHlMZADMHCAJSVwg+ABMoLlkIHIYiamU1CAd4BhYCPj9ZDBG-GRBAwJkZFraOnJgoAA8ikvLK6pJ6xqgxiDntrjjpqZk2OxYeFgAvODzRCUEIaemIOGp7kyeXspY4bjqnRkwU43x+M1a7SBbw+3V6-RypT+AL4syhsgAjAAZZqQ+aLJbHF5DU7TOBLVAMVQyACODiI5D4WX4zzUGFRePYfm5uFJMgI3Cg7CBAyEzM+Emk6jApESHFKFhgEvE-l5zxeIwwfKG6nV0waXFOcQAvpN9nBbJw4AxlWDiBxZQ4qhZqeL8mrXrA4NSxVBsjJ8tJTnU4OwCH1UJtWdL5KQHAxnoLODM5FCg+qBUL2KHqaKZX7coG8NLZVB5YrlarTmxUA5SD6wAaoBhSol4OnpkQ67X62ohE2W224EJAhkHVAJKsZu8cpwJ+JDkK4KRlXEWHUp0IYOE55KwGaUmkAILoMEOFjUujsYJ0ZioKCWO6lbjnupg6aPt6Jcg5c98XfiLI65EiS6rZgwABu1rUusVQ1HwNZ1rIXY6EhMjZsKNRjBMeroVwk7FDIn7Wo0dzgVBDD-vhgFnHURKmhAfhgMaAC6QA", # nolint
     "app",
     header = FALSE
   ),
@@ -158,7 +162,7 @@ If you had to register multiple blocks:
 ```r
 register_blocks(
   constructor = c(
-    data_block, filter_block, select_block, summarize_block
+    dataset_block, filter_block, select_block, summarize_block
   ),
   name = c(
     "data block", "filter block", "select block", "summarize block"
@@ -184,15 +188,15 @@ register_blocks(
 ## Unregister a block
 
 The counterpart of `register_block()` is `unregister_blocks()`. We can remove
-our new `head_block` from the registry:
+our new `tail_block` from the registry:
 
 ```{r, eval=TRUE}
-unregister_blocks(ids = "head_block")
+unregister_blocks(ids = "tail_block")
 
 # Check it out
 names(available_blocks())
 ```
 
 where __ids__ is the first entry we applied in the class attributes when the block
-was created, that is `head_block`. If you had to remove multiple blocks at once,
+was created, that is `tail_block`. If you had to remove multiple blocks at once,
 you can pass a vector in __ids__.

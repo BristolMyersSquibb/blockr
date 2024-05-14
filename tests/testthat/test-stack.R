@@ -1,7 +1,7 @@
 test_that("stacks", {
 
   stack <- new_stack(
-    new_data_block,
+    new_dataset_block,
     new_filter_block
   )
 
@@ -18,19 +18,19 @@ test_that("stacks", {
   expect_type(code, "language")
 
   code <- generate_code(
-    new_stack(new_data_block)
+    new_stack(new_dataset_block)
   )
 
   expect_type(code, "language")
 
   code <- generate_code(
-    new_stack(new_data_block, new_filter_block)
+    new_stack(new_dataset_block, new_filter_block)
   )
 
   expect_type(code, "language")
 
   code <- generate_code(
-    new_stack(new_data_block, new_filter_block, new_select_block)
+    new_stack(new_dataset_block, new_filter_block, new_select_block)
   )
 
   expect_type(code, "language")

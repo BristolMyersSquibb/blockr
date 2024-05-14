@@ -7,11 +7,10 @@
 #' @param dat Multiple datasets.
 #' @param selected Selected dataset.
 #' @export
-#' @rdname data_block
-new_data_block <- function(
-    ...,
-    dat = as.environment("package:datasets"),
-    selected = character()) {
+#' @rdname dataset_block
+new_dataset_block <- function(..., dat = as.environment("package:datasets"),
+                              selected = character()) {
+
   is_dataset_eligible <- function(x) {
     inherits(
       get(x, envir = dat, inherits = FALSE),
@@ -45,10 +44,10 @@ new_data_block <- function(
   )
 }
 
-#' @rdname data_block
+#' @rdname dataset_block
 #' @export
-data_block <- function(...) {
-  initialize_block(new_data_block(...))
+dataset_block <- function(...) {
+  initialize_block(new_dataset_block(...))
 }
 
 #' Upload block constructor
@@ -60,6 +59,7 @@ data_block <- function(...) {
 #' @export
 #' @rdname upload_block
 new_upload_block <- function(...) {
+
   data_path <- function(file) {
     if (length(file)) file$datapath else character()
   }
@@ -92,6 +92,7 @@ upload_block <- function(...) {
 #' @export
 #' @rdname filesbrowser_block
 new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
+
   data_path <- function(file) {
     if (length(file) == 0 || is.integer(file) || length(file$files) == 0) {
       return(character())
@@ -131,6 +132,7 @@ filesbrowser_block <- function(...) {
 #' @rdname parser_block
 new_parser_block <- function(data, expr, fields = list(), ...,
                              class = character()) {
+
   safe_expr <- function(data) {
     if (length(data)) {
       expr
@@ -252,6 +254,7 @@ xpt_block <- function(data, ...) {
 #' @rdname result_block
 #' @export
 new_result_block <- function(...) {
+
   fields <- list(
     stack = new_result_field(title = "Stack")
   )
@@ -282,12 +285,9 @@ result_block <- function(...) {
 #' @param filter_fun Default filter fun for the expression.
 #' @rdname filter_block
 #' @export
-new_filter_block <- function(
-    data,
-    columns = colnames(data)[1L],
-    values = character(),
-    filter_fun = "==",
-    ...) {
+new_filter_block <- function(data, columns = character(), values = character(),
+                             filter_fun = "==", ...) {
+
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
@@ -392,12 +392,14 @@ filter_block <- function(data, ...) {
 #' @param columns Column(s) to select.
 #' @rdname select_block
 #' @export
-new_select_block <- function(data, columns = colnames(data)[1], ...) {
+new_select_block <- function(data, columns = character(), ...) {
+
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, title = "Columns")
+    columns = new_select_field(columns, all_cols, multiple = TRUE,
+                               title = "Columns")
   )
 
   new_block(
@@ -430,11 +432,9 @@ select_block <- function(data, ...) {
 #' as func.
 #' @rdname summarize_block
 #' @export
-new_summarize_block <- function(
-    data,
-    func = c("mean", "se"),
-    default_columns = character(),
-    ...) {
+new_summarize_block <- function(data, func = c("mean", "se"),
+                                default_columns = character(), ...) {
+
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -554,12 +554,14 @@ summarize_block <- function(data, ...) {
 #' @inheritParams select_block
 #' @rdname arrange_block
 #' @export
-new_arrange_block <- function(data, columns = colnames(data)[1], ...) {
+new_arrange_block <- function(data, columns = character(), ...) {
+
   all_cols <- function(data) colnames(data)
 
   # Type as name for arrange and group_by
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols, multiple = TRUE,
+                               type = "name", title = "Columns")
   )
 
   new_block(
@@ -585,7 +587,8 @@ arrange_block <- function(data, ...) {
 #' @inheritParams select_block
 #' @rdname group_by_block
 #' @export
-new_group_by_block <- function(data, columns = colnames(data)[1], ...) {
+new_group_by_block <- function(data, columns = character(), ...) {
+
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
@@ -625,6 +628,7 @@ group_by_block <- function(data, ...) {
 #' @export
 new_join_block <- function(data, y = NULL, type = character(),
                            by = character(), ...) {
+
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
   }
@@ -676,11 +680,8 @@ join_block <- function(data, ...) {
 #' @param n_rows Number of rows to return.
 #' @param n_rows_min Minimum number of rows.
 #' @export
-new_head_block <- function(
-    data,
-    n_rows = numeric(),
-    n_rows_min = 1L,
-    ...) {
+new_head_block <- function(data, n_rows = numeric(), n_rows_min = 1L, ...) {
+
   tmp_expr <- function(n_rows) {
     bquote(
       head(n = .(n_rows)),
@@ -688,8 +689,11 @@ new_head_block <- function(
     )
   }
 
+  n_rows_max <- function(data) nrow(data)
+
   fields <- list(
-    n_rows = new_numeric_field(n_rows, n_rows_min, nrow(data), title = "Number of rows"),
+    n_rows = new_numeric_field(n_rows, n_rows_min, n_rows_max,
+                               title = "Number of rows"),
     expression = new_hidden_field(tmp_expr)
   )
 

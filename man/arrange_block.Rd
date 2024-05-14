@@ -5,7 +5,7 @@
 \alias{arrange_block}
 \title{Arrange block}
 \usage{
-new_arrange_block(data, columns = colnames(data)[1], ...)
+new_arrange_block(data, columns = character(), ...)
 
 arrange_block(data, ...)
 }

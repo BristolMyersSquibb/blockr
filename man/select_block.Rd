@@ -5,7 +5,7 @@
 \alias{select_block}
 \title{Select block}
 \usage{
-new_select_block(data, columns = colnames(data)[1], ...)
+new_select_block(data, columns = character(), ...)
 
 select_block(data, ...)
 }
