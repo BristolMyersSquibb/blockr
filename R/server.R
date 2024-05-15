@@ -240,6 +240,16 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       download(x, session, out_dat)
 
+      # For shinytest2
+      # Note: no need to export data as
+      # they are reflected in the shinytest2
+      # output elements
+      exportTestValues(
+        block = blk(),
+        # res may be a ggplot object
+        res = out_dat()
+      )
+
       return(
         list(
           block = blk,
@@ -297,6 +307,12 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         stack = x,
         blocks = vector("list", length(x)),
         removed = FALSE
+      )
+      # Don't remove: needed by shinytest2
+      exportTestValues(
+        stack = vals$stack,
+        n_blocks = length(vals$blocks),
+        removed = vals$removed
       )
 
       init(x, vals, session)

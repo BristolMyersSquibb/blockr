@@ -393,3 +393,172 @@ test_that("blocks can be constructed with default args", {
     expect_s3_class(do.call(block, list()), "block")
   }
 })
+
+library(shinytest2)
+library(ggplot2)
+test_that("block demo works", {
+  # Don't run these tests on the CRAN build servers
+  skip_on_cran()
+
+  # Helper plot blocks
+  new_ggplot_block <- function(data, ...) {
+    data_cols <- function(data) colnames(data)
+
+    new_block(
+      fields = list(
+        x = new_select_field(colnames(data)[1], data_cols, type = "name"),
+        y = new_select_field(colnames(data)[2], data_cols, type = "name")
+      ),
+      expr = quote(ggplot2::ggplot(mapping = ggplot2::aes(x = .(x), y = .(y)))),
+      class = c("ggplot_block", "plot_block"),
+      ...
+    )
+  }
+
+  ggplot_block <- function(data, ...) {
+    initialize_block(new_ggplot_block(data, ...), data)
+  }
+
+  new_geompoint_block <- function(data, ...) {
+    new_block(
+      fields = list(
+        color = new_select_field("blue", c("blue", "green", "red"))
+      ),
+      expr = quote(ggplot2::geom_point(color = .(color))),
+      class = c("plot_layer_block", "plot_block"),
+      ...
+    )
+  }
+
+  geompoint_block <- function(data, ...) {
+    initialize_block(new_geompoint_block(data, ...), data)
+  }
+
+  custom_data_block <- function(...) {
+    initialize_block(
+      new_dataset_block(
+        dat = as.environment("package:datasets"),
+        selected = "airquality",
+        ...
+      )
+    )
+  }
+
+  stack <- new_stack(
+    custom_data_block,
+    ggplot_block,
+    geompoint_block
+  )
+
+  # Change block ids to known values
+  for (i in seq_along(stack)) {
+    attr(stack[[i]], "name") <- sprintf("block_%s", i)
+  }
+
+  blocks_app <- serve_stack(stack)
+
+  app <- AppDriver$new(
+    blocks_app,
+    name = "block-app",
+    seed = 4323
+  )
+
+  blocks_inputs <- c(
+    # Block management
+    chr_ply(1:3, \(i) sprintf("my_stack-block_%s-copy", i)),
+    chr_ply(1:3, \(i) sprintf("my_stack-remove-block-block_%s", i)),
+    # Fields inputs
+    "my_stack-block_1-dataset",
+    "my_stack-block_2-x",
+    "my_stack-block_2-y",
+    "my_stack-block_3-color"
+  )
+
+  blocks_exports <- chr_ply(1:3, \(i) sprintf("my_stack-block_%s-block", i))
+
+  blocks_outputs <- c(
+    "my_stack-block_1-ncol",
+    "my_stack-block_1-nrow",
+    "my_stack-block_1-res"
+  )
+
+  test_plot <- function(i) {
+    message("TESTING PLOTS")
+    plot_obj <- app$get_values(
+      export = sprintf("my_stack-block_%s-res", i)
+    )
+    # Verify `plot_obj()` is consistent
+    vdiffr::expect_doppelganger(
+      sprintf("check-plot-%s", i),
+      plot_obj
+    )
+  }
+
+  # Only last block is uncollapsed
+  app$expect_values(
+    input = blocks_inputs,
+    export = blocks_exports,
+    output = blocks_outputs
+    # We have to test ggplot2 obj separately
+    # as they can't be serialized to json
+  )
+
+  app$click(selector = ".stack-edit-toggle")
+  invisible(
+    lapply(1:2, \(i) {
+      app$click(
+        selector = sprintf("[href=\"#my_stack-block_%s-outputCollapse\"]", i)
+      )
+    })
+  )
+
+  # Uncollapse 2 first blocks: outputs should render
+  app$expect_values(
+    input = blocks_inputs,
+    export = blocks_exports,
+    output = blocks_outputs
+  )
+  # Only block2 and 3 have results
+  lapply(2:3, test_plot)
+
+  # Test last block input field
+  app$set_inputs("my_stack-block_3-color" = "green")
+
+  app$expect_values(
+    input = blocks_inputs,
+    export = blocks_exports,
+    output = blocks_outputs
+  )
+
+  # Change coordinates
+  app$set_inputs(
+    "my_stack-block_2-x" = "Solar.R",
+    "my_stack-block_2-y" = "Wind"
+  )
+
+  app$expect_values(
+    input = blocks_inputs,
+    export = blocks_exports,
+    output = blocks_outputs
+  )
+
+  # TO DO: Change data
+  # app$set_inputs(
+  #  "my_stack-block_1-dataset" = "iris"
+  # )
+
+  # Remove all blocks starting by the last one
+  invisible(
+    lapply(3:1, \(i) {
+      app$click(
+        selector = sprintf("#my_stack-remove-block-block_%s", i)
+      )
+    })
+  )
+
+  app$expect_values(
+    input = blocks_inputs,
+    export = blocks_exports,
+    output = blocks_outputs
+  )
+})
