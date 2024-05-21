@@ -14,13 +14,8 @@ new_string_field <- function(value = character(), ...) {
 #' @rdname validate_field
 #' @export
 validate_field.string_field <- function(x) {
-  val <- value(x)
-
-  if (!is.character(val) || length(val) != 1L) {
-    value(x) <- ""
-  }
-
-  x
+  validate_string(value(x))
+  NextMethod()
 }
 
 #' Select field constructor
@@ -34,22 +29,27 @@ validate_field.string_field <- function(x) {
 #' @export
 new_select_field <- function(value = character(), choices = character(),
                              multiple = FALSE, ...) {
-  new_field(value,
-    choices = choices, multiple = multiple, ...,
-    class = "select_field"
-  )
+
+  new_field(value, choices = choices, multiple = multiple, ...,
+            class = "select_field")
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.select_field <- function(x) {
+
   val <- value(x)
 
-  if (length(val) && !all(val %in% value(x, "choices"))) {
-    value(x) <- character()
+  validate_string(val)
+
+  if (!all(val %in% value(x, "choices"))) {
+    validation_failure("selected value(s) not among provided choices",
+                       class = "enum_failure")
   }
 
-  x
+  validate_bool(value(x, "multiple"), "multiple")
+
+  NextMethod()
 }
 
 #' Switch field constructor
@@ -66,12 +66,8 @@ new_switch_field <- function(value = FALSE, ...) {
 #' @rdname validate_field
 #' @export
 validate_field.switch_field <- function(x) {
-  val <- value(x)
-
-  if (length(val) == 0) {
-    value(x) <- FALSE
-  }
-  x
+  validate_bool(value(x))
+  NextMethod()
 }
 
 #' Numeric field constructor
@@ -82,45 +78,21 @@ validate_field.switch_field <- function(x) {
 #' @inheritParams shiny::numericInput
 #' @rdname numeric_field
 #' @export
-new_numeric_field <- function(
-    value = numeric(),
-    min = numeric(),
-    max = numeric(),
-    ...) {
+new_numeric_field <- function(value = numeric(), min = numeric(),
+                              max = numeric(), ...) {
   new_field(value, min = min, max = max, ..., class = "numeric_field")
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.numeric_field <- function(x) {
-  val <- value(x)
 
-  # Shiny does not care much about min and max
-  # Let's be more strict.
-  # Inf and -Inf are allowed
-  stopifnot(
-    is_truthy(value(x, "min")),
-    is_truthy(value(x, "max")),
-    value(x, "min") < value(x, "max"),
-    length(value(x, "min")) == 1L,
-    length(value(x, "max")) == 1L
-  )
+  validate_number(value(x))
+  validate_number(value(x, "min"), "min")
+  validate_number(value(x, "max"), "max")
+  validate_range(value(x), value(x, "min"), value(x, "max"))
 
-  if (length(val) == 1L) {
-    # NA is allowed to return validation
-    # error on the client
-    if (!is.na(val)) {
-      if (!is.numeric(val) || is.nan(val) || is.infinite(val)) {
-        value(x) <- value(x, "min")
-      } else if (val < value(x, "min")) {
-        value(x) <- value(x, "min")
-      } else if (val > value(x, "max")) {
-        value(x) <- value(x, "max")
-      }
-    }
-  }
-
-  x
+  NextMethod()
 }
 
 #' Submit field constructor
@@ -131,14 +103,7 @@ validate_field.numeric_field <- function(x) {
 #' @rdname submit_field
 #' @export
 new_submit_field <- function(...) {
-  # action buttons always start from 0
   new_field(value = 0, ..., class = "submit_field")
-}
-
-#' @rdname validate_field
-#' @export
-validate_field.submit_field <- function(x) {
-  x
 }
 
 #' Upload field constructor
@@ -149,17 +114,19 @@ validate_field.submit_field <- function(x) {
 #' @rdname upload_field
 #' @export
 new_upload_field <- function(value = character(), ...) {
-  new_field(
-    value,
-    ...,
-    class = "upload_field"
-  )
+  new_field(value, ..., class = "upload_field")
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.upload_field <- function(x) {
-  x
+
+  val <- value(x)
+
+  validate_string(val)
+  validate_file(val)
+
+  NextMethod()
 }
 
 #' Files browser field constructor
@@ -172,18 +139,26 @@ validate_field.upload_field <- function(x) {
 #' @export
 new_filesbrowser_field <- function(value = character(), volumes = character(),
                                    ...) {
-  new_field(
-    value,
-    volumes = volumes,
-    ...,
-    class = "filesbrowser_field"
-  )
+  new_field(value, volumes = volumes, ..., class = "filesbrowser_field")
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.filesbrowser_field <- function(x) {
-  x
+
+  val <- value(x)
+
+  validate_string(val)
+  validate_file(val)
+
+  vol <- value(x, "volumes")
+
+  if (!is.character(vol) && !length(vol)) {
+    validation_failure("expecting a nonzero length character vector as ",
+                       "`volumes`", class = "character_failure")
+  }
+
+  NextMethod()
 }
 
 #' Variable field constructor
@@ -198,53 +173,17 @@ validate_field.filesbrowser_field <- function(x) {
 #' @param field Field type
 #' @param components Variable list of field components
 #' @export
-new_variable_field <- function(value = character(), field = character(),
-                               components = list(), ...) {
-  new_field(value,
-    field = field, components = components, ...,
-    class = "variable_field"
-  )
+new_variable_field <- function(field = character(), components = list(), ...) {
+
+  new_field(NULL, field = field, components = components, ...,
+            class = "variable_field")
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.variable_field <- function(x) {
-  val <- value(x, "field")
-  # TO DO: avoid hardcoding
-  opt <- c(
-    "string_field",
-    "select_field",
-    "switch_field",
-    "range_field",
-    "numeric_field",
-    "upload_field",
-    "filesbrowser_field"
-  )
-
-  stopifnot(is.character(val), length(val) <= 1L)
-
-  if (!length(val) || !val %in% opt) {
-    value(x, "field") <- "string_field"
-  }
-
-  value(x, "components") <- c(
-    validate_field(materialize_variable_field(x))
-  )
-
-  value(x) <- value(x, "components")[["value"]]
-
-  x
-}
-
-materialize_variable_field <- function(x) {
-  cmp <- value(x, "components")
-  val <- value(x)
-
-  if (is_truthy(val)) {
-    cmp[["value"]] <- val
-  }
-
-  do.call(value(x, "field"), cmp)
+  validate_field(materialize_variable_field(x))
+  NextMethod()
 }
 
 #' Range field constructor
@@ -263,17 +202,19 @@ new_range_field <- function(value = numeric(), min = numeric(),
 #' @rdname validate_field
 #' @export
 validate_field.range_field <- function(x) {
+
   val <- value(x)
 
-  if (!is.numeric(val) || length(val) < 2L) {
-    value(x) <- c(value(x, "min"), value(x, "max"))
-  } else if (val[1L] < value(x, "min")) {
-    value(x) <- c(value(x, "min"), val[2L])
-  } else if (val[2L] > value(x, "max")) {
-    value(x) <- c(val[1L], value(x, "max"))
-  }
+  validate_number(val[1L])
+  validate_number(val[2L])
 
-  x
+  validate_number(value(x, "min"), "min")
+  validate_number(value(x, "max"), "max")
+
+  validate_range(val[1L], value(x, "min"), value(x, "max"))
+  validate_range(val[2L], value(x, "min"), value(x, "max"))
+
+  NextMethod()
 }
 
 #' Hidden field constructor
@@ -286,12 +227,6 @@ validate_field.range_field <- function(x) {
 #' @export
 new_hidden_field <- function(value = expression(), ...) {
   new_field(value, ..., class = "hidden_field")
-}
-
-#' @rdname validate_field
-#' @export
-validate_field.hidden_field <- function(x) {
-  x
 }
 
 #' List field constructor
@@ -310,20 +245,12 @@ new_list_field <- function(value = list(), sub_fields = list(), ...) {
 #' @rdname validate_field
 #' @export
 validate_field.list_field <- function(x) {
-  val <- value(x)
-  sub <- value(x, "sub_fields")
 
-  if (!is.list(val) || length(val) != length(sub) ||
-    !setequal(names(val), names(sub))) { # nolint
-    value(x) <- lst_xtr(sub, "value")
+  for (sub in get_sub_fields(x)) {
+    validate_field(sub)
   }
 
-  value(x, "sub_fields") <- lapply(
-    update_sub_fields(sub, val),
-    validate_field
-  )
-
-  x
+  NextMethod()
 }
 
 #' Result field constructor
@@ -336,10 +263,4 @@ validate_field.list_field <- function(x) {
 #' @export
 new_result_field <- function(value = list(), ...) {
   new_field(value, ..., class = "result_field")
-}
-
-#' @rdname validate_field
-#' @export
-validate_field.result_field <- function(x) {
-  x
 }

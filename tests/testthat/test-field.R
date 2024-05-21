@@ -3,17 +3,18 @@ test_that("string fields", {
   field <- new_string_field("foo")
 
   expect_s3_class(field, "string_field")
-  expect_type(field, "list")
   expect_identical(value(field), "foo")
 
-  field <- new_string_field(1)
+  value(field) <- "bar"
 
-  expect_s3_class(field, "string_field")
-  expect_type(field, "list")
+  expect_identical(value(field), "bar")
 
-  field <- validate_field(field)
+  expect_null(validate_field(field))
 
-  expect_identical(value(field), "")
+  expect_error(
+    validate_field(new_string_field(1)),
+    class = "string_failure"
+  )
 })
 
 test_that("select fields", {
@@ -21,59 +22,59 @@ test_that("select fields", {
   field <- new_select_field("a", letters)
 
   expect_s3_class(field, "select_field")
-  expect_type(field, "list")
   expect_identical(value(field), "a")
 
-  field <- new_select_field("aa", letters)
+  expect_null(validate_field(field))
 
-  expect_s3_class(field, "select_field")
-  expect_type(field, "list")
+  value(field, "choices") <- LETTERS
 
-  field <- validate_field(field)
+  expect_error(
+    validate_field(field),
+    class = "enum_failure"
+  )
 
-  expect_identical(value(field), character())
-
-  field <- new_select_field(1, letters)
-
-  expect_s3_class(field, "select_field")
-  expect_type(field, "list")
-
-  field <- validate_field(field)
-
-  expect_identical(value(field), character())
+  expect_error(
+    validate_field(new_select_field(1, letters)),
+    class = "string_failure"
+  )
 })
 
 test_that("range fields", {
 
-  field <- new_range_field(min = 0, max = 10)
+  field <- new_range_field(c(2, 4), min = 0, max = 10)
 
   expect_s3_class(field, "range_field")
-  expect_type(field, "list")
+  expect_identical(value(field), c(2, 4))
 
-  field <- validate_field(field)
+  expect_null(validate_field(field))
 
-  expect_identical(value(field), c(0, 10))
+  value(field, "max") <- 3
+
+  expect_error(
+    validate_field(field),
+    class = "range_failure"
+  )
 })
 
 test_that("numeric fields", {
 
-  field <- new_numeric_field(min = 0, max = 10)
+  field <- new_numeric_field(2, min = 0, max = 10)
 
   expect_s3_class(field, "numeric_field")
-  expect_type(field, "list")
-  expect_identical(value(field), numeric())
+  expect_identical(value(field), 2)
 
-  field <- validate_field(
-    new_numeric_field(value = 200, min = 0, max = 10)
+  expect_null(validate_field(field))
+
+  value(field, "max") <- 3
+
+  expect_null(validate_field(field))
+
+  value(field, "max") <- 1
+
+  expect_error(
+    validate_field(field),
+    class = "range_failure"
   )
-
-  expect_identical(value(field), 10)
-
-  field <- validate_field(
-    new_numeric_field(value = -10, min = 0, max = 10)
-  )
-
-  expect_identical(value(field), 0)
 })
 
 test_that("submit fields", {
@@ -81,8 +82,14 @@ test_that("submit fields", {
   field <- new_submit_field()
 
   expect_s3_class(field, "submit_field")
-  expect_type(field, "list")
   expect_identical(value(field), 0)
+
+  expect_null(validate_field(field))
+
+  value(field) <- "foo"
+
+  expect_null(validate_field(field))
+  expect_identical(value(field), "foo")
 })
 
 test_that("switch field", {
@@ -90,26 +97,63 @@ test_that("switch field", {
   field <- new_switch_field()
 
   expect_s3_class(field, "switch_field")
-  expect_type(field, "list")
   expect_identical(value(field), FALSE)
+
+  expect_null(validate_field(field))
+
+  value(field) <- TRUE
+
+  expect_null(validate_field(field))
+  expect_identical(value(field), TRUE)
+
+  value(field) <- "foo"
+
+  expect_error(
+    validate_field(field),
+    class = "bool_failure"
+  )
 })
 
 test_that("upload field", {
 
-  field <- new_upload_field()
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
+
+  field <- new_upload_field("iris.csv")
 
   expect_s3_class(field, "upload_field")
-  expect_type(field, "list")
-  expect_identical(value(field), character(0))
+  expect_identical(value(field), "iris.csv")
+
+  expect_error(
+    validate_field(field),
+    class = "file_failure"
+  )
+
+  value(field) <- data.frame(datapath = path)
+
+  expect_identical(value(field), path)
+  expect_null(validate_field(field))
 })
 
 test_that("filesbrowser field", {
 
-  field <- new_filesbrowser_field()
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
+
+  field <- new_filesbrowser_field("iris.csv", c(vol = dirname(path)))
 
   expect_s3_class(field, "filesbrowser_field")
-  expect_type(field, "list")
-  expect_identical(value(field), character(0))
+  expect_identical(value(field), "iris.csv")
+  expect_identical(value(field, "volumes"), c(vol = dirname(path)))
+
+  expect_error(
+    validate_field(field),
+    class = "file_failure"
+  )
+
+  value(field) <- data.frame(root = "vol", files = basename(path))
+
+  expect_null(validate_field(field))
 })
 
 test_that("field name", {

@@ -10,7 +10,8 @@
 #' @param descr A description of the field, explaining its purpose or usage.
 #' @param status The status of the field (experimental)
 #' @param class Field subclass
-#' @param exclude Experimental: Exclude field from being captured in the update_fields
+#' @param exclude Experimental: Exclude field from being captured in the
+#'   update_fields
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
@@ -68,18 +69,6 @@ initialize_field.field <- function(x, env = list()) {
 #' @export
 is_initialized.field <- function(x) {
   all(lengths(values(x)) > 0)
-}
-
-#' Validate field generic
-#'
-#' Checks the value of a field with \link{value} and
-#' apply corrections whenever necessary.
-#'
-#' @inheritParams is_field
-#' @rdname validate_field
-#' @export
-validate_field <- function(x) {
-  UseMethod("validate_field", x)
 }
 
 #' Update field generic
@@ -170,6 +159,22 @@ value.field <- function(x, name = "value") {
   res
 }
 
+#' @rdname value
+#' @export
+value.variable_field <- function(x, name = "value") {
+  value(materialize_variable_field(x), name)
+}
+
+materialize_variable_field <- function(x) {
+  do.call(x[["field"]], x[["components"]])
+}
+
+#' @rdname value
+#' @export
+value.list_field <- function(x, name = "value") {
+  lapply(get_sub_fields(x), value, name)
+}
+
 #' Get all values from a field
 #'
 #' This calls \link{value} on all the field's names.
@@ -209,12 +214,21 @@ values <- function(x, name = names(x)) {
 #' @rdname value
 #' @export
 `value<-.upload_field` <- function(x, name = "value", value) {
+
+  if (!identical(name, "value")) {
+    return(NextMethod())
+  }
+
   NextMethod(value = value$datapath)
 }
 
 #' @rdname value
 #' @export
 `value<-.filesbrowser_field` <- function(x, name = "value", value) {
+
+  if (!identical(name, "value")) {
+    return(NextMethod())
+  }
 
   if (is.integer(value)) {
     return(x)
@@ -224,6 +238,8 @@ values <- function(x, name = names(x)) {
 
   NextMethod(value = unname(files$datapath))
 }
+
+get_sub_fields <- function(x) x[["sub_fields"]]
 
 update_sub_fields <- function(sub, val) {
   # Added this because of the join_block

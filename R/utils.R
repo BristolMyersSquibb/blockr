@@ -104,6 +104,10 @@ is_count <- function(x, include_zero = TRUE) {
   }
 }
 
+is_number <- function(x) {
+  is.numeric(x) && is_scalar(x) && !is.na(x) && !is.nan(x) && is.finite(x)
+}
+
 set_names <- function(object = nm, nm) {
   names(object) <- nm
   object

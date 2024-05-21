@@ -3,6 +3,8 @@
 \name{value}
 \alias{value}
 \alias{value.field}
+\alias{value.variable_field}
+\alias{value.list_field}
 \alias{value<-}
 \alias{value<-.field}
 \alias{value<-.upload_field}
@@ -12,6 +14,10 @@
 value(x, name = "value")
 
 \method{value}{field}(x, name = "value")
+
+\method{value}{variable_field}(x, name = "value")
+
+\method{value}{list_field}(x, name = "value")
 
 value(x, name = "value") <- value
 
