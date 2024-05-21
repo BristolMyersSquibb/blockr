@@ -60,9 +60,7 @@ initialize_field <- function(x, env = list()) {
 #' @rdname initialize_field
 #' @export
 initialize_field.field <- function(x, env = list()) {
-  validate_field(
-    eval_set_field_value(x, env)
-  )
+  eval_set_field_value(x, env)
 }
 
 #' @rdname initialize
@@ -90,21 +88,23 @@ update_field <- function(x, new, env = list()) {
 #' @rdname update_field
 #' @export
 update_field.field <- function(x, new, env = list()) {
+
   x <- eval_set_field_value(x, env)
 
   if (is.null(new)) {
-    return(validate_field(x))
+    validate_field(x)
+    return(x)
   }
 
   value(x) <- new
 
-  res <- validate_field(x)
+  validate_field(x)
 
-  if (is_initialized(res)) {
-    return(res)
+  if (is_initialized(x)) {
+    return(x)
   }
 
-  eval_set_field_value(res, env)
+  eval_set_field_value(x, env)
 }
 
 #' @rdname update_field
