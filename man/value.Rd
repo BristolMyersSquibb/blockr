@@ -9,6 +9,7 @@
 \alias{value<-.field}
 \alias{value<-.upload_field}
 \alias{value<-.filesbrowser_field}
+\alias{value<-.list_field}
 \title{Get field attribute value}
 \usage{
 value(x, name = "value")
@@ -26,6 +27,8 @@ value(x, name = "value") <- value
 \method{value}{upload_field}(x, name = "value") <- value
 
 \method{value}{filesbrowser_field}(x, name = "value") <- value
+
+\method{value}{list_field}(x, name = "value") <- value
 }
 \arguments{
 \item{x}{An object inheriting form \code{"field"}}

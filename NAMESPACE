@@ -2,6 +2,7 @@
 
 S3method("value<-",field)
 S3method("value<-",filesbrowser_field)
+S3method("value<-",list_field)
 S3method("value<-",upload_field)
 S3method(block_body,block)
 S3method(block_code,block)

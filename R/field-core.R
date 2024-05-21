@@ -148,7 +148,9 @@ value <- function(x, name = "value") UseMethod("value", x)
 
 #' @rdname value
 #' @export
-value.field <- function(x, name = "value") {
+value.field <- function(x, name = "value") get_field_value(x, name)
+
+get_field_value <- function(x, name) {
 
   res <- x[[name]]
 
@@ -166,7 +168,7 @@ value.variable_field <- function(x, name = "value") {
 }
 
 materialize_variable_field <- function(x) {
-  do.call(x[["field"]], x[["components"]])
+  do.call(paste0("new_", x[["field"]]), x[["components"]])
 }
 
 #' @rdname value
@@ -197,10 +199,10 @@ values <- function(x, name = names(x)) {
 #' @rdname value
 #' @export
 `value<-.field` <- function(x, name = "value", value) {
+  set_field_value(x, value, name)
+}
 
-  if (is.null(x)) {
-    return(NULL)
-  }
+set_field_value <- function(x, value, name) {
 
   if (is.function(x[[name]])) {
     if (!is.null(value)) attr(x[[name]], "result") <- value
@@ -239,20 +241,15 @@ values <- function(x, name = names(x)) {
   NextMethod(value = unname(files$datapath))
 }
 
-get_sub_fields <- function(x) x[["sub_fields"]]
-
-update_sub_fields <- function(sub, val) {
-  # Added this because of the join_block
-  if (is.null(names(val)) && length(sub)) {
-    value(sub[[1]]) <- unlist(val)
-  } else {
-    for (fld in names(val)[lgl_ply(val, is_truthy)]) {
-      value(sub[[fld]]) <- unlist(val[[fld]])
-    }
-  }
-
-  sub
+#' @rdname value
+#' @export
+`value<-.list_field` <- function(x, name = "value", value) {
+  set_sub_fields(x, Map(`value<-`, get_sub_fields(x), name, value))
 }
+
+get_sub_fields <- function(x) get_field_value(x, "sub_fields")
+
+set_sub_fields <- function(x, val) set_field_value(x, val, "sub_fields")
 
 get_field_name <- function(field, name = "") {
   title <- attr(field, "title")

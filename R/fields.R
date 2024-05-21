@@ -87,10 +87,23 @@ new_numeric_field <- function(value = numeric(), min = numeric(),
 #' @export
 validate_field.numeric_field <- function(x) {
 
-  validate_number(value(x))
-  validate_number(value(x, "min"), "min")
-  validate_number(value(x, "max"), "max")
-  validate_range(value(x), value(x, "min"), value(x, "max"))
+  val <- value(x)
+  min <- value(x, "min")
+  max <- value(x, "max")
+
+  validate_number(val)
+
+  if (length(min)) {
+    validate_number(min, "min")
+  }
+
+  if (length(max)) {
+    validate_number(max, "max")
+  }
+
+  if (length(min) && length(max)) {
+    validate_range(val, min, max)
+  }
 
   NextMethod()
 }
@@ -175,7 +188,7 @@ validate_field.filesbrowser_field <- function(x) {
 #' @export
 new_variable_field <- function(field = character(), components = list(), ...) {
 
-  new_field(NULL, field = field, components = components, ...,
+  new_field(NULL, field = field, components = as.list(components), ...,
             class = "variable_field")
 }
 
@@ -204,15 +217,24 @@ new_range_field <- function(value = numeric(), min = numeric(),
 validate_field.range_field <- function(x) {
 
   val <- value(x)
+  min <- value(x, "min")
+  max <- value(x, "max")
 
   validate_number(val[1L])
   validate_number(val[2L])
 
-  validate_number(value(x, "min"), "min")
-  validate_number(value(x, "max"), "max")
+  if (length(min)) {
+    validate_number(min, "min")
+  }
 
-  validate_range(val[1L], value(x, "min"), value(x, "max"))
-  validate_range(val[2L], value(x, "min"), value(x, "max"))
+  if (length(max)) {
+    validate_number(max, "max")
+  }
+
+  if (length(min) && length(max)) {
+    validate_range(val[1L], min, max)
+    validate_range(val[2L], min, max)
+  }
 
   NextMethod()
 }
@@ -238,8 +260,8 @@ new_hidden_field <- function(value = expression(), ...) {
 #' @param sub_fields Fields contained in `list_field`
 #' @rdname list_field
 #' @export
-new_list_field <- function(value = list(), sub_fields = list(), ...) {
-  new_field(value, sub_fields = sub_fields, ..., class = "list_field")
+new_list_field <- function(sub_fields = list(), ...) {
+  new_field(NULL, sub_fields = sub_fields, ..., class = "list_field")
 }
 
 #' @rdname validate_field

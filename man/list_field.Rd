@@ -4,11 +4,9 @@
 \alias{new_list_field}
 \title{List field constructor}
 \usage{
-new_list_field(value = list(), sub_fields = list(), ...)
+new_list_field(sub_fields = list(), ...)
 }
 \arguments{
-\item{value}{Default text input value.}
-
 \item{sub_fields}{Fields contained in \code{list_field}}
 
 \item{...}{Other parameters passed to \link{new_field} and may be needed

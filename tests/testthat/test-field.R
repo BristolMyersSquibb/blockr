@@ -156,6 +156,52 @@ test_that("filesbrowser field", {
   expect_null(validate_field(field))
 })
 
+test_that("variable field", {
+
+  field <- new_variable_field("string_field", "foo")
+
+  expect_s3_class(field, "variable_field")
+  expect_identical(value(field), "foo")
+  expect_null(validate_field(field))
+
+  value(field, "field") <- "select_field"
+
+  expect_error(
+    validate_field(field),
+    class = "enum_failure"
+  )
+
+  value(field, "components") <- list("foo", choices = c("foo", "bar"))
+
+  expect_null(validate_field(field))
+})
+
+test_that("list field", {
+
+  field <- new_list_field(list(new_string_field("foo")))
+
+  expect_s3_class(field, "list_field")
+  expect_identical(value(field), list("foo"))
+  expect_null(validate_field(field))
+
+  value(field) <- "bar"
+
+  expect_identical(value(field), list("bar"))
+  expect_null(validate_field(field))
+
+  field <- new_list_field(
+    list(new_string_field("foo"), new_numeric_field(3, 0, 10))
+  )
+
+  expect_identical(value(field), list("foo", 3))
+  expect_null(validate_field(field))
+
+  value(field) <- list("bar", 2)
+
+  expect_identical(value(field), list("bar", 2))
+  expect_null(validate_field(field))
+})
+
 test_that("field name", {
   blk <- new_dataset_block("iris")
   expect_equal(get_field_names(blk), c("package", "Dataset"))
