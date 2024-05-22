@@ -19,7 +19,8 @@ validate_field.field <- function(x) {
 #' @export
 validate_field.default <- function(x) {
   validation_failure("no validator available for class ", class(x),
-                     class = "no_validator")
+    class = "no_validator"
+  )
 }
 
 #' @rdname validate_field
@@ -42,14 +43,22 @@ is_valid.field <- function(x) {
   )
 }
 
+validate_block <- function(x) {
+  tmp <- lapply(names(x), \(name) {
+    is_valid(x[[name]])
+  })
+  structure(
+    all(unlist(tmp) == TRUE),
+    msgs = unlist(lapply(tmp, \(res) attr(res, "msg")))
+  )
+}
+
 validation_failure <- function(..., class = character()) {
-  rlang::abort(paste0(...), class = c(class, "validation_failure"))
+  rlang::warn(paste0(...), class = c(class, "validation_failure"))
 }
 
 validate_string <- function(x, arg = NULL) {
-
   if (!is_string(x)) {
-
     msg <- "expecting a string"
 
     if (not_null(arg)) {
@@ -63,9 +72,7 @@ validate_string <- function(x, arg = NULL) {
 }
 
 validate_bool <- function(x, arg = NULL) {
-
   if (!is_bool(x)) {
-
     msg <- "expecting a boolean"
 
     if (not_null(arg)) {
@@ -79,9 +86,7 @@ validate_bool <- function(x, arg = NULL) {
 }
 
 validate_number <- function(x, arg = NULL) {
-
   if (!is_number(x)) {
-
     msg <- "expecting a boolean"
 
     if (not_null(arg)) {
@@ -95,7 +100,6 @@ validate_number <- function(x, arg = NULL) {
 }
 
 validate_file <- function(x) {
-
   if (!file.exists(x)) {
     validation_failure("file does not exist", class = "file_failure")
   }
@@ -104,10 +108,10 @@ validate_file <- function(x) {
 }
 
 validate_range <- function(x, min, max) {
-
   if (x < min || x > max) {
     validation_failure("expecting a value in the specified range",
-                       class = "range_failure")
+      class = "range_failure"
+    )
   }
 
   invisible(NULL)

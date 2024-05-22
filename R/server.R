@@ -104,15 +104,13 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       ns <- session$ns
       blk <- reactiveVal(x)
       obs <- list()
-      # block and inputs are booleans. message is a character vector.
-      is_valid <- reactiveValues(
-        block = TRUE,
-        input = list(),
-        message = NULL,
-        error = NULL
-      )
 
       ns <- session$ns
+
+      is_valid <- reactiveValues(
+        block = NULL,
+        message = NULL
+      )
 
       # Idea:
       # - If a field has a generate_server() method, initialize it and use
@@ -164,23 +162,19 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         # 2. Update UI
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
         log_debug("Updating UI of block ", class(x)[[1]])
+
+        # Validating
+        is_valid$block <- validate_block(blk())
+        is_valid$message <- attr(is_valid$block, "msg")
+        log_debug("Validating block ", class(x)[[1]])
       }) |>
         bindEvent(r_values(), in_dat())
 
-      # Validate block inputs
-      if (display != "plot") {
-        obs$validate_inputs <- observeEvent(r_values(), {
-          log_debug("Validating block ", class(x)[[1]])
-          blk_no_srv <- blk()
-          blk_no_srv[is_srv] <- NULL # to keep class etc
-          validate_inputs(blk_no_srv, is_valid, session) # FIXME should not rely on input$
-
-          # Block will have a red border if any nested input is invalid
-          # since blocks can be collapsed and people won't see the input
-          # elements.
-          validate_block(blk(), is_valid, session)
-        })
-      }
+      # Propagate message to user
+      obs$surface_error <- observe({
+        send_error_to_ui(blk(), is_valid, session)
+        log_debug("Sending error message to UI for block ", class(x)[[1]])
+      }) |> bindEvent(is_valid$block)
 
       # For submit blocks like filter, summarise,
       # join that can have computationally intense tasks
