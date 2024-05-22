@@ -54,7 +54,7 @@ validate_block <- function(x) {
 }
 
 validation_failure <- function(..., class = character()) {
-  rlang::warn(paste0(...), class = c(class, "validation_failure"))
+  rlang::abort(paste0(...), class = c(class, "validation_failure"))
 }
 
 validate_string <- function(x, arg = NULL) {
@@ -87,7 +87,7 @@ validate_bool <- function(x, arg = NULL) {
 
 validate_number <- function(x, arg = NULL) {
   if (!is_number(x)) {
-    msg <- "expecting a boolean"
+    msg <- "expecting a number"
 
     if (not_null(arg)) {
       msg <- paste0(msg, " as `", arg, "`")
