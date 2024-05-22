@@ -60,7 +60,12 @@ initialize_field <- function(x, env = list()) {
 #' @rdname initialize_field
 #' @export
 initialize_field.field <- function(x, env = list()) {
-  eval_set_field_value(x, env)
+
+  res <- eval_set_field_value(x, env)
+
+  validate_field(res)
+
+  res
 }
 
 #' @rdname initialize
@@ -89,45 +94,48 @@ update_field <- function(x, new, env = list()) {
 #' @export
 update_field.field <- function(x, new, env = list()) {
 
-  x <- eval_set_field_value(x, env)
-
-  if (is.null(new)) {
-    validate_field(x)
-    return(x)
+  if (length(new)) {
+    value(x) <- new
   }
 
-  value(x) <- new
+  res <- eval_set_field_value(x, env)
 
-  validate_field(x)
+  validate_field(res)
 
-  if (is_initialized(x)) {
-    return(x)
-  }
-
-  eval_set_field_value(x, env)
+  res
 }
 
 #' @rdname update_field
 #' @export
 update_field.hidden_field <- function(x, new, env = list()) {
-  validate_field(
-    eval_set_field_value(x, env)
-  )
+
+  res <- eval_set_field_value(x, env)
+
+  validate_field(res)
+
+  res
 }
 
 eval_set_field_value <- function(x, env) {
+
   for (cmp in names(x)[lgl_ply(x, is.function)]) {
+
     fun <- x[[cmp]]
+    arg <- env[methods::formalArgs(fun)]
 
-    tmp <- try(
-      do.call(fun, env[methods::formalArgs(fun)]),
-      silent = TRUE
-    )
+    if (all(lengths(arg))) {
 
-    if (inherits(tmp, "try-error")) {
-      log_error(tmp)
-    } else if (length(tmp)) {
-      value(x, cmp) <- tmp
+      tmp <- try(do.call(fun, arg), silent = TRUE)
+
+      if (inherits(tmp, "try-error")) {
+        log_error(tmp)
+      } else if (length(tmp)) {
+        value(x, cmp) <- tmp
+      }
+
+    } else {
+
+      log_debug("skipping field eval for ", cmp)
     }
   }
 
