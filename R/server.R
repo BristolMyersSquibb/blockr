@@ -109,7 +109,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       ns <- session$ns
 
       is_valid <- reactiveValues(
-        block = NULL,
+        block = FALSE,
         message = NULL
       )
 
@@ -137,10 +137,24 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       # When the previous block changes data or validation
       # we must reset the current block valid state
       # to block computations.
-      observeEvent(c(is_prev_valid(), in_dat()), {
-        is_valid$block <- NULL
-        is_valid$message <- NULL
-      })
+      observeEvent(
+        {
+          req(!is.null(is_prev_valid()))
+          # in_dat will be Error if the previous
+          # block isn't valid because of the req
+          # The expression has to be different so this
+          # event triggers.
+          if (is_prev_valid()) {
+            c(is_prev_valid(), in_dat())
+          } else {
+            is_prev_valid()
+          }
+        },
+        {
+          is_valid$block <- FALSE
+          is_valid$message <- NULL
+        }
+      )
 
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
