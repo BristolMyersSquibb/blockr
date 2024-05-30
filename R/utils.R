@@ -310,7 +310,13 @@ send_error_to_ui <- function(blk, is_valid, session) {
 
   # Cleanup any old message
   removeUI(
-    selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
+    selector = sprintf("[data-value=\"%s\"] .block-invalid-message", ns("block")),
+    multiple = TRUE,
+    session = session
+  )
+
+  removeUI(
+    selector = sprintf("[data-value=\"%s\"] .field-invalid-message", ns("block")),
     multiple = TRUE,
     session = session
   )
@@ -319,12 +325,31 @@ send_error_to_ui <- function(blk, is_valid, session) {
   if (!is_valid$block) {
     insertUI(
       selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
-      ui = lapply(is_valid$message, function(m) {
-        p(m, class = "message text-center text-danger")
-      }),
+      ui = div(
+        class = "text-danger text-center block-invalid-message",
+        sprintf("%s error(s) found in this block", length(is_valid$message))
+      ),
       where = "beforeEnd",
       session = session
     )
+
+    is_valid$message |>
+      length() |>
+      seq() |>
+      lapply(\(i) {
+        msg <- is_valid$message[i]
+        field <- is_valid$fields[i]
+
+        insertUI(
+          selector = sprintf("#%s", ns(field)),
+          ui = div(
+            class = "text-danger field-invalid-message",
+            msg
+          ),
+          where = "afterEnd",
+          session = session
+        )
+      })
   }
 }
 
