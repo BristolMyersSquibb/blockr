@@ -134,28 +134,6 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
           generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
       }
 
-      # When the previous block changes data or validation
-      # we must reset the current block valid state
-      # to block computations.
-      observeEvent(
-        {
-          req(!is.null(is_prev_valid()))
-          # in_dat will be Error if the previous
-          # block isn't valid because of the req
-          # The expression has to be different so this
-          # event triggers.
-          if (is_prev_valid()) {
-            c(is_prev_valid(), in_dat())
-          } else {
-            is_prev_valid()
-          }
-        },
-        {
-          is_valid$block <- FALSE
-          is_valid$message <- NULL
-        }
-      )
-
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
         # if (!is.null(is_prev_valid)) req(is_prev_valid)
@@ -173,7 +151,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 
       # This will also trigger when the previous block
       # valid status changes.
-      obs$update_blk <- observe({
+      obs$update_blk <- observeEvent(c(r_values(), in_dat(), is_prev_valid()), {
         # 1. upd blk,
         b <- update_blk(
           b = blk(),
@@ -194,8 +172,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         is_valid$message <- attr(is_valid$block, "msg")
         is_valid$fields <- attr(is_valid$block, "fields")
         log_debug("Validating block ", class(x)[[1]])
-      }) |>
-        bindEvent(r_values(), in_dat(), is_prev_valid())
+      }, priority = 1000)
 
       # Propagate message to user
       obs$surface_error <- observe({
@@ -386,7 +363,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       )
 
       observeEvent(vals$stack, {
-        message("UPDADING WORKSPACE with stack ", id)
+        log_debug("UPDADING WORKSPACE with stack ", id)
         add_workspace_stack(id, vals$stack,
           force = TRUE,
           workspace = workspace
@@ -563,7 +540,7 @@ generate_server.workspace <- function(x, id, ...) {
 
         stack_id <- get_stack_name(stck)
 
-        message("ADD STACK (", stack_id, ")")
+        log_debug("ADD STACK (", stack_id, ")")
 
         add_workspace_stack(stack_id, stck, workspace = x)
 
