@@ -193,7 +193,13 @@ values <- function(x, name = names(x)) {
 #' @rdname value
 #' @export
 #' @returns The field.
-`value<-` <- function(x, name = "value", value) UseMethod("value<-", x)
+`value<-` <- function(x, name = "value", value) {
+  if (length(value)) {
+    UseMethod("value<-", x)
+  } else {
+    x
+  }
+}
 
 #' @rdname value
 #' @export
@@ -245,12 +251,17 @@ set_field_value <- function(x, value, name) {
 `value<-.list_field` <- function(x, name = "value", value) {
 
   if (identical(name, "value")) {
-    return(
-      set_sub_fields(x, Map(`value<-`, get_sub_fields(x), name, value))
-    )
+    tmp <- get_sub_fields(x)
+    tmp[names(value)] <- Map(`value<-`, tmp[names(value)], name, value)
+    set_sub_fields(x, tmp)
+  } else if (identical(name, "sub_fields")) {
+    tmp <- value(x)
+    x <- set_sub_fields(x, value)
+    value(x) <- tmp
+    x
+  } else {
+    stop("Unrecognized list_field component")
   }
-
-  NextMethod()
 }
 
 get_sub_fields <- function(x) get_field_value(x, "sub_fields")
