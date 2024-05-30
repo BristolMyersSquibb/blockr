@@ -76,6 +76,20 @@ validate_string <- function(x, arg = NULL) {
   invisible(NULL)
 }
 
+validate_character <- function(x, arg = NULL) {
+  if (!is.character(x) || !length(x)) {
+    msg <- "expecting a non zero-length character vector"
+
+    if (not_null(arg)) {
+      msg <- paste0(msg, " as `", arg, "`")
+    }
+
+    validation_failure(msg, class = "string_failure")
+  }
+
+  invisible(NULL)
+}
+
 validate_bool <- function(x, arg = NULL) {
   if (!is_bool(x)) {
     msg <- "expecting a boolean"

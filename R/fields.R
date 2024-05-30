@@ -38,16 +38,22 @@ new_select_field <- function(value = character(), choices = character(),
 #' @export
 validate_field.select_field <- function(x) {
 
+  mul <- value(x, "multiple")
+
+  validate_bool(mul, "multiple")
+
   val <- value(x)
 
-  validate_string(val)
+  if (mul) {
+    validate_character(val)
+  } else {
+    validate_string(val)
+  }
 
   if (!all(val %in% value(x, "choices"))) {
     validation_failure("selected value(s) not among provided choices",
                        class = "enum_failure")
   }
-
-  validate_bool(value(x, "multiple"), "multiple")
 
   NextMethod()
 }
