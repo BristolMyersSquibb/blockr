@@ -16,6 +16,7 @@
 \alias{validate_field.default}
 \alias{is_valid}
 \alias{is_valid.field}
+\alias{validation_failure}
 \title{Validate field generic}
 \usage{
 \method{validate_field}{string_field}(x)
@@ -47,9 +48,15 @@ validate_field(x)
 is_valid(x)
 
 \method{is_valid}{field}(x)
+
+validation_failure(..., class = character())
 }
 \arguments{
-\item{x}{An object inheriting form \code{"field"}}
+\item{x}{A Field}
+
+\item{...}{Message components (forwarded to \code{\link[=paste0]{paste0()}})}
+
+\item{class}{Condition class (will be a subclass of \code{validation_failure})}
 }
 \description{
 Checks the value of a field with \link{value} and

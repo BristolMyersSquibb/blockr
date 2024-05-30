@@ -3,7 +3,7 @@
 #' Checks the value of a field with \link{value} and
 #' apply corrections whenever necessary.
 #'
-#' @inheritParams is_field
+#' @param x A Field
 #' @export
 validate_field <- function(x) {
   UseMethod("validate_field", x)
@@ -53,6 +53,10 @@ validate_block <- function(x) {
   )
 }
 
+#' @param ... Message components (forwarded to [paste0()])
+#' @param class Condition class (will be a subclass of `validation_failure`)
+#' @rdname validate_field
+#' @export
 validation_failure <- function(..., class = character()) {
   rlang::abort(paste0(...), class = c(class, "validation_failure"))
 }
