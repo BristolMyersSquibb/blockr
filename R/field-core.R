@@ -168,7 +168,12 @@ materialize_variable_field <- function(x) {
 #' @rdname value
 #' @export
 value.list_field <- function(x, name = "value") {
-  lapply(get_sub_fields(x), value, name)
+
+  if (identical(name, "value")) {
+    return(lapply(get_sub_fields(x), value, name))
+  }
+
+  NextMethod()
 }
 
 #' Get all values from a field
@@ -238,7 +243,14 @@ set_field_value <- function(x, value, name) {
 #' @rdname value
 #' @export
 `value<-.list_field` <- function(x, name = "value", value) {
-  set_sub_fields(x, Map(`value<-`, get_sub_fields(x), name, value))
+
+  if (identical(name, "value")) {
+    return(
+      set_sub_fields(x, Map(`value<-`, get_sub_fields(x), name, value))
+    )
+  }
+
+  NextMethod()
 }
 
 get_sub_fields <- function(x) get_field_value(x, "sub_fields")
