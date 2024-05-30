@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_upload_field}
 \alias{new_upload_field}
-\alias{upload_field}
 \title{Upload field constructor}
 \usage{
 new_upload_field(value = character(), ...)
-
-upload_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

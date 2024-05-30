@@ -82,13 +82,14 @@ update_ui <- function(b, is_srv, session, l_init) {
   }
 }
 
-generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "plot")) {
+generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "plot"), is_prev_valid) {
   display <- match.arg(display)
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
   # returns NULL
   if (is.null(in_dat)) {
     in_dat <- reactive(NULL)
+    is_prev_valid <- reactive(NULL)
   }
 
   obs_expr <- function(x) {
@@ -104,15 +105,13 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       ns <- session$ns
       blk <- reactiveVal(x)
       obs <- list()
-      # block and inputs are booleans. message is a character vector.
-      is_valid <- reactiveValues(
-        block = TRUE,
-        input = list(),
-        message = NULL,
-        error = NULL
-      )
 
       ns <- session$ns
+
+      is_valid <- reactiveValues(
+        block = FALSE,
+        message = NULL
+      )
 
       # Idea:
       # - If a field has a generate_server() method, initialize it and use
@@ -135,8 +134,31 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
           generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
       }
 
+      # When the previous block changes data or validation
+      # we must reset the current block valid state
+      # to block computations.
+      observeEvent(
+        {
+          req(!is.null(is_prev_valid()))
+          # in_dat will be Error if the previous
+          # block isn't valid because of the req
+          # The expression has to be different so this
+          # event triggers.
+          if (is_prev_valid()) {
+            c(is_prev_valid(), in_dat())
+          } else {
+            is_prev_valid()
+          }
+        },
+        {
+          is_valid$block <- FALSE
+          is_valid$message <- NULL
+        }
+      )
+
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
+        # if (!is.null(is_prev_valid)) req(is_prev_valid)
         blk_no_srv <- blk()
         blk_no_srv[is_srv] <- NULL # to keep class etc
         eval(obs_expr(blk_no_srv))
@@ -149,6 +171,8 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         c(values_module, values_default)[names(x)]
       })
 
+      # This will also trigger when the previous block
+      # valid status changes.
       obs$update_blk <- observe({
         # 1. upd blk,
         b <- update_blk(
@@ -164,23 +188,20 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         # 2. Update UI
         update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
         log_debug("Updating UI of block ", class(x)[[1]])
+
+        # Validating
+        is_valid$block <- validate_block(blk())
+        is_valid$message <- attr(is_valid$block, "msg")
+        is_valid$fields <- attr(is_valid$block, "fields")
+        log_debug("Validating block ", class(x)[[1]])
       }) |>
-        bindEvent(r_values(), in_dat())
+        bindEvent(r_values(), in_dat(), is_prev_valid())
 
-      # Validate block inputs
-      if (display != "plot") {
-        obs$validate_inputs <- observeEvent(r_values(), {
-          log_debug("Validating block ", class(x)[[1]])
-          blk_no_srv <- blk()
-          blk_no_srv[is_srv] <- NULL # to keep class etc
-          validate_inputs(blk_no_srv, is_valid, session) # FIXME should not rely on input$
-
-          # Block will have a red border if any nested input is invalid
-          # since blocks can be collapsed and people won't see the input
-          # elements.
-          validate_block(blk(), is_valid, session)
-        })
-      }
+      # Propagate message to user
+      obs$surface_error <- observe({
+        send_error_to_ui(blk(), is_valid, session)
+        log_debug("Sending error message to UI for block ", class(x)[[1]])
+      }) |> bindEvent(is_valid$block)
 
       # For submit blocks like filter, summarise,
       # join that can have computationally intense tasks
@@ -253,7 +274,10 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
       return(
         list(
           block = blk,
-          data = out_dat
+          data = out_dat,
+          # Needed by the stack to block
+          # computations for the next block
+          is_valid = reactive(is_valid$block)
         )
       )
     }
@@ -263,20 +287,20 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
 #' @rdname generate_server
 #' @export
 generate_server.data_block <- function(x, id, ...) {
-  generate_server_block(x = x, in_dat = NULL, id = id)
+  generate_server_block(x = x, in_dat = NULL, id = id, is_prev_valid = NULL)
 }
 
 #' @param in_dat Reactive input data
 #' @rdname generate_server
 #' @export
-generate_server.transform_block <- function(x, in_dat, id, ...) {
-  generate_server_block(x = x, in_dat = in_dat, id = id)
+generate_server.transform_block <- function(x, in_dat, id, is_prev_valid, ...) {
+  generate_server_block(x = x, in_dat = in_dat, id = id, is_prev_valid = is_prev_valid)
 }
 
 #' @rdname generate_server
 #' @export
-generate_server.plot_block <- function(x, in_dat, id, ...) {
-  generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot")
+generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...) {
+  generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot", is_prev_valid = is_prev_valid)
 }
 
 #' @param id Unique module id. Useful when the stack is called as a module.
@@ -670,7 +694,16 @@ init_block <- function(i, vals) {
       # Data from previous block
       vals$blocks[[i - 1]]$data
     },
-    id = attr(vals$stack[[i]], "name")
+    id = attr(vals$stack[[i]], "name"),
+    # Extract the state of the previous block
+    # to pass it to the next one. This is needed
+    # within the next block server function
+    # to reset calculations if required.
+    is_prev_valid = if (i == 1) {
+      NULL
+    } else {
+      vals$blocks[[i - 1]]$is_valid
+    }
   )
 }
 

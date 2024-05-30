@@ -1,6 +1,6 @@
 test_that("result field", {
 
-  field <- result_field()
+  field <- new_result_field()
 
   expect_s3_class(field, "result_field")
   expect_type(field, "list")
@@ -28,7 +28,7 @@ test_that("result server works", {
   )
 
   shiny::testServer(
-    generate_server(result_field()), {
+    generate_server(new_result_field()), {
       expect_setequal(opts(), c("stack1", "stack2"))
     }
   )

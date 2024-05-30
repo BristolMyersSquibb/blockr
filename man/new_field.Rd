@@ -33,7 +33,8 @@ is_field(x)
 
 \item{class}{Field subclass}
 
-\item{exclude}{Experimental: Exclude field from being captured in the update_fields
+\item{exclude}{Experimental: Exclude field from being captured in the
+update_fields
 feature. Default to FALSE. Not yet used.}
 
 \item{x}{An object inheriting form \code{"field"}}
