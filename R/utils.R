@@ -104,13 +104,16 @@ is_count <- function(x, include_zero = TRUE) {
   }
 }
 
+is_number <- function(x) {
+  is.numeric(x) && is_scalar(x) && !is.na(x) && !is.nan(x) && is.finite(x)
+}
+
 set_names <- function(object = nm, nm) {
   names(object) <- nm
   object
 }
 
 coal <- function(..., fail_null = TRUE) {
-
   for (i in seq_len(...length())) {
     x <- ...elt(i)
     if (is.null(x)) next else return(x)
@@ -147,7 +150,6 @@ splice_args <- function(expr, ...) {
 }
 
 type_trans <- function(x) {
-
   res <- value(x)
 
   switch(attr(x, "type"),
@@ -276,67 +278,18 @@ secure <- function(expr) {
   )
 }
 
-#' Validate inputs
-#'
-#' Get input value and determine if they're valid.
-#'
-#' @param blk Block reactive value.
-#' @param is_valid Block valid status.
-#' @param session Shiny session object.
-#'
-#' @return Side effects.
-#'
-#' @keywords internal
-validate_inputs <- function(blk, is_valid, session) {
-  input <- get("input", parent.frame())
-  ns <- session$ns
-
-  # Reset
-  is_valid$block <- TRUE
-  is_valid$inputs <- list()
-  is_valid$message <- NULL
-
-  inputs_to_validate <- unlst(input_ids(blk))
-  to_exclude <- which(inputs_to_validate %in% c("expression", "submit"))
-  if (length(to_exclude) > 0) {
-    inputs_to_validate <- inputs_to_validate[-to_exclude]
-  }
-
-  lapply(inputs_to_validate, function(el) {
-    is_valid$input[[el]] <- TRUE
-    val <- input[[el]]
-    if (length(val) == 0 || (length(val) > 0 && (all(nchar(val) == 0) || any(is.na(val))))) {
-      is_valid$message <- c(
-        is_valid$message,
-        sprintf("Error: input '%s' is not valid.", el)
-      )
-      is_valid$input[[el]] <- FALSE
-      is_valid$block <- FALSE
-    }
-
-    # Input border is red (danger) if invalid
-    session$sendCustomMessage(
-      "validate-input",
-      list(
-        state = is_valid$input[[el]],
-        id = ns(el)
-      )
-    )
-  })
-}
-
-#' Validate a entire block
+#' Sends validation error to user interface
 #'
 #' Depending on whether some inputs are invalid.
 #'
-#' @param blk Block reactive value.
+#' @param blk Block.
 #' @param is_valid Block valid status.
 #' @param session Shiny session object.
 #'
 #' @return Side effects.
 #'
 #' @keywords internal
-validate_block <- function(blk, is_valid, session) {
+send_error_to_ui <- function(blk, is_valid, session) {
   ns <- session$ns
   session$sendCustomMessage(
     "validate-block",
@@ -347,6 +300,7 @@ validate_block <- function(blk, is_valid, session) {
   )
 
   # Toggle submit field
+  # FIXME: maybe we want to handle this outside the function?
   if ("submit_block" %in% class(blk)) {
     session$sendCustomMessage(
       "toggle-submit",
@@ -356,7 +310,13 @@ validate_block <- function(blk, is_valid, session) {
 
   # Cleanup any old message
   removeUI(
-    selector = sprintf("[data-value=\"%s\"] .message", ns("block")),
+    selector = sprintf("[data-value=\"%s\"] .block-invalid-message", ns("block")),
+    multiple = TRUE,
+    session = session
+  )
+
+  removeUI(
+    selector = sprintf("[data-value=\"%s\"] .field-invalid-message", ns("block")),
     multiple = TRUE,
     session = session
   )
@@ -365,12 +325,31 @@ validate_block <- function(blk, is_valid, session) {
   if (!is_valid$block) {
     insertUI(
       selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
-      ui = lapply(is_valid$message, function(m) {
-        p(m, class = "message text-center text-danger")
-      }),
+      ui = div(
+        class = "text-danger text-center block-invalid-message",
+        sprintf("%s error(s) found in this block", length(is_valid$message))
+      ),
       where = "beforeEnd",
       session = session
     )
+
+    is_valid$message |>
+      length() |>
+      seq() |>
+      lapply(\(i) {
+        msg <- is_valid$message[i]
+        field <- is_valid$fields[i]
+
+        insertUI(
+          selector = sprintf("#%s", ns(field)),
+          ui = div(
+            class = "text-danger field-invalid-message",
+            msg
+          ),
+          where = "afterEnd",
+          session = session
+        )
+      })
   }
 }
 

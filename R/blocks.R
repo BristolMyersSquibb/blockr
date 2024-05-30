@@ -274,7 +274,7 @@ new_filter_block <- function(columns = character(), values = character(),
       ),
       title = "Comparison"
     ),
-    values = new_list_field(values, sub_fields, title = "Value"),
+    values = new_list_field(sub_fields, title = "Value"),
     expression = new_hidden_field(filter_exps)
   )
 
@@ -423,7 +423,7 @@ new_summarize_block <- function(func = character(),
 
   fields <- list(
     funcs = new_select_field(func, func_choices, multiple = TRUE, title = "Functions"),
-    columns = new_list_field(sub_fields = sub_fields, title = "Columns"),
+    columns = new_list_field(sub_fields, title = "Columns"),
     expression = new_hidden_field(summarize_expr)
   )
 

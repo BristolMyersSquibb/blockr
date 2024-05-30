@@ -4,16 +4,9 @@
 \alias{new_variable_field}
 \title{Variable field constructor}
 \usage{
-new_variable_field(
-  value = character(),
-  field = character(),
-  components = list(),
-  ...
-)
+new_variable_field(field = character(), components = list(), ...)
 }
 \arguments{
-\item{value}{Default text input value.}
-
 \item{field}{Field type}
 
 \item{components}{Variable list of field components}
