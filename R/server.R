@@ -192,6 +192,7 @@ generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "pl
         # Validating
         is_valid$block <- validate_block(blk())
         is_valid$message <- attr(is_valid$block, "msg")
+        is_valid$fields <- attr(is_valid$block, "fields")
         log_debug("Validating block ", class(x)[[1]])
       }) |>
         bindEvent(r_values(), in_dat(), is_prev_valid())

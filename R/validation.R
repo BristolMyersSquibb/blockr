@@ -49,7 +49,8 @@ validate_block <- function(x) {
   })
   structure(
     all(unlist(tmp) == TRUE),
-    msgs = unlist(lapply(tmp, \(res) attr(res, "msg")))
+    msgs = unlist(lapply(tmp, \(res) attr(res, "msg"))),
+    fields = names(x)[unlist(tmp) != TRUE]
   )
 }
 
