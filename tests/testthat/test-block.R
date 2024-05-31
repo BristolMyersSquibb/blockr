@@ -401,7 +401,7 @@ test_that("block demo works", {
   skip_on_cran()
 
   # Helper plot blocks
-  new_ggplot_block <- function(data, ...) {
+  new_ggplot_block <- function(...) {
     data_cols <- function(data) colnames(data)
 
     new_block(
@@ -415,11 +415,10 @@ test_that("block demo works", {
     )
   }
 
-  ggplot_block <- function(data, ...) {
-    initialize_block(new_ggplot_block(data, ...), data)
-  }
-
-  new_geompoint_block <- function(data, ...) {
+  new_geompoint_block <- function(...) {
+    plop <- function(data) {
+      browser()
+    }
     new_block(
       fields = list(
         color = new_select_field("blue", c("blue", "green", "red"))
@@ -430,24 +429,17 @@ test_that("block demo works", {
     )
   }
 
-  geompoint_block <- function(data, ...) {
-    initialize_block(new_geompoint_block(data, ...), data)
-  }
-
   custom_data_block <- function(...) {
-    initialize_block(
-      new_dataset_block(
-        dat = as.environment("package:datasets"),
-        selected = "airquality",
-        ...
-      )
+    new_dataset_block(
+      selected = "airquality",
+      ...
     )
   }
 
   stack <- new_stack(
     custom_data_block,
-    ggplot_block,
-    geompoint_block
+    new_ggplot_block,
+    new_geompoint_block
   )
 
   # Change block ids to known values

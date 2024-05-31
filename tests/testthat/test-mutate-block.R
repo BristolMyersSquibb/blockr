@@ -26,8 +26,8 @@ test_that("mutate_module_server handles input correctly", {
 
   # wrap generate_server
   # id as first argument, so we can test via shiny::testSever
-  module_server_test <- function(id, x, in_dat, ...) {
-    generate_server(x = x, in_dat = in_dat, id = id)
+  module_server_test <- function(id, x, in_dat, is_prev_valid, ...) {
+    generate_server(x = x, in_dat = in_dat, id = id, is_prev_valid = is_prev_valid)
   }
 
   shiny::testServer(
@@ -48,7 +48,8 @@ test_that("mutate_module_server handles input correctly", {
     args = list(
       id = "test",
       x = new_mutate_block(data = datasets::iris),
-      in_dat = reactive(datasets::iris)
+      in_dat = reactive(datasets::iris),
+      is_prev_valid = TRUE
     )
   )
 })
