@@ -268,6 +268,7 @@ generate_server.data_block <- function(x, id, ...) {
 }
 
 #' @param in_dat Reactive input data
+#' @param is_prev_valid Useful to validate the current block
 #' @rdname generate_server
 #' @export
 generate_server.transform_block <- function(x, in_dat, id, is_prev_valid, ...) {

@@ -39,6 +39,8 @@ generate_server(x, ...)
 
 \item{in_dat}{Reactive input data}
 
+\item{is_prev_valid}{Useful to validate the current block}
+
 \item{new_block}{For dynamically inserted blocks.}
 
 \item{workspace}{Stack workspace}
