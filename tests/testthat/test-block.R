@@ -452,6 +452,12 @@ test_that("block demo works", {
     seed = 4323
   )
 
+  # Init plot inputs
+  app$set_inputs(
+    "my_stack-block_2-x" = "Ozone",
+    "my_stack-block_2-y" = "Solar.R"
+  )
+
   blocks_inputs <- c(
     # Block management
     chr_ply(1:3, \(i) sprintf("my_stack-block_%s-copy", i)),

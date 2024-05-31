@@ -435,3 +435,9 @@ get_block_title <- function(x) {
     trimws() |>
     tools::toTitleCase()
 }
+
+# wrap generate_server
+# id as first argument, so we can test via shiny::testSever
+module_server_test <- function(id, x, in_dat, is_prev_valid, ...) {
+  generate_server(x = x, in_dat = in_dat, id = id, is_prev_valid = is_prev_valid)
+}
