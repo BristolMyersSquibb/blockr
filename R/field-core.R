@@ -252,7 +252,8 @@ set_field_value <- function(x, value, name) {
 
   if (identical(name, "value")) {
     tmp <- get_sub_fields(x)
-    tmp[names(value)] <- Map(`value<-`, tmp[names(value)], name, value)
+    hit <- intersect(names(value), names(tmp))
+    tmp[hit] <- Map(`value<-`, tmp[hit], name, value)
     set_sub_fields(x, tmp)
   } else if (identical(name, "sub_fields")) {
     tmp <- value(x)
