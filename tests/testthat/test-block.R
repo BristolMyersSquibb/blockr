@@ -416,9 +416,6 @@ test_that("block demo works", {
   }
 
   new_geompoint_block <- function(...) {
-    plop <- function(data) {
-      browser()
-    }
     new_block(
       fields = list(
         color = new_select_field("blue", c("blue", "green", "red"))
