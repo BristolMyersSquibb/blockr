@@ -98,7 +98,8 @@ test_that("workspace", {
   expect_s3_class(app, "shiny.appobj")
 })
 
-library(shinytest2)
+withr::local_package("shinytest2")
+
 test_that("workspace demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
@@ -139,8 +140,7 @@ test_that("restore workspace works", {
     system.file("examples/restore-workspace/app.R", package = "blockr")
   app <- AppDriver$new(
     shiny_app_path,
-    name = "restore-workspace-app",
-    variant = platform_variant()
+    name = "restore-workspace-app"
   )
 
   app$expect_values(
