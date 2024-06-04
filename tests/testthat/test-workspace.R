@@ -98,7 +98,8 @@ test_that("workspace", {
   expect_s3_class(app, "shiny.appobj")
 })
 
-library(shinytest2)
+withr::local_package("shinytest2")
+
 test_that("workspace demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()

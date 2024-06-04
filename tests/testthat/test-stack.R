@@ -35,7 +35,8 @@ test_that("stacks", {
   expect_type(code, "language")
 })
 
-library(shinytest2)
+withr::local_package("shinytest2")
+
 test_that("stacks demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
