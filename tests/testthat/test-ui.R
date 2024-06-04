@@ -25,7 +25,7 @@ test_that("block ui can be created", {
 
   shinyFiles_ui <- htmltools::tagQuery(ui)$
     find(".shinyFiles")$
-    selectedTags()
+    selectedTags() # nolint
 
   expect_length(shinyFiles_ui, 1)
 })

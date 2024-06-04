@@ -82,7 +82,13 @@ update_ui <- function(b, is_srv, session, l_init) {
   }
 }
 
-generate_server_block <- function(x, in_dat = NULL, id, display = c("table", "plot"), is_prev_valid) {
+generate_server_block <- function(
+  x,
+  in_dat = NULL,
+  id,
+  display = c("table", "plot"),
+  is_prev_valid
+) {
   display <- match.arg(display)
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
@@ -278,7 +284,13 @@ generate_server.transform_block <- function(x, in_dat, id, is_prev_valid, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...) {
-  generate_server_block(x = x, in_dat = in_dat, id = id, display = "plot", is_prev_valid = is_prev_valid)
+  generate_server_block(
+    x = x,
+    in_dat = in_dat,
+    id = id,
+    display = "plot",
+    is_prev_valid = is_prev_valid
+  )
 }
 
 #' @param id Unique module id. Useful when the stack is called as a module.

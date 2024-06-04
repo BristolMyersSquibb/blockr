@@ -6,7 +6,7 @@ testServer(module_server_test, {
   expect_true(is_valid$block)
   expect_true(
     all.equal(
-      out_dat(), 
+      out_dat(),
       iris |> select(colnames(datasets::iris)[[1]])
     )
   )
