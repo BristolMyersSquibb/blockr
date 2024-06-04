@@ -394,10 +394,10 @@ test_that("block demo works", {
     )
   }
 
-  new_geompoint_block <- function(...) {
+  new_geompoint_block <- function(default_color = character(), ...) {
     new_block(
       fields = list(
-        color = new_select_field("blue", c("blue", "green", "red"))
+        color = new_select_field(default_color, c("blue", "green", "red"))
       ),
       expr = quote(ggplot2::geom_point(color = .(color))),
       class = c("plot_layer_block", "plot_block"),
@@ -408,7 +408,7 @@ test_that("block demo works", {
   stack <- new_stack(
     block_1 = new_dataset_block("anscombe"),
     block_2 = new_ggplot_block("x1", "y1"),
-    block_3 = new_geompoint_block()
+    block_3 = new_geompoint_block("red")
   )
 
   blocks_app <- serve_stack(stack)
@@ -417,12 +417,6 @@ test_that("block demo works", {
     blocks_app,
     name = "block-app",
     seed = 4323
-  )
-
-  # Init plot inputs
-  app$set_inputs(
-    "my_stack-block_2-x" = "Ozone",
-    "my_stack-block_2-y" = "Solar.R"
   )
 
   blocks_inputs <- c(
@@ -494,8 +488,8 @@ test_that("block demo works", {
 
   # Change coordinates
   app$set_inputs(
-    "my_stack-block_2-x" = "Solar.R",
-    "my_stack-block_2-y" = "Wind"
+    "my_stack-block_2-x" = "x2",
+    "my_stack-block_2-y" = "y2"
   )
 
   app$expect_values(

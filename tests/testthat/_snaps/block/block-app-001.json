@@ -1,11 +1,11 @@
 {
   "input": {
     "my_stack-block_1-copy": 0,
-    "my_stack-block_1-dataset": "airquality",
+    "my_stack-block_1-dataset": "anscombe",
     "my_stack-block_2-copy": 0,
-    "my_stack-block_2-x": "Ozone",
-    "my_stack-block_2-y": "Solar.R",
-    "my_stack-block_3-color": "blue",
+    "my_stack-block_2-x": "x1",
+    "my_stack-block_2-y": "y1",
+    "my_stack-block_3-color": "red",
     "my_stack-block_3-copy": 0,
     "my_stack-remove-block-block_1": 0,
     "my_stack-remove-block-block_2": 0,
@@ -20,7 +20,7 @@
         "value": "datasets"
       },
       "dataset": {
-        "value": "airquality",
+        "value": "anscombe",
         "choices": [
           "structure(function (package) ",
           "{",
@@ -42,27 +42,27 @@
     },
     "my_stack-block_2-block": {
       "x": {
-        "value": "Ozone",
+        "value": "x1",
         "choices": [
           "structure(function (data) ",
-          "colnames(data), result = c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\", ",
-          "\"Month\", \"Day\"))"
+          "colnames(data), result = c(\"x1\", \"x2\", \"x3\", \"x4\", \"y1\", \"y2\", ",
+          "\"y3\", \"y4\"))"
         ],
         "multiple": false
       },
       "y": {
-        "value": "Solar.R",
+        "value": "y1",
         "choices": [
           "structure(function (data) ",
-          "colnames(data), result = c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\", ",
-          "\"Month\", \"Day\"))"
+          "colnames(data), result = c(\"x1\", \"x2\", \"x3\", \"x4\", \"y1\", \"y2\", ",
+          "\"y3\", \"y4\"))"
         ],
         "multiple": false
       }
     },
     "my_stack-block_3-block": {
       "color": {
-        "value": "blue",
+        "value": "red",
         "choices": [
           "blue",
           "green",
