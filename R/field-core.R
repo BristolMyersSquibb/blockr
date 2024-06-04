@@ -251,16 +251,30 @@ set_field_value <- function(x, value, name) {
 `value<-.list_field` <- function(x, name = "value", value) {
 
   if (identical(name, "value")) {
+
     tmp <- get_sub_fields(x)
-    hit <- intersect(names(value), names(tmp))
-    tmp[hit] <- Map(`value<-`, tmp[hit], name, value)
+
+    if (length(names(value))) {
+      hit <- intersect(names(value), names(tmp))
+      tmp[hit] <- Map(`value<-`, tmp[hit], name, value)
+    } else {
+      stopifnot(length(tmp) == length(value))
+      tmp <- Map(`value<-`, tmp, name, value)
+    }
+
     set_sub_fields(x, tmp)
+
   } else if (identical(name, "sub_fields")) {
+
     tmp <- value(x)
     x <- set_sub_fields(x, value)
+
     value(x) <- tmp
+
     x
+
   } else {
+
     stop("Unrecognized list_field component")
   }
 }

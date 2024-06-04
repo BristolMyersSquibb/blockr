@@ -116,9 +116,6 @@ test_that("switch field", {
 
 test_that("upload field", {
 
-  path <- withr::local_tempfile()
-  write.csv(datasets::iris, path, row.names = FALSE)
-
   field <- new_upload_field("iris.csv")
 
   expect_s3_class(field, "upload_field")
@@ -129,6 +126,9 @@ test_that("upload field", {
     class = "file_failure"
   )
 
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
+
   value(field) <- data.frame(datapath = path)
 
   expect_identical(value(field), path)
@@ -138,7 +138,6 @@ test_that("upload field", {
 test_that("filesbrowser field", {
 
   path <- withr::local_tempfile()
-  write.csv(datasets::iris, path, row.names = FALSE)
 
   field <- new_filesbrowser_field("iris.csv", c(vol = dirname(path)))
 
@@ -150,6 +149,8 @@ test_that("filesbrowser field", {
     validate_field(field),
     class = "file_failure"
   )
+
+  write.csv(datasets::iris, path, row.names = FALSE)
 
   value(field) <- data.frame(root = "vol", files = basename(path))
 
