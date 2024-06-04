@@ -139,8 +139,7 @@ test_that("restore workspace works", {
     system.file("examples/restore-workspace/app.R", package = "blockr")
   app <- AppDriver$new(
     shiny_app_path,
-    name = "restore-workspace-app",
-    variant = platform_variant()
+    name = "restore-workspace-app"
   )
 
   app$expect_values(
