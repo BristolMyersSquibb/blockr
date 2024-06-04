@@ -378,6 +378,7 @@ withr::local_package("ggplot2")
 test_that("block demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
+  skip_on_covr()
 
   # Helper plot blocks
   new_ggplot_block <- function(col_x = character(), col_y = character(), ...) {
