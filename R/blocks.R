@@ -146,18 +146,6 @@ new_json_block <- function(...) {
   )
 }
 
-#' SAS data parser block
-#'
-#' \code{sas_block}: From a string given by \link{new_filesbrowser_block} and
-#' \link{new_upload_block}, reads the related SAS file and returns
-#' a dataframe.
-#'
-#' @rdname new_parser_block
-#' @export
-new_sas_block <- function(...) {
-  new_parser_block(quote(haven::read_sas()), ..., class = "sas_block")
-}
-
 #' XPT data parser block
 #'
 #' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and

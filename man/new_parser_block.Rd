@@ -5,7 +5,6 @@
 \alias{new_csv_block}
 \alias{new_rds_block}
 \alias{new_json_block}
-\alias{new_sas_block}
 \alias{new_xpt_block}
 \title{Data parser block constructor}
 \usage{
@@ -16,8 +15,6 @@ new_csv_block(...)
 new_rds_block(...)
 
 new_json_block(...)
-
-new_sas_block(...)
 
 new_xpt_block(...)
 }
@@ -46,10 +43,6 @@ a dataframe.
 
 \code{json_block}: From a string given by \link{new_filesbrowser_block} and
 \link{new_upload_block}, reads the related json file and returns
-a dataframe.
-
-\code{sas_block}: From a string given by \link{new_filesbrowser_block} and
-\link{new_upload_block}, reads the related SAS file and returns
 a dataframe.
 
 \code{csv_block}: From a string given by \link{new_filesbrowser_block} and

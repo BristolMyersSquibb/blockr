@@ -335,28 +335,6 @@ test_that("rds parser block", {
   expect_equal(colnames(res), colnames(data))
 })
 
-test_that("sas parser block", {
-
-  skip_on_cran()
-
-  data <- datasets::iris
-  colnames(data) <- gsub("\\.", "_", colnames(data))
-
-  path <- withr::local_tempfile(fileext = ".sas7bdat")
-  haven::write_sas(data, path)
-
-  block <- new_sas_block()
-
-  expect_s3_class(block, "parser_block")
-  expect_s3_class(block, "sas_block")
-
-  block <- initialize_block(block, path)
-  res <- evaluate_block(block, path)
-
-  expect_equal(nrow(res), nrow(data))
-  expect_equal(colnames(res), colnames(data))
-})
-
 test_that("xpt parser block", {
 
   data <- datasets::iris
