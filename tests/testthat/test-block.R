@@ -372,20 +372,21 @@ test_that("blocks can be constructed with default args", {
   }
 })
 
-library(shinytest2)
-library(ggplot2)
+withr::local_package("shinytest2")
+withr::local_package("ggplot2")
+
 test_that("block demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
 
   # Helper plot blocks
-  new_ggplot_block <- function(...) {
+  new_ggplot_block <- function(col_x = character(), col_y = character(), ...) {
     data_cols <- function(data) colnames(data)
 
     new_block(
       fields = list(
-        x = new_select_field(colnames(data)[1], data_cols, type = "name"),
-        y = new_select_field(colnames(data)[2], data_cols, type = "name")
+        x = new_select_field(col_x, data_cols, type = "name"),
+        y = new_select_field(col_y, data_cols, type = "name")
       ),
       expr = quote(ggplot2::ggplot(mapping = ggplot2::aes(x = .(x), y = .(y)))),
       class = c("ggplot_block", "plot_block"),
@@ -404,23 +405,11 @@ test_that("block demo works", {
     )
   }
 
-  custom_data_block <- function(...) {
-    new_dataset_block(
-      selected = "airquality",
-      ...
-    )
-  }
-
   stack <- new_stack(
-    custom_data_block,
-    new_ggplot_block,
-    new_geompoint_block
+    block_1 = new_dataset_block("anscombe"),
+    block_2 = new_ggplot_block("x1", "y1"),
+    block_3 = new_geompoint_block()
   )
-
-  # Change block ids to known values
-  for (i in seq_along(stack)) {
-    attr(stack[[i]], "name") <- sprintf("block_%s", i)
-  }
 
   blocks_app <- serve_stack(stack)
 

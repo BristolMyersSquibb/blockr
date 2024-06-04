@@ -10,7 +10,7 @@
 #' @export
 new_stack <- function(..., title = "Stack", name = rand_names()) {
 
-  ctors <- c(...)
+  ctors <- list(...)
   names <- names(ctors)
 
   stopifnot(is_string(title), is_string(name))
@@ -19,19 +19,18 @@ new_stack <- function(..., title = "Stack", name = rand_names()) {
 
     blocks <- vector("list", length(ctors))
 
-    blocks[[1L]] <- initialize_block(
-      do.call(ctors[[1L]], list(position = 1))
-    )
+    if (length(names)) {
+      stopifnot(length(unique(names)) == length(blocks))
+    } else {
+      names <- rand_names(n = length(blocks))
+    }
 
+    blocks[[1L]] <- do_init_block(ctors[[1L]], 1L, names[1L])
     temp <- evaluate_block(blocks[[1L]])
 
     for (i in seq_along(ctors)[-1L]) {
 
-      blocks[[i]] <- initialize_block(
-        do.call(ctors[[i]], list(position = i)),
-        temp
-      )
-
+      blocks[[i]] <- do_init_block(ctors[[i]], i, names[i], temp)
       temp <- evaluate_block(blocks[[i]], data = temp)
     }
 
@@ -44,6 +43,25 @@ new_stack <- function(..., title = "Stack", name = rand_names()) {
   stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
   structure(blocks, title = title, name = name, result = temp, class = "stack")
+}
+
+do_init_block <- function(x, pos, nme, dat = NULL) {
+
+  if (is.function(x)) {
+    x <- do.call(x, list())
+  }
+
+  stopifnot(inherits(x, "block"))
+
+  # TODO: stop doing this and track info on stack level
+  attr(x, "position") <- pos
+  attr(x, "name") <- nme
+
+  if (is.null(dat)) {
+    initialize_block(x)
+  } else {
+    initialize_block(x, dat)
+  }
 }
 
 set_stack_blocks <- function(stack, blocks, result) {

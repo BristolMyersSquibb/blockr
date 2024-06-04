@@ -247,9 +247,8 @@ evaluate_block.block <- function(x, data, ...) {
 #' @export
 evaluate_block.plot_layer_block <- function(x, data, ...) {
 
-  stopifnot(...length() == 0L)
+  stopifnot(...length() == 0L, inherits(data, "ggplot"))
 
-  if (!inherits(data, "ggplot")) return(NULL)
   eval(
     substitute(data + expr, list(expr = generate_code(x))),
     list(data = data)
