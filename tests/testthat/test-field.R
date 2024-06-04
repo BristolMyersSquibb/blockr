@@ -121,10 +121,12 @@ test_that("upload field", {
   expect_s3_class(field, "upload_field")
   expect_identical(value(field), "iris.csv")
 
-  expect_error(
-    validate_field(field),
-    class = "file_failure"
-  )
+  if (!file.exists("iris.csv")) {
+    expect_error(
+      validate_field(field),
+      class = "file_failure"
+    )
+  }
 
   path <- withr::local_tempfile()
   write.csv(datasets::iris, path, row.names = FALSE)
@@ -145,10 +147,12 @@ test_that("filesbrowser field", {
   expect_identical(value(field), "iris.csv")
   expect_identical(value(field, "volumes"), c(vol = dirname(path)))
 
-  expect_error(
-    validate_field(field),
-    class = "file_failure"
-  )
+  if (!file.exists(file.path(dirname(path), "iris.csv"))) {
+    expect_error(
+      validate_field(field),
+      class = "file_failure"
+    )
+  }
 
   write.csv(datasets::iris, path, row.names = FALSE)
 
