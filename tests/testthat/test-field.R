@@ -40,7 +40,7 @@ test_that("select fields", {
 
   expect_error(
     validate_field(new_select_field(1:3, LETTERS, multiple = TRUE)),
-    class = "string_failure"
+    class = "character_failure"
   )
 })
 
