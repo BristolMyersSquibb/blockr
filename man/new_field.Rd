@@ -12,8 +12,7 @@ new_field(
   title = "",
   descr = "",
   status = c("active", "disabled", "invisible"),
-  class = character(),
-  exclude = FALSE
+  class = character()
 )
 
 is_field(x)
@@ -31,10 +30,7 @@ is_field(x)
 
 \item{status}{The status of the field (experimental)}
 
-\item{class}{Field subclass}
-
-\item{exclude}{Experimental: Exclude field from being captured in the
-update_fields
+\item{class}{Field subclass
 feature. Default to FALSE. Not yet used.}
 
 \item{x}{An object inheriting form \code{"field"}}

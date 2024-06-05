@@ -10,8 +10,6 @@
 #' @param descr A description of the field, explaining its purpose or usage.
 #' @param status The status of the field (experimental)
 #' @param class Field subclass
-#' @param exclude Experimental: Exclude field from being captured in the
-#'   update_fields
 #' feature. Default to FALSE. Not yet used.
 #'
 #' @export
@@ -20,7 +18,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
                       title = "",
                       descr = "",
                       status = c("active", "disabled", "invisible"),
-                      class = character(), exclude = FALSE) {
+                      class = character()) {
 
   x <- list(value = value, ...)
 
@@ -34,8 +32,7 @@ new_field <- function(value, ..., type = c("literal", "name"),
     class = c(class, "field"),
     title = title,
     descr = descr,
-    status = status,
-    exclude = exclude
+    status = status
   )
 }
 

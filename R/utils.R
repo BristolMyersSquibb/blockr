@@ -162,28 +162,6 @@ type_trans <- function(x) {
   )
 }
 
-is_truthy <- function(x) {
-  if (inherits(x, "try-error")) {
-    FALSE
-  } else if (!is.atomic(x)) {
-    TRUE
-  } else if (is.null(x)) {
-    FALSE
-  } else if (length(x) == 0) {
-    FALSE
-  } else if (all(is.na(x))) {
-    FALSE
-  } else if (is.character(x) && !any(nzchar(stats::na.omit(x)))) {
-    FALSE
-  } else if (inherits(x, "shinyActionButtonValue") && x == 0) {
-    FALSE
-  } else if (is.logical(x) && !any(stats::na.omit(x))) {
-    FALSE
-  } else {
-    TRUE
-  }
-}
-
 unlst <- function(x, recursive = FALSE, use_names = FALSE) {
   unlist(x, recursive = recursive, use.names = use_names)
 }
@@ -255,26 +233,6 @@ create_modal <- function(...) {
       size = "l",
       fade = TRUE
     )
-  )
-}
-
-#' Evaluate expression safely
-#'
-#' tryCatch wrapper.
-#'
-#' @param expr Expression to evaluate.
-#'
-#' @return Result or error message.
-#'
-#' @keywords internal
-secure <- function(expr) {
-  tryCatch(
-    {
-      expr
-    },
-    error = function(e) {
-      cat(e$message)
-    }
   )
 }
 
