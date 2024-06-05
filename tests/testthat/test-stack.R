@@ -40,6 +40,7 @@ withr::local_package("shinytest2")
 test_that("stacks demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
+  skip_on_covr()
   app <- AppDriver$new(
     system.file("examples/stack", package = "blockr"),
     name = "stack-app"

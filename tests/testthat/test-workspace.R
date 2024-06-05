@@ -103,6 +103,7 @@ withr::local_package("shinytest2")
 test_that("workspace demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
+  skip_on_covr()
   shiny_app_path <-
     system.file("examples/workspace/app.R", package = "blockr")
   app <- AppDriver$new(
@@ -136,6 +137,7 @@ test_that("workspace demo works", {
 test_that("restore workspace works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
+  skip_on_covr()
   shiny_app_path <-
     system.file("examples/restore-workspace/app.R", package = "blockr")
   app <- AppDriver$new(

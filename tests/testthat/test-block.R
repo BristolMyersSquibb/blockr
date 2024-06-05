@@ -36,7 +36,12 @@ test_that("data blocks", {
   expect_identical(nrow(res3), nrow(dat2))
   expect_identical(colnames(res3), colnames(dat2))
 
-  blk3 <- update_fields(blk3, session = shiny::MockShinySession$new(), package = "datasets", dataset = "iris")
+  blk3 <- update_fields(
+    blk3,
+    session = shiny::MockShinySession$new(),
+    package = "datasets",
+    dataset = "iris"
+  )
   expect_identical(value(blk3[["dataset"]]), "iris")
   expect_identical(value(blk3[["dataset"]], "choices"), list_datasets("datasets"))
 })
@@ -445,13 +450,13 @@ new_geompoint_block <- function(default_color = character(), ...) {
 }
 
 test_that("ggplot layer works", {
- layer <- new_geompoint_block("red")
- expect_error(evaluate_block(layer, iris))
- gg_obj <- evaluate_block(
-  initialize_block(new_ggplot_block("x1", "y1"), datasets::anscombe),
-  datasets::anscombe
- )
- res <- evaluate_block(layer, gg_obj)
+  layer <- new_geompoint_block("red")
+  expect_error(evaluate_block(layer, iris))
+  gg_obj <- evaluate_block(
+    initialize_block(new_ggplot_block("x1", "y1"), datasets::anscombe),
+    datasets::anscombe
+  )
+  res <- evaluate_block(layer, gg_obj)
 })
 
 test_that("block demo works", {
