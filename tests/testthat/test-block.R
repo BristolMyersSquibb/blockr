@@ -35,6 +35,10 @@ test_that("data blocks", {
 
   expect_identical(nrow(res3), nrow(dat2))
   expect_identical(colnames(res3), colnames(dat2))
+
+  blk3 <- update_fields(blk3, session = shiny::MockShinySession$new(), package = "datasets", dataset = "iris")
+  expect_identical(value(blk3[["dataset"]]), "iris")
+  expect_identical(value(blk3[["dataset"]], "choices"), list_datasets("datasets"))
 })
 
 test_that("filter blocks", {
@@ -414,36 +418,46 @@ test_that("blocks can be updated", {
 withr::local_package("shinytest2")
 withr::local_package("ggplot2")
 
+# Helper plot blocks
+new_ggplot_block <- function(col_x = character(), col_y = character(), ...) {
+  data_cols <- function(data) colnames(data)
+
+  new_block(
+    fields = list(
+      x = new_select_field(col_x, data_cols, type = "name"),
+      y = new_select_field(col_y, data_cols, type = "name")
+    ),
+    expr = quote(ggplot2::ggplot(mapping = ggplot2::aes(x = .(x), y = .(y)))),
+    class = c("ggplot_block", "plot_block"),
+    ...
+  )
+}
+
+new_geompoint_block <- function(default_color = character(), ...) {
+  new_block(
+    fields = list(
+      color = new_select_field(default_color, c("blue", "green", "red"))
+    ),
+    expr = quote(ggplot2::geom_point(color = .(color))),
+    class = c("plot_layer_block", "plot_block"),
+    ...
+  )
+}
+
+test_that("ggplot layer works", {
+ layer <- new_geompoint_block("red")
+ expect_error(evaluate_block(layer, iris))
+ gg_obj <- evaluate_block(
+  initialize_block(new_ggplot_block("x1", "y1"), datasets::anscombe),
+  datasets::anscombe
+ )
+ res <- evaluate_block(layer, gg_obj)
+})
+
 test_that("block demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
   skip_on_covr()
-
-  # Helper plot blocks
-  new_ggplot_block <- function(col_x = character(), col_y = character(), ...) {
-    data_cols <- function(data) colnames(data)
-
-    new_block(
-      fields = list(
-        x = new_select_field(col_x, data_cols, type = "name"),
-        y = new_select_field(col_y, data_cols, type = "name")
-      ),
-      expr = quote(ggplot2::ggplot(mapping = ggplot2::aes(x = .(x), y = .(y)))),
-      class = c("ggplot_block", "plot_block"),
-      ...
-    )
-  }
-
-  new_geompoint_block <- function(default_color = character(), ...) {
-    new_block(
-      fields = list(
-        color = new_select_field(default_color, c("blue", "green", "red"))
-      ),
-      expr = quote(ggplot2::geom_point(color = .(color))),
-      class = c("plot_layer_block", "plot_block"),
-      ...
-    )
-  }
 
   stack <- new_stack(
     block_1 = new_dataset_block("anscombe"),

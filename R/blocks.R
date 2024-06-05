@@ -9,19 +9,6 @@
 #' @export
 new_dataset_block <- function(selected = character(), package = "datasets",
                               ...) {
-  is_dataset_eligible <- function(x, pkg) {
-    inherits(do.call("::", list(pkg = pkg, name = x)), "data.frame")
-  }
-
-  list_datasets <- function(package) {
-    datasets <- utils::data(package = package)
-    datasets <- datasets$results[, "Item"]
-
-    options <- gsub("\\s+\\(.+\\)$", "", datasets)
-
-    options[lgl_ply(options, is_dataset_eligible, package)]
-  }
-
   new_block(
     fields = list(
       package = new_hidden_field(package, type = "name"),
