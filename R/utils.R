@@ -173,19 +173,6 @@ dropNulls <- function(x) {
 
 `!startsWith` <- Negate(startsWith)
 
-is_dataset_eligible <- function(x, pkg) {
-  inherits(do.call("::", list(pkg = pkg, name = x)), "data.frame")
-}
-
-list_datasets <- function(package) {
-  datasets <- utils::data(package = package)
-  datasets <- datasets$results[, "Item"]
-
-  options <- gsub("\\s+\\(.+\\)$", "", datasets)
-
-  options[lgl_ply(options, is_dataset_eligible, package)]
-}
-
 #' Bootstrap 5 offcanvas
 #'
 #' Sidebar like element either a top, bottom, right or left.

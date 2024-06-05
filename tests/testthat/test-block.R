@@ -35,15 +35,6 @@ test_that("data blocks", {
 
   expect_identical(nrow(res3), nrow(dat2))
   expect_identical(colnames(res3), colnames(dat2))
-
-  blk3 <- update_fields(
-    blk3,
-    session = shiny::MockShinySession$new(),
-    package = "datasets",
-    dataset = "iris"
-  )
-  expect_identical(value(blk3[["dataset"]]), "iris")
-  expect_identical(value(blk3[["dataset"]], "choices"), list_datasets("datasets"))
 })
 
 test_that("filter blocks", {
@@ -456,7 +447,9 @@ test_that("ggplot layer works", {
     initialize_block(new_ggplot_block("x1", "y1"), datasets::anscombe),
     datasets::anscombe
   )
-  res <- evaluate_block(layer, gg_obj)
+  gg_obj <- evaluate_block(layer, gg_obj)
+  expect_length(gg_obj$layers, 1)
+  expect_s3_class(gg_obj$layers[[1]]$geom, "GeomPoint")
 })
 
 test_that("block demo works", {
