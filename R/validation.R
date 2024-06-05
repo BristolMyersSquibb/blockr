@@ -84,7 +84,7 @@ validate_character <- function(x, arg = NULL) {
       msg <- paste0(msg, " as `", arg, "`")
     }
 
-    validation_failure(msg, class = "string_failure")
+    validation_failure(msg, class = "character_failure")
   }
 
   invisible(NULL)
