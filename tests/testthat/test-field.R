@@ -75,6 +75,12 @@ test_that("numeric fields", {
     validate_field(field),
     class = "range_failure"
   )
+
+  value(field, "test")
+  expect_error(
+    validate_field(field),
+    class = "number_failure"
+  )
 })
 
 test_that("submit fields", {
