@@ -37,6 +37,11 @@ test_that("select fields", {
     validate_field(new_select_field(1, letters)),
     class = "string_failure"
   )
+
+  expect_error(
+    validate_field(new_select_field(1:3, LETTERS, multiple = TRUE)),
+    class = "string_failure"
+  )
 })
 
 test_that("range fields", {
@@ -76,7 +81,7 @@ test_that("numeric fields", {
     class = "range_failure"
   )
 
-  value(field, "test")
+  value(field) <- "test"
   expect_error(
     validate_field(field),
     class = "number_failure"
