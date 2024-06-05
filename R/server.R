@@ -356,7 +356,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       })
 
       observeEvent(input$newTitle, {
-        set_stack_title(vals$stack, input$newTitle)
+        vals$stack <- set_stack_title(vals$stack, input$newTitle)
       })
 
       # Any block change: data or input should be sent
