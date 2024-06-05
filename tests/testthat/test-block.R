@@ -372,6 +372,45 @@ test_that("blocks can be constructed with default args", {
   }
 })
 
+test_that("blocks can be updated", {
+
+  block_test_server <- function(id, x, dat = NULL, ...) {
+    if (is.null(dat)) {
+      generate_server(x = x, id = id, ...)
+    } else {
+      generate_server(x = x, in_dat = shiny::reactive(dat), id = id,
+                      is_prev_valid = shiny::reactive(TRUE), ...)
+    }
+  }
+
+  shiny::testServer(
+    block_test_server,
+    {
+      expect_identical(value(blk()$dataset), character())
+      session$setInputs(dataset = "anscombe")
+      expect_identical(value(blk()$dataset), "anscombe")
+    },
+    args = list(
+      id = "dataset_block_update",
+      x = new_dataset_block()
+    )
+  )
+
+  shiny::testServer(
+    block_test_server,
+    {
+      expect_identical(value(blk()$columns), character())
+      session$setInputs(columns = c("x1", "y1"))
+      expect_identical(value(blk()$columns), c("x1", "y1"))
+    },
+    args = list(
+      id = "transform_block_update",
+      x = new_select_block(),
+      dat = anscombe
+    )
+  )
+})
+
 withr::local_package("shinytest2")
 withr::local_package("ggplot2")
 
