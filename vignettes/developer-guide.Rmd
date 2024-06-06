@@ -48,7 +48,7 @@ The stack is able to dynamically add new blocks through `add_block()`.
 To add a block to a stack, you can leverage `add_block()`:
 
 ```r
-stack <- new_stack(data_block) |>
+stack <- new_stack(dataset_block) |>
   add_block(select_block) |>
   add_block(filter_block, 1)
 ```

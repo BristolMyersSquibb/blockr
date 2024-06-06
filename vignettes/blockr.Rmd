@@ -89,7 +89,7 @@ library(blockr)
 library(blockr.data)
 
 stack <- new_stack(
-  data_block,
+  dataset_block,
   filter_block
 )
 serve_stack(stack)
@@ -98,7 +98,7 @@ serve_stack(stack)
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC5M6PFcQKKZADMWbnIGCtEJQLjA9jgGADc4bITxPhyJPzAAXwBdIA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC52OFJM6PFcQKKZADMWbnIGatEJQLjAioYANzhshPE+HIk-MABfAF0gA", # nolint
     "app",
     header = FALSE
   ),
@@ -108,9 +108,9 @@ card(
 
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
-  "You'll notice that some blocks, such as the `filter_block` 
+  "You'll notice that some blocks, such as the `filter_block`
   have a submit button. The reason was to prevent any expansive task
-  to run without explicit user approval. That said, this feature is 
+  to run without explicit user approval. That said, this feature is
   still very much experimental and might change in the future.",
   color = "primary"
 )
@@ -121,20 +121,26 @@ In the next example, we'll see how to create an which can dynamically add or rem
 
 ### Dynamically add a block
 
-Below is an app with an interface to dynamically add blocks. On the UI side, we called `generate_ui()`,
-which is nothing more than calling the stack module UI and `generate_server()` in the Shiny server function. If you leave `id` NULL,
-the namespace is automatically handled.
+The stack exposes a helper button to add a block in the top right corner of the card header. 
+It triggers an [offcanvas](https://getbootstrap.com/docs/5.3/components/offcanvas/)
+UI panel, that basically allows one to select any block available in the 
+registered blocks [vignette](https://blockr-org.github.io/blockr/articles/registry.html).
 
-To get the list of available blocks, we leverage the `{blockr}` registry namely `available_blocks()` which exposes the
+As a side note, there's another mechanism that works to add blocks, which we describe in the
+following. It is more verbose but allows you to 
+bring your own custom UI. On the UI side, we call `generate_ui()`,
+which is nothing more than calling the stack module UI and `generate_server()` in the Shiny server function. If you leave `id` NULL,
+the namespace is automatically handled. To get the list of available blocks, we leverage the `{blockr}` registry namely `available_blocks()` which exposes the
 currently registered blocks. You can learn more about the registry in the dedicated
-vignette. `add_block_ui()` is a UI helper to show a button as well
+[vignette](https://blockr-org.github.io/blockr/articles/registry.html). 
+`add_block_ui()` is a UI helper to show a button as well
 as the necessary interface to contain the new block choice.
 Within an `observer` we listen to the "add block" button. Then, we pass the new block in the `new_block` slot of the `generate_server()` function.
-It accepts the name of the block to insert as well as its position in the stack (here we append).
+It accepts the name of the block to insert as well as its position in the stack (here we append and leave `NULL`).
 
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
-  "Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo) 
+  "Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo)
   utilises `{masonry}` (https://github.com/blockr-org/masonry) to provide
   a better user experience, allowing one to drag and drop blocks
   within the stack.",
@@ -144,10 +150,9 @@ note_box(
 
 ```r
 library(shiny)
-library(blockr.data)
 library(blockr)
 
-stack <- new_stack(data_block)
+stack <- new_stack(dataset_block)
 shinyApp(
   ui = bslib::page_fluid(
     add_block_ui(),
@@ -162,17 +167,11 @@ shinyApp(
     )
 
     observeEvent(input$add, {
-      vals$new_block <- NULL
-      # Always append to stack
-      loc <- length(stack$blocks)
       block <- available_blocks()[[input$selected_block]]
       # add_block expect the current stack, the block to add and its position
       # (NULL is fine for the position, in that case the block will
       # go at the end)
-      vals$new_block <- list(
-        block = block,
-        position = loc
-      )
+      vals$new_block <- list(block = block)
     })
   }
 )
@@ -190,7 +189,7 @@ note_box(
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+dg02cICgkIYwyOMJBgwAEygueODQiL5UyXjAzigJGQAeUxkIOGoAfTKJPiyuBqL46NiAQXRBCBkZBxZVGTp2POZUKEs4BoAzbhGMgaGhqAyMjtEJBpG+FgyKUjs43ED1mTm6pPJ9liiuCVkjsaEYcObxf0uZPwugxk7DgDAAbqCxgsHBACKcSIcIKgHKRZEQUcjUcC4Ox2K4IH4ZCA-kMwTxlNU5HByqcIQA1HgOHF8OqNIpjAByAFUADI8+JXb5VGo3UHZeYg8GgtZXYHPcSA2UyN5qD5feXSEnrVk7ExjeQ0lgQvhk7jsAAkOs6WpKQKGRAmoIhAFEIWREZjzZsMrJiXb1qaLVbduJhTJuXytUMAMQyHrcahQL4yNCoCgZGSkIhy8o-f1DXZh7gUSz2J6581FdgC2XsylQMksbhQETzKt8PzAYBsT0g4twuDbIoAXWHUZkse9uoqcAAHmm4ZmNHAZAQHAx5GQcy8lyv2VmU1sUxAM3ZlD47Pjx7G+BGecrlAs2CuFhZdzIL-CIK9BvZsquoBBd92WoJtuGva5s3-ewV3TGsrkDS16mnUNKWCTgZSVdk1CKRUlQ-JRLxIMZdnHeCZAAXxrCjAj8MAKOHIA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJPjiWABNU9KEYcLzxIUCEjTZw5nZ6iHCAQXRBCBkZBxZVGTp2YLpmVChLOGyAM24+oq6ensnMhihybL6+KtliuJ6-XECe9jgGADczgemHCAJSVwg+NlQHUlkiN9f3mVP2dkefhkIGOSyqpRkKzO6ympwuZ22XAkuyK+xkAF9An4wOiALpAA", # nolint
     "app",
     header = FALSE
   ),
@@ -205,18 +204,17 @@ The stack can be nested within modules. This is what we do in
 
 ```r
 library(shiny)
-library(blockr.data)
 library(blockr)
 
 stack <- new_stack(
-  data_block,
+  dataset_block,
   filter_block,
   select_block
 )
 
 block_ui <- function(id) {
-  ns <- shiny::NS(id)
-  uiOutput(ns("block"))
+  ns <- NS(id)
+  generate_ui(stack, id = ns("b"))
 }
 
 block_server <- function(id) {
@@ -224,11 +222,6 @@ block_server <- function(id) {
     id,
     function(input, output, session){
       ns <- session$ns
-
-      output$block <- renderUI({
-        generate_ui(stack, id = ns("b"))
-      })
-
       generate_server(stack, id = "b")
     }
   )

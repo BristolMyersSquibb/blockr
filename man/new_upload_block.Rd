@@ -2,14 +2,13 @@
 % Please edit documentation in R/blocks.R
 \name{new_upload_block}
 \alias{new_upload_block}
-\alias{upload_block}
 \title{Upload block constructor}
 \usage{
-new_upload_block(...)
-
-upload_block(...)
+new_upload_block(file_path = character(), ...)
 }
 \arguments{
+\item{file_path}{File path}
+
 \item{...}{Further (metadata) attributes}
 }
 \description{

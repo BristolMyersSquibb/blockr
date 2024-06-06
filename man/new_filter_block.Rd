@@ -2,27 +2,21 @@
 % Please edit documentation in R/blocks.R
 \name{new_filter_block}
 \alias{new_filter_block}
-\alias{filter_block}
 \title{Filter block}
 \usage{
 new_filter_block(
-  data,
-  columns = colnames(data)[1L],
+  columns = character(),
   values = character(),
   filter_fun = "==",
   ...
 )
-
-filter_block(data, ...)
 }
 \arguments{
-\item{data}{Tabular data to filter (rows).}
+\item{columns}{Columns used for filtering}
 
-\item{columns}{Definition of the equality filter.}
+\item{values}{Values used for filtering}
 
-\item{values}{Definition of the equality filter.}
-
-\item{filter_fun}{Default filter fun for the expression.}
+\item{filter_fun}{Filter function for the expression}
 
 \item{...}{Further (metadata) attributes}
 }

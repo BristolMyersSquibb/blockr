@@ -2,16 +2,11 @@
 % Please edit documentation in R/blocks.R
 \name{new_join_block}
 \alias{new_join_block}
-\alias{join_block}
 \title{Join block}
 \usage{
-new_join_block(data, y = NULL, type = character(), by = character(), ...)
-
-join_block(data, ...)
+new_join_block(y = NULL, type = character(), by = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{y}{Second dataset for join.}
 
 \item{type}{Join type.}

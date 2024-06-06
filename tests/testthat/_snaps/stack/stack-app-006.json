@@ -1,0 +1,39 @@
+{
+  "input": {
+    "mystack-add": 1,
+    "mystack-copy": 1,
+    "mystack-newTitle": "Stack",
+    "mystack-remove": 1
+  },
+  "export": {
+    "mystack-n_blocks": 1,
+    "mystack-removed": true,
+    "mystack-stack": [
+      {
+        "package": {
+          "value": "datasets"
+        },
+        "dataset": {
+          "value": "BOD",
+          "choices": [
+            "structure(function (package) ",
+            "{",
+            "    datasets <- utils::data(package = package)",
+            "    datasets <- datasets$results[, \"Item\"]",
+            "    options <- gsub(\"\\\\s+\\\\(.+\\\\)$\", \"\", datasets)",
+            "    options[lgl_ply(options, is_dataset_eligible, package)]",
+            "}, result = c(\"BOD\", \"CO2\", \"ChickWeight\", \"DNase\", \"Formaldehyde\", ",
+            "\"Indometh\", \"InsectSprays\", \"LifeCycleSavings\", \"Loblolly\", \"Orange\", ",
+            "\"OrchardSprays\", \"PlantGrowth\", \"Puromycin\", \"Theoph\", \"ToothGrowth\", ",
+            "\"USArrests\", \"USJudgeRatings\", \"airquality\", \"anscombe\", \"attenu\", ",
+            "\"attitude\", \"beaver1\", \"beaver2\", \"cars\", \"chickwts\", \"esoph\", ",
+            "\"faithful\", \"freeny\", \"infert\", \"iris\", \"longley\", \"morley\", ",
+            "\"mtcars\", \"npk\", \"pressure\", \"quakes\", \"randu\", \"rock\", \"sleep\", ",
+            "\"stackloss\", \"swiss\", \"trees\", \"warpbreaks\", \"women\"))"
+          ],
+          "multiple": false
+        }
+      }
+    ]
+  }
+}

@@ -2,16 +2,11 @@
 % Please edit documentation in R/blocks.R
 \name{new_group_by_block}
 \alias{new_group_by_block}
-\alias{group_by_block}
 \title{Group by block}
 \usage{
-new_group_by_block(data, columns = colnames(data)[1], ...)
-
-group_by_block(data, ...)
+new_group_by_block(columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{columns}{Column(s) to select.}
 
 \item{...}{Further (metadata) attributes}

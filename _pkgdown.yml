@@ -76,7 +76,7 @@ reference:
 - title: Blocks
   desc: Blocks contain field. They return a dataframe
   contents: 
-  - "`data_block`"
+  - "`dataset_block`"
   - "`upload_block`"
   - "`filesbrowser_block`"
   - "`new_parser_block`"

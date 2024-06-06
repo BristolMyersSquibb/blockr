@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_submit_field}
 \alias{new_submit_field}
-\alias{submit_field}
 \title{Submit field constructor}
 \usage{
 new_submit_field(...)
-
-submit_field(...)
 }
 \arguments{
 \item{...}{Other parameters passed to \link{new_field} and may be needed
