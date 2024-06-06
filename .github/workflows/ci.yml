@@ -8,7 +8,13 @@ name: ci
 
 jobs:
 
+  lint:
+
+    uses: ./.github/workflows/lint.yml
+
   smoke:
+
+    needs: lint
 
     runs-on: ubuntu-latest
 
@@ -50,24 +56,6 @@ jobs:
 
     uses: ./.github/workflows/coverage.yml
 
-    secrets: inherit
-
-  lint:
-
-    needs: smoke
-
-    uses: ./.github/workflows/lint.yml
-
-    secrets: inherit
-  
-  deploy:
-
-    needs: smoke
-
-    if: github.event_name != 'pull_request'
-  
-    uses: ./.github/workflows/deploy-app.yml
-  
     secrets: inherit
 
   pkgdown:
