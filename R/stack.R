@@ -64,13 +64,29 @@ do_init_block <- function(x, pos, nme, dat = NULL) {
   }
 }
 
+eval_stack <- function(x) {
+
+  stopifnot(is_stack(x))
+
+  if (!length(x)) {
+    return(x)
+  }
+
+  temp <- evaluate_block(x[[1L]])
+
+  for (i in seq_along(x)[-1L]) {
+    temp <- evaluate_block(x[[i]], data = temp)
+  }
+
+  set_stack_result(x, temp)
+}
+
 set_stack_blocks <- function(stack, blocks, result) {
   stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
 
   attributes(blocks) <- attributes(stack)
-  attr(blocks, "result") <- result
 
-  blocks
+  set_stack_result(blocks, result)
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -90,6 +106,16 @@ get_stack_name <- function(x) {
 get_stack_result <- function(stack) {
   stopifnot(is_stack(stack))
   attr(stack, "result")
+}
+
+set_stack_result <- function(stack, value) {
+  stopifnot(is_stack(stack))
+  attr(stack, "result") <- value
+  stack
+}
+
+clear_stack_result <- function(stack) {
+  set_stack_result(stack, NULL)
 }
 
 #' @param x An object inheriting form `"stack"`

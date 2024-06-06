@@ -27,7 +27,9 @@ blockr_serialize.block <- serialize_impl
 
 #' @rdname blockr_serialize
 #' @export
-blockr_serialize.stack <- serialize_impl
+blockr_serialize.stack <- function(x) {
+  serialize_impl(clear_stack_result(x))
+}
 
 #' @rdname blockr_serialize
 #' @export
@@ -54,7 +56,7 @@ blockr_deserialize <- function(x) {
 
   if (identical(x[["class"]], "workspace")) {
 
-    c(
+    res <- c(
       lapply(x[["payload"]][["stacks"]], blockr_deserialize),
       title = x[["payload"]][["title"]],
       settings = jsonlite::toJSON(x[["payload"]][["settings"]])
@@ -62,8 +64,14 @@ blockr_deserialize <- function(x) {
 
   } else {
 
-    unserialize(x[["payload"]])
+    res <- unserialize(x[["payload"]])
   }
+
+  if (!identical(x[["class"]], "stack")) {
+    return(res)
+  }
+
+  eval_stack(res)
 }
 
 #' @rdname blockr_serialize
