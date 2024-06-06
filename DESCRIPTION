@@ -53,6 +53,7 @@ Suggests:
     htmlwidgets,
     withr,
     ggplot2,
-    vdiffr
+    vdiffr,
+    palmerpenguins
 Config/testthat/edition: 3
 VignetteBuilder: knitr
