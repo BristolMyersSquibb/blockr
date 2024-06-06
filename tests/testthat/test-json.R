@@ -11,9 +11,9 @@ test_that("json ser/deser for fields", {
 
 test_that("json ser/deser for blocks", {
 
-  x <- new_dataset_block("")
+  x <- new_dataset_block("iris")
 
-  expect_identical(from_json(to_json(x)), x)
+  expect_identical(from_json(to_json(x)), x, ignore_function_env = TRUE)
 })
 
 test_that("json ser/deser for stacks", {

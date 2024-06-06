@@ -35,7 +35,30 @@ test_that("stacks", {
   expect_type(code, "language")
 })
 
-library(shinytest2)
+test_that("Set stack title", {
+
+  stack_test_server <- function(id, x, ...) {
+    generate_server(x, id, ...)
+  }
+
+  shiny::testServer(
+    stack_test_server,
+    {
+      expect_identical(get_stack_title(vals$stack), "Stack")
+      session$setInputs(newTitle = "Test stack")
+      expect_identical(get_stack_title(vals$stack), "Test stack")
+    },
+    args = list(
+      id = "add_block_to_stack",
+      x = new_stack(
+        data = new_dataset_block("anscombe")
+      )
+    )
+  )
+})
+
+withr::local_package("shinytest2")
+
 test_that("stacks demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()

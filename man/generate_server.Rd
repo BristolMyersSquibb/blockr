@@ -16,9 +16,9 @@ generate_server(x, ...)
 
 \method{generate_server}{data_block}(x, id, ...)
 
-\method{generate_server}{transform_block}(x, in_dat, id, ...)
+\method{generate_server}{transform_block}(x, in_dat, id, is_prev_valid, ...)
 
-\method{generate_server}{plot_block}(x, in_dat, id, ...)
+\method{generate_server}{plot_block}(x, in_dat, id, is_prev_valid, ...)
 
 \method{generate_server}{stack}(
   x,
@@ -38,6 +38,8 @@ generate_server(x, ...)
 \item{id}{Unique module id. Useful when the workspace is called as a module.}
 
 \item{in_dat}{Reactive input data}
+
+\item{is_prev_valid}{Useful to validate the current block}
 
 \item{new_block}{For dynamically inserted blocks.}
 

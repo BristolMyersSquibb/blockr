@@ -94,11 +94,12 @@ test_that("workspace", {
   expect_identical(get_workspace_title(), "")
   expect_identical(get_workspace_settings(), list())
 
-  app <- serve_workspace(my_stack = new_stack(dataset_block))
+  app <- serve_workspace(my_stack = new_stack(new_dataset_block))
   expect_s3_class(app, "shiny.appobj")
 })
 
-library(shinytest2)
+withr::local_package("shinytest2")
+
 test_that("workspace demo works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
@@ -139,8 +140,7 @@ test_that("restore workspace works", {
     system.file("examples/restore-workspace/app.R", package = "blockr")
   app <- AppDriver$new(
     shiny_app_path,
-    name = "restore-workspace-app",
-    variant = platform_variant()
+    name = "restore-workspace-app"
   )
 
   app$expect_values(

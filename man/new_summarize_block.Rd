@@ -2,21 +2,11 @@
 % Please edit documentation in R/blocks.R
 \name{new_summarize_block}
 \alias{new_summarize_block}
-\alias{summarize_block}
 \title{Summarize block}
 \usage{
-new_summarize_block(
-  data,
-  func = c("mean", "se"),
-  default_columns = character(),
-  ...
-)
-
-summarize_block(data, ...)
+new_summarize_block(func = character(), default_columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{func}{Summarize function to apply.}
 
 \item{default_columns}{If you know in advance each function to apply,

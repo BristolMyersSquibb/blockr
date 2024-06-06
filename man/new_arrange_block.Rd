@@ -2,16 +2,11 @@
 % Please edit documentation in R/blocks.R
 \name{new_arrange_block}
 \alias{new_arrange_block}
-\alias{arrange_block}
 \title{Arrange block}
 \usage{
-new_arrange_block(data, columns = character(), ...)
-
-arrange_block(data, ...)
+new_arrange_block(columns = character(), ...)
 }
 \arguments{
-\item{data}{Tabular data in which to select some columns.}
-
 \item{columns}{Column(s) to select.}
 
 \item{...}{Further (metadata) attributes}

@@ -2,7 +2,6 @@
 % Please edit documentation in R/fields.R
 \name{new_select_field}
 \alias{new_select_field}
-\alias{select_field}
 \title{Select field constructor}
 \usage{
 new_select_field(
@@ -11,8 +10,6 @@ new_select_field(
   multiple = FALSE,
   ...
 )
-
-select_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

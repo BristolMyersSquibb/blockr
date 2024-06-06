@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_switch_field}
 \alias{new_switch_field}
-\alias{switch_field}
 \title{Switch field constructor}
 \usage{
 new_switch_field(value = FALSE, ...)
-
-switch_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

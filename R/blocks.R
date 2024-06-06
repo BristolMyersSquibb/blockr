@@ -4,50 +4,37 @@
 #' the default being datasets.
 #'
 #' @inheritParams new_block
-#' @param dat Multiple datasets.
-#' @param selected Selected dataset.
+#' @param selected Selected dataset
+#' @param package Name of an R package containing datasets
 #' @export
-#' @rdname dataset_block
-new_dataset_block <- function(..., dat = as.environment("package:datasets"),
-                              selected = character()) {
+new_dataset_block <- function(selected = character(), package = "datasets",
+                              ...) {
 
-  is_dataset_eligible <- function(x) {
-    inherits(
-      get(x, envir = dat, inherits = FALSE),
-      "data.frame"
-    )
+  is_dataset_eligible <- function(x, pkg) {
+    inherits(do.call("::", list(pkg = pkg, name = x)), "data.frame")
   }
 
-  datasets <- ls(envir = dat)
-  datasets <- datasets[lgl_ply(datasets, is_dataset_eligible)]
+  list_datasets <- function(package) {
+    datasets <- utils::data(package = package)
+    datasets <- datasets$results[, "Item"]
 
-  if (length(selected) == 0) selected <- datasets[1]
+    options <- gsub("\\s+\\(.+\\)$", "", datasets)
 
-  fields <- list(
-    dataset = new_select_field(
-      selected,
-      datasets,
-      title = "Dataset"
-    )
-  )
-
-  expr <- substitute(
-    get(.(dataset), envir = data),
-    list(data = substitute(dat))
-  )
+    options[lgl_ply(options, is_dataset_eligible, package)]
+  }
 
   new_block(
-    fields = fields,
-    expr = expr,
+    fields = list(
+      package = new_hidden_field(package, type = "name"),
+      dataset = new_select_field(selected, list_datasets,
+        type = "name",
+        title = "Dataset"
+      )
+    ),
+    expr = as.call(c(as.symbol("::"), quote(.(package)), quote(.(dataset)))),
     ...,
     class = c("dataset_block", "data_block")
   )
-}
-
-#' @rdname dataset_block
-#' @export
-dataset_block <- function(...) {
-  initialize_block(new_dataset_block(...))
 }
 
 #' Upload block constructor
@@ -56,29 +43,17 @@ dataset_block <- function(...) {
 #' This block outputs a string containing the file path.
 #'
 #' @inheritParams new_block
+#' @param file_path File path
 #' @export
-#' @rdname upload_block
-new_upload_block <- function(...) {
-
-  data_path <- function(file) {
-    if (length(file)) file$datapath else character()
-  }
-
+new_upload_block <- function(file_path = character(), ...) {
   new_block(
     fields = list(
-      file = new_upload_field(title = "File"),
-      expression = new_hidden_field(data_path)
+      file = new_upload_field(file_path, title = "File")
     ),
-    expr = quote(c(.(expression))),
+    expr = quote(.(file)),
     ...,
     class = c("upload_block", "data_block")
   )
-}
-
-#' @rdname upload_block
-#' @export
-upload_block <- function(...) {
-  initialize_block(new_upload_block(...))
 }
 
 #' Files browser block constructor
@@ -87,37 +62,22 @@ upload_block <- function(...) {
 #' It falls back to the user file system when running locally.
 #' This block outputs a string containing the file path.
 #'
-#' @inheritParams new_block
-#' @param volumes Paths accessible by the shinyFiles browser.
+#' @inheritParams new_upload_block
+#' @param volumes Paths accessible by the shinyFiles browser
 #' @export
-#' @rdname filesbrowser_block
-new_filesbrowser_block <- function(volumes = c(home = path.expand("~")), ...) {
-
-  data_path <- function(file) {
-    if (length(file) == 0 || is.integer(file) || length(file$files) == 0) {
-      return(character())
-    }
-
-    files <- shinyFiles::parseFilePaths(volumes, file)
-
-    unname(files$datapath)
-  }
-
+new_filesbrowser_block <- function(file_path = character(),
+                                   volumes = c(home = path.expand("~")), ...) {
   new_block(
     fields = list(
-      file = new_filesbrowser_field(volumes = volumes, title = "File"),
-      expression = new_hidden_field(data_path)
+      file = new_filesbrowser_field(file_path,
+        volumes = volumes,
+        title = "File"
+      )
     ),
-    expr = quote(c(.(expression))),
+    expr = quote(.(file)),
     ...,
     class = c("filesbrowser_block", "data_block")
   )
-}
-
-#' @export
-#' @rdname filesbrowser_block
-filesbrowser_block <- function(...) {
-  initialize_block(new_filesbrowser_block(...))
 }
 
 #' Data parser block constructor
@@ -126,13 +86,8 @@ filesbrowser_block <- function(...) {
 #' Unless you need a new data parser, there is no need to use this directly.
 #'
 #' @inheritParams new_block
-#' @param data Data coming from any data reader block like \link{filesbrowser_block} and
-#' \link{upload_block}.
 #' @export
-#' @rdname parser_block
-new_parser_block <- function(data, expr, fields = list(), ...,
-                             class = character()) {
-
+new_parser_block <- function(expr, fields = list(), ..., class = character()) {
   safe_expr <- function(data) {
     if (length(data)) {
       expr
@@ -154,95 +109,54 @@ new_parser_block <- function(data, expr, fields = list(), ...,
 
 #' CSV data parser block
 #'
-#' \code{csv_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related CSV file and returns
+#' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related CSV file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
-new_csv_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(utils::read.csv()), class = "csv_block")
-}
-
-#' @rdname parser_block
-#' @export
-csv_block <- function(data, ...) {
-  initialize_block(new_csv_block(data, ...), data)
+new_csv_block <- function(...) {
+  new_parser_block(quote(utils::read.csv()), ..., class = "csv_block")
 }
 
 #' RDS data parser block
 #'
-#' \code{rds_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related rds file and returns
+#' \code{rds_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related rds file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
-new_rds_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(readRDS()), class = "rds_block")
-}
-
-#' @rdname parser_block
-#' @export
-rds_block <- function(data, ...) {
-  initialize_block(new_rds_block(data, ...), data)
+new_rds_block <- function(...) {
+  new_parser_block(quote(readRDS()), ..., class = "rds_block")
 }
 
 #' JSON data parser block
 #'
-#' \code{json_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related json file and returns
+#' \code{json_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related json file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
-new_json_block <- function(data, ...) {
-  new_parser_block(data,
-    expr = quote(jsonlite::fromJSON()),
+new_json_block <- function(...) {
+  new_parser_block(
+    quote(jsonlite::fromJSON()),
+    ...,
     class = "json_block"
   )
 }
 
-#' @rdname parser_block
-#' @export
-json_block <- function(data, ...) {
-  initialize_block(new_json_block(data, ...), data)
-}
-
-#' SAS data parser block
-#'
-#' \code{sas_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related SAS file and returns
-#' a dataframe.
-#'
-#' @rdname parser_block
-#' @export
-new_sas_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(haven::read_sas()), class = "sas_block")
-}
-
-#' @rdname parser_block
-#' @export
-sas_block <- function(data, ...) {
-  initialize_block(new_sas_block(data, ...), data)
-}
-
 #' XPT data parser block
 #'
-#' \code{csv_block}: From a string given by \link{filesbrowser_block} and
-#' \link{upload_block}, reads the related XPT file and returns
+#' \code{csv_block}: From a string given by \link{new_filesbrowser_block} and
+#' \link{new_upload_block}, reads the related XPT file and returns
 #' a dataframe.
 #'
-#' @rdname parser_block
+#' @rdname new_parser_block
 #' @export
-new_xpt_block <- function(data, ...) {
-  new_parser_block(data, expr = quote(haven::read_xpt()), class = "xpt_block")
-}
-
-#' @rdname parser_block
-#' @export
-xpt_block <- function(data, ...) {
-  initialize_block(new_xpt_block(data, ...), data)
+new_xpt_block <- function(...) {
+  new_parser_block(quote(haven::read_xpt()), ..., class = "xpt_block")
 }
 
 #' Result block
@@ -251,10 +165,8 @@ xpt_block <- function(data, ...) {
 #' another one. This isn't relevant for single stack apps.
 #'
 #' @inheritParams new_block
-#' @rdname result_block
 #' @export
 new_result_block <- function(...) {
-
   fields <- list(
     stack = new_result_field(title = "Stack")
   )
@@ -267,33 +179,24 @@ new_result_block <- function(...) {
   )
 }
 
-#' @rdname result_block
-#' @export
-result_block <- function(...) {
-  initialize_block(new_result_block(...))
-}
-
 #' Filter block
 #'
 #' This block provides access to \link[dplyr]{filter} verb and
 #' returns the filtered data.
 #'
 #' @inheritParams new_block
-#' @param data Tabular data to filter (rows).
-#' @param columns Definition of the equality filter.
-#' @param values Definition of the equality filter.
-#' @param filter_fun Default filter fun for the expression.
-#' @rdname filter_block
+#' @param columns Columns used for filtering
+#' @param values Values used for filtering
+#' @param filter_fun Filter function for the expression
 #' @export
-new_filter_block <- function(data, columns = character(), values = character(),
+new_filter_block <- function(columns = character(), values = character(),
                              filter_fun = "==", ...) {
-
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
-        factor = select_field,
-        numeric = range_field,
-        string_field
+        factor = new_select_field,
+        numeric = new_range_field,
+        new_string_field
       )
     }
 
@@ -360,7 +263,7 @@ new_filter_block <- function(data, columns = character(), values = character(),
       ),
       title = "Comparison"
     ),
-    values = new_list_field(values, sub_fields, title = "Value"),
+    values = new_list_field(sub_fields, title = "Value"),
     expression = new_hidden_field(filter_exps)
   )
 
@@ -376,30 +279,23 @@ new_filter_block <- function(data, columns = character(), values = character(),
   )
 }
 
-#' @rdname filter_block
-#' @export
-filter_block <- function(data, ...) {
-  initialize_block(new_filter_block(data, ...), data)
-}
-
 #' Select block
 #'
 #' This block provides access to \link[dplyr]{select} verb and
 #' returns a dataframe with the selected columns.
 #'
 #' @inheritParams new_block
-#' @param data Tabular data in which to select some columns.
 #' @param columns Column(s) to select.
-#' @rdname select_block
 #' @export
-new_select_block <- function(data, columns = character(), ...) {
-
+new_select_block <- function(columns = character(), ...) {
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE,
-                               title = "Columns")
+    columns = new_select_field(columns, all_cols,
+      multiple = TRUE,
+      title = "Columns"
+    )
   )
 
   new_block(
@@ -412,29 +308,21 @@ new_select_block <- function(data, columns = character(), ...) {
   )
 }
 
-#' @rdname select_block
-#' @export
-select_block <- function(data, ...) {
-  initialize_block(new_select_block(data, ...), data)
-}
-
 #' Summarize block
 #'
 #' This block provides access to \link[dplyr]{summarize} verb and
 #' returns a dataframe with the transformed columns.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
+#' @inheritParams new_select_block
 #' @param func Summarize function to apply.
 #' @param default_columns If you know in advance each function to apply,
 #' you can also pass predefined selected column for each summary.
 #' Therefore when not of length 0, columns should have the same length
 #' as func.
-#' @rdname summarize_block
 #' @export
-new_summarize_block <- function(data, func = c("mean", "se"),
+new_summarize_block <- function(func = character(),
                                 default_columns = character(), ...) {
-
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -524,7 +412,7 @@ new_summarize_block <- function(data, func = c("mean", "se"),
 
   fields <- list(
     funcs = new_select_field(func, func_choices, multiple = TRUE, title = "Functions"),
-    columns = new_list_field(sub_fields = sub_fields, title = "Columns"),
+    columns = new_list_field(sub_fields, title = "Columns"),
     expression = new_hidden_field(summarize_expr)
   )
 
@@ -539,29 +427,23 @@ new_summarize_block <- function(data, func = c("mean", "se"),
   )
 }
 
-#' @rdname summarize_block
-#' @export
-summarize_block <- function(data, ...) {
-  initialize_block(new_summarize_block(data, ...), data)
-}
-
 #' Arrange block
 #'
 #' This block provides access to \link[dplyr]{arrange} verb and
 #' returns a dataframe.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
-#' @rdname arrange_block
+#' @inheritParams new_select_block
 #' @export
-new_arrange_block <- function(data, columns = character(), ...) {
-
+new_arrange_block <- function(columns = character(), ...) {
   all_cols <- function(data) colnames(data)
 
   # Type as name for arrange and group_by
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE,
-                               type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols,
+      multiple = TRUE,
+      type = "name", title = "Columns"
+    )
   )
 
   new_block(
@@ -572,44 +454,31 @@ new_arrange_block <- function(data, columns = character(), ...) {
   )
 }
 
-#' @rdname arrange_block
-#' @export
-arrange_block <- function(data, ...) {
-  initialize_block(new_arrange_block(data, ...), data)
-}
-
 #' Group by block
 #'
 #' This block provides access to \link[dplyr]{group_by} verb and
 #' returns a dataframe.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
-#' @rdname group_by_block
+#' @inheritParams new_select_block
 #' @export
-new_group_by_block <- function(data, columns = character(), ...) {
-
+new_group_by_block <- function(columns = character(), ...) {
   all_cols <- function(data) colnames(data)
 
   # Select_field only allow one value, not multi select
   fields <- list(
-    columns = new_select_field(columns, all_cols, multiple = TRUE, type = "name", title = "Columns")
+    columns = new_select_field(columns, all_cols,
+      multiple = TRUE,
+      type = "name", title = "Columns"
+    )
   )
 
   new_block(
     fields = fields,
-    expr = quote(
-      dplyr::group_by(..(columns))
-    ),
+    expr = quote(dplyr::group_by(..(columns))),
     ...,
     class = c("group_by_block", "transform_block")
   )
-}
-
-#' @rdname group_by_block
-#' @export
-group_by_block <- function(data, ...) {
-  initialize_block(new_group_by_block(data, ...), data)
 }
 
 #' Join block
@@ -619,22 +488,16 @@ group_by_block <- function(data, ...) {
 #' stack as the `y` parameter expects a dataframe from another stack.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
+#' @inheritParams new_select_block
 #' @param y Second dataset for join.
 #' @param type Join type.
 #' @param by Join columns.
 #'
-#' @rdname join_block
 #' @export
-new_join_block <- function(data, y = NULL, type = character(),
-                           by = character(), ...) {
-
+new_join_block <- function(y = NULL, type = character(), by = character(),
+                           ...) {
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
-  }
-
-  if (!length(by) && not_null(y)) {
-    by <- by_choices(data, y)[1L]
   }
 
   join_types <- c("left", "inner", "right", "full", "semi", "anti")
@@ -664,49 +527,28 @@ new_join_block <- function(data, y = NULL, type = character(),
   )
 }
 
-#' @rdname join_block
-#' @export
-join_block <- function(data, ...) {
-  initialize_block(new_join_block(data, ...), data)
-}
-
 #' Head block
 #'
 #' This allows to select the first n rows of the input dataframe.
 #'
 #' @inheritParams new_block
-#' @inheritParams select_block
-#' @rdname head_block
+#' @inheritParams new_select_block
 #' @param n_rows Number of rows to return.
 #' @param n_rows_min Minimum number of rows.
 #' @export
-new_head_block <- function(data, n_rows = numeric(), n_rows_min = 1L, ...) {
-
-  tmp_expr <- function(n_rows) {
-    bquote(
-      head(n = .(n_rows)),
-      list(n_rows = n_rows)
-    )
-  }
-
+new_head_block <- function(n_rows = numeric(), n_rows_min = 1L, ...) {
   n_rows_max <- function(data) nrow(data)
 
   fields <- list(
     n_rows = new_numeric_field(n_rows, n_rows_min, n_rows_max,
-                               title = "Number of rows"),
-    expression = new_hidden_field(tmp_expr)
+      title = "Number of rows"
+    )
   )
 
   new_block(
     fields = fields,
-    expr = quote(.(expression)),
+    expr = quote(head(n = .(n_rows))),
     ...,
     class = c("head_block", "transform_block")
   )
-}
-
-#' @rdname head_block
-#' @export
-head_block <- function(data, ...) {
-  initialize_block(new_head_block(data, ...), data)
 }

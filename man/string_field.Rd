@@ -2,12 +2,9 @@
 % Please edit documentation in R/fields.R
 \name{new_string_field}
 \alias{new_string_field}
-\alias{string_field}
 \title{String field constructor}
 \usage{
 new_string_field(value = character(), ...)
-
-string_field(...)
 }
 \arguments{
 \item{value}{Default text input value.}

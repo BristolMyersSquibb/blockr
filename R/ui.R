@@ -581,7 +581,8 @@ ui_input.submit_field <- function(x, id, name) {
 ui_input.upload_field <- function(x, id, name) {
   fileInput(
     input_ids(x, id),
-    name
+    name,
+    placeholder = if (length(value(x))) value(x) else "No file selected"
   )
 }
 
@@ -641,10 +642,15 @@ input_ids.list_field <- function(x, name, ...) {
 
 #' @rdname ui_input
 #' @export
+input_ids.hidden_field <- function(x, name, ...) {
+  character()
+}
+
+#' @rdname ui_input
+#' @export
 ui_input.variable_field <- function(x, id, name) {
-  field <- validate_field(
-    materialize_variable_field(x)
-  )
+
+  field <- materialize_variable_field(x)
 
   div(
     id = paste0(id, "_cont"),
@@ -669,10 +675,8 @@ ui_input.hidden_field <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.list_field <- function(x, id, name) {
-  fields <- lapply(
-    update_sub_fields(value(x, "sub_fields"), value(x)),
-    validate_field
-  )
+
+  fields <- get_sub_fields(x)
 
   # TODO: indicate nesting of fields, nice version of
   # `paste0(name, "_", names(fields))` instead of just `names(fields)`
@@ -794,10 +798,7 @@ ui_update.list_field <- function(x, session, id, name) {
     session = session
   )
 
-  fields <- lapply(
-    update_sub_fields(value(x, "sub_fields"), value(x)),
-    validate_field
-  )
+  fields <- get_sub_fields(x)
 
   insertUI(
     selector = paste0("#", ns_id, "_cont"),

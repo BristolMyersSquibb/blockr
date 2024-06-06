@@ -9,34 +9,59 @@
 #'
 #' @export
 new_stack <- function(..., title = "Stack", name = rand_names()) {
-  ctors <- c(...)
+
+  ctors <- list(...)
   names <- names(ctors)
 
   stopifnot(is_string(title), is_string(name))
 
   if (length(ctors)) {
+
     blocks <- vector("list", length(ctors))
 
-    blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
+    if (length(names)) {
+      stopifnot(length(unique(names)) == length(blocks))
+    } else {
+      names <- rand_names(n = length(blocks))
+    }
+
+    blocks[[1L]] <- do_init_block(ctors[[1L]], 1L, names[1L])
     temp <- evaluate_block(blocks[[1L]])
 
     for (i in seq_along(ctors)[-1L]) {
-      temp <- evaluate_block(
-        blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
-        data = temp
-      )
+
+      blocks[[i]] <- do_init_block(ctors[[i]], i, names[i], temp)
+      temp <- evaluate_block(blocks[[i]], data = temp)
     }
+
   } else {
+
     blocks <- list()
     temp <- list()
   }
 
   stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks,
-    title = title, name = name, result = temp,
-    class = "stack"
-  )
+  structure(blocks, title = title, name = name, result = temp, class = "stack")
+}
+
+do_init_block <- function(x, pos, nme, dat = NULL) {
+
+  if (is.function(x)) {
+    x <- do.call(x, list())
+  }
+
+  stopifnot(inherits(x, "block"))
+
+  # TODO: stop doing this and track info on stack level
+  attr(x, "position") <- pos
+  attr(x, "name") <- nme
+
+  if (is.null(dat)) {
+    initialize_block(x)
+  } else {
+    initialize_block(x, dat)
+  }
 }
 
 set_stack_blocks <- function(stack, blocks, result) {
@@ -195,9 +220,17 @@ add_block <- function(stack, block, position = NULL) {
   }
 
   if (!length(stack)) {
-    tmp <- do.call(block, list())
+
+    tmp <- initialize_block(
+      do.call(block, list())
+    )
+
   } else {
-    tmp <- do.call(block, list(data = data, position = position))
+
+    tmp <- initialize_block(
+      do.call(block, list(position = position)),
+      data
+    )
   }
 
   set_stack_blocks(stack, append(stack, list(tmp), position), data)
