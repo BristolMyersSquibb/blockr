@@ -30,6 +30,16 @@ restore_workspace <- function(x, force = FALSE, workspace = get_workspace()) {
   do.call(set_workspace, c(x, list(force = force, workspace = workspace)))
 }
 
+#' @param file Filename
+#' @rdname set_workspace
+#' @export
+save_workspace <- function(file, workspace = get_workspace()) {
+
+  stopifnot(!file.exists(file), is_workspace(workspace))
+
+  writeLines(to_json(workspace), file, useBytes = TRUE)
+}
+
 workspace_env <- structure(
   new.env(parent = emptyenv()),
   title = "",
@@ -215,6 +225,8 @@ clear_workspace_settings <- function(workspace = get_workspace()) {
   set_workspace_settings(list(), workspace)
 }
 
+#' @rdname set_workspace
+#' @export
 clear_workspace <- function(workspace = get_workspace()) {
 
   stopifnot(is_workspace(workspace))
