@@ -32,13 +32,11 @@ note_box <- function(..., color) {
 
 ## Get started
 
-`{blockr}` provides plug and play block which can be used to import, transform and visualize data.
+`{blockr}` provides plug and play blocks which can be used to import, transform and visualize data.
 
 ### Introduction
 
-`{blockr}` aims at abstracting the logic behind `{dplyr}` functions
-under __blocks__. We assume that a __stack__ is a succession
-of dependent blocks. We designed 3 kinds of blocks:
+`{blockr}` aims at abstracting the logic behind common data pipeline tasks under __blocks__, without requiring any programming background. Besides, `{blockr}` exposes multiple tools so that advanced developers can easily extend it. We assume that a __stack__ is a succession of dependent blocks. We designed 3 kinds of blocks:
 
 - __data__ block: entry level block to determine input data.
 - __transform__ block: materialize `{dplyr}` operations on the selected data.
