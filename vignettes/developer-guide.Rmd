@@ -130,39 +130,38 @@ That's currently how {blockr} validate blocks and fields. Each block is validate
 ```{r, echo=FALSE}
 mermaid("
 flowchart TD;
-    subgraph stack
-        subgraph blk1
-            block1[Block 1] --> |check fields| validate_block1[Validation] --> validate_block1_ok[OK]
-            validate_block1 --> validate_block1_fail[Fail]
-            validate_block1_ok --> |evaluate| try_eval[Try] --> eval_block1_ok[OK] --> data_block1[Data]
-            eval_block1_ok[Success]
-            try_eval --> eval_block1_fail[Fail]
-        end
-        data_block1 -.-> block2
-        subgraph blk2
-        block2[Block2] --> |check fields| validate_block2[Validation] --> validate_block2_ok[OK]
-        
-        validate_block2 --> validate_block2_fail[Fail]
-        validate_block2_ok --> |evaluate| try_eval2[Try] --> eval_block2_ok[OK] --> data_block2[Data]
-        eval_block2_ok[Success]
-        try_eval2 --> eval_block2_fail[Fail]
-        end
-        data_block2 -.-> stack_result[Stack result]
+  subgraph stack
+    subgraph blk1
+      block1[Block 1] --> |check fields| validate_block1[Validation] --> validate_block1_ok[OK]
+      validate_block1 --> validate_block1_fail[Fail]
+      validate_block1_ok --> |evaluate| try_eval[Try] --> eval_block1_ok[OK] --> data_block1[Data]
+      eval_block1_ok[Success]
+      try_eval --> eval_block1_fail[Fail]
     end
-    eval_block1_fail -.-x |notification| gui
-    eval_block2_fail -.-x |notification| gui
-    validate_block1_fail -.-x |notification| gui
-    validate_block2_fail -.-x |notification| gui
-    subgraph ui
-        gui[User interface]
+    data_block1 -.-> block2
+    subgraph blk2
+      block2[Block2] --> |check fields| validate_block2[Validation] --> validate_block2_ok[OK]
+    
+      validate_block2 --> validate_block2_fail[Fail]
+      validate_block2_ok --> |evaluate| try_eval2[Try] --> eval_block2_ok[OK] --> data_block2[Data]
+      eval_block2_ok[Success]
+      try_eval2 --> eval_block2_fail[Fail]
     end
+    data_block2 -.-> stack_result[Stack result]
+  end
+  eval_block1_fail -.-x |notification| gui
+  eval_block2_fail -.-x |notification| gui
+  validate_block1_fail -.-x |notification| gui
+  validate_block2_fail -.-x |notification| gui
+  subgraph ui
+      gui[User interface]
+  end
 ", height = "1200px") |>
-  htmlwidgets::onRender(
-    "function(el, x) {
+  htmlwidgets::onRender("
+    function(el, x) {
       el.classList.add('text-center')
     }
-    "
-)
+  ")
 ```
 
 # Adding new fields
