@@ -185,10 +185,15 @@ output as input of the second stack (it appears in the result block select input
 
 ```r
 library(blockr)
+library(blockr.data)
 
 serve_workspace(
-  stack1 = new_stack(new_dataset_block, new_select_block),
+  stack1 = new_stack(
+    new_dataset_block("lab", "blockr.data"),
+    new_select_block(c("STUDYID", "USUBJID"))
+  ),
   stack2 = new_stack(new_result_block),
+  stack3 = new_stack(new_dataset_block("ae", "blockr.data")),
   title = "My workspace"
 )
 ```
@@ -196,7 +201,7 @@ serve_workspace(
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6exwDABucAD61Fbi7KhQBHCCEDIynC3iAIyqMhBw1DXdEnxDIwAmUFzlpDWF4rKTo3DccAQLS8m46Z1j4gBMA6uHE8M18uxO3NuiErv7MqQOGwNCALK5MvUMjc1WkJ0skwABfAC6QA", # nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwl6exwDABucAD61Fbi7KhQBHCCEDIynAPiAIyqMhBw1B3jEsOjo3MLdVzNpB1VmtxQdAFCVQy19VApuOmrs-OLcNxwBDt7GkIAygAqAKoAIgBNACSf2OYB+Hx+ACEAFIglIlUbJa4jMZcCQAJhm60W6PEfBx8nYTm4r1EEmRNzREwAzNj7kt8TjNrE4GSzJooHAwadzlwESjRqQHE8ZkIALK5GTdBi9fqDITpZJgAC+AF0gA", # nolint
     "app",
     header = FALSE
   ),

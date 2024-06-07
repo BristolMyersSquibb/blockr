@@ -46,19 +46,19 @@ reference:
 - title: Fields elements
   desc: Fields are translated into shiny inputs. They are part of blocks.
   contents:
-  - "`string_field`"
-  - "`select_field`"
-  - "`switch_field`"
-  - "`numeric_field`"
-  - "`submit_field`"
-  - "`upload_field`"
-  - "`filesbrowser_field`"
-  - "`variable_field`"
-  - "`range_field`"
-  - "`hidden_field`"
-  - "`list_field`"
-  - "`result_field`"
-  - "`keyvalue_field`"
+  - "`new_string_field`"
+  - "`new_select_field`"
+  - "`new_switch_field`"
+  - "`new_numeric_field`"
+  - "`new_submit_field`"
+  - "`new_upload_field`"
+  - "`new_filesbrowser_field`"
+  - "`new_variable_field`"
+  - "`new_range_field`"
+  - "`new_hidden_field`"
+  - "`new_list_field`"
+  - "`new_result_field`"
+  - "`new_keyvalue_field`"
 
 - title: Blocks core elements
   desc: Functions to build blocks
@@ -76,24 +76,23 @@ reference:
 - title: Blocks
   desc: Blocks contain field. They return a dataframe
   contents: 
-  - "`dataset_block`"
-  - "`upload_block`"
-  - "`filesbrowser_block`"
+  - "`new_dataset_block`"
+  - "`new_upload_block`"
+  - "`new_filesbrowser_block`"
   - "`new_parser_block`"
-  - "`csv_block`"
-  - "`rds_block`"
-  - "`json_block`"
-  - "`sas_block`"
-  - "`xpt_block`"
-  - "`result_block`"
-  - "`filter_block`"
-  - "`select_block`"
-  - "`summarize_block`"
-  - "`arrange_block`"
-  - "`group_by_block`"
-  - "`join_block`"
-  - "`head_block`"
-  - "`mutate_block`"
+  - "`new_csv_block`"
+  - "`new_rds_block`"
+  - "`new_json_block`"
+  - "`new_xpt_block`"
+  - "`new_result_block`"
+  - "`new_filter_block`"
+  - "`new_select_block`"
+  - "`new_summarize_block`"
+  - "`new_arrange_block`"
+  - "`new_group_by_block`"
+  - "`new_join_block`"
+  - "`new_head_block`"
+  - "`new_mutate_block`"
 
 - title: Stack
   desc: Stack contains multiple block.
@@ -197,3 +196,9 @@ reference:
   - "`as_log_level`"
   - "`cnd_logger`"
   - "`cat_logger`"
+
+news:
+ releases:
+ - text: "blockr 0.0.2"
+ - text: "blockr 0.0.1.9000"
+ 
