@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,8 +52,15 @@
     <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
   </div>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -64,8 +71,15 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../#dark-mode"></a>
@@ -79,8 +93,9 @@
 
 
 
-
-<div class="row">
+<link href="plot-block_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="plot-block_files/bslib-component-js-0.7.0/components.min.js"></script><script src="plot-block_files/bslib-component-js-0.7.0/web-components.min.js" type="module"></script><link href="plot-block_files/bslib-component-css-0.7.0/components.css" rel="stylesheet">
+<script src="plot-block_files/bslib-tag-require-0.7.0/tag-require.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>3. Case study: create a plot block</h1>
             
@@ -167,13 +182,13 @@ the <strong>flexibility</strong> provided by <code>{blockr}</code>.</p>
 these block layer must have the <code>plot_layer_block</code> class:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">evaluate_block.plot_layer_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dots.html" class="external-link">...length</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0L</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dots.html" class="external-link">...length</a></span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0L</span>, <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"ggplot"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute</a></span><span class="op">(</span><span class="va">data</span> <span class="op">+</span> <span class="va">expr</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>expr <span class="op">=</span> <span class="fu"><a href="../reference/generate_code.html">generate_code</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Compared to <code><a href="../reference/evaluate_block.html">evaluate_block.transform_block()</a></code>, we simply
+<p>Compared to <code>evaluate_block.transform_block()</code>, we simply
 replaced <code>%&gt;%</code> by <code>+</code>. Nothing more! As a side
 note, if you had to develop your own method in a test script, you could
 register it and test it with:</p>
@@ -203,7 +218,7 @@ integers with:</p>
 block expressions given by <code>lapply(x, generate_code)</code>. If
 there are 3 blocks in the stack:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">dataset_block</span>, <span class="va">filter_block</span>, <span class="va">select_block</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">new_dataset_block</span>, <span class="va">new_filter_block</span>, <span class="va">new_select_block</span><span class="op">)</span></span></code></pre></div>
 <p><code>binary_substitute</code> is called twice:</p>
 <ul>
 <li>Once to combine x being <code>&lt;dataset_block_EXPR&gt;</code> (the
@@ -309,7 +324,7 @@ default choice. Note that the mapping field depends on the provided
 data. To stay simple, we assume to only handle <code>x</code> and
 <code>y</code> <strong>aesthetics</strong>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
 <span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      <span class="co"># TO DO</span></span>
@@ -318,13 +333,8 @@ data. To stay simple, we assume to only handle <code>x</code> and
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggplot_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_ggplot_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>We finally end with <code>new_ggplot_block</code>, the internal
-constructor and <code>ggplot_block</code>, the user facing constructor.
+<p>We finally end with the <code>new_ggplot_block</code> constructor.
 The next step is to create the mappings fields with two
 <code><a href="../reference/select_field.html">new_select_field()</a></code>. Those fields are converted into shiny
 inputs, specifically <code><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput()</a></code>. To set the field
@@ -334,14 +344,14 @@ helper:</p>
 <code class="sourceCode R"><span><span class="va">data_cols</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
 <p>We modify <code>new_ggplot_block</code> such that:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">col_x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">col_y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
 <span>  <span class="va">data_cols</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
 <span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span>,</span>
-<span>      y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
+<span>      x <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">col_x</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span>,</span>
+<span>      y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">col_y</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggplot_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
@@ -368,14 +378,14 @@ makes it easier to use than <code><a href="https://rdrr.io/r/base/substitute.htm
 explicitly mark what we want to evaluate.</p>
 <p>All combined together, this eventually yields:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">col_x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">col_y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
 <span>  <span class="va">data_cols</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
 <span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span>,</span>
-<span>      y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
+<span>      x <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">col_x</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span>,</span>
+<span>      y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">col_y</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span></span>
 <span>      <span class="fu">ggplot</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -390,36 +400,39 @@ complexity.</p>
 <div class="section level3">
 <h3 id="create-a-geom-block">Create a geom block<a class="anchor" aria-label="anchor" href="#create-a-geom-block"></a>
 </h3>
-<p>Now that we have a valid <code>ggplot_block</code>, we want to add it
-a geometry. The easiest one is <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>. To keep the
-vignette as simple as possible, we only handle one option, namely the
-point color. We host this information in a
+<p>Now that we have a valid <code>new_ggplot_block</code>, we want to
+add it a geometry. The easiest one is <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>. To keep
+the vignette as simple as possible, we only handle two options, namely
+the point color and shape. We host this information in a
 <code><a href="../reference/select_field.html">new_select_field()</a></code>, for instance:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">default</span>, <span class="va">choices</span><span class="op">)</span></span></code></pre></div>
 <p>The expression is straightforward to get:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span><span class="op">)</span> <span class="co"># Don't forget to wrap it with quote(...).</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span><span class="op">)</span> <span class="co"># Don't forget to wrap it with quote(...).</span></span></code></pre></div>
 <p>Importantly, since we use <code>.(color)</code>, the field name must
-be <strong>color</strong>.</p>
+be <strong>color</strong> and conversely for the shape. Also note that,
+since the previous data contains the <code>ggplot</code> object, we must
+extract its data located in <code>data$data</code>, such that the column
+names are obtained with
+<code>data_cols &lt;- function(data) colnames(data$data)</code>.</p>
 <p>This finally gives us:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_geompoint_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">new_geompoint_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">color</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">shape</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
+<span>  <span class="va">data_cols</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
 <span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      color <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
+<span>      color <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">color</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span>,</span>
+<span>      shape <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">shape</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span></span>
-<span>      <span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plot_layer_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">geompoint_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_geompoint_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Note the class <code>plot_layer_block</code>. This is necessary to
 invoke the corresponding <code><a href="../reference/evaluate_block.html">evaluate_block()</a></code> method (to use
@@ -434,8 +447,19 @@ invoke the corresponding <code><a href="../reference/evaluate_block.html">evalua
   Toggling other blocks is up to the end-user.</div>
 <p>We can try it on the following stack:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">dataset_block</span>, <span class="va">ggplot_block</span>, <span class="va">geompoint_block</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
+<span>  data_block <span class="op">=</span> <span class="fu"><a href="../reference/new_dataset_block.html">new_dataset_block</a></span><span class="op">(</span><span class="st">"penguins"</span>, <span class="st">"palmerpenguins"</span><span class="op">)</span>, </span>
+<span>  plot_block <span class="op">=</span> <span class="fu">new_ggplot_block</span><span class="op">(</span><span class="st">"flipper_length_mm"</span>, <span class="st">"body_mass_g"</span><span class="op">)</span>,</span>
+<span>  layer_block <span class="op">=</span> <span class="fu">new_geompoint_block</span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"species"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-5628">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+ag88AyoFNZObOwlmdl5fNbWqKKkAEwl6RBw1AD6nd1EpCOF4jIAPOYyAGZOEASk7hB8xNwjAB6q6lo5UOtwDHzJsjsjuYcEx+VnF1cyGO-JMiDp6TIyACZQLgjHbKBbLVbrTZ8QFcT47aDwdgwoFQAYQP5DUYzQQYv7LFhwbj-ZRqTKcXH4-EHNRYkbsIlwdYjJaE4nbIi7PayWFQEGc9iyUi5OqHISIuApXC-KkyO604b0xnM1lE-4c3a5Hmo-ncQUyYWitTi2CSsAlKlXGV-OB7VAMQ4ARyckzglNl4x6fBgaFQbGshygcGRNLefD2r3lYdyqQt+KteL+BG4sVJ6k0nsm01EEgCQgmUxmUutb3eMpKAF8fhA6dY4EQYIo2IWc7NwSs1hsSBqrPdHqdyC9ZOxjkajidnpdZO8MJ9vhAZbzdWDFh2od3efDORLkbyACSb6uYxU4kuq4lp8mkd1Una9hWjBncJlTc-qu8MbXA0FCkVwMWQKaxaJviI5oP+D5Ks+KpsuqYF1F+fI-gaf4ARKKQlgmVK2vaTouuQN74nWDYjE2ZB8EGyIfocGA9sUw6jhBYbwXAqTDiwABeTH9Jh0ogcmqb3JoBYjCmuTnNmZh5mAIlFuafFUjO5bpFWC4cFwEjzIsdKcKc4jukuMyHHSvIMi2ZjCfUjQcNJVTcDUdQQA0TRSoEeKya2xmKpm5kSJoSyZOgEnPk5jgjDAMDSXQRD-Lk4WpmMwF-GJElGZBxGNkQzaSX5QjsHUBCEv4eCBGA+VMkVGEQCUDIMAAbnA9IafpukSMkYAVgAukAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
+</bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
+</div>
 </div>
 <div class="section level3">
 <h3 id="going-further">Going further<a class="anchor" aria-label="anchor" href="#going-further"></a>
@@ -452,15 +476,13 @@ Below is a possible implementation of an interactive
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidgohel.github.io/ggiraph/" class="external-link">ggiraph</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">custom_data_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/dataset_block.html">new_dataset_block</a></span><span class="op">(</span></span>
-<span>      <span class="va">...</span>,</span>
-<span>      selected <span class="op">=</span> <span class="st">"mtcars"</span></span>
-<span>    <span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/new_dataset_block.html">new_dataset_block</a></span><span class="op">(</span></span>
+<span>    <span class="va">...</span>,</span>
+<span>    selected <span class="op">=</span> <span class="st">"mtcars"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">new_ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
 <span>  <span class="va">data_cols</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
@@ -478,19 +500,16 @@ Below is a possible implementation of an interactive
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">ggplot_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_ggplot_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
 <span><span class="co"># We could have use a mutate_block instead of</span></span>
 <span><span class="co"># changing the data from inside the block ...</span></span>
 <span><span class="co"># {blockr} is flexible here.</span></span>
-<span><span class="va">new_geompoint_interactive_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">new_geompoint_interactive_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">build_expr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Get data from the previous ggplot layer</span></span>
 <span>    <span class="co"># data is the ggplot so we need to use data$data</span></span>
 <span>    <span class="co"># to get the initial data</span></span>
-<span>    <span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">carname</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span>    <span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">data</span></span>
+<span>    <span class="va">dat</span><span class="op">$</span><span class="va">carname</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute</a></span><span class="op">(</span></span>
 <span>      <span class="fu">geom_point_interactive</span><span class="op">(</span></span>
 <span>        <span class="co"># Pass in new data</span></span>
@@ -500,7 +519,7 @@ Below is a possible implementation of an interactive
 <span>          data_id <span class="op">=</span> <span class="va">carname</span></span>
 <span>        <span class="op">)</span></span>
 <span>      <span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
@@ -514,11 +533,7 @@ Below is a possible implementation of an interactive
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">geompoint_interactive_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_geompoint_interactive_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">new_theme_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">new_theme_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
 <span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      theme <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span></span>
@@ -535,33 +550,32 @@ Below is a possible implementation of an interactive
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">theme_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_theme_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">new_ggiraph_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">new_ggiraph_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/new_block.html">new_block</a></span><span class="op">(</span></span>
 <span>    fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      pointsize <span class="op">=</span> <span class="fu"><a href="../reference/numeric_field.html">new_numeric_field</a></span><span class="op">(</span><span class="fl">12</span>, min <span class="op">=</span> <span class="fl">1</span>, max <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span></span>
-<span>      <span class="fu">girafe</span><span class="op">(</span>ggobj <span class="op">=</span> <span class="va">data</span>, pointsize <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">pointsize</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
+<span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu">girafe</span><span class="op">(</span>ggobj <span class="op">=</span> <span class="va">data</span>, pointsize <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">pointsize</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggiraph_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">ggiraph_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/initialize_block.html">initialize_block</a></span><span class="op">(</span><span class="fu">new_ggiraph_block</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
+<span><span class="co"># Necessary to get ggiraph plot rendering</span></span>
+<span><span class="va">uiOutputBlock.ggiraph_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">ns</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">ggiraph</span><span class="fu">::</span><span class="fu">girafeOutput</span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">server_output.ggiraph_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">result</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">ggiraph</span><span class="fu">::</span><span class="fu">renderGirafe</span><span class="op">(</span><span class="fu">result</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">custom_data_block</span>,</span>
-<span>  <span class="va">ggplot_block</span>,</span>
-<span>  <span class="va">geompoint_interactive_block</span>,</span>
-<span>  <span class="va">theme_block</span>,</span>
-<span>  <span class="va">ggiraph_block</span></span>
+<span>  <span class="va">new_ggplot_block</span>,</span>
+<span>  <span class="va">new_geompoint_interactive_block</span>,</span>
+<span>  <span class="va">new_theme_block</span>,</span>
+<span>  <span class="va">new_ggiraph_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
 </div>

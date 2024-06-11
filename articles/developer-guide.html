@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,8 +52,15 @@
     <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
   </div>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -64,8 +71,15 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../#dark-mode"></a>
@@ -168,66 +182,25 @@ subsequently produce the result whenever it gets evaluated.</p>
 revelant values. For instance, for a string field, which ultimately
 becomes a shiny text input, the method
 <code>validate_field.string_field</code> is responsible for checking
-that the value is a character string and modifies it if not (I BELIEVE
-WE’RE DOING TOO MUCH HERE SINCE THE VALIDATION SHOULD HAPPEN ON THE
-SHINY SIDE).</p>
+that the value is a character string and modifies it if not.</p>
 </div>
 <div class="section level4">
 <h4 id="more-complex-fields">More complex fields<a class="anchor" aria-label="anchor" href="#more-complex-fields"></a>
 </h4>
-<p>With basic fields, we can’t handle <strong>dependencies</strong>
-between 2 fields. This is typically what happens in a join block. To
-join datasets, we need 2 datasets and some columns for the join.
-Assuming, the dataset choice is managed by a field, changing the
-datasets may update the possible choices for the <code>join_by</code>
-field. Below shows the definition of 2 simple fields, one for selecting
-the join function (static set of choices) and another for selecting the
-second dataset.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fields</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  join_func <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">type</span>, <span class="st">"join"</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">join_types</span>, <span class="st">"join"</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">y</span><span class="op">)</span>,</span>
-<span>  by <span class="op">=</span> <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>How do we handle the <code>by</code> field as it depends on
-<code>y</code>?</p>
-<p>This is where we introduce <code>list_field</code>.
-<code>list_field</code> accepts a function generating the choices with a
-dependency on other existing fields:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">by_choices</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="co"># DEPENDENCY on y</span></span>
-<span>    <span class="va">choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/name.html" class="external-link">as.name</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
-<span>    <span class="va">...</span></span>
-<span></span>
-<span>    <span class="co"># Return nested field</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      val <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span></span>
-<span>        <span class="va">default</span>,</span>
-<span>        <span class="va">choices</span>,</span>
-<span>        multiple <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span></code></pre></div>
-<p><code>by_choices</code> can then be injected inside
-<code>new_list_field</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fields</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  join_func <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">type</span>, <span class="st">"join"</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">join_types</span>, <span class="st">"join"</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">y</span><span class="op">)</span>,</span>
-<span>  by <span class="op">=</span> <span class="fu"><a href="../reference/list_field.html">new_list_field</a></span><span class="op">(</span>sub_fields <span class="op">=</span> <span class="va">by_choices</span><span class="op">)</span> <span class="co"># HERE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<p>TBD</p>
 </div>
+</div>
+<div class="section level3">
+<h3 id="validation-and-evaluation">Validation and evaluation<a class="anchor" aria-label="anchor" href="#validation-and-evaluation"></a>
+</h3>
+<p>That’s currently how {blockr} validate blocks and fields. Each block
+is validated, meaning that each field that compose it should have valid
+values according to the input data. Only when everything is valid, the
+block expression is evaluated and the result computed and passed to the
+next block. Any error is catched by R and forwarded to JavaScript so
+that users are notified about what went wrong and where.</p>
+<div id="htmlwidget-febe03efa1a2d8d52a86" style="width:700px;height:1200px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"diagram":"\nflowchart TD;\n  subgraph stack\n    subgraph blk1\n      block1[Block 1] --> |check fields| validate_block1[Validation] --> validate_block1_ok[OK]\n      validate_block1 --> validate_block1_fail[Fail]\n      validate_block1_ok --> |evaluate| try_eval[Try] --> eval_block1_ok[OK] --> data_block1[Data]\n      eval_block1_ok[Success]\n      try_eval --> eval_block1_fail[Fail]\n    end\n    data_block1 -.-> block2\n    subgraph blk2\n      block2[Block2] --> |check fields| validate_block2[Validation] --> validate_block2_ok[OK]\n    \n      validate_block2 --> validate_block2_fail[Fail]\n      validate_block2_ok --> |evaluate| try_eval2[Try] --> eval_block2_ok[OK] --> data_block2[Data]\n      eval_block2_ok[Success]\n      try_eval2 --> eval_block2_fail[Fail]\n    end\n    data_block2 -.-> stack_result[Stack result]\n  end\n  eval_block1_fail -.-x |notification| gui\n  eval_block2_fail -.-x |notification| gui\n  validate_block1_fail -.-x |notification| gui\n  validate_block2_fail -.-x |notification| gui\n  subgraph ui\n      gui[User interface]\n  end\n"},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      el.classList.add('text-center')\n    }\n  ","data":null}]}}</script>
 </div>
 </div>
 <div class="section level2">

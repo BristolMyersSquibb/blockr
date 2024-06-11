@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,15 @@
     <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
   </div>
 </li>
-<li class="active nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -43,8 +50,15 @@
       <ul class="navbar-nav"><li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
+    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../#dark-mode"></a>
@@ -61,6 +75,35 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.2" id="blockr-002">blockr 0.0.2<a class="anchor" aria-label="anchor" href="#blockr-002"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-0-2">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-2"></a></h3>
+<ul><li>Change blocks and fields constructor names to <code>new_*_block</code> and <code>new_*_field</code>. For instance, for the select block, users are now supposed to use <code><a href="../reference/new_select_block.html">new_select_block()</a></code> and not <code>select_block</code>.</li>
+<li>Remove <code>data</code> from block constructor:</li>
+</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">new_select_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">columns</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="new-features-0-0-2">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-2"></a></h3>
+<ul><li>New validation functions: <code><a href="../reference/validate_field.html">validate_field()</a></code> and <code>validate_block()</code> to check that values are consistent with data. These are used to then propagate any error to the user via JavaScript.</li>
+<li>Evaluation stops whenever a block isn’t valid and the app should not crash.</li>
+<li>We can now instantiate block outside the stack with default parameter values (or use the old way with constructors):</li>
+</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># New way</span></span>
+<span><span class="va">data_blk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_dataset_block.html">new_dataset_block</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="st">"lab"</span>, package <span class="op">=</span> <span class="st">"blockr.data"</span><span class="op">)</span></span>
+<span><span class="va">select_blk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_select_block.html">new_select_block</a></span><span class="op">(</span><span class="st">"STUDYID"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">data_blk</span>, <span class="va">select_blk</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Old way</span></span>
+<span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">new_data_block</span>, <span class="va">new_select_block</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.1.9000" id="blockr-0019000">blockr 0.0.1.9000<a class="anchor" aria-label="anchor" href="#blockr-0019000"></a></h2>
 <ul><li>First prototype:
 <ul><li>single stacks.</li>
@@ -69,7 +112,8 @@
 <li>Add/remove block from a stack.</li>
 </ul></li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
