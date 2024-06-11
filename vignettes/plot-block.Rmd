@@ -338,7 +338,7 @@ geom_point(color = .(color), shape = .(shape)) # Don't forget to wrap it with qu
 ```
 
 Importantly, since we use `.(color)`, the field name must be __color__ and conversely for the shape.
-Also note that, since the previous data contains the `ggplot` object, we must extract is data such that `data_cols <- function(data) colnames(data$data)`.
+Also note that, since the previous data contains the `ggplot` object, we must extract its data located in `data$data`, such that the column names are obtained with `data_cols <- function(data) colnames(data$data)`.
 
 This finally gives us:
 
