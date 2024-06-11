@@ -22,16 +22,10 @@ values are consistent with data. These are used to then propagate any error to t
 data_blk <- new_dataset_block(selected = "lab", package = "blockr.data")
 select_blk <- new_select_block("STUDYID")
 
-stack <- new_stack(
-  data_blk,
-  select_blk
-)
+stack <- new_stack(data_blk, select_blk)
 
 # Old way
-stack <- new_stack(
-  new_ data_block,
-  new_select_block
-)
+stack <- new_stack(new_data_block, new_select_block)
 ```
 
 # blockr 0.0.1.9000
