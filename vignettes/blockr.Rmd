@@ -32,13 +32,11 @@ note_box <- function(..., color) {
 
 ## Get started
 
-`{blockr}` provides plug and play block which can be used to import, transform and visualize data.
+`{blockr}` provides plug and play blocks which can be used to import, transform and visualize data.
 
 ### Introduction
 
-`{blockr}` aims at abstracting the logic behind `{dplyr}` functions
-under __blocks__. We assume that a __stack__ is a succession
-of dependent blocks. We designed 3 kinds of blocks:
+`{blockr}` aims at abstracting the logic behind common data pipeline tasks under __blocks__, without requiring any programming background. Besides, `{blockr}` exposes multiple tools so that advanced developers can easily extend it. We assume that a __stack__ is a succession of dependent blocks. We designed 3 kinds of blocks:
 
 - __data__ block: entry level block to determine input data.
 - __transform__ block: materialize `{dplyr}` operations on the selected data.
@@ -87,10 +85,11 @@ specifying any __modules IDs__, they are automatically handled by `{blockr}`.
 ```r
 library(blockr)
 library(blockr.data)
+library(palmerpenguins)
 
 stack <- new_stack(
-  dataset_block,
-  filter_block
+  block1 = new_dataset_block(selected = "penguins", package = "palmerpenguins"),
+  block2 = new_filter_block(columns = "species", values = "Adelie")
 )
 serve_stack(stack)
 ```
@@ -98,7 +97,7 @@ serve_stack(stack)
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAI4uCRkAHlMZCDhqAH1OKAlBCBlCmQATKC52OFJM6PFcQKKZADMWbnIGatEJQLjAioYANzhshPE+HIk-MABfAF0gA", # nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwlmdl5fKg88AyoFNZObOwl6ZxQEjIAPOYyEHDUAPpDEoIQMjJVAIyqk9MzdVzscKQzVXx73HAE5DUbQl0QPX0BbRJQ1nBXYG3cHTd3HCm46csqgAmDZTWYAMxY3HIDEOogWxG4ThgHDe7C6BBYcH8eBkADceE5sW8AII1OCZOApdIlPYMPFwOZcBbzcTJMAAXwAukA", # nolint
     "app",
     header = FALSE
   ),
@@ -152,7 +151,7 @@ note_box(
 library(shiny)
 library(blockr)
 
-stack <- new_stack(dataset_block)
+stack <- new_stack(new_dataset_block)
 shinyApp(
   ui = bslib::page_fluid(
     add_block_ui(),
@@ -189,7 +188,7 @@ note_box(
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJPjiWABNU9KEYcLzxIUCEjTZw5nZ6iHCAQXRBCBkZBxZVGTp2YLpmVChLOGyAM24+oq6ensnMhihybL6+KtliuJ6-XECe9jgGADczgemHCAJSVwg+NlQHUlkiN9f3mVP2dkefhkIGOSyqpRkKzO6ympwuZ22XAkuyK+xkAF9An4wOiALpAA", # nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwl6ZxQEjIAPOYyEHDUAPrNEnwl7HAMAG5w-VyDA+LJYAC+ALpAA", # nolint
     "app",
     header = FALSE
   ),
@@ -207,9 +206,9 @@ library(shiny)
 library(blockr)
 
 stack <- new_stack(
-  dataset_block,
-  filter_block,
-  select_block
+  new_dataset_block,
+  new_filter_block,
+  new_select_block
 )
 
 block_ui <- function(id) {

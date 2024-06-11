@@ -13,15 +13,17 @@ Building blocks for data manipulation and visualization operations.
 
 `{blockr}` has been built for webR (wasm) and is available for download
 with
-`webr::install("blockr", repos = "https://blockr-org.github.io/webr-repos")`.
+`webr::install("blockr", repos = c("https://blockr-org.github.io/webr-repos", "https://repo.r-wasm.org"))`.
 
 ``` r
 library(blockr)
 library(blockr.data)
 
+data_block <- new_dataset_block(selected = "lab", package = "blockr.data")
+
 stack <- new_stack(
-  dataset_block,
-  select_block
+  data_block,
+  new_select_block
 )
 serve_stack(stack)
 ```
@@ -33,7 +35,7 @@ You can install the development version of blockr from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("blockr-org/blockr")
+pak::pkg_install("blockr-org/blockr")
 ```
 
 ## Contribute

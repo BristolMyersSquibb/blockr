@@ -117,65 +117,51 @@ classDiagram
 
 The `validate_field` generic ensures each field has revelant values. For instance, for a string field,
 which ultimately becomes a shiny text input, the method `validate_field.string_field` is responsible
-for checking that the value is a character string and modifies it if not (I BELIEVE WE'RE DOING
-TOO MUCH HERE SINCE THE VALIDATION SHOULD HAPPEN ON THE SHINY SIDE).
+for checking that the value is a character string and modifies it if not.
 
 ### More complex fields
 
-With basic fields, we can't handle __dependencies__ between 2 fields. This is typically what happens
-in a join block. To join datasets, we need 2 datasets and some columns for the join. Assuming, 
-the dataset choice is managed by a field, changing the datasets may update the possible
-choices for the `join_by` field. Below shows the definition of 2 simple fields, one for selecting
-the join function (static set of choices) and another for selecting the second dataset.
+TBD
 
-```r
-fields <- list(
-  join_func = new_select_field(
-    paste(type, "join", sep = "_"),
-    paste(join_types, "join", sep = "_")
-  ),
-  y = new_select_field(y[[1]], y),
-  by = ...
-)
-```
+## Validation and evaluation
 
-How do we handle the `by` field as it depends on `y`?
+That's currently how {blockr} validate blocks and fields. Each block is validated, meaning that each field that compose it should have valid values according to the input data. Only when everything is valid, the block expression is evaluated and the result computed and passed to the next block. Any error is catched by R and forwarded to JavaScript so that users are notified about what went wrong and where.
 
-This is where we introduce `list_field`. `list_field` accepts a function generating 
-the choices with a dependency on other existing fields:
-
-```r
-by_choices <- function(data, y) {
-    # DEPENDENCY on y
-    choices <- intersect(
-      colnames(data),
-      colnames(eval(as.name(y)))
-    )
-
-    ...
-
-    # Return nested field
-    list(
-      val = new_select_field(
-        default,
-        choices,
-        multiple = TRUE
-      )
-    )
-  }
-```
-
-`by_choices` can then be injected inside `new_list_field`:
-
-```r
-fields <- list(
-  join_func = new_select_field(
-    paste(type, "join", sep = "_"),
-    paste(join_types, "join", sep = "_")
-  ),
-  y = new_select_field(y[[1]], y),
-  by = new_list_field(sub_fields = by_choices) # HERE
-)
+```{r, echo=FALSE}
+mermaid("
+flowchart TD;
+  subgraph stack
+    subgraph blk1
+      block1[Block 1] --> |check fields| validate_block1[Validation] --> validate_block1_ok[OK]
+      validate_block1 --> validate_block1_fail[Fail]
+      validate_block1_ok --> |evaluate| try_eval[Try] --> eval_block1_ok[OK] --> data_block1[Data]
+      eval_block1_ok[Success]
+      try_eval --> eval_block1_fail[Fail]
+    end
+    data_block1 -.-> block2
+    subgraph blk2
+      block2[Block2] --> |check fields| validate_block2[Validation] --> validate_block2_ok[OK]
+    
+      validate_block2 --> validate_block2_fail[Fail]
+      validate_block2_ok --> |evaluate| try_eval2[Try] --> eval_block2_ok[OK] --> data_block2[Data]
+      eval_block2_ok[Success]
+      try_eval2 --> eval_block2_fail[Fail]
+    end
+    data_block2 -.-> stack_result[Stack result]
+  end
+  eval_block1_fail -.-x |notification| gui
+  eval_block2_fail -.-x |notification| gui
+  validate_block1_fail -.-x |notification| gui
+  validate_block2_fail -.-x |notification| gui
+  subgraph ui
+      gui[User interface]
+  end
+", height = "1200px") |>
+  htmlwidgets::onRender("
+    function(el, x) {
+      el.classList.add('text-center')
+    }
+  ")
 ```
 
 # Adding new fields

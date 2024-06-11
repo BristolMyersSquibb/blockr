@@ -44,7 +44,7 @@ The __registry__ is a __environment__ which provides access to multiple __blocks
 metadata:
 
 - The block __description__.
-- Allowed __input__ (default to data.frame, expect for `data_block` blocks)
+- Allowed __input__ (default to data.frame, expect for `new_dataset_block` blocks)
 - Returned __output__.
 - ...
 
@@ -57,13 +57,13 @@ ready to be queried by `available_blocks()`. A truncated output example below:
 ```r
 $dataset_block
 function(...) {
-  initialize_block(new_dataset_block(...))
+  ...
 }
 <environment: namespace:blockr>
 attr(,"name")
 [1] "data block"
 attr(,"description")
-[1] "choose a dataset"
+[1] "Choose a dataset from a package"
 attr(,"classes")
 [1] "dataset_block" "data_block"   
 attr(,"input")
@@ -77,7 +77,7 @@ attr(,"class")
 
 $select_block
 function(data, ...) {
-  initialize_block(new_select_block(data, ...), data)
+  ...
 }
 <environment: namespace:blockr>
 attr(,"name")
@@ -101,34 +101,31 @@ names(available_blocks())
 ```
 
 ## Register a block
-To register you own blocks, user facing functions are:
+To register your own blocks, user facing functions are:
 
 - `register_block()` to register a block in the __registry__. If the __block__ is already registered,
 it __overwrites__ the existing one.
 - `register_blocks()` to register multiple blocks.
 
-Let's say you want to create a new `tail_block` which returns the `n` last rows of the
+Let's say you want to create a new `new_tail_block` which returns the `n` last rows of the
 selected dataset:
 
 ```{r, eval=TRUE}
-tail_block <- function(data, n_rows = numeric(), ...) {
+new_tail_block <- function(data, n_rows = numeric(), ...) {
   n_rows_max <- function(data) nrow(data)
 
-  initialize_block(
-    new_block(
-      fields = list(
-        n_rows = new_numeric_field(n_rows, 1L, n_rows_max)
-      ),
-      expr = quote(tail(n = .(n_rows))),
-      class = c("tail_block", "transform_block"),
-      ...
+  new_block(
+    fields = list(
+      n_rows = new_numeric_field(n_rows, 1L, n_rows_max)
     ),
-    data
+    expr = quote(tail(n = .(n_rows))),
+    class = c("tail_block", "transform_block"),
+    ...
   )
 }
 
 register_block(
-  constructor = tail_block,
+  constructor = new_tail_block,
   name = "tail block",
   description = "return last n rows",
   classes = c("tail_block", "transform_block"),
@@ -149,7 +146,7 @@ visible in the new choices:
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI9g02cLjArhZuAH1o8RkAHlMZADMHCAJSVwg+ABMoLlkIHIYiamU1CAd4BhYCPj9ZDBG-GRBAwJkZFraOnJgoAA8ikvLK6pJ6xqgxiDntrjjpqZk2OxYeFgAvODzRCUEIaemIOGp7kyeXspY4bjqnRkwU43x+M1a7SBbw+3V6-RypT+AL4syhsgAjAAZZqQ+aLJbHF5DU7TOBLVAMVQyACODiI5D4WX4zzUGFRePYfm5uFJMgI3Cg7CBAyEzM+Emk6jApESHFKFhgEvE-l5zxeIwwfKG6nV0waXFOcQAvpN9nBbJw4AxlWDiBxZQ4qhZqeL8mrXrA4NSxVBsjJ8tJTnU4OwCH1UJtWdL5KQHAxnoLODM5FCg+qBUL2KHqaKZX7coG8NLZVB5YrlarTmxUA5SD6wAaoBhSol4OnpkQ67X62ohE2W224EJAhkHVAJKsZu8cpwJ+JDkK4KRlXEWHUp0IYOE55KwGaUmkAILoMEOFjUujsYJ0ZioKCWO6lbjnupg6aPt6Jcg5c98XfiLI65EiS6rZgwABu1rUusVQ1HwNZ1rIXY6EhMjZsKNRjBMeroVwk7FDIn7Wo0dzgVBDD-vhgFnHURKmhAfhgMaAC6QA", # nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6RBw1AD6XCzclYXiMgA85jIAZk4QBKTuEHwAJlBcshCVDETUymoQTvAMLBrJshgryTIg6ekyMqPjk5UwUAAeza0dXT0kA0NQaxB711wl21s7FfWiEoIQ29ttLHBuP0pjJMpxvr9frsJiDylUZnMFpV-oD+nxoZNZABGAAyIzGMIOx2evyWr22cCOqAYqhkAEcnERyHwavwfmoMOiCZNUmSfr8CNxYiCNEJWR8zAExQwoBw2lYYBKJClcOSZCsMK8SgBfTb3OD2ThwBhK8QQ9QkTgMJzdKy0uHVKC1U2q-nQeC0sVO7gyBrSV79ODsAjzVCXdmBMDyUhOBg-IWcHZyGH+-mC4VB2misDiv14SOkGVyhWmlWvNioJykT1gQZcDBtGXwVPbIhVyvVtRCOtQBtNuBCdIldKcKASU5vKqjr4OnvsOCkU0lecMABucEq07NW+SYG1AF0gA", # nolint
     "app",
     header = FALSE
   ),
@@ -162,13 +159,13 @@ If you had to register multiple blocks:
 ```r
 register_blocks(
   constructor = c(
-    dataset_block, filter_block, select_block, summarize_block
+    new_dataset_block, new_filter_block, new_select_block, new_summarize_block
   ),
   name = c(
     "data block", "filter block", "select block", "summarize block"
   ),
   description = c(
-    "choose a dataset",
+    "choose a dataset in a package",
     "filter rows in a table",
     "select columns in a table",
     "summarize data groups"
