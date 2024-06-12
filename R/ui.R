@@ -329,7 +329,8 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         })
       )
     ),
-    useBlockr()
+    useBlockr(),
+    tags$script(HTML(sprintf("Shiny.setInputValue('%s', 1);", ns("rendered"))))
   )
 }
 

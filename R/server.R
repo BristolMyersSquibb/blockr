@@ -434,7 +434,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         )
       })
 
-      observe({
+      observeEvent(input$rendered, {
         session$sendCustomMessage(
           "blockr-render-stack",
           list(

@@ -3,7 +3,9 @@ import "./stack-title.js";
 import { renderLocked } from "./lock.js";
 import { loading } from "./loading.js";
 
+console.log("here");
 window.Shiny.addCustomMessageHandler("blockr-render-stack", (msg) => {
+  console.log(msg);
   const stack = `#${msg.stack}`;
   showLastOutput(stack);
   renderLocked(stack, msg.locked);
