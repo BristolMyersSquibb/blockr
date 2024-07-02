@@ -132,7 +132,7 @@ ui_input.keyvalue_field <- function(x, id, name) {
 #'
 #' TBD
 #' @inheritParams new_field
-#' @inheritParams select_field
+#' @inheritParams new_select_field
 #' @param submit Should a 'submit button' be shown?
 #' @param key How to display the 'key' field
 #' @rdname keyvalue_field

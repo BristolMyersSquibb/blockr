@@ -1,5 +1,37 @@
+test_that("block ui can be created", {
+  blk1 <- new_dataset_block(selected = "iris")
+
+  ui <- generate_ui(blk1, "foo")
+
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+
+  path <- withr::local_tempfile()
+  write.csv(datasets::iris, path, row.names = FALSE)
+
+  blk2 <- new_upload_block(path)
+
+  ui <- generate_ui(blk2, "foo")
+
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+
+  blk3 <- new_filesbrowser_block(path)
+
+  ui <- generate_ui(blk3, "foo")
+
+  expect_type(ui, "list")
+  expect_s3_class(ui, "shiny.tag")
+
+  shinyFiles_ui <- htmltools::tagQuery(ui)$
+    find(".shinyFiles")$
+    selectedTags() # nolint
+
+  expect_length(shinyFiles_ui, 1)
+})
+
 test_that("data_info works", {
-  block <- data_block()
+  block <- new_dataset_block()
   info <- data_info(block, ns = NS(attr(block, "name")))
   expect_s3_class(info, "shiny.tag")
 

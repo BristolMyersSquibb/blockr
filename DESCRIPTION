@@ -1,6 +1,6 @@
 Package: blockr
 Title: A block-based framework for data manipulation and visualization
-Version: 0.0.1.9000
+Version: 0.0.2
 Authors@R: 
     c(person(given = "Nicolas",
              family = "Bennett",
@@ -35,7 +35,6 @@ Imports:
     htmltools,
     shinyAce,
     jsonlite,
-    constructive,
     shinyFiles,
     memuse,
     haven,
@@ -51,6 +50,9 @@ Suggests:
     shinytest2,
     pkgload,
     htmlwidgets,
-    withr
+    withr,
+    ggplot2,
+    vdiffr,
+    palmerpenguins
 Config/testthat/edition: 3
 VignetteBuilder: knitr

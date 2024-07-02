@@ -2,22 +2,17 @@
 % Please edit documentation in R/fields.R
 \name{new_list_field}
 \alias{new_list_field}
-\alias{list_field}
 \title{List field constructor}
 \usage{
-new_list_field(value = list(), sub_fields = list(), ...)
-
-list_field(...)
+new_list_field(sub_fields = list(), ...)
 }
 \arguments{
-\item{value}{Default text input value.}
-
 \item{sub_fields}{Fields contained in \code{list_field}}
 
 \item{...}{Other parameters passed to \link{new_field} and may be needed
 by \link{ui_input} to pass more options to the related shiny input.}
 }
 \description{
-A field that can contain subfields. See \link{filter_block} for
+A field that can contain subfields. See \link{new_filter_block} for
 a usecase.
 }

@@ -9,43 +9,84 @@
 #'
 #' @export
 new_stack <- function(..., title = "Stack", name = rand_names()) {
-  ctors <- c(...)
+
+  ctors <- list(...)
   names <- names(ctors)
 
   stopifnot(is_string(title), is_string(name))
 
   if (length(ctors)) {
+
     blocks <- vector("list", length(ctors))
 
-    blocks[[1L]] <- do.call(ctors[[1L]], list(position = 1))
+    if (length(names)) {
+      stopifnot(length(unique(names)) == length(blocks))
+    } else {
+      names <- rand_names(n = length(blocks))
+    }
+
+    blocks[[1L]] <- do_init_block(ctors[[1L]], 1L, names[1L])
     temp <- evaluate_block(blocks[[1L]])
 
     for (i in seq_along(ctors)[-1L]) {
-      temp <- evaluate_block(
-        blocks[[i]] <- do.call(ctors[[i]], list(temp, position = i)),
-        data = temp
-      )
+
+      blocks[[i]] <- do_init_block(ctors[[i]], i, names[i], temp)
+      temp <- evaluate_block(blocks[[i]], data = temp)
     }
+
   } else {
+
     blocks <- list()
     temp <- list()
   }
 
   stopifnot(is.list(blocks), all(lgl_ply(blocks, is_block)))
 
-  structure(blocks,
-    title = title, name = name, result = temp,
-    class = "stack"
-  )
+  structure(blocks, title = title, name = name, result = temp, class = "stack")
+}
+
+do_init_block <- function(x, pos, nme, dat = NULL) {
+
+  if (is.function(x)) {
+    x <- do.call(x, list())
+  }
+
+  stopifnot(inherits(x, "block"))
+
+  # TODO: stop doing this and track info on stack level
+  attr(x, "position") <- pos
+  attr(x, "name") <- nme
+
+  if (is.null(dat)) {
+    initialize_block(x)
+  } else {
+    initialize_block(x, dat)
+  }
+}
+
+eval_stack <- function(x) {
+
+  stopifnot(is_stack(x))
+
+  if (!length(x)) {
+    return(x)
+  }
+
+  temp <- evaluate_block(x[[1L]])
+
+  for (i in seq_along(x)[-1L]) {
+    temp <- evaluate_block(x[[i]], data = temp)
+  }
+
+  set_stack_result(x, temp)
 }
 
 set_stack_blocks <- function(stack, blocks, result) {
   stopifnot(is_stack(stack), is.list(blocks), all(lgl_ply(blocks, is_block)))
 
   attributes(blocks) <- attributes(stack)
-  attr(blocks, "result") <- result
 
-  blocks
+  set_stack_result(blocks, result)
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -65,6 +106,16 @@ get_stack_name <- function(x) {
 get_stack_result <- function(stack) {
   stopifnot(is_stack(stack))
   attr(stack, "result")
+}
+
+set_stack_result <- function(stack, value) {
+  stopifnot(is_stack(stack))
+  attr(stack, "result") <- value
+  stack
+}
+
+clear_stack_result <- function(stack) {
+  set_stack_result(stack, NULL)
 }
 
 #' @param x An object inheriting form `"stack"`
@@ -169,26 +220,43 @@ add_block <- function(stack, block, position = NULL) {
     position <- length(stack)
   }
 
-  log_debug("ADD BLOCK (position ", position + 1, ")")
-
   if (position < 1L) {
     position <- 1L
   }
 
-  # get data from the previous block
-  if (length(stack) == 1) {
-    data <- evaluate_block(stack[[position]])
-  } else if (length(stack) > 1L) {
-    data <- evaluate_block(stack[[1]])
-    for (i in seq_along(stack)[-1L]) {
-      data <- evaluate_block(stack[[i]], data = data)
+  log_debug("ADD BLOCK (position ", position + 1, ")")
+
+  stopifnot(is_count(position))
+
+  if (position == length(stack)) {
+    data <- get_stack_result(stack)
+  } else {
+    data <- NULL
+  }
+
+  if (is.null(data) && length(stack) > 0L) {
+
+    data <- evaluate_block(stack[[1L]])
+
+    if (position > 1L) {
+      for (i in seq.int(2L, position)) {
+        data <- evaluate_block(stack[[i]], data = data)
+      }
     }
   }
 
   if (!length(stack)) {
-    tmp <- do.call(block, list())
+
+    tmp <- initialize_block(
+      do.call(block, list())
+    )
+
   } else {
-    tmp <- do.call(block, list(data = data, position = position))
+
+    tmp <- initialize_block(
+      do.call(block, list(position = position)),
+      data
+    )
   }
 
   set_stack_blocks(stack, append(stack, list(tmp), position), data)

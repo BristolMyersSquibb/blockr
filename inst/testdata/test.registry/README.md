@@ -23,7 +23,7 @@ This is a basic example which shows you how to solve a common problem:
 library(blockr)
 library(test.registry)
 stack <- new_stack(
-  data_block,
+  dataset_block,
   new_dummy_block
 )
 serve_stack(stack)

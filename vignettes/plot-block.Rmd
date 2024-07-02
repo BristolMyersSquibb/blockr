@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 
 ```{r setup, echo=FALSE, message=FALSE}
 library(blockr)
+library(bslib)
+library(ggplot2)
+library(palmerpenguins)
 
 note_box <- function(..., color) {
   htmltools::div(
@@ -110,7 +113,7 @@ As a consequence, these block layer must have the `plot_layer_block` class:
 
 ```r
 evaluate_block.plot_layer_block <- function(x, data, ...) {
-  stopifnot(...length() == 0L)
+  stopifnot(...length() == 0L, inherits(data, "ggplot"))
   eval(
     substitute(data + expr, list(expr = generate_code(x))),
     list(data = data)
@@ -153,15 +156,15 @@ Reduce(`+`, 1:3)
 If there are 3 blocks in the stack:
 
 ```r
-my_stack <- new_stack(data_block, filter_block, select_block)
+my_stack <- new_stack(new_dataset_block, new_filter_block, new_select_block)
 ```
 
 `binary_substitute` is called twice:
 
-- Once to combine x being `<data_block_EXPR>` (the data block expression) and y being `<filter_block_EXPR>`, 
-to give `<data_block_EXPR> %>% <filter_block_EXPR>`.
-- Then to combine the previous result, namely x, equal to `<data_block_EXPR> %>% <filter_block_EXPR>` with y equal to `<select_block_EXPR>`.
-- This ultimately yields: `<data_block_EXPR> %>% <filter_block_EXPR> %>% <select_block_EXPR>`
+- Once to combine x being `<dataset_block_EXPR>` (the data block expression) and y being `<filter_block_EXPR>`,
+to give `<dataset_block_EXPR> %>% <filter_block_EXPR>`.
+- Then to combine the previous result, namely x, equal to `<dataset_block_EXPR> %>% <filter_block_EXPR>` with y equal to `<select_block_EXPR>`.
+- This ultimately yields: `<dataset_block_EXPR> %>% <filter_block_EXPR> %>% <select_block_EXPR>`
 
 `substitute()` ensures we don't evaluate the generated expression and replace `x` and `y` by their respective values.
 
@@ -241,7 +244,7 @@ leave the layout to the default choice. Note that the mapping field depends on t
 To stay simple, we assume to only handle `x` and `y` __aesthetics__.
 
 ```{r}
-new_ggplot_block <- function(data, ...) {
+new_ggplot_block <- function(...) {
   new_block(
     fields = list(
       # TO DO
@@ -251,15 +254,9 @@ new_ggplot_block <- function(data, ...) {
     ...
   )
 }
-
-ggplot_block <- function(data, ...) {
-  initialize_block(new_ggplot_block(data, ...), data)
-}
 ```
 
-We finally end with `new_ggplot_block`, the internal constructor and 
-`ggplot_block`, the user facing constructor. The next step is to create the mappings fields with 
-two `new_select_field()`. Those fields are converted into shiny inputs, specifically `selectInput()`.
+We finally end with the `new_ggplot_block` constructor. The next step is to create the mappings fields with two `new_select_field()`. Those fields are converted into shiny inputs, specifically `selectInput()`.
 To set the field choices which depend on the data, we define the `data_cols` helper:
 
 ```r
@@ -269,14 +266,14 @@ data_cols <- function(data) colnames(data)
 We modify `new_ggplot_block` such that:
 
 ```r
-new_ggplot_block <- function(data, ...) {
+new_ggplot_block <- function(col_x = character(), col_y = character(), ...) {
 
   data_cols <- function(data) colnames(data)
 
   new_block(
     fields = list(
-      x = new_select_field(colnames(data)[1], data_cols, type = "name"),
-      y = new_select_field(colnames(data)[2], data_cols, type = "name")
+      x = new_select_field(col_x, data_cols, type = "name"),
+      y = new_select_field(col_y, data_cols, type = "name")
     ),
     expr = quote(),
     class = c("ggplot_block", "plot_block"),
@@ -299,20 +296,19 @@ ggplot(mapping = aes(x = .(x), y = .(y)))
 ```
 
 In the above expression, you may notice `.()`, which is actually required by `generate_code()`. Under the hoods, this is needed by `bquote()` which only evaluates arguments wrapped
-by `.()` with variables from the environment. It makes it easier to use than `substitute()`, since we explicitly mark what we want to
-evaluate.
+by `.()` with variables from the environment. It makes it easier to use than `substitute()`, since we explicitly mark what we want to evaluate.
 
 All combined together, this eventually yields:
 
 ```{r, eval=TRUE}
-new_ggplot_block <- function(data, ...) {
+new_ggplot_block <- function(col_x = character(), col_y = character(), ...) {
 
   data_cols <- function(data) colnames(data)
 
   new_block(
     fields = list(
-      x = new_select_field(colnames(data)[1], data_cols, type = "name"),
-      y = new_select_field(colnames(data)[2], data_cols, type = "name")
+      x = new_select_field(col_x, data_cols, type = "name"),
+      y = new_select_field(col_y, data_cols, type = "name")
     ),
     expr = quote(
       ggplot(mapping = aes(x = .(x), y = .(y)))
@@ -327,46 +323,45 @@ As you can, see the code base is reasonable in terms of complexity.
 
 ### Create a geom block
 
-Now that we have a valid `ggplot_block`, we want to add it a geometry. The easiest one is `geom_point()`.
-To keep the vignette as simple as possible, we only handle one option, namely the point color. We
+Now that we have a valid `new_ggplot_block`, we want to add it a geometry. The easiest one is `geom_point()`.
+To keep the vignette as simple as possible, we only handle two options, namely the point color and shape. We
 host this information in a `new_select_field()`, for instance:
 
 ```r
-new_select_field("blue", c("blue", "green", "red"))
+new_select_field(default, choices)
 ```
 
 The expression is straightforward to get:
 
 ```r
-geom_point(color = .(color)) # Don't forget to wrap it with quote(...).
+geom_point(color = .(color), shape = .(shape)) # Don't forget to wrap it with quote(...).
 ```
 
-Importantly, since we use `.(color)`, the field name must be __color__.
+Importantly, since we use `.(color)`, the field name must be __color__ and conversely for the shape.
+Also note that, since the previous data contains the `ggplot` object, we must extract its data located in `data$data`, such that the column names are obtained with `data_cols <- function(data) colnames(data$data)`.
 
 This finally gives us:
 
 ```{r, eval=TRUE}
-new_geompoint_block <- function(data, ...) {
+new_geompoint_block <- function(color = character(), shape = character(), ...) {
+
+  data_cols <- function(data) colnames(data$data)
 
   new_block(
     fields = list(
-      color = new_select_field("blue", c("blue", "green", "red"))
+      color = new_select_field(color, data_cols, type = "name"),
+      shape = new_select_field(shape, data_cols, type = "name")
     ),
     expr = quote(
-      geom_point(color = .(color))
+      geom_point(aes(color = .(color), shape = .(shape)), size = 2)
     ),
     class = c("plot_layer_block", "plot_block"),
     ...
   )
 }
-
-geompoint_block <- function(data, ...) {
-  initialize_block(new_geompoint_block(data, ...), data)
-}
 ```
 
-Note the class `plot_layer_block`. This is necessary to invoke the corresponding 
-`evaluate_block()` method (to use `+` instead of `%>%`).
+Note the class `plot_layer_block`. This is necessary to invoke the corresponding `evaluate_block()` method (to use `+` instead of `%>%`).
 
 
 ### Try it
@@ -384,8 +379,23 @@ note_box(
 We can try it on the following stack:
 
 ```r
-stack <- new_stack(data_block, ggplot_block, geompoint_block)
+stack <- new_stack(
+  data_block = new_dataset_block("penguins", "palmerpenguins"), 
+  plot_block = new_ggplot_block("flipper_length_mm", "body_mass_g"),
+  layer_block = new_geompoint_block("species", "species")
+)
 serve_stack(stack)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+ag88AyoFNZObOwlmdl5fNbWqKKkAEwl6RBw1AD6nd1EpCOF4jIAPOYyAGZOEASk7hB8xNwjAB6q6lo5UOtwDHzJsjsjuYcEx+VnF1cyGO-JMiDp6TIyACZQLgjHbKBbLVbrTZ8QFcT47aDwdgwoFQAYQP5DUYzQQYv7LFhwbj-ZRqTKcXH4-EHNRYkbsIlwdYjJaE4nbIi7PayWFQEGc9iyUi5OqHISIuApXC-KkyO604b0xnM1lE-4c3a5Hmo-ncQUyYWitTi2CSsAlKlXGV-OB7VAMQ4ARyckzglNl4x6fBgaFQbGshygcGRNLefD2r3lYdyqQt+KteL+BG4sVJ6k0nsm01EEgCQgmUxmUutb3eMpKAF8fhA6dY4EQYIo2IWc7NwSs1hsSBqrPdHqdyC9ZOxjkajidnpdZO8MJ9vhAZbzdWDFh2od3efDORLkbyACSb6uYxU4kuq4lp8mkd1Una9hWjBncJlTc-qu8MbXA0FCkVwMWQKaxaJviI5oP+D5Ks+KpsuqYF1F+fI-gaf4ARKKQlgmVK2vaTouuQN74nWDYjE2ZB8EGyIfocGA9sUw6jhBYbwXAqTDiwABeTH9Jh0ogcmqb3JoBYjCmuTnNmZh5mAIlFuafFUjO5bpFWC4cFwEjzIsdKcKc4jukuMyHHSvIMi2ZjCfUjQcNJVTcDUdQQA0TRSoEeKya2xmKpm5kSJoSyZOgEnPk5jgjDAMDSXQRD-Lk4WpmMwF-GJElGZBxGNkQzaSX5QjsHUBCEv4eCBGA+VMkVGEQCUDIMAAbnA9IafpukSMkYAVgAukAA", # nolint
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
 ```
 
 ### Going further
@@ -411,15 +421,13 @@ library(ggplot2)
 library(ggiraph)
 
 custom_data_block <- function(...) {
-  initialize_block(
-    new_data_block(
-      ...,
-      selected = "mtcars"
-    )
+  new_dataset_block(
+    ...,
+    selected = "mtcars"
   )
 }
 
-new_ggplot_block <- function(data, ...) {
+new_ggplot_block <- function(...) {
 
   data_cols <- function(data) colnames(data)
 
@@ -437,19 +445,16 @@ new_ggplot_block <- function(data, ...) {
   )
 }
 
-ggplot_block <- function(data, ...) {
-  initialize_block(new_ggplot_block(data, ...), data)
-}
-
 # We could have use a mutate_block instead of
 # changing the data from inside the block ...
 # {blockr} is flexible here.
-new_geompoint_interactive_block <- function(data, ...) {
+new_geompoint_interactive_block <- function(...) {
   build_expr <- function(data) {
     # Get data from the previous ggplot layer
     # data is the ggplot so we need to use data$data
     # to get the initial data
-    data$data$carname <- row.names(data$data)
+    dat <- data$data
+    dat$carname <- row.names(dat)
     substitute(
       geom_point_interactive(
         # Pass in new data
@@ -459,7 +464,7 @@ new_geompoint_interactive_block <- function(data, ...) {
           data_id = carname
         )
       ),
-      list(new_data = data$data)
+      list(new_data = dat)
     )
   }
 
@@ -473,11 +478,7 @@ new_geompoint_interactive_block <- function(data, ...) {
   )
 }
 
-geompoint_interactive_block <- function(data, ...) {
-  initialize_block(new_geompoint_interactive_block(data, ...), data)
-}
-
-new_theme_block <- function(data, ...) {
+new_theme_block <- function(...) {
   new_block(
     fields = list(
       theme = new_select_field(
@@ -494,33 +495,32 @@ new_theme_block <- function(data, ...) {
   )
 }
 
-theme_block <- function(data, ...) {
-  initialize_block(new_theme_block(data, ...), data)
-}
-
-new_ggiraph_block <- function(data, ...) {
+new_ggiraph_block <- function(...) {
   new_block(
     fields = list(
       pointsize = new_numeric_field(12, min = 1, max = 20)
     ),
-    expr = quote(
-      girafe(ggobj = data, pointsize = .(pointsize))
-    ),
+    expr = quote(girafe(ggobj = data, pointsize = .(pointsize))),
     class = c("ggiraph_block", "plot_block"),
     ...
   )
 }
 
-ggiraph_block <- function(data, ...) {
-  initialize_block(new_ggiraph_block(data, ...), data)
+# Necessary to get ggiraph plot rendering
+uiOutputBlock.ggiraph_block <- function(x, ns) {
+  ggiraph::girafeOutput(ns("plot"))
+}
+
+server_output.ggiraph_block <- function(x, result, output) {
+  ggiraph::renderGirafe(result())
 }
 
 stack <- new_stack(
   custom_data_block,
-  ggplot_block,
-  geompoint_interactive_block,
-  theme_block,
-  ggiraph_block
+  new_ggplot_block,
+  new_geompoint_interactive_block,
+  new_theme_block,
+  new_ggiraph_block
 )
 serve_stack(stack)
 ```
