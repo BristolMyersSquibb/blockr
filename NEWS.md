@@ -1,3 +1,9 @@
+# blockr 0.0.2.9000
+
+## Fixes
+
+- Loading spinner is now correctly hidden when the block visual is updated.
+
 # blockr 0.0.2
 
 ## Breaking changes
