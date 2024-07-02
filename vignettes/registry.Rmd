@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup, echo=FALSE, message=FALSE}
 library(blockr)
 library(bslib)
+library(DiagrammeR)
 
 note_box <- function(..., color) {
   htmltools::div(
@@ -47,6 +48,44 @@ metadata:
 - Allowed __input__ (default to data.frame, expect for `new_dataset_block` blocks)
 - Returned __output__.
 - ...
+
+```{r, echo=FALSE}
+
+mermaid("
+  flowchart LR
+  subgraph blockr_ggplot2[blockr.ggplot2]
+    new_block1[New block]
+    new_block2[New block]
+  end
+  subgraph blockr_echarts4r[blockr.echarts4r]
+    new_block3[New block]
+    new_block4[New block]
+  end
+  blockr_ggplot2 --> |register| registry
+  blockr_echarts4r --> |register| registry
+  subgraph registry[Registry]
+    subgraph select_reg[Select block]
+      reg_name[Name: select block]
+      reg_descr[Description: select columns in a table]
+      reg_classes[Classes: select_block, tranform_block]
+      reg_input[Input: data.frame]
+      reg_output[Output: data.frame]
+      reg_package[Package: blockr]
+    end
+    subgraph filter_reg[Filter block]
+    end
+    filter_reg --x |unregister| trash['fa:fa-trash']
+  end
+  ",
+  height = "600px"
+) |>
+  htmlwidgets::onRender(
+    "function(el, x) {
+      el.classList.add('text-center')
+    }
+    "
+  )
+```
 
 ## Previewing available blocks
 
