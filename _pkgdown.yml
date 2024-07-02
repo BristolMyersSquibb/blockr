@@ -13,7 +13,7 @@ navbar:
   bg: info
   type: light
   structure:
-    right: [reference, news, github, dark-mode]
+    right: [reference, github, dark-mode]
   components:
     home: ~
     dark-mode:

@@ -123,7 +123,7 @@ for checking that the value is a character string and modifies it if not.
 
 TBD
 
-## Validation and evaluation
+# Validation and evaluation
 
 That's currently how {blockr} validate blocks and fields. Each block is validated, meaning that each field that compose it should have valid values according to the input data. Only when everything is valid, the block expression is evaluated and the result computed and passed to the next block. Any error is catched by R and forwarded to JavaScript so that users are notified about what went wrong and where.
 
@@ -156,7 +156,7 @@ flowchart TD;
   subgraph ui
       gui[User interface]
   end
-", height = "1200px") |>
+", height = "1250px") |>
   htmlwidgets::onRender("
     function(el, x) {
       el.classList.add('text-center')

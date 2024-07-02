@@ -42,21 +42,26 @@ note_box <- function(..., color) {
 - __transform__ block: materialize `{dplyr}` operations on the selected data.
 - __output__ (only plot for now) block: consumes transformed data to produce visualizations.
 
-A __stack__ always starts from a data block and may end either by a transform blocks or an output block.
-
-Note: at the moment, there is only one output block per stack.
+A __stack__ always starts from a data block and may end either by a transform blocks or an output block. This means that, at the moment, there can only be one output block per stack.
 
 ```{r, echo=FALSE}
 mermaid("
-  flowchart TB
-    subgraph stack
-      input(Data);
-      transform(Transform);
-      output(Visualize);
-      input-->transform--> output;
+  flowchart TD
+  subgraph stack1[Stack]
+    direction TB
+    subgraph input_block[Block 1]
+      input(Data: dataset, browser, ...)
     end
+    subgraph transform_block[Block 2]
+      transform(Transform block: filter, select ...)
+    end
+    subgraph output_block[Block 3]
+      output(Result/transform: plot, filter, ...)
+    end
+    input_block --> |data| transform_block --> |data| output_block
+  end
   ",
-  height = "120px"
+  height = "600px"
 ) |>
   htmlwidgets::onRender(
     "function(el, x) {
@@ -65,6 +70,41 @@ mermaid("
     "
   )
 ```
+
+Under the hoods, blocks are composed of __fields__. The latter are used to convey interactivity within the block.
+As you can see in the below diagram, fields are combined to compute an expression, which eventually leads to a block result after evaluation. For a data block, there is no data input.
+
+```{r, echo=FALSE}
+mermaid(
+  "flowchart TD
+  blk_data_in(Data input)
+  blk_data_out[Output]
+  subgraph blk_block[Block]
+    subgraph blk_field1[Field 1]
+      value(Value)
+      title(Title)
+      descr(Description)
+      status(Status)
+    end
+    blk_field2(Field 2)
+    blk_field1 --> blk_expr
+    blk_field2 --> blk_expr
+    blk_expr(Expression)
+    blk_res(result)
+    blk_expr --> blk_res
+  end
+  blk_data_in --> blk_block --> blk_data_out
+  ",
+  height = "800px"
+) |>
+  htmlwidgets::onRender(
+    "function(el, x) {
+      el.classList.add('text-center')
+    }
+    "
+  )
+```
+
 
 ### The user interface
 
@@ -240,4 +280,36 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+```
+
+### Connect stacks: the workspace
+
+The __workspace__ allows you to create more complex analysis by connecting stacks together and get a dashboard.
+
+```{r, echo=FALSE}
+mermaid(
+  "flowchart TD
+  subgraph s1[Stack 1]
+    direction TB
+    input_s1(Data)
+    transform_s1(Transform)
+    input_s1 --> |data| transform_s1
+  end
+  transform_s1 --> |data| input_s2
+  subgraph s2[Stack 2]
+    direction TB
+    input_s2(Data)
+    transform_s2(Transform)
+    output_s2(Visualize)
+    input_s2 --> |data| transform_s2 --> |data| output_s2
+  end
+  ",
+  height = "600px"
+) |>
+  htmlwidgets::onRender(
+    "function(el, x) {
+      el.classList.add('text-center')
+    }
+    "
+  )
 ```
