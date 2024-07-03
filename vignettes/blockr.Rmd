@@ -30,6 +30,10 @@ note_box <- function(..., color) {
 }
 ```
 
+```{r echo=FALSE}
+knitr::include_url("https://blockr-org.github.io/useR2024")
+```
+
 ## Get started
 
 `{blockr}` provides plug and play blocks which can be used to import, transform and visualize data.
@@ -71,8 +75,7 @@ mermaid("
   )
 ```
 
-Under the hoods, blocks are composed of __fields__. The latter are used to convey interactivity within the block.
-As you can see in the below diagram, fields are combined to compute an expression, which eventually leads to a block result after evaluation. For a data block, there is no data input.
+Under the hoods, blocks are composed of __fields__. The latter are translated into shiny inputs used to convey interactivity within the block. As you can see in the below diagram, fields are combined to compute an expression, which eventually leads to a block result after evaluation. For a data block, there is no data input.
 
 ```{r, echo=FALSE}
 mermaid(
@@ -96,6 +99,46 @@ mermaid(
   blk_data_in --> blk_block --> blk_data_out
   ",
   height = "800px"
+) |>
+  htmlwidgets::onRender(
+    "function(el, x) {
+      el.classList.add('text-center')
+    }
+    "
+  )
+```
+
+For instance, if we assume a filter `{dplyr}` __expression__:
+
+```{r, eval=FALSE}
+data |> filter(col1 == "test")
+```
+
+This operation can be translated to `data |> filter(<COLNAME> <FILTER_FUNC> <FILTER_VALUE>, ...)`, where `<COLNAME>`, `<FILTER_FUNC>` and `<FILTER_VALUE>` are __fields__, to give the end user the ability to change the
+expression. Note that fields may have dependencies, `<COLNAME>` controling the number of filters to apply. Besides, at the moment, our implementation of the filter block exposes additive operations, meaning that the result corresponds to `cond1 && cond2 && ...`.
+
+```{r, echo=FALSE}
+mermaid(
+  "flowchart TD
+  filt_data_in[Data input]
+  filt_data_out[Transformed data]
+  subgraph filt_block[Filter block]
+    filt_select_col[Select columns]
+    filt_filter_func[Filter function ==, !=]
+    filt_filter_val[Filter values]
+    filt_expr[Expression]
+    filt_res[Result]
+
+    filt_select_col --> filt_expr
+    filt_select_col --> |depends| filt_filter_val
+    filt_filter_val --> filt_expr
+    filt_filter_func --> filt_expr
+
+    filt_expr --> filt_res
+  end
+  filt_data_in --> filt_block --> filt_data_out
+  ",
+  height = "700px"
 ) |>
   htmlwidgets::onRender(
     "function(el, x) {
@@ -285,6 +328,7 @@ shinyApp(ui, server)
 ### Connect stacks: the workspace
 
 The __workspace__ allows you to create more complex analysis by connecting stacks together and get a dashboard.
+To know more about this you can read the following [article](https://blockr-org.github.io/blockr/articles/data-blocks.html#reading-data-from-another-stack).
 
 ```{r, echo=FALSE}
 mermaid(
