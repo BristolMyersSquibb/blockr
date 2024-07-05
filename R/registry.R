@@ -340,7 +340,8 @@ add_block_ui <- function(x, ns = identity) {
           class = "blockr-registry-list",
           div(
             id = ns("scrollable-child"),
-            class = "scrollable-child"
+            class = "scrollable-child",
+            style = "min-height:50px"
           )
         ),
         tags$p(class = "blockr-description w-100 m-0 p-0")
@@ -349,78 +350,50 @@ add_block_ui <- function(x, ns = identity) {
   )
 }
 
+#' @importFrom shiny reactivePoll
 add_block_server <- function(
-  session,
-  registry = available_blocks
+  session
 ) {
   if (!getOption("BLOCKR_ADD_BLOCK", TRUE))
     return()
 
-  observe({
-    registry_path <- session$registerDataObj(
-      rand_names(),
-      list(
-        registry = registry() |> add_block_index() |> sort_registry()
-      ),
-      get_registry
-    )
+  registry <- reactivePoll(
+    1000,
+    session,
+    \() {
+      length(available_blocks())
+    },
+    \() {
+      available_blocks()
+    }
+  )
 
-    hash_path <- session$registerDataObj(
-      rand_names(),
-      list(
-        registry = registry()
-      ),
-      get_registry_hash
-    )
+  observeEvent(registry(), {
+    blocks <- registry() |>
+      add_block_index() |>
+      sort_registry() |>
+      lapply(\(x) {
+        list(
+          name = block_name(x),
+          index = get_block_index(x),
+          description = block_descr(x),
+          classes = attr(x, "classes"),
+          icon = block_icon(x) |> as.character()
+        )
+      })
+
+    blocks <- blocks[sapply(blocks, length) > 0] |>
+      unname()
 
     session$sendCustomMessage(
       "blockr-registry-endpoints",
       list(
         id = session$ns("addBlockCanvas"),
         ns = session$ns(NULL),
-        registry = registry_path,
-        hash = hash_path,
+        registry = blocks,
+        hash = rlang::hash(registry()),
         delay = 250
       )
     )
   })
-}
-
-get_registry_hash <- function(data, req) {
-  payload <- list(
-    hash = rlang::hash(data$registry)
-  )
-
-  shiny::httpResponse(
-    200L,
-    content_type = "application/json",
-    content = jsonlite::toJSON(payload, auto_unbox = TRUE)
-  )
-}
-
-get_registry <- function(data, req) {
-  blocks <- data$registry |>
-    lapply(\(x) {
-      list(
-        name = block_name(x),
-        index = get_block_index(x),
-        description = block_descr(x),
-        classes = attr(x, "classes"),
-        icon = block_icon(x) |> as.character()
-      )
-    })
-
-  blocks <- blocks[sapply(blocks, length) > 0] |>
-    unname()
-
-  payload <- list(
-    registry = blocks,
-    hash = rlang::hash(blocks)
-  )
-
-  shiny::httpResponse(
-    200L,
-    content_type = "application/json",
-    content = jsonlite::toJSON(payload, auto_unbox = TRUE, dataframe = "rows", force = TRUE)
-  )
 }

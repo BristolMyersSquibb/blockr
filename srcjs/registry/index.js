@@ -1,17 +1,17 @@
-import { description } from "./description";
-import { bindScroll } from "./scroll";
-import { fetchFactory } from "./fetch";
+import { handleClick, renderPills } from "./render";
 import { handleSearch } from "./search";
-import { handleClick } from "./render";
 
 $(() => {
-  handleClick();
-  window.Shiny.addCustomMessageHandler("blockr-registry-endpoints", (msg) => {
-    const endpoints = fetchFactory(msg);
-    setTimeout(() => {
-      bindScroll(msg, endpoints);
-      handleSearch(msg, endpoints);
-      description();
+    handleSearch();
+})
+
+$(() => {
+    handleClick();
+    window.Shiny.addCustomMessageHandler("blockr-registry-endpoints", (msg) => {
+        console.log(msg);
+        $(`#${msg.ns}-scrollable-child`).html("");
+        setTimeout(() => {
+        renderPills(msg);
     }, msg.delay);
   });
 });

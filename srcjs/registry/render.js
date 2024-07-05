@@ -1,16 +1,16 @@
 import { description } from "./description";
 import { capitalise } from "../utils";
 
-const createPills = (blocks, all) => {
+const createPills = (blocks) => {
   let pills = [];
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
     let previous_block_index = 0;
-    all.map((d, index) => {
+    blocks.map((d, index) => {
       if (d.name !== block.name) return;
       previous_block_index = index - 1;
     });
-    const previous_block = all[previous_block_index];
+    const previous_block = blocks[previous_block_index];
 
     if (!previous_block) {
       pills += `<h3>${capitalise(blockType(block))}</h3>`;
@@ -35,19 +35,19 @@ const createPill = (block) => {
     data-name="${block.name}"
     data-description="${block.description}"
     draggable="true">
-    ${name.replace("block$", "")}
+    ${name}
   </p>`;
 };
 
-export const renderPills = (params, data, all) => {
-  if (data.length === 0) {
+export const renderPills = (params) => {
+  if (params.registry.length === 0) {
     $(`#${params.ns}-scrollable-child`).html(
       "<p class='text-muted'>No blocks found</p>",
     );
     return;
   }
 
-  const pills = createPills(data, all);
+  const pills = createPills(params.registry);
   $(`#${params.ns}-scrollable-child`).append(pills);
   description();
 };
