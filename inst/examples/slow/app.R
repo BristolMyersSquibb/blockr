@@ -32,7 +32,7 @@ slow_head_block <- function(data, ...) {
 }
 
 stack <- new_stack(
-  data_block,
+  dataset_block,
   slow_head_block
 )
 

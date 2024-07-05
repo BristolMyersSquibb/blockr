@@ -35,35 +35,36 @@ Data blocks are the starting point of any __stack__ and are required by any __tr
 
 ### Package based data block
 
-`{blockr}` introduces a `data_block()` which takes as input any package containing a (or multiple) dataset(s).
+`{blockr}` introduces a `new_dataset_block()` which takes as input any package containing a (or multiple) dataset(s).
 This block is constructed as follows:
 
 ```r
-new_data_block <- function(
+new_dataset_block <- function(
+  selected = character(),
+  package = "datasets",
   ...,
-  dat = as.environment("package:datasets"),
-  selected = character()
+  
 ) {
   # code  
 }
 ```
 
-By default, the selected dataset is from the `datasets` package but you can actually provide any dataset you like by changing the `dat` parameter
+By default, the selected dataset is from the `datasets` package but you can actually provide any dataset you like by changing the `package` parameter
 (in the following we leverage the `{blockr.data}` datasets with the lab data pre-selected):
 
 ```r
 # Define the custom data block
 custom_data_block <- function(...) {
-  data_block(
-    dat = as.environment("package:blockr.data"),
+  new_dataset_block(
     selected = "lab",
+    package = "blockr.data",
     ...
   )
 }
 
 stack <- new_stack(
   custom_data_block, 
-  select_block
+  new_select_block
 )
 serve_stack(stack)
 ```
@@ -71,7 +72,7 @@ serve_stack(stack)
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAKCQhjDI6MkMABMoLjjAggdOIhgAfQyuQpSZAB5TGQAzBwgCUlcIPgw2vxkQQJkZEqgy0QlBCB6ektUZKHYMCgA3FgYSeDJBMFQoCShLOEQUhnTMqH9cbtH2OG44Rrg0iaFuKDppU562jFO4gF9AwM4N8Uq1QgcGohT+Q1OuXyRT6AxMslO50ujThEkCcXODFmcDBXCG4PEfjAnwAukA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQBE6cRDAA+gAmUFxVheIyADzmMgBmTqWk7hB8GIPJMiDpMjIQcNS19bFwpI2iEoIQ4+PscNxwBOQ1qoFg3FB00mNrqFASUNZw+0JNDBh1XKera4MYZyUAvunpnJdmm0JlMqgDlmcyhVqs8oIszLIzpNphstjt4RJ0iUNgwAG5wMFcZbg8TJMDfAC6QA", # nolint
     "app",
     header = FALSE
   ),
@@ -86,7 +87,7 @@ note_box(
 )
 ```
 
-In practice, you'll always call `data_block()` and not `new_data_block()` (internal constructor).
+In practice, you'll always call `new_dataset_block()` and not `new_dataset_block()` (internal constructor).
 
 Overall, this block is good for testing or if you get your own data package. In the next part, we see how to import
 data from a file.
@@ -94,27 +95,26 @@ data from a file.
 ### Reading data from files
 
 `{blockr}` exposes 2 extra data blocks which have to be combined with one 
-of the 5 following data __parser__ blocks:
+of the 4 following data __parser__ blocks:
 
-- `xpt_block`, reads xpt files.
-- `sas_block`, reads sas7bdat files.
-- `rds_block`, reads rds files.
-- `json_block`, reads json files.
-- `csv_block`, reads csv files.
+- `new_xpt_block`, reads xpt files (and sas7bdat files).
+- `new_rds_block`, reads rds files.
+- `new_json_block`, reads json files.
+- `new_csv_block`, reads csv files.
 
 #### Upload data
 
-If you want to load data from any location on your computer, `upload_block()` is what you need.
-Since the `upload_block()` temporarily moves the data in a custom location, we recognize that it might not be always possible
+If you want to load data from any location on your computer, `new_upload_block()` is what you need.
+Since the `new_upload_block()` temporarily moves the data in a custom location, we recognize that it might not be always possible
 for security reasons.
 
 ```r
 library(blockr)
 
 stack <- new_stack(
-  upload_block,
-  csv_block,
-  select_block
+  new_upload_block,
+  new_csv_block,
+  new_select_block
 )
 serve_stack(stack)
 ```
@@ -122,7 +122,7 @@ serve_stack(stack)
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJQQgZGQdUUSgAE2zo8VxAooJ2ADcq0Qlawpl2OG44AlIWk0C4roZGuFyufLzxOLAAXwBdIA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6ZxQEjIAPOYyEHDUAPrlEoIQMnUNjU6oolAAJo2F4rjpHfVNBOwAbkOiEqPtnU3scNxwBKRzZuklqwzTcM1crS3iyWAAvgC6QA", # nolint
     "app",
     header = FALSE
   ),
@@ -132,13 +132,14 @@ card(
 
 #### Files browser block
 
-`filesbrowser_block()` can read data from the __server file system__.
+`new_filesbrowser_block()` can read data from the __server file system__.
 It means that if no data is available on the server, you won't see anything.
 You can customize the accessible locations as follows, through the `volumes` parameter:
 
 ```r
 custom_filesbrowser_block <- function(...) {
-  filesbrowser_block(
+  new_filesbrowser_block(
+    file_path = character(),
     volumes = c(vol1 = "<PATH1>", vol2 = "<PATH2>"),
     ...
   )
@@ -153,9 +154,9 @@ shinylive feature (upload button).
 library(blockr)
 
 stack <- new_stack(
-  filesbrowser_block,
-  csv_block,
-  select_block
+  new_filesbrowser_block,
+  new_csv_block,
+  new_select_block
 )
 serve_stack(stack)
 ```
@@ -163,7 +164,7 @@ serve_stack(stack)
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhAzigJGQAeUxkIOGoAfUSJQQgZGQAzFm44dkYianY4Bmzo8VxAooJ2ADcG0Qlmwpla8oJSLpNAuNqGdrhcrny88TiwAF9ccGh4KgB5bnCYVBY27IBxWAqMNva8QhJySmQ4ABM7VwhcR+eSbJYHt6fSF+yDgY3Fw4TgYVwBDs4UhRAcZAi2WK3CglkBwNh8NIiIgYlwiQYwweUHIbwgD2yxNJxD2cH+-0+VLguBY7AAEnBuA9AgBGAAcAE4AGwyADKDhg8AYMm2u32bVwPNw+neDI4+iV-OFuAAgvY2FBlSwYKiKvpkaj2PojlgAKIYVAQSy4G222QinWoBhlRUAVhknu9IJFgGQCGQ8gDMAa9Pt5AoADPGxRKpTKdnsDuxcAAmZWql5W3M8hPx3AABTCrKNJssZotlitADEsDqHU7cM2dbhuzyACwyACyUHCMjD2b5MqGRDodV6xfj-fFkrqablmdwEbzfwL+k3897uFFpAwMgAMnCq-pjaarfWrQBVUWtx3Ox9dvuD4fd8MyABSDh2UcZGzEUADkiCmGAZwYOcEwnJdU1lDMFV9LcPnVVD5z5XBz3JEhqxvc0UQba0ACEsDbZ0jnIxUo3-HZu2zAB2aMgyAiMeUnUhp1nOMeWzZNl2lJD5SzIU0LVK1xOLfjD24iQNCIbgYAI2tb2Iq1RQAdXtF9Dx090-wAmFmKMhiZH9IcRzHFj6JhPiRQQlcRPXX1SxVbcSCtNzFQFHlxNIupgleK8azrDTrVtCi9KOKLu1wQAUAlwcDSBkDROQeGQHgcOAZG4mRqDCONsyTJzhPTUTcCYiSd2q4sSt1MhaAYVAKFU8LLX0UjbVPSjcG609FX7HUHEsBxOA3JMRrGibsyjQMyiA-ixQUcgoN4iB6sXFNnIq9dsI89CrWwrby0rLNQsIu99E7PrO1kf07JzWzjNkfsrKA0ynuK+CdvKtcFQFGqvP0IH6uwnUYE4OpiRUy61KIzrQNtAARPrkZRnMJye5bpvG0hFRYj6w1x0b8dgiMBLK1dkKzHl3PzEH6d8ymcKUAMnU5Cp2vUzq3z6t9JrMmEPzxiaIyTOyluGsmJrjCNHL+mnKp5JVDskjVNQFBX+qCtgecRkjYui9tjdkTixYJ-yA1lq2lo9W3YN7UqlZclC1cZjCted3AOW4dg2HEFgDeuxsAElQLuiP4qSlK0oyrKcryogCqKzaBV7bahOV1zc3VndfSLDOD1wh58PhjqjfIvrqKwGPkqIVL0q5RPcvywqpHT3tfuzt26bzz2rVk4tu7ZvCQuvBHrtrmuaOzAVhaGm2ZoJkDhel5fybjQvBMQvaFUjYH1UP4tC99zkA4gIOQ4i8PI70u-fMXmR5sdj8pbDF-N7l9PfUV3v950wPPnJmB5T7iQHJyOgcIGCZBvp1HUj4+qINFDmAS4FILQVkBOFGcACBwHWjBbM6CIIEOgkBGQOC8FkI2sWIULsAEAzpqhEBx9MLClLFgIgJp4EkTDgAFWfO2ARXZsz+ktoqTiopVo0KIeI22S0pEyMIbBIUWc95MMVOJVhQ9pLCgPPwog4hwhEF4VaX8ZZ77tgsaBRUSZNhTiwdmfsDjuJYNVp9FxjjaHCh7ho2mhMj5Dzqr43AABhFgDhiSZQeLlAcABLgAHgcUxFdeYkQHLaAAGn1TJWTFQCVcTxIhLEinuIEjZLixTYJMSpq7QBioDqDw1CdAUtTcADgAD8QAIOlCeYV0lNiwEcO6wycwOxXpIlaqA1pOImfjRR0zZk+KYv-fxKsgY6I1GDNpECbgMHiTwMx+gwk6isc6U5tieQvXMhbN+2NjIULuZMuMfIGHrPXA1LZDVixvI6UocQ7RDRpMNg+LAooBbgqfk9L+EiSrr0-q-F56c+TqN2po7MHtPLqkxb5VFbNlA6k5uUC6k9K4PifALJ8WNF6k0mTIEUH9wwCQka8vx6KAnEKCfoLlvzsLSLhCCEF10ADSmwTbOjFXXa5SzZGyEKd4mCMrpEzNkRQhVbifECjqYwzlm5vl7gFNq-qYR8GiGgMc20ooyx9StWWHMj1XoyAXnC-sTLnXfwJnGYUu8OWVWcdygNxZtR6hRGQYFZLBn6H5npQWxZn4y0mfC91iat4QBKomX1-1OUsOaWInMiZSyinCA8TIMJhURRQcgx8fpZUqJ-GU2ckY63kM-pxRtMFAgZrRdm-12i83iW7bqfUFqK2dVdDXO0tFPU5hdW-TiY453Iozey3trl9XNN9JuFdusWAACs2DOjHSRMJbJznhLPdgmdziZ2hmAqmn+JVlrUz7rgX0wDN0HifbmUu5dI2grIhKl0c8bkixZY7MRCLmUzq7fGa2L6Gm+k2ZuoGT7xJYFcFlXKv4oCZBYAwVJ-7rrkSEc6EjD1r3PPJlGMcVHH3xnhQhzRQosVHX0CxgtDVDHGMIwMgDNi+o2JzHRR5JVcWUM9cBBjSpMVQYk5bKTuLYM3qYwEoUG7sVSW3Qxg8FZvSkr46HFsoyuzdiSsp1dOcFRqO5TZsT2FzyEuJdzY9FLSO4EFmZ3oJVKZZqs1mCM7StmBdzD53MpF9N0Fw8yVz+gq16RQfXYq-YtJsHIGuhU89A07IDWEjQsASAsEScc26D8Ww5jdbhhwYQYQWRkI2egDBqsRHGX+KrNWKH9ga4wZr9l07jhkKlsgfr1wS25WN8Gh5cPiFSgOCwdgABexzRT3jDn1FbYcpndaazVwm9XGu9amSTBe23DvywEkN9L-mNysY1hxFmP6oDiFymWFEUIfixZje2QWMgusHd28207u3+wk39EDlr8sRSXZGwqVmwWi46xOAwGArJemmD07cIODBeltVi8bGucUGX7Z6wDkU4OYR3utuTp2SZocZazL6XNmn9CM98j7JHKP2Bo4xxQLHOP+lXQivjmKcUvNx2bjEpO7c04jxS2lmHDP+3M7-mzg8YSLD-GgFlAA5JDVqC2Fu8cF51ERfURH13FwnbKbcU4dzjN3Qb8v6cbg02xiMhrR6imm7N+bpAluxY2+t1bQscMQEOxJ6nEs2th465-Cc1Pt4Xad9diMH7mep98mfTY7BRDHNAuK9G4ra3U8g9Tj8Y4wf-Yh7-KHyfX0RiZ279hKv1eEgNDrvXcADdG6nhFU3elzdr1D+HyvJOWtD-axECho+dvV7obTuvDSdbBb0fQw8ABHar1AZAADUeDlHLURiKX3XzUv5MT2fJl49V5FgvMc1+x99boXL4bzvAvjZCTZsOEAOA9Z6LFxBfhatfhWdaPcPE7G-Z6MA2PIoCAx-VRCcOnFPJpdPVpIUbCI4eQXEEQGLI-TqUrdse6InMvB-S-XAEHcMUgs7dOWpR3V-FPZDdPHZdpL3dACwHvclfQATPSITL+MvKMSPJaAQyAuMVZOgq7V9H2LZH2YsVZXAb-X-Jrf-PAkiQA4At6C-Q7HkGfQ7GjcMHQ3bV5BfegyQ27HcXsLWP5U8J7F7N7b4Y5E-DzM-YQ+Am9MvCpe9TQwwlFF-CQhpXsAeZnAIvFA8L3BgKAPdOAdoDgqNAATXvBGT0niKOCvTLzgLIJYmOy8LnwFD5EQMX00V7Fdw1iKLxWwjCR4EsF21i0uT6kuWnRLyoIBz0IGwT3Tm1XEIV3ILTzY0zl8mNR1G4GglIHaDKHKBK2MzKy7Aj0gLmmyJhAnDHBcLIO9V8K6N7EbxKPYQzhwjGLgHyyEjzwLz0nz2lQEhLxYncM+kuJEPaPyJMP8KV16L0VyOSlRFwxiP40sUE0sVkBuNcPOMgMyOAkBPgNgwY06Od17GqmkOqgzVzC924FSmsOexkAiVIEP0M2P0pVjWpRmNcL+3gLv08LaIzVrweMKMYN6NQ0THEkMW9FxGOX72EUETsXmNazLwXWAjJ1uKfWML8M0V9BhM3ThLg1LD3x6ThCmBghqLOTqLOQKXZNaMgOWnv3ZNgw-CQNfV9BQLYx1ILT7EPDEA0GDliywCQT0nNNQRkH+LILmOpzvXtN5Lg3uIFLUwZmZzXyfWwjLDBBIEsDy1wyPRUKtClT6ilVkHSMO1L0gMWOAgMOrzEyTwpLU0CLYyFFCwY3CzgH3UPWOVPXPQLI0JLyTBL0+lLOdLXi1IaSC2aXaTEwgTKA+NMFb01ygA71pG7yZMETN1ZOINmNBLIIoOIXVJrxkFtE3wqGxBYFw3IN1JKNaRVyPBMEUmUmWx0nWwMnpiMjgRlX-F3K5L3PhGZDjHjBFG-3SwIB4BJEeHIO5TAQTHEj1BNNHRDOtDtEnTdBHIWhBGAk-BMhZRjG4HVX-N6GWAAF0gA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6ZxQEjIAPOYyEHDUAPrlEoIQMnUNjQBmLNxw7IxE1OxwDI2F4rjpHfVNBOwAbhOiEtPtnU2j-QSkK2bpJaMMi3DNXK0t4slgAL644NDwVKgU1k5s7BgLi3iEJORKMghOxXgQWANpEIWOxuFAIAATKHCPrcRr9CDWRyNGAwZF0VGNBEKbG45HdTLoMbot6kvF4IR0IgI3I42LsRpJBlgUYAD2RuTgOSE6SEAEFiZk4MiACqJMajUp4ADMAE4MABGXAagAcGAA7NqdVrlfqAKwABmmYBgPGleAATBaLfrRWAJXApbL5QxFdI1Rgzdr9RgACxGgBsuGVOud1u6cFt-WkTpdbo9Xu5cpsCoo0lDFowyqN2tVQeVDst8cTdpTztdSozEO9Od9ebwADkxbguz3u73e6mG+LJc2sz6-SqIwbS0XS8XlaGq0IE0n7bgh+nR+uhNnrLmldH1cWnRgoxrVVblRHlzba4761vPWPrXuD-69argxgdUaTRHK2rNc6zTRttxbfc20PAMHVnc8y1wUMI3Na1gIfUCR2fHcwDfKD-VDTUjUIi8F1DFDB0fMCsIg988FDWDT1gi8rXoqsKIw91wPHVtJ2jENfw1EMtV1KNlWVON2OHTjqO4yDeNNH9v2LXUr31CTu03KjM1fCd20QjViJDc8dVgis4xXGtk3QqSm2w3D5L1KMHQMpjVRNWMrSENCN0ozDtN3XToIIpyDOE1Vf1DAtPLvKyfI42yaLwqcz2-ASdXLNTotXe84psridJ4vSYxnC9S3LJcsss9dNL8l8AsKw96MDHyStVQ0Kui7yauk-ycMC-CwyI8NdXDMTAIsrrfJ6uq+oa-MQuai9w3o8yYuqqaEu5AAhGFiHXBS0rnQTRqioCcu6zbrR29g9v9ENDV1ErY2jCNVsm+L8qEa7bpVM0MC-C8MCYnUvxjVbstii7PrAb6iH2vVgeI9Kj1vd68pkq7drhj9FMEoGjSvDzUPOjbodh-a-uUz8jUNMHKrRp9evJ-NC2MlLdQXM1UZJj6Ma+rH1wLRaQwBnVadTM7IdJvmYYFu7-qI899VMjVbwh9beaZuW6MLINHtFq8y06nn0d6gAReRYH9dU9enB79V-Cs1aqkDTZmi2hXpPj8ce4SHaPN6TcZ93La9gM9f4o1HfE+mg60kPPZZhX9aNUbL2NqXNYTq3kuGh6ELGoMJrj2rsI9nOj3x5ziNVKNQ1VjONbdsvQ5x38nVLQ3ucz5vkXLr2msRvXnuVLnY574OW8TlUjNnKmTRjyWm8nvvW5VdUBPVYSdWWm9G9dlfuX7-1p2Ho0Vedhn46niuhcO4aC-T4mJ+v1fp5eojh9EjVwZd6zD+tMfOiBEwqtTrqdLyJdpo3zDg9acotyzOnHsvV+R816VzZpvFir197-1QYA9B9ca7n2jKxZ+KDS5vwrgpYeyd9RfgdG1IMkkAFCCAR-PGANLykMvlAy6bDCEOjnNXVyWp67dwodA5EzN17s3upGaMlpkEgR1Kw2WN1sY6yRsnHUEVF6QMzqo-B-MNEU2-Fwq8FUl4qLUTIxCrlmoSwLBImxxj1E-VIYtPU29DSMN-u9IxlDtra30oNR68ETSZXIa4oJmNTHW2-F-RRvDDG2JCULTB85oxEwMRrQJUjgnxOSrbdmxoNzpWUehfJ-D3GaO9vBGuo1zS4LitUsmITR4lXgUacsDdrFVLSUU0JJ5QplUQhAtaMSClxI8QpJWPSXr+J5m0mWdiiHbx9qqWCziWmphWVrIZ14wlCVTuUlJeTBkeKIcZUspkjbRIGW4uxnSSmuXLKPSprTLl1PWbObeEUf67OdPsma9kip-QBtOeCV4LTnKmTUsFjUDKbzCeFcZLjHmxPqnJIqypFoWMWZ8vZajEXWyeqiw2gdUluNJbIpWmzRJj36V8ml-U6J-UOlw9qfTcnwuhrSxRwt8WqSWdSrFs0cWNSEYdPWCFWJAotCCuybLEKFkhbjNyfFRUXNZXNGemywk7wDgqpViV5LTiYtOHxySiXApJSqpqoCwpBiiia+1erPH0uBqDCWxcxXTOxbRexdD2a10QlE3lmKA0SqDUch6eo0q0xyWAdWfKZYCs6aAh+xYVpurcewhSylI4XgXnCqNNT2FEJPIWZSqpRpMsjSy8VBbpy1uFdkqlOrm3oKOaLUpoMlHMuJfmnteo23epRnm7t79ip9qwYSoddqR0zr+vGnypkG0pr-k26NlbRm+x8i6-Rkzy3QwLXnJG5VtVpvNj29UbNt7gIxTuitPaLVKRptGY9qbT0y0rYWTlPk9GdpvdnMO3jFady1baxVaj-1HT1LKuuHyHkvrPT2vFwkrXBnbk-P1Xbd2ELxUPW5+kQO-oObMiOyctl8XGlu96qpvmCy1B3J0OblZFxPXFJjTyOnyI1MZBcLouM-p48x+W7crTMXsc+1MvHxXPJFpBkiG4tmie3fJiTsj406PrXJ50Cno3PMct+VyoNmmLotEZmpJmq7Se4Wqcj4m+OHIg4JP80ZBIacY9pxCxHSylnavqFCjatOudme50+pZHYmR8zzGz7ShlLhSqeWtYicGofC4pjp6p7atQXL6hjCW-OD1nLK9qDpQvcey8Z3LqXCz5xNHh4rmdEurPSUI3Tta64iay4Z91kqcbzN1Lh696F2u9QzSGat+KLPVd87qobv0SrxtBih-DIFJugodfu0zup1v0cW+KjN768bA1pjy1rGttvKo9QpfOGrHaDrCwNpbQahZMXtqJKxm2JuDY+wZYaiH13ZIWyV97SVBVMQhQo8SZaXMnYdazQLF4vyuv69ZgHUPioCVniW6MVX4ttex7xIhtDa1Huc7VhFKq1TfjCiaWFMHbtmr0pFJGG4f6qup29pH92QecKg4XKzrPZIfcw7OVytMXs1b54Rmd04ZVZI+SzuDPaQy0NlejsiXHjsK+oe5-HYtSH0bEzT9D79fl41lZShVYuCErrkfik03nRfq6t4WBihZWNxjVODkny7qFwK8VetXQew55fMVk+VmOHcCM9z7E5qnFzjcRwbgeKPzufsXAHm7HvqFCOEn9Yejtmfu4j0ne2wvONx4L7Ao6SvSMx3D9O6hfb43lj3nXyvsjEbQtk-b+vJ9SmGpOtV838vX2K9SmMxcCOLd-o17jdzqoFyWde1j3vHDk8m9NGnxft6rcGS1z5MRSCe9CAAOIUFIEQIg0j0nYY1AF5yYjZeT44jfsg9-H9DKrIJsIuJLgGaBGnLl-rfr-oUlcnqA9CAlzixL9tdgfEqN-nfg-tAXUgAX9AxLqCAWAVfNfpARgTMj8vjgREGM5EGGaBMoQWAGgVAaQYLNFi-o4tzkuAvlNAwSQSYlcn9MNMFFzmIsmp-lJNwX-lcnbNqJTFzl+GaEVnQeIZgYLHispHiuGE6DrgflwcQRIT8k3qrINFQSAVdoobocoUnADHir4hqLvJwRAT-jwbUoLOqqxoJiAZumYY4XoYLCXtqNYVznYTBmIeYUwfmHqAIali-iARUpjiEd4RYeyrjIIc5CxEVqIW6EoWEXRMeNITOM5IaGaLEZvvEegT4fmExHipQewVdhkagaEbwT8uqDDlXM5LgBGMel4WUYkYhGdhQT5OjiIZpjoQkdkYhLAXkaxg6LBGaBtuAaUYwY0euJaD7ARCMr+KAbzg4d0WMSlsJP0cYUosEZkQ0c4fNItAcdEZFNodsYsWcXRK2nke3KrCAeXiUScaMUsRUcnJLocRfn9rlB8TsV8Q8cRH9G4dQYCnEUCXcWsv0bYcIu4fXOpICfUZ8fceGrjNUdQd3u8WicCRiaGAjNqGsQgb0TcQsU4XYtgcIh3FzAZrcVSekjNnkSeNMSAZWAqpSeUXRNKiSfZujmAXUUQeiWsuCfyZQS6K8fYdyT0WaPesGBuMAa9AybKbsVvPye3HSbUcMbBvibCekhEdqI8dMVaDQVsfklkSCcGueAEc5DmvcgCcOiKQSXCccoiXIZyZjpaacXCf4Q1novYT6aKYaSVKukBiAXMQEjCUycll1v6b4oqpOlZsGa6ekgqe4dMdQQQcsjGTyYhDIawTYSxN+rqamQaclhmdUXXBvuAeWbGR4isXrLDtMTMZ4bmfqQ2T8niraQrAUYhC1p-vWfmSlnrHigwuwekWWXmXKbrHkQwoBOaVOvQb6ekgRFYYicWGaFCU6Uui6RWXwT7BylztQZ0R2fuV2cwezARLgSxMUcgVGlaYSYLvAaaZGRaTObseKQiRoewRMkOZ+daSscXhuIuf8XWYBYSSwQRL+e1IOdOZ2SOc2UYXSW8RBYhT0aGHigJOORGVhTccOZhX4S8W+Ucd6ZBWsgFgiZKRFEgQBRhWMSscNDIdMeGPScuU+WKUdNhXhVOdGQxdaUhKsX2W0bMR+QJYSeGawROctP+QhRefmTQUdOGQ6MqFqGaLiehQpURckVXKVGRARRRembjE3qpWaTmf6pxU-sJb+UEX2DulZZWYtO+tMXIcmvxdpbsVUfyQxB3AZTBoRYxY1tIaBVue2ZZauclgJtWeGkGUZcltOMxalqJeBR5SuSGclsSYYU5KJTuVpelWmQlRcYpP2fIYZRJWsolSFc5DWeVZ5YJftk5MAUUeJfVYSZrj5QMeSQFfFY2fuiaR3DghxZFYeZUSVS8brj1RVekjgcaShVuY6flY5VchqdRVztsgBMTvntNf-kIshTlepUgfrstWQWEikRqNsrXruVvm1dSdJi2Q6GxVGRDrdWuT8eNZdfYUZidcsQBh+tMRsZlpvt9SNd2WdUYXgUhDcSDRlX1UdDeVzhsWeYHq9VFRceteMRPrqTDYVY2UXoqWZR4QyTjQeadc2YjQOV9b1VgUIl9oRADSAbQS9QVaTb4cVdUZ9a3izZefmDbHNVMWxZpcdaDYLPCQRDYctPeZ-iTTzXgCsQJCpQ6FGGVUPjtStWEseTVQOUdszT9ecQDCkeyUSVjcLbDT8kaT+T5DmptRXqjXDVho4ouV6cDdTYLILtUYMVTWrVgbDh5gzRpVsTLSOSGC0diQOSbbrSLbzWCaBRsbLqbbjadWoeNTWYBOxEHZhQYdhocfHZHWbSxiVOLWSf5bbdzYpeoU8bIR4YHa7fmKoSSXhaAVtVtrXXRO5uKZodXarXbVgXOYYbgcreBdLa3QOViSJXIYtQnazXXYtLNfab0V7T3csSfnNSeM1bnSjWXZncJW4e1KaM3f9t7csd+U1WafeVPbLeMrPfkR5sbcwhpPLnrW3SZa0bBENZflvbsSHQmYEdrQfenk-fZQOP2CAwA1HaCQJKScYUSYvZ-UBYWElb4uyU3d3XA5JcJc8TMXxXnYnS4cnNndEUuR-QAMJaCfCkAMBoBUIDwsHKYXgboUluikPkOUOoDUPSAAF80XiiQtZ0HMMcAUNUNoLvzblHTNEq5C1QL8OcCsPsNJHA5PTPZm66lSTSOCNsPCMVzyGtQaq0xXXzFMNkMCOyOaMDyzV4ybyOyLXClgBqMmOO63zP5ZX+xOzHFKh2NCMONeyiNUybJ6OqmGMsOeMJ6ONERcIuo6l8NGMyPBNgDsI+OzhcKOwWWSIeMaNePnH0qbwLhDFRNBPpMhPeMGSJliNNJ54oFCBpNyPhofq6gZSMPuPRPqPVPyFES+7n4BONP5PVMpYAzJ6OZN1WaqNNP2OFMcN90KlOgdNcmBPGOxPxM1o+RBZfpbHDPdOmMcN44r6RINOVMjPzOEJVXhLC50UqOzMxMFNxOELiOPRvLjKrPnPNMbO8nunzwLrXVrNzOXOVqC4dUE6p4zNdNfM9NUVQqfp+JuN7PrMZNy1Z7qjZodqAtQvAvPO9GrY0bvK7O2P7PfPoKtOlQXjcqdPIsXMtN91GkSwAspmPOjNXNW5cMMJ+7uXnnYvQtjOgkXqbw7NTUktPMwscklVWhOgurhUEZVOotCzqrGTix1Wssov8tKXe6CtiLI1is4s9N7VzXxq0xzH0W8u0vxMbJSY5p5VpXiv8uhhR7HMXhd6tVyuksSt-MGGqigzwVmvquOuj6U7ZJxVAsOsKtKvFnjF2vmvstotSukZVayuht0taPeWAyMsishsesWtcJsFdzLkxuVpnZ-N76aV6v2t8thsrFpthSMoMn5JZuELEX5yMrRspvFtqrR7cMvQR2b1VsiN-WPSSliJHXM0dtaM+7NuOZyX64DsDxpshTbKqst1+tFuxtFNeJPTizE00sHP0u4wskXiOzIT-21bjvhHERHMutfrKNjsNsLscNA6BZTPJku1zsGvVvou1oLhA0Pnp4Huws6OJk5poXntsuXsvPUZUw6uwOfsCuIyby0x9vtsXuVrmNgv-PO3vv7twfXNiN9kWi-ursPvruDs+wJqg50wkNodW5-QNIPz1pnv9ukdaMGRpuSk8M4f6t4c0Mv3Dygz5vY1ru4tkerZz5cf-vyvFvHmAxSbtSpU0cAeVrxsQZOimSjtSfCeAej1syuTr7lOH0se8f4ebzF2mtKf+uNsEetTJNtvbV3AAC6QAA", # nolint
     "app",
     header = FALSE
   ),
@@ -177,17 +178,22 @@ a single variable block.
 
 ### Reading data from another stack
 
-`result_block()` allows to read data from another stack. From the below code, the first stack contains
-a `data_block()` from which the n-th first rows are pulled by the `head_block()`. In the second stack,
+`new_result_block()` allows to read data from another stack. From the below code, the first stack contains
+a `new_dataset_block()` from which we can select some columns with `new_select_block()`. In the second stack,
 we can reuse this smaller dataset. If you dynamically add a third stack, you can also select the third stack
 output as input of the second stack (it appears in the result block select input).
 
 ```r
 library(blockr)
+library(blockr.data)
 
 serve_workspace(
-  stack1 = new_stack(data_block, head_block),
-  stack2 = new_stack(result_block),
+  stack1 = new_stack(
+    new_dataset_block("lab", "blockr.data"),
+    new_select_block(c("STUDYID", "USUBJID"))
+  ),
+  stack2 = new_stack(new_result_block),
+  stack3 = new_stack(new_dataset_block("ae", "blockr.data")),
   title = "My workspace"
 )
 ```
@@ -195,7 +201,7 @@ serve_workspace(
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZQgBalSqdogD0+kWMkBaIgwDmGSy1IaArnQwsi+2o1PzF7IQEoBCG4WRigGAE8+YwkGAIhA9jgGADc4AH1qC3F2VCgCOEEIGRlOPPEARlUZCDhqNNKJPgATKC406PFZDTgoJvbRCT9cQOKG8QAmKpq6sb55dgduUn6TIZGZUjtuOCqhAFlwmUyGbNz8oUC4sABfAF0gA", #nolint
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwl6exwDABucAD61Fbi7KhQBHCCEDIynAPiAIyqMhBw1B3jEsOjo3MLdVzNpB1VmtxQdAFCVQy19VApuOmrs-OLcNxwBDt7GkIAygAqAKoAIgBNACSf2OYB+Hx+ACEAFIglIlUbJa4jMZcCQAJhm60W6PEfBx8nYTm4r1EEmRNzREwAzNj7kt8TjNrE4GSzJooHAwadzlwESjRqQHE8ZkIALK5GTdBi9fqDITpZJgAC+AF0gA", # nolint
     "app",
     header = FALSE
   ),

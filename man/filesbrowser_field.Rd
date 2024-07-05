@@ -2,15 +2,14 @@
 % Please edit documentation in R/fields.R
 \name{new_filesbrowser_field}
 \alias{new_filesbrowser_field}
-\alias{filesbrowser_field}
 \title{Files browser field constructor}
 \usage{
-new_filesbrowser_field(value = character(), ...)
-
-filesbrowser_field(...)
+new_filesbrowser_field(value = character(), volumes = character(), ...)
 }
 \arguments{
 \item{value}{Default text input value.}
+
+\item{volumes}{Paths accessible by the shinyFiles browser}
 
 \item{...}{Other parameters passed to \link{new_field} and may be needed
 by \link{ui_input} to pass more options to the related shiny input.}

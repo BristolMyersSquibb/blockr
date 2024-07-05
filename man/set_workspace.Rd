@@ -3,6 +3,7 @@
 \name{set_workspace}
 \alias{set_workspace}
 \alias{restore_workspace}
+\alias{save_workspace}
 \alias{get_workspace}
 \alias{is_workspace}
 \alias{add_workspace_stack}
@@ -12,6 +13,7 @@
 \alias{set_workspace_title}
 \alias{set_workspace_settings}
 \alias{list_workspace_stacks}
+\alias{clear_workspace}
 \alias{get_workspace_stack}
 \alias{get_workspace_stacks}
 \alias{get_workspace_title}
@@ -28,6 +30,8 @@ set_workspace(
 )
 
 restore_workspace(x, force = FALSE, workspace = get_workspace())
+
+save_workspace(file, workspace = get_workspace())
 
 get_workspace()
 
@@ -46,6 +50,8 @@ set_workspace_title(title, workspace = get_workspace())
 set_workspace_settings(settings, workspace = get_workspace())
 
 list_workspace_stacks(workspace = get_workspace())
+
+clear_workspace(workspace = get_workspace())
 
 get_workspace_stack(name, workspace = get_workspace())
 
@@ -74,6 +80,8 @@ serve_workspace(
 \item{workspace}{The workspace environment}
 
 \item{x}{(Workspace) object}
+
+\item{file}{Filename}
 
 \item{name}{Stack name}
 

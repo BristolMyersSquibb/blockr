@@ -2,21 +2,11 @@
 % Please edit documentation in R/fields.R
 \name{new_variable_field}
 \alias{new_variable_field}
-\alias{variable_field}
 \title{Variable field constructor}
 \usage{
-new_variable_field(
-  value = character(),
-  field = character(),
-  components = list(),
-  ...
-)
-
-variable_field(...)
+new_variable_field(field = character(), components = list(), ...)
 }
 \arguments{
-\item{value}{Default text input value.}
-
 \item{field}{Field type}
 
 \item{components}{Variable list of field components}
