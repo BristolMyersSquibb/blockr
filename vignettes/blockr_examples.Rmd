@@ -5,6 +5,7 @@ date: "2024-07-07"
 ---
 
 ```{r setup, include=FALSE}
+library(bslib)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -28,7 +29,7 @@ The flexibility of `blockr` makes it valuable across various industries. Let's e
 
 ```{r slider_block, include=FALSE}
 # Provided by John, new_range_field not working
-new_slider_field <- function(value = 5L, min = 0L, max = 10L, step = 1L, ...){
+new_slider_field <- function(value = 5L, min = 0L, max = 10L, step = 1L, ...) {
   blockr::new_field(
     value = value,
     min = min,
@@ -37,13 +38,13 @@ new_slider_field <- function(value = 5L, min = 0L, max = 10L, step = 1L, ...){
     class = "slider_field"
   )
 }
-slider_field <- function(...){
+slider_field <- function(...) {
   validate_field(new_slider_field(...))
 }
 
 #' @method ui_input slider_field
 #' @export
-ui_input.slider_field <- function(x, id, name){
+ui_input.slider_field <- function(x, id, name) {
   ns <- NS(input_ids(x, id))
 
   shiny::sliderInput(
@@ -58,7 +59,7 @@ ui_input.slider_field <- function(x, id, name){
 
 #' @method validate_field slider_field
 #' @export
-validate_field.slider_field <- function(x, ...){
+validate_field.slider_field <- function(x, ...) {
   x
 }
 
@@ -74,8 +75,6 @@ ui_update.slider_field <- function(x, session, id, name) {
     blockr::value(x, "max")
   )
 }
-
-
 ```
 
 ```{r filter_block, include=FALSE}
@@ -85,8 +84,9 @@ ui_update.slider_field <- function(x, session, id, name) {
 #' @export
 filter_in_block <- function(data, ...) {
   sub_fields <- \(data, column){
-    if(!length(column))
+    if (!length(column)) {
       column <- names(data)[1]
+    }
 
     list(
       values = blockr::select_field(data[[column]][1], unique(data[[column]]), multiple = TRUE)
@@ -110,14 +110,14 @@ filter_in_block <- function(data, ...) {
   )
 }
 
-  blockr::register_block(
-    constructor = filter_in_block,
-    name = "Filter in",
-    description = "Filter on a vector",
-    classes = c("filter_in_block", "transform_block"),
-    input = "data.frame",
-    output = "data.frame"
-  )
+blockr::register_block(
+  constructor = filter_in_block,
+  name = "Filter in",
+  description = "Filter on a vector",
+  classes = c("filter_in_block", "transform_block"),
+  input = "data.frame",
+  output = "data.frame"
+)
 ```
 
 
@@ -162,13 +162,12 @@ prophet_forecast_block <- function(columns = character(), ...) {
       periods = new_slider_field(7, min = 0, max = 365, title = "Forecast duration")
     ),
     expr = quote({
-    
       df <- data.frame(
         ds = data$Date,
         y = data[[.(value_col)]]
       )
       model <- prophet(df)
-      future <- make_future_dataframe(model, periods =.( periods))
+      future <- make_future_dataframe(model, periods = .(periods))
       forecast <- predict(model, future)
       plot(model, forecast)
     }),
@@ -212,100 +211,106 @@ serve_stack(stock_forecast_stack)
 This forest plot visualizes the relative risk of adverse events between two treatment arms in a clinical trial. In this case, it compares "Xanomeline High Dose" to "Xanomeline Low Dose" starting from the [pharmaverseadam](https://github.com/pharmaverse/pharmaverseadam) `adae` dataset.
 
 ```{r ae_forest}
+library(dplyr)
+library(tidyr)
+library(forestplot)
 
 # Function to create adverse event forest plot
 create_ae_forest_plot <- function(data, usubjid_col, arm_col, aedecod_col, n_events) {
+  data <- data |> filter(.data[[arm_col]] != "Placebo")
+  # Convert column names to strings
+  usubjid_col <- as.character(substitute(usubjid_col))
+  arm_col <- as.character(substitute(arm_col))
+  aedecod_col <- as.character(substitute(aedecod_col))
 
-  
-    # Convert column names to strings
-    usubjid_col <- as.character(substitute(usubjid_col))
-    arm_col <- as.character(substitute(arm_col))
-    aedecod_col <- as.character(substitute(aedecod_col))
-    
-    # Calculate the total number of subjects in each arm
-    n_subjects <- data |>
-        select(all_of(c(usubjid_col, arm_col))) |>
-        distinct() |>
-        group_by(across(all_of(arm_col))) |>
-        summarise(n = n(), .groups = "drop")
-    
-    # Calculate AE frequencies and proportions
-    ae_summary <- data |>
-        group_by(across(all_of(c(arm_col, aedecod_col)))) |>
-        summarise(n_events = n_distinct(.data[[usubjid_col]]), .groups = "drop") |>
-        left_join(n_subjects, by = arm_col) |>
-        mutate(proportion = n_events / n)
-    
-    # Select top N most frequent AEs across all arms
-    top_aes <- ae_summary |>
-        group_by(across(all_of(aedecod_col))) |>
-        summarise(total_events = sum(n_events), .groups = "drop") |>
-        top_n(n_events, total_events) |>
-        pull(all_of(aedecod_col))
-    
-    # Get unique treatment arms
-    arms <- unique(data[[arm_col]])
-    if(length(arms) != 2) {
-        stop("This plot requires exactly two treatment arms.")
-    }
-    active_arm <- arms[1]
-    control_arm <- arms[2]
-    
-    # Filter for top AEs and calculate relative risk
-    ae_rr <- ae_summary |>
-        filter(.data[[aedecod_col]] %in% top_aes) |>
-        pivot_wider(id_cols = all_of(aedecod_col), 
-                    names_from = all_of(arm_col), 
-                    values_from = c(n_events, n, proportion)) |>
-        mutate(
-            RR = .data[[paste0("proportion_", active_arm)]] / .data[[paste0("proportion_", control_arm)]],
-            lower_ci = exp(log(RR) - 1.96 * sqrt(
-                1/.data[[paste0("n_events_", active_arm)]] + 
-                    1/.data[[paste0("n_events_", control_arm)]] - 
-                    1/.data[[paste0("n_", active_arm)]] - 
-                    1/.data[[paste0("n_", control_arm)]]
-            )),
-            upper_ci = exp(log(RR) + 1.96 * sqrt(
-                1/.data[[paste0("n_events_", active_arm)]] + 
-                    1/.data[[paste0("n_events_", control_arm)]] - 
-                    1/.data[[paste0("n_", active_arm)]] - 
-                    1/.data[[paste0("n_", control_arm)]]
-            ))
-        )
-    
-    # Prepare data for forest plot
-    forest_data <- ae_rr |>
-        mutate(
-            label = paste0(.data[[aedecod_col]], " (", 
-                           .data[[paste0("n_events_", active_arm)]], "/", .data[[paste0("n_", active_arm)]], " vs ",
-                           .data[[paste0("n_events_", control_arm)]], "/", .data[[paste0("n_", control_arm)]], ")")
-        )
-    
-    # Create forest plot
-    forestplot::forestplot(
-        labeltext = cbind(forest_data$label, 
-                          sprintf("%.2f (%.2f-%.2f)", forest_data$RR, forest_data$lower_ci, forest_data$upper_ci)),
-        mean = forest_data$RR,
-        lower = forest_data$lower_ci,
-        upper = forest_data$upper_ci,
-        align = c("l", "r"),
-        graphwidth = unit(60, "mm"),
-        cex = 0.9,
-        lineheight = unit(8, "mm"),
-        boxsize = 0.35,
-        col = fpColors(box = "royalblue", line = "darkblue", summary = "royalblue"),
-        txt_gp = fpTxtGp(label = gpar(cex = 0.9), ticks = gpar(cex = 0.9), xlab = gpar(cex = 0.9)),
-        xlab = paste("Relative Risk (", active_arm, " / ", control_arm, ")"),
-        zero = 1,
-        lwd.zero = 2,
-        lwd.ci = 2,
-        xticks = c(0.5, 1, 2, 4),
-        grid = TRUE,
-        title = paste("Relative Risk of Adverse Events (", active_arm, " vs ", control_arm, ")")
+  # Calculate the total number of subjects in each arm
+  n_subjects <- data |>
+    select(all_of(c(usubjid_col, arm_col))) |>
+    distinct() |>
+    group_by(across(all_of(arm_col))) |>
+    summarise(n = n(), .groups = "drop")
+
+  # Calculate AE frequencies and proportions
+  ae_summary <- data |>
+    group_by(across(all_of(c(arm_col, aedecod_col)))) |>
+    summarise(n_events = n_distinct(.data[[usubjid_col]]), .groups = "drop") |>
+    left_join(n_subjects, by = arm_col) |>
+    mutate(proportion = n_events / n)
+
+  # Select top N most frequent AEs across all arms
+  top_aes <- ae_summary |>
+    group_by(across(all_of(aedecod_col))) |>
+    summarise(total_events = sum(n_events), .groups = "drop") |>
+    top_n(n_events, total_events) |>
+    pull(all_of(aedecod_col))
+
+  # Get unique treatment arms
+  arms <- unique(data[[arm_col]])
+  if (length(arms) != 2) {
+    stop("This plot requires exactly two treatment arms.")
+  }
+  active_arm <- arms[1]
+  control_arm <- arms[2]
+
+  # Filter for top AEs and calculate relative risk
+  ae_rr <- ae_summary |>
+    filter(.data[[aedecod_col]] %in% top_aes) |>
+    pivot_wider(
+      id_cols = all_of(aedecod_col),
+      names_from = all_of(arm_col),
+      values_from = c(n_events, n, proportion)
+    ) |>
+    mutate(
+      RR = .data[[paste0("proportion_", active_arm)]] / .data[[paste0("proportion_", control_arm)]],
+      lower_ci = exp(log(RR) - 1.96 * sqrt(
+        1 / .data[[paste0("n_events_", active_arm)]] +
+          1 / .data[[paste0("n_events_", control_arm)]] -
+          1 / .data[[paste0("n_", active_arm)]] -
+          1 / .data[[paste0("n_", control_arm)]]
+      )),
+      upper_ci = exp(log(RR) + 1.96 * sqrt(
+        1 / .data[[paste0("n_events_", active_arm)]] +
+          1 / .data[[paste0("n_events_", control_arm)]] -
+          1 / .data[[paste0("n_", active_arm)]] -
+          1 / .data[[paste0("n_", control_arm)]]
+      ))
     )
+
+  # Prepare data for forest plot
+  forest_data <- ae_rr |>
+    mutate(
+      label = paste0(
+        .data[[aedecod_col]], " (",
+        .data[[paste0("n_events_", active_arm)]], "/", .data[[paste0("n_", active_arm)]], " vs ",
+        .data[[paste0("n_events_", control_arm)]], "/", .data[[paste0("n_", control_arm)]], ")"
+      )
+    )
+
+  # Create forest plot
+  forestplot::forestplot(
+    labeltext = cbind(
+      forest_data$label,
+      sprintf("%.2f (%.2f-%.2f)", forest_data$RR, forest_data$lower_ci, forest_data$upper_ci)
+    ),
+    mean = forest_data$RR,
+    lower = forest_data$lower_ci,
+    upper = forest_data$upper_ci,
+    align = c("l", "r"),
+    graphwidth = unit(60, "mm"),
+    cex = 0.9,
+    lineheight = unit(8, "mm"),
+    boxsize = 0.35,
+    col = fpColors(box = "royalblue", line = "darkblue", summary = "royalblue"),
+    txt_gp = fpTxtGp(label = gpar(cex = 0.9), ticks = gpar(cex = 0.9), xlab = gpar(cex = 0.9)),
+    xlab = paste("Relative Risk (", active_arm, " / ", control_arm, ")"),
+    zero = 1,
+    lwd.zero = 2,
+    lwd.ci = 2,
+    xticks = c(0.5, 1, 2, 4),
+    grid = TRUE,
+    title = paste("Relative Risk of Adverse Events (", active_arm, " vs ", control_arm, ")")
+  )
 }
- 
- 
 
 forest_plot_block <- function(...) {
   new_block(
@@ -316,9 +321,7 @@ forest_plot_block <- function(...) {
       n_events = new_numeric_field(10, min = 5, max = 20, step = 1, title = "Number of Top AEs to Display")
     ),
     expr = quote({
-      data |> 
-      filter(.data[[.(arm_col)]] != "Placebo") |> 
-      create_ae_forest_plot(.(usubjid_col), .(arm_col), .(aedecod_col), .(n_events))
+      create_ae_forest_plot(data, .(usubjid_col), .(arm_col), .(aedecod_col), .(n_events))
     }),
     class = c("adverse_event_plot_block", "plot_block"),
     ...
@@ -341,9 +344,8 @@ clinical_trial_stack <- new_stack(
     selected = "adae",
     package = "pharmaverseadam"
   ),
- # filter_in_block(),
-  forest_plot_block() 
-  
+  # filter_in_block(),
+  forest_plot_block()
 )
 
 serve_stack(clinical_trial_stack)
@@ -352,128 +354,39 @@ serve_stack(clinical_trial_stack)
 
 This demographics table is taken from the `cardinal` package of [FDA Safety Tables and Figures](https://github.com/pharmaverse/cardinal) and demonstrates `gt` and `rtables` outputs starting from the [pharmaverseadam](https://github.com/pharmaverse/pharmaverseadam) `adsl` dataset.
 
-```{r tables_blocks, include=FALSE}
-
-
-#' @export
-cardinal02_block <- function(data, ...){
-  blockr::initialize_block(new_cardinal02_block(data, ...), data)
-}
-
-#' @method server_output rtables_block
-#' @export
-server_output.rtables_block <- function (x, result, output) {
-    shiny::renderUI({
-        txt <- utils::capture.output(print(result()$rtables))
-        txt <- paste0(txt, collapse = "\n")
-        
-        if(length(result()$gt) > 0){
-            shiny::tabsetPanel(
-                shiny::tabPanel(
-                    "GT",
-                    result()$gt
-                ),
-                shiny::tabPanel(
-                    "Text",
-                    tags$pre(
-                        tags$code(
-                            txt
-                        )
-                    )
-                ),
-                shiny::tabPanel(
-                    "HTML",
-                    rtables::as_html(result()$rtables, class_table = "table")
-                )
-            )
-        } else {
-            shiny::tabsetPanel(
-                shiny::tabPanel(
-                    "Text",
-                    tags$pre(
-                        tags$code(
-                            txt
-                        )
-                    )
-                ),
-                shiny::tabPanel(
-                    "HTML",
-                    rtables::as_html(result()$rtables, class_table = "table")
-                )
-            )
-            
-        }
-    })
-}
-
-#' @method uiOutputBlock rtables_block
-#' @export
-uiOutputBlock.rtables_block <- function (x, ns) {
-    shiny::uiOutput(ns("res"))
-}
-
-#' @method evaluate_block rtables_block
-#' @export
-evaluate_block.rtables_block <- function (x, data, ...) {
-    stopifnot(...length() == 0L)
-    eval(substitute(data %>% expr, list(expr = generate_code(x))), 
-         list(data = data))
-}
-
-#' @method generate_server rtables_block
-#' @export
-generate_server.rtables_block <- function (...) {
-    blockr:::generate_server_block(...)
-}
-
-#' @method block_combiner rtables_block
-#' @export
-block_combiner.rtables_block <- function (left, right, ...) {
-    substitute(left %>% right, list(left = generate_code(left), 
-                                    right = generate_code(right)))
-}
-
-
-```
-
-
 
 ```{r cardinal_tables}
 library(shiny)
 library(blockr)
-library(pharmaverseadam)
+library(blockr.falcon)
+library(blockr.pharmaverseadam)
 
-
-cardinal02_block <- function(
-    data,
-    ...
-){
- 
+cardinal02_block <- function(...) {
   all_cols <- function(data) colnames(data)
-  
+
   fields <- list(
     columns = new_select_field(c("SEX", "AGE", "AGEGR1", "RACE", "ETHNIC", "COUNTRY"), all_cols, multiple = TRUE, title = "Variables")
   )
-  
+
   expr <- quote({
     data <- droplevels(data)
-    
+
     rtables <- cardinal::make_table_02(
       df = data,
       vars = .(columns)
     )
-    
+
     gt <- cardinal::make_table_02_gtsum(
       df = data,
       vars = .(columns)
     )
-    
+
     list(
       rtables = rtables,
       gt = gt
     )
   })
-  
+
   blockr::new_block(
     expr = expr,
     fields = fields,
@@ -481,7 +394,6 @@ cardinal02_block <- function(
     class = c("cardinal02_block", "rtables_block", "submit_block")
   )
 }
-
 
 blockr::register_block(
   cardinal02_block,
@@ -491,24 +403,18 @@ blockr::register_block(
   output = "list",
   classes = c("cardinal02_block", "rtables_block", "submit_block")
 )
-  
+
 
 # Create the stack
 rtables_stack <- new_stack(
-    blockr::new_dataset_block( package="pharmaverseadam",
-        selected = "adsl",
-    ),
-    cardinal02_block() 
+  new_adam_block(selected = "adsl"),
+  cardinal02_block()
 )
 
-serve_stack(rtables_stack) 
-
+serve_stack(rtables_stack)
 ```
 
 
-
-
- 
 ### 3. Environmental Science: Air Quality Analysis and Prediction
 
 This example demonstrates a pipeline for analyzing air quality data and predicting future pollution levels using actual data from the [openair](https://github.com/cran/openair) package.
@@ -517,6 +423,7 @@ This pipeline imports actual air quality data from the `openair` package and for
 ```{r environment}
 library(blockr)
 library(openair)
+library(forecast)
 
 
 # Custom block for air quality data import
@@ -534,12 +441,12 @@ air_quality_block <- function(...) {
     ...
   )
 }
- 
+
 
 # Custom block for pollution forecasting
 pollution_forecast_block <- function(columns = character(), ...) {
   all_cols <- function(data) setdiff(colnames(data), c("date", "site", "source"))
-  
+
   new_block(
     fields = list(
       pollutant = new_select_field(columns, all_cols, multiple = FALSE, title = "Pollutant"),
@@ -564,7 +471,7 @@ register_block(pollution_forecast_block, name = "Pollution Forecast", descriptio
 # Create the stack
 air_quality_stack <- new_stack(
   air_quality_block(),
-  pollution_forecast_block(columns="no2")
+  pollution_forecast_block(columns = "no2")
 )
 
 serve_stack(air_quality_stack)
@@ -575,51 +482,52 @@ This example demonstrates how to use [CausalImpact](https://google.github.io/Cau
 This pipeline generates dummy marketing data with an intervention, then uses CausalImpact to analyze the effect of the intervention on sales.
 
 ```{r date_field, include=FALSE}
+library(shiny)
 new_date_field <- function(value = Sys.Date(), min = NULL, max = NULL, ...) {
-    blockr::new_field(
-        value = value,
-        min = min,
-        max = max,
-        ...,
-        class = "date_field"
-    )
+  blockr::new_field(
+    value = value,
+    min = min,
+    max = max,
+    ...,
+    class = "date_field"
+  )
 }
 
 date_field <- function(...) {
-    validate_field(new_date_field(...))
+  validate_field(new_date_field(...))
 }
 
 #' @method ui_input date_field
 #' @export
 ui_input.date_field <- function(x, id, name) {
-    ns <- NS(input_ids(x, id))
-    
-    shiny::dateInput(
-        blockr:::input_ids(x, id),
-        name,
-        value = blockr::value(x, "value"),
-        min = blockr::value(x, "min"),
-        max = blockr::value(x, "max")
-    )
+  ns <- NS(input_ids(x, id))
+
+  shiny::dateInput(
+    blockr:::input_ids(x, id),
+    name,
+    value = blockr::value(x, "value"),
+    min = blockr::value(x, "min"),
+    max = blockr::value(x, "max")
+  )
 }
 
 #' @method validate_field date_field
 #' @export
 validate_field.date_field <- function(x, ...) {
-    x
+  x
 }
 
 #' @method ui_update date_field
 #' @export
 ui_update.date_field <- function(x, session, id, name) {
-    updateDateInput(
-        session,
-        blockr:::input_ids(x, id),
-        blockr:::get_field_name(x, name),
-        value = blockr::value(x),
-        min = blockr::value(x, "min"),
-        max = blockr::value(x, "max")
-    )
+  updateDateInput(
+    session,
+    blockr:::input_ids(x, id),
+    blockr:::get_field_name(x, name),
+    value = blockr::value(x),
+    min = blockr::value(x, "min"),
+    max = blockr::value(x, "max")
+  )
 }
 ```
 
@@ -632,85 +540,167 @@ library(CausalImpact)
 library(dplyr)
 
 # Custom block to load and prepare marketing data
-marketing_data_block <- function(...) {
-    new_block(
-        fields = list(
-            start_date = date_field(Sys.Date() - 365, min = Sys.Date() - 730, max = Sys.Date() - 1, label = "Start Date"),
-            intervention_date = date_field(Sys.Date() - 180, min = Sys.Date() - 729, max = Sys.Date(), label = "Intervention Date"),
-            end_date = date_field(Sys.Date(), min = Sys.Date() - 364, max = Sys.Date(), label = "End Date")
-        ),
-        expr = quote({
-            # Generate dummy data for demonstration
-            dates <- seq(as.Date(.(start_date)), as.Date(.(end_date)), by = "day")
-            sales <- cumsum(rnorm(length(dates), mean = 100, sd = 10))
-            ad_spend <- cumsum(rnorm(length(dates), mean = 50, sd = 5))
-            
-            # Add intervention effect
-            intervention_index <- which(dates == as.Date(.(intervention_date)))
-            sales[intervention_index:length(sales)] <- sales[intervention_index:length(sales)] * 1.2
-            
-            data.frame(
-                date = dates,
-                sales = sales,
-                ad_spend = ad_spend
-            )
-        }),
-        class = c("marketing_data_block", "data_block"),
-        ...
-    )
+new_marketing_data_block <- function(...) {
+  new_block(
+    fields = list(
+      start_date = date_field(Sys.Date() - 365, min = Sys.Date() - 730, max = Sys.Date() - 1, label = "Start Date"),
+      intervention_date = date_field(Sys.Date() - 180, min = Sys.Date() - 729, max = Sys.Date(), label = "Intervention Date"),
+      end_date = date_field(Sys.Date(), min = Sys.Date() - 364, max = Sys.Date(), label = "End Date")
+    ),
+    expr = quote({
+      # Generate dummy data for demonstration
+      dates <- seq(as.Date(.(start_date)), as.Date(.(end_date)), by = "day")
+      sales <- cumsum(rnorm(length(dates), mean = 100, sd = 10))
+      ad_spend <- cumsum(rnorm(length(dates), mean = 50, sd = 5))
+
+      # Add intervention effect
+      intervention_index <- which(dates == as.Date(.(intervention_date)))
+      sales[intervention_index:length(sales)] <- sales[intervention_index:length(sales)] * 1.2
+
+      data.frame(
+        date = dates,
+        sales = sales,
+        ad_spend = ad_spend
+      )
+    }),
+    class = c("marketing_data_block", "data_block"),
+    ...
+  )
 }
 
 # Custom block for CausalImpact analysis
-causal_impact_block <- function(columns = character(), ...) {
-    all_cols <- function(data) colnames(data)[2:length(colnames(data))]
-    
-    new_block(
-        fields = list(
-            response_var = new_select_field(columns, all_cols, multiple = FALSE, title = "Response Variable"),
-            covariate_var = new_select_field(columns, all_cols, multiple = FALSE, title = "Covariate Variable"),
-            pre_period_end = date_field(Sys.Date() - 181, min = Sys.Date() - 729, max = Sys.Date() - 1, label = "Pre-Period End Date"),
-            post_period_start = date_field(Sys.Date() - 180, min = Sys.Date() - 728, max = Sys.Date(), label = "Post-Period Start Date")
-        ),
-        expr = quote({
-            data <- data.frame(
-                y = data[[.(response_var)]],
-                x = data[[.(covariate_var)]]
-            )
-            
-            pre_period <- c(min(data$date), as.Date(.(pre_period_end)))
-            post_period <- c(as.Date(.(post_period_start)), max(data$date))
-            
-            impact <- CausalImpact(data, pre_period, post_period)
-            plot(impact)
-        }),
-        class = c("causal_impact_block", "plot_block"),
-        ...
-    )
+new_causal_impact_block <- function(columns = character(), ...) {
+  all_cols <- function(data) colnames(data)[2:length(colnames(data))]
+
+  new_block(
+    fields = list(
+      response_var = new_select_field(columns, all_cols, multiple = FALSE, title = "Response Variable"),
+      covariate_var = new_select_field(columns, all_cols, multiple = FALSE, title = "Covariate Variable"),
+      pre_period_end = date_field(Sys.Date() - 181, min = Sys.Date() - 729, max = Sys.Date() - 1, label = "Pre-Period End Date"),
+      post_period_start = date_field(Sys.Date() - 180, min = Sys.Date() - 728, max = Sys.Date(), label = "Post-Period Start Date")
+    ),
+    expr = quote({
+      data <- data.frame(
+        y = data[[.(response_var)]],
+        x = data[[.(covariate_var)]]
+      )
+
+      pre_period <- c(min(data$date), as.Date(.(pre_period_end)))
+      post_period <- c(as.Date(.(post_period_start)), max(data$date))
+
+      impact <- CausalImpact(data, pre_period, post_period)
+      plot(impact)
+    }),
+    class = c("causal_impact_block", "plot_block"),
+    ...
+  )
 }
 
 # Register custom blocks
 register_block(
-    new_marketing_data_block,
-    name = "Marketing Data",
-    description = "Load and prepare marketing data",
-    classes = c("marketing_data_block", "data_block"),
-    input = NA_character_,
-    output = "data.frame"
+  new_marketing_data_block,
+  name = "Marketing Data",
+  description = "Load and prepare marketing data",
+  classes = c("marketing_data_block", "data_block"),
+  input = NA_character_,
+  output = "data.frame"
 )
 register_block(
-    new_causal_impact_block,
-    name = "Causal Impact Analysis",
-    description = "Perform Causal Impact analysis on marketing data",
-    classes = c("causal_impact_block", "plot_block"),
-    input = "data.frame",
-    output = "plot"
+  new_causal_impact_block,
+  name = "Causal Impact Analysis",
+  description = "Perform Causal Impact analysis on marketing data",
+  classes = c("causal_impact_block", "plot_block"),
+  input = "data.frame",
+  output = "plot"
 )
 
 # Create the stack
 marketing_impact_stack <- new_stack(
-    marketing_data_block(),
-    causal_impact_block()
+  new_marketing_data_block(),
+  new_causal_impact_block()
 )
 
 serve_stack(marketing_impact_stack)
 ```
+
+
+### 5. Dynamical systems
+
+
+```{r, eval=TRUE, echo=FALSE}
+card(
+  create_app_link(
+    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhBeTKwcXLyaphIMdtaooqQATAHhymoaQbr6RiaihZY2dg7Oru6e9FHVAfUhTeGR0bHxiSlpEOncLIxQDACefAWSM-OLK3yoDFAEMFCbC-s760XWJWXlM+kQcNQA+kQAJnBP6zIAPOYyAGZOCAEUjuCB8DCQ5IyEDpdIyGSieQQABePz+gOBoJIMj4pFky1kqCWMHY0NhEARCLqlKpCIAGqoZMSGKTgABGAC6MgAVDJlhzuQBqfnAcrcvkCgDMnNw8LpMgAmkyWWzxbzcQL1X9pZzknLaXSAFpM8wCrkarXC5kk9jAGWWsXcnX2znyhEzBEAXzhtP+LDg3Feyl+iJYnEEhpkUCZD2eECc8AYLAIT39gdefHMAA5DFLZOZ2QAGWTlIv690yOixx5PBNJlNpgNBrPFgsAVhLMmL5YNdIINfjibgydT6Zb5WzsnZ06L5fld1pcc+LXEkbp4+DTM37D7VLgAA89kz2C5OA4nOR1wrYhhXlAuBh-vt4NeFTI3nAACztt-vgFArIlbvssRZMhojJqDOSpMtBJpQRWUbvqQYFqCWwEKqQ-rQNwsFznu-42qyNTqBCfDHLIGBrPqMhUQQqQYR6GGIe+8wRpiTJIhQKKelSLFUpCGAEeo3CxCRdRgJ+K5mIMYD3lw0kSCkC7pD6sw5Ac4jojIy6cJp17LlJ6xAUutZXKURCkIpa6VpiA61JoB6ycsKQmXS7z-FATjcFZxDcImHDgZoywYOyzkYJUYC8TR8rLtYcBEDAihsFZ6zpDM7AjgAbh8ekSHweXiMkYBepyQA", # nolint
+    "app",
+    mode = "editor"
+  ),
+  full_screen = TRUE
+)
+```
+
+<p class="text-center">
+<a 
+class="btn btn-primary" 
+data-bs-toggle="collapse" 
+href="#lorenz-mod" 
+role="button" 
+aria-expanded="false" 
+aria-controls="lorenz-mod">
+Toggle code
+</a>
+</p>
+
+<div class="collapse" id="lorenz-mod">
+
+```r
+library(blockr)
+library(pracma)
+library(blockr.ggplot2)
+
+new_ode_block <- function(...) {
+
+  lorenz <- function (t, y, parms) {
+    c(
+      X = parms[1] * y[1] + y[2] * y[3],
+      Y = parms[2] * (y[2] - y[3]),
+      Z = -y[1] * y[2] + parms[3] * y[2] - y[3]
+    )
+  }
+
+  fields <- list(
+    a = new_numeric_field(-8/3, -10, 20),
+    b = new_numeric_field(-10, -50, 100),
+    c = new_numeric_field(28, 1, 100)
+  )
+
+  new_block(
+    fields = fields,
+    expr = substitute(
+      as.data.frame(
+        ode45(
+          fun, 
+          y0 = c(X = 1, Y = 1, Z = 1),
+          t0 = 0,
+          tfinal = 100,
+          parms = c(.(a), .(b), .(c))
+        )
+      ),
+      list(fun = lorenz)
+    ),
+    ...,
+    class = c("ode_block", "data_block")
+  )
+}
+
+stack <- new_stack(
+  new_ode_block,
+  # Coming from blockr.ggplot2
+  new_ggplot_block(
+    func = c("x", "y"), 
+    default_columns = c("y.1", "y.2")
+  ), 
+  new_geompoint_block
+)
+serve_stack(stack)
+```
+</div>
