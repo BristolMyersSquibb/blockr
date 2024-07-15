@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Why blockr?
 
-`blockr` is an R package designed to democratize data analysis by providing a flexible, intuitive, and code-free approach to building data pipelines. It allows users to create powerful data workflows using pre-built blocks that can be easily connected and customized, all without writing a single line of code.
+`blockr` is an R package designed to democratize data analysis by providing a flexible, intuitive, and code-free approach to building data pipelines. It allows users to create powerful data workflows using pre-built blocks that can be easily connected, all without writing a single line of code.
 
 ### Key Features
 
@@ -23,9 +23,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## blockr Across Industries
 
-The flexibility of `blockr` makes it valuable across various industries. Let's explore how it can be applied in different sectors with detailed examples:
-
-
+The flexibility of `blockr` makes it valuable across various industries. Let's explore how it can be applied in different sectors with detailed examples. Somex examples require to create a new field such as the `new_slider_field` described in the corresponding vignette.
 
 ```{r slider_block, include=FALSE}
 # Provided by John, new_range_field not working
@@ -34,12 +32,10 @@ new_slider_field <- function(value = 5L, min = 0L, max = 10L, step = 1L, ...) {
     value = value,
     min = min,
     max = max,
+    step = step,
     ...,
     class = "slider_field"
   )
-}
-slider_field <- function(...) {
-  validate_field(new_slider_field(...))
 }
 
 #' @method ui_input slider_field
@@ -59,8 +55,27 @@ ui_input.slider_field <- function(x, id, name) {
 
 #' @method validate_field slider_field
 #' @export
-validate_field.slider_field <- function(x, ...) {
-  x
+validate_field.slider_field <- function(x) {
+  val <- value(x)
+  min <- value(x, "min")
+  max <- value(x, "max")
+  step <- value(x, "step")
+
+  validate_number(val)
+
+  if (length(min)) {
+    validate_number(min, "min")
+  }
+
+  if (length(max)) {
+    validate_number(max, "max")
+  }
+
+  if (length(step)) {
+    validate_number(step, "step")
+  }
+
+  NextMethod()
 }
 
 #' @method ui_update slider_field
@@ -68,8 +83,8 @@ validate_field.slider_field <- function(x, ...) {
 ui_update.slider_field <- function(x, session, id, name) {
   updateSliderInput(
     session,
-    blockr:::input_ids(x, id),
-    blockr:::get_field_name(x, name),
+    blockr::input_ids(x, id),
+    blockr::get_field_name(x, name),
     blockr::value(x),
     blockr::value(x, "min"),
     blockr::value(x, "max")
@@ -127,7 +142,7 @@ blockr::register_block(
 
 ### 1. Finance: Stock Price Forecasting
 
-In this example, we'll create a pipeline that fetches recent stock data using the [quantmod package](https://github.com/joshuaulrich/quantmod), performs time series analysis, and forecasts future stock prices using the [Prophet model](https://github.com/facebook/prophet).
+In this example, we'll create a pipeline that fetches recent stock data using the [quantmod package](https://github.com/joshuaulrich/quantmod), performs time series analysis, and forecasts future stock prices using the [Prophet model](https://github.com/facebook/prophet). We first design the `stock_data_block`, containing a field to select the stock items and generate the data. The `prophet_forecast_block` does all the modeling part.
 
 ```{r stock_example}
 library(blockr)
