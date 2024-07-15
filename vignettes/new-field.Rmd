@@ -1,8 +1,8 @@
 ---
-title: "new-field"
+title: "4. Case study: create a new field"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{new-field}
+  %\VignetteIndexEntry{4. Case study: create a new field}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

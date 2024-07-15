@@ -24,6 +24,7 @@ articles:
   desc: ~
   navbar: User Guide
   contents:
+  - "`blockr_examples`"
   - "`data-blocks`"
   - "`registry`"
   - "`plot-block`"

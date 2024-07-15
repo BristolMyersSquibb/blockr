@@ -1,7 +1,10 @@
 ---
-title: "blockr: Flexible Data Pipeline Building for Everyone"
-output: html_document
-date: "2024-07-07"
+title: "blockr: case studies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{blockr: case studies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -41,8 +44,6 @@ new_slider_field <- function(value = 5L, min = 0L, max = 10L, step = 1L, ...) {
 #' @method ui_input slider_field
 #' @export
 ui_input.slider_field <- function(x, id, name) {
-  ns <- NS(input_ids(x, id))
-
   shiny::sliderInput(
     blockr:::input_ids(x, id),
     name,
@@ -741,6 +742,7 @@ serve_stack(marketing_impact_stack)
 
 ### 5. Dynamical systems
 
+In the below example, we implemented the Lorenz attractor and solve it with the `{pracma}` R package (technically, the reason using `{pracma}` over `{deSolve}` or `{diffeqr}` is because only `{pracma}` is available for shinylive required by the embeded demo).
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
