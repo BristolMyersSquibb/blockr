@@ -280,6 +280,10 @@ get_sub_fields <- function(x) get_field_value(x, "sub_fields")
 
 set_sub_fields <- function(x, val) set_field_value(x, val, "sub_fields")
 
+#' @export
+#' @rdname update_field
+#' @param field Field element.
+#' @param name To pass a name if no title attribute.
 get_field_name <- function(field, name = "") {
   title <- attr(field, "title")
 
