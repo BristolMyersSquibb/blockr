@@ -49,8 +49,6 @@ On the UI side, this is fairly straightforward as all we have to do is call `shi
 
 ```{r, ui-slider-field}
 ui_input.slider_field <- function(x, id, name) {
-  ns <- NS(input_ids(x, id))
-
   shiny::sliderInput(
     blockr::input_ids(x, id),
     name,
@@ -100,7 +98,8 @@ ui_update.slider_field <- function(x, session, id, name) {
     blockr::get_field_name(x, name),
     blockr::value(x),
     blockr::value(x, "min"),
-    blockr::value(x, "max")
+    blockr::value(x, "max"),
+    blockr::value(x, "step")
   )
 }
 ```
@@ -110,31 +109,33 @@ ui_update.slider_field <- function(x, session, id, name) {
 We can test our newly created field in a custom block:
 
 ```{r, test-slider-field, eval=FALSE}
-new_rows_select_block <- function(...) {
-  n_rows <- \(data) nrows(data)
+new_slice_block <- function(from = 0, ...) {
+
+  n_rows <- \(data) nrow(data)
 
   fields <- list(
-    nrows = new_slider_field(
-      value = 1,
+    rows = new_slider_field(
+      value = from,
       min = 0,
       max = n_rows,
+      step = 1,
       title = "Select rows"
     )
   )
 
   new_block(
     fields = fields,
+    expr = quote(dplyr::slice(seq_len(.(rows)))),
+    name = "Slider slice block",
     ...,
-    expr = quote(data[seq_along(.(nrows)), ]),
-    name = "Slider select block",
-    class = c("rows_select_block", "transform_block")
+    class = c("slice_block", "transform_block")
   )
 }
 
 serve_stack(
   new_stack(
-    new_dataset_block,
-    new_rows_select_block
+    new_dataset_block("iris"),
+    new_slice_block(5)
   )
 )
 ```
