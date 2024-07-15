@@ -4,6 +4,7 @@
 \alias{update_field}
 \alias{update_field.field}
 \alias{update_field.hidden_field}
+\alias{get_field_name}
 \title{Update field generic}
 \usage{
 update_field(x, new, env = list())
@@ -11,6 +12,8 @@ update_field(x, new, env = list())
 \method{update_field}{field}(x, new, env = list())
 
 \method{update_field}{hidden_field}(x, new, env = list())
+
+get_field_name(field, name = "")
 }
 \arguments{
 \item{x}{An object inheriting form \code{"field"}}
@@ -18,6 +21,10 @@ update_field(x, new, env = list())
 \item{new}{Value to set}
 
 \item{env}{Environment with data and other field values}
+
+\item{field}{Field element.}
+
+\item{name}{To pass a name if no title attribute.}
 }
 \value{
 The modified field.
