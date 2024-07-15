@@ -83,7 +83,7 @@ ui_update.slider_field <- function(x, session, id, name) {
 #' @param ... ignored.
 #' @export
 filter_in_block <- function(data, ...) {
-  sub_fields <- \(data, column){
+  sub_fields <- \(data, column) {
     if (!length(column)) {
       column <- names(data)[1]
     }
@@ -94,7 +94,11 @@ filter_in_block <- function(data, ...) {
   }
 
   fields <- list(
-    column = blockr::new_select_field(\(data) names(data)[1], choices = \(data) names(data), title = "Column"),
+    column = blockr::new_select_field(
+      \(data) names(data)[1],
+      choices = \(data) names(data),
+      title = "Column"
+    ),
     values = blockr::new_list_field(character(), sub_fields)
   )
 
@@ -315,10 +319,29 @@ create_ae_forest_plot <- function(data, usubjid_col, arm_col, aedecod_col, n_eve
 forest_plot_block <- function(...) {
   new_block(
     fields = list(
-      usubjid_col = new_select_field("USUBJID", function(data) colnames(data), multiple = FALSE, title = "Subject ID Column"),
-      arm_col = new_select_field("ACTARM", function(data) colnames(data), multiple = FALSE, title = "Treatment Arm Column"),
-      aedecod_col = new_select_field("AEDECOD", function(data) colnames(data), multiple = FALSE, title = "AE Term Column"),
-      n_events = new_numeric_field(10, min = 5, max = 20, step = 1, title = "Number of Top AEs to Display")
+      usubjid_col = new_select_field(
+        "USUBJID",
+        function(data) colnames(data),
+        multiple = FALSE,
+        title = "Subject ID Column"
+      ),
+      arm_col = new_select_field(
+        "ACTARM",
+        function(data) colnames(data),
+        multiple = FALSE,
+        title = "Treatment Arm Column"
+      ),
+      aedecod_col = new_select_field(
+        "AEDECOD",
+        function(data) colnames(data),
+        multiple = FALSE,
+        title = "AE Term Column"
+      ),
+      n_events = new_numeric_field(
+        10,
+        min = 5, max = 20, step = 1,
+        title = "Number of Top AEs to Display"
+      )
     ),
     expr = quote({
       create_ae_forest_plot(data, .(usubjid_col), .(arm_col), .(aedecod_col), .(n_events))
@@ -365,7 +388,12 @@ cardinal02_block <- function(...) {
   all_cols <- function(data) colnames(data)
 
   fields <- list(
-    columns = new_select_field(c("SEX", "AGE", "AGEGR1", "RACE", "ETHNIC", "COUNTRY"), all_cols, multiple = TRUE, title = "Variables")
+    columns = new_select_field(
+      c("SEX", "AGE", "AGEGR1", "RACE", "ETHNIC", "COUNTRY"),
+      all_cols,
+      multiple = TRUE,
+      title = "Variables"
+    )
   )
 
   expr <- quote({
@@ -430,9 +458,26 @@ library(forecast)
 air_quality_block <- function(...) {
   new_block(
     fields = list(
-      site = new_select_field("kc1", \()openair::importMeta()$code, multiple = FALSE, title = "Monitoring Site"),
-      start_year = new_numeric_field(2020, min = 1990, max = as.numeric(format(Sys.Date(), "%Y")), step = 1, title = "Start Year"),
-      end_year = new_numeric_field(as.numeric(format(Sys.Date(), "%Y")), min = 1990, max = as.numeric(format(Sys.Date(), "%Y")), step = 1, title = "End Year")
+      site = new_select_field(
+        "kc1",
+        \() openair::importMeta()$code,
+        multiple = FALSE,
+        title = "Monitoring Site"
+      ),
+      start_year = new_numeric_field(
+        2020,
+        min = 1990,
+        max = as.numeric(format(Sys.Date(), "%Y")),
+        step = 1,
+        title = "Start Year"
+      ),
+      end_year = new_numeric_field(
+        as.numeric(format(Sys.Date(), "%Y")),
+        min = 1990,
+        max = as.numeric(format(Sys.Date(), "%Y")),
+        step = 1,
+        title = "End Year"
+      )
     ),
     expr = quote({
       importAURN(site = .(site), year = .(start_year):.(end_year)) |> tail(700)
@@ -450,7 +495,13 @@ pollution_forecast_block <- function(columns = character(), ...) {
   new_block(
     fields = list(
       pollutant = new_select_field(columns, all_cols, multiple = FALSE, title = "Pollutant"),
-      horizon = new_slider_field(30, min = 1, max = 365, step = 1, title = "Forecast Horizon (days)")
+      horizon = new_slider_field(
+        30,
+        min = 1,
+        max = 365,
+        step = 1,
+        title = "Forecast Horizon (days)"
+      )
     ),
     expr = quote({
       ts_data <- ts(na.omit(data[[.(pollutant)]]), frequency = 365)
@@ -464,9 +515,23 @@ pollution_forecast_block <- function(columns = character(), ...) {
 }
 
 # Register custom blocks
-register_block(air_quality_block, name = "Air Quality Data", description = "Import air quality data", classes = c("air_quality_block", "data_block"), input = NA_character_, output = "data.frame")
+register_block(
+  air_quality_block,
+  name = "Air Quality Data",
+  description = "Import air quality data",
+  classes = c("air_quality_block", "data_block"),
+  input = NA_character_,
+  output = "data.frame"
+)
 
-register_block(pollution_forecast_block, name = "Pollution Forecast", description = "Forecast pollution levels", classes = c("pollution_forecast_block", "plot_block"), input = "data.frame", output = "plot")
+register_block(
+  pollution_forecast_block,
+  name = "Pollution Forecast",
+  description = "Forecast pollution levels",
+  classes = c("pollution_forecast_block", "plot_block"),
+  input = "data.frame",
+  output = "plot"
+)
 
 # Create the stack
 air_quality_stack <- new_stack(
@@ -543,9 +608,24 @@ library(dplyr)
 new_marketing_data_block <- function(...) {
   new_block(
     fields = list(
-      start_date = date_field(Sys.Date() - 365, min = Sys.Date() - 730, max = Sys.Date() - 1, label = "Start Date"),
-      intervention_date = date_field(Sys.Date() - 180, min = Sys.Date() - 729, max = Sys.Date(), label = "Intervention Date"),
-      end_date = date_field(Sys.Date(), min = Sys.Date() - 364, max = Sys.Date(), label = "End Date")
+      start_date = date_field(
+        Sys.Date() - 365,
+        min = Sys.Date() - 730,
+        max = Sys.Date() - 1,
+        label = "Start Date"
+      ),
+      intervention_date = date_field(
+        Sys.Date() - 180,
+        min = Sys.Date() - 729,
+        max = Sys.Date(),
+        label = "Intervention Date"
+      ),
+      end_date = date_field(
+        Sys.Date(),
+        min = Sys.Date() - 364,
+        max = Sys.Date(),
+        label = "End Date"
+      )
     ),
     expr = quote({
       # Generate dummy data for demonstration
@@ -574,10 +654,30 @@ new_causal_impact_block <- function(columns = character(), ...) {
 
   new_block(
     fields = list(
-      response_var = new_select_field(columns, all_cols, multiple = FALSE, title = "Response Variable"),
-      covariate_var = new_select_field(columns, all_cols, multiple = FALSE, title = "Covariate Variable"),
-      pre_period_end = date_field(Sys.Date() - 181, min = Sys.Date() - 729, max = Sys.Date() - 1, label = "Pre-Period End Date"),
-      post_period_start = date_field(Sys.Date() - 180, min = Sys.Date() - 728, max = Sys.Date(), label = "Post-Period Start Date")
+      response_var = new_select_field(
+        columns,
+        all_cols,
+        multiple = FALSE,
+        title = "Response Variable"
+      ),
+      covariate_var = new_select_field(
+        columns,
+        all_cols,
+        multiple = FALSE,
+        title = "Covariate Variable"
+      ),
+      pre_period_end = date_field(
+        Sys.Date() - 181,
+        min = Sys.Date() - 729,
+        max = Sys.Date() - 1,
+        label = "Pre-Period End Date"
+      ),
+      post_period_start = date_field(
+        Sys.Date() - 180,
+        min = Sys.Date() - 728,
+        max = Sys.Date(),
+        label = "Post-Period Start Date"
+      )
     ),
     expr = quote({
       data <- data.frame(
