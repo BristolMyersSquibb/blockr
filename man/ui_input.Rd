@@ -10,14 +10,11 @@
 \alias{ui_input.upload_field}
 \alias{ui_input.filesbrowser_field}
 \alias{ui_input.result_field}
-\alias{input_ids}
-\alias{input_ids.block}
-\alias{input_ids.field}
-\alias{input_ids.hidden_field}
 \alias{ui_input.variable_field}
 \alias{ui_input.range_field}
 \alias{ui_input.hidden_field}
 \alias{ui_input.list_field}
+\alias{ui_input.expression_field}
 \alias{ui_update}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
@@ -30,6 +27,10 @@
 \alias{ui_update.filesbrowser_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
+\alias{input_ids}
+\alias{input_ids.block}
+\alias{input_ids.field}
+\alias{input_ids.hidden_field}
 \title{UI input generic}
 \usage{
 ui_input(x, id, name)
@@ -50,14 +51,6 @@ ui_input(x, id, name)
 
 \method{ui_input}{result_field}(x, id, name)
 
-input_ids(x, ...)
-
-\method{input_ids}{block}(x, ...)
-
-\method{input_ids}{field}(x, name, ...)
-
-\method{input_ids}{hidden_field}(x, name, ...)
-
 \method{ui_input}{variable_field}(x, id, name)
 
 \method{ui_input}{range_field}(x, id, name)
@@ -65,6 +58,8 @@ input_ids(x, ...)
 \method{ui_input}{hidden_field}(x, id, name)
 
 \method{ui_input}{list_field}(x, id, name)
+
+\method{ui_input}{expression_field}(x, id, name)
 
 ui_update(x, session, id, name)
 
@@ -89,6 +84,14 @@ ui_update(x, session, id, name)
 \method{ui_update}{hidden_field}(x, session, id, name)
 
 \method{ui_update}{list_field}(x, session, id, name)
+
+input_ids(x, ...)
+
+\method{input_ids}{block}(x, ...)
+
+\method{input_ids}{field}(x, name, ...)
+
+\method{input_ids}{hidden_field}(x, name, ...)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
@@ -97,9 +100,9 @@ ui_update(x, session, id, name)
 
 \item{name}{Field name.}
 
-\item{...}{Generic consistency}
-
 \item{session}{Shiny session}
+
+\item{...}{Generic consistency}
 }
 \description{
 For a given field, generates the corresponding

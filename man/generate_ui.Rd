@@ -5,6 +5,7 @@
 \alias{generate_ui.block}
 \alias{generate_ui.stack}
 \alias{generate_ui.workspace}
+\alias{ui_update.expression_field}
 \alias{input_ids.list_field}
 \title{UI}
 \usage{
@@ -15,6 +16,8 @@ generate_ui(x, ...)
 \method{generate_ui}{stack}(x, id = NULL, ...)
 
 \method{generate_ui}{workspace}(x, id, ...)
+
+\method{ui_update}{expression_field}(x, session, id, name)
 
 \method{input_ids}{list_field}(x, name, ...)
 }

@@ -530,3 +530,33 @@ update_field_value.list_field <- function(x, new) {
 new_result_field <- function(value = list(), ...) {
   new_field(value, ..., class = "result_field")
 }
+
+#' @param autocomplete Additional autocomplete options
+#' @rdname new_field
+#' @export
+new_expression_field <- function(value = "", autocomplete = character(), ...) {
+
+  new_field(value, autocomplete = autocomplete, ...,
+            class = "expression_field")
+}
+
+#' @rdname new_field
+#' @export
+validate_field.expression_field <- function(x) {
+
+  validate_string(field_component(x, "value"))
+
+  validate_character(
+    field_component(x, "autocomplete"),
+    allow_zero_length = TRUE
+  )
+
+  NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+is_initialized.expression_field <- function(x) {
+  val <- field_component(x, "value")
+  length(val) && nchar(val) > 0
+}
