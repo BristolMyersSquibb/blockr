@@ -23,5 +23,6 @@ webpack.prod.js
 ^\.eslintrc\.js$
 ^CODEOWNERS$
 ^index\.md$
+^index\.Rmd$
 ^wiki
 ^\.vscode$

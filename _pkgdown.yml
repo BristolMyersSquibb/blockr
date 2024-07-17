@@ -13,7 +13,7 @@ navbar:
   bg: info
   type: light
   structure:
-    right: [reference, news, github, dark-mode]
+    right: [reference, github, dark-mode]
   components:
     home: ~
     dark-mode:
@@ -24,9 +24,11 @@ articles:
   desc: ~
   navbar: User Guide
   contents:
+  - "`blockr_examples`"
   - "`data-blocks`"
   - "`registry`"
   - "`plot-block`"
+  - "`new-field`"
   - "`developer-guide`"
 
 reference:

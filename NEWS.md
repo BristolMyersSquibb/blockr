@@ -1,7 +1,11 @@
 # blockr 0.0.2.9000
 
-## Fixes
+## Doc
+- Improved `registry` and `getting started` vignettes.
+- Add new `case studies` vignette to present blockr in various contexts.
+- Refine GitHub readme.
 
+## Fixes
 - Loading spinner is now correctly hidden when the block visual is updated.
 
 # blockr 0.0.2
