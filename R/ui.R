@@ -537,14 +537,18 @@ ui_input <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.string_field <- function(x, id, name) {
-  textInput(input_ids(x, id), name, value(x))
+  textInput(input_ids(x, id), name, field_value(x))
 }
 
 #' @rdname ui_input
 #' @export
 ui_input.select_field <- function(x, id, name) {
   selectizeInput(
-    input_ids(x, id), name, value(x, "choices"), value(x), value(x, "multiple"),
+    input_ids(x, id),
+    name,
+    field_component(x, "choices"),
+    field_value(x),
+    field_component(x, "multiple"),
     options = list(
       dropdownParent = "body",
       placeholder = "Please select an option below"
@@ -555,7 +559,7 @@ ui_input.select_field <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.switch_field <- function(x, id, name) {
-  bslib::input_switch(input_ids(x, id), name, value(x))
+  bslib::input_switch(input_ids(x, id), name, field_value(x))
 }
 
 #' @rdname ui_input
@@ -580,10 +584,13 @@ ui_input.submit_field <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.upload_field <- function(x, id, name) {
+
+  val <- field_value(x)
+
   fileInput(
     input_ids(x, id),
     name,
-    placeholder = if (length(value(x))) value(x) else "No file selected"
+    placeholder = if (length(val)) val else "No file selected"
   )
 }
 
@@ -607,7 +614,7 @@ ui_input.result_field <- function(x, id, name) {
     ns("select-stack"),
     name,
     list_workspace_stacks(),
-    value(x),
+    field_value(x),
     options = list(
       dropdownParent = "body",
       placeholder = "Please select an option below"
@@ -637,8 +644,14 @@ input_ids.field <- function(x, name, ...) {
 #' @param name Input name.
 #' @export
 input_ids.list_field <- function(x, name, ...) {
-  sub_names <- names(value(x, "sub_fields"))
-  set_names(paste0(name, "_", sub_names), sub_names)
+
+  nme <- field_component(x, "name")
+
+  if (length(nme)) {
+    nme <- paste0(name, "_", nme)
+  }
+
+  Map(input_ids, materialize_list_field(x), nme)
 }
 
 #' @rdname ui_input
@@ -662,8 +675,16 @@ ui_input.variable_field <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.range_field <- function(x, id, name) {
+
+  min <- field_component(x, "min")
+  max <- field_component(x, "max")
+
   sliderInput(
-    input_ids(x, id), name, value(x, "min"), value(x, "max"), value(x)
+    input_ids(x, id),
+    name,
+    min,
+    max,
+    coal(field_value(x), c(min, max), continue = function(x) length(x) != 2L)
   )
 }
 
@@ -677,10 +698,7 @@ ui_input.hidden_field <- function(x, id, name) {
 #' @export
 ui_input.list_field <- function(x, id, name) {
 
-  fields <- get_sub_fields(x)
-
-  # TODO: indicate nesting of fields, nice version of
-  # `paste0(name, "_", names(fields))` instead of just `names(fields)`
+  fields <- materialize_list_field(x)
 
   args <- c(
     list(id = paste0(id, "_cont")),
@@ -700,21 +718,35 @@ ui_update <- function(x, session, id, name) {
 #' @rdname ui_input
 #' @export
 ui_update.string_field <- function(x, session, id, name) {
-  updateTextInput(session, input_ids(x, id), get_field_name(x, name), value(x))
+  updateTextInput(
+    session,
+    input_ids(x, id),
+    get_field_name(x, name),
+    field_value(x)
+  )
 }
 
 #' @rdname ui_input
 #' @export
 ui_update.select_field <- function(x, session, id, name) {
   updateSelectInput(
-    session, input_ids(x, id), get_field_name(x, name), value(x, "choices"), value(x)
+    session,
+    input_ids(x, id),
+    get_field_name(x, name),
+    field_component(x, "choices"),
+    field_value(x)
   )
 }
 
 #' @rdname ui_input
 #' @export
 ui_update.switch_field <- function(x, session, id, name) {
-  bslib::update_switch(input_ids(x, id), get_field_name(x, name), value(x), session)
+  bslib::update_switch(
+    input_ids(x, id),
+    get_field_name(x, name),
+    field_value(x),
+    session
+  )
 }
 
 #' @rdname ui_input
@@ -743,7 +775,12 @@ ui_update.variable_field <- function(x, session, id, name) {
 #' @export
 ui_update.range_field <- function(x, session, id, name) {
   updateSliderInput(
-    session, input_ids(x, id), get_field_name(x, name), value(x), value(x, "min"), value(x, "max")
+    session,
+    input_ids(x, id),
+    get_field_name(x, name),
+    field_value(x),
+    field_component(x, "min"),
+    field_component(x, "max")
   )
 }
 
@@ -751,7 +788,12 @@ ui_update.range_field <- function(x, session, id, name) {
 #' @export
 ui_update.numeric_field <- function(x, session, id, name) {
   updateNumericInput(
-    session, input_ids(x, id), get_field_name(x, name), value(x), value(x, "min"), value(x, "max")
+    session,
+    input_ids(x, id),
+    get_field_name(x, name),
+    field_value(x),
+    field_component(x, "min"),
+    field_component(x, "max")
   )
 }
 
@@ -799,7 +841,7 @@ ui_update.list_field <- function(x, session, id, name) {
     session = session
   )
 
-  fields <- get_sub_fields(x)
+  fields <- materialize_list_field(x)
 
   insertUI(
     selector = paste0("#", ns_id, "_cont"),

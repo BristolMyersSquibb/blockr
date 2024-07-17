@@ -4,12 +4,20 @@
 \alias{new_variable_field}
 \title{Variable field constructor}
 \usage{
-new_variable_field(field = character(), components = list(), ...)
+new_variable_field(
+  field = character(),
+  components = list(),
+  package = "blockr",
+  ...
+)
 }
 \arguments{
 \item{field}{Field type}
 
 \item{components}{Variable list of field components}
+
+\item{package}{Package weher to find the field constructor (as
+\verb{new_\{class_name\}})}
 
 \item{...}{Other parameters passed to \link{new_field} and may be needed
 by \link{ui_input} to pass more options to the related shiny input.}
@@ -17,7 +25,4 @@ by \link{ui_input} to pass more options to the related shiny input.}
 \description{
 Variable field is intended to conditionally display
 different field based on a condition.
-}
-\note{
-Currently broken. Don't use.
 }

@@ -145,7 +145,13 @@ generate_server_block <- function(
         # if (!is.null(is_prev_valid)) req(is_prev_valid)
         blk_no_srv <- blk()
         blk_no_srv[is_srv] <- NULL # to keep class etc
-        eval(obs_expr(blk_no_srv))
+
+        rapply(
+          eval(obs_expr(blk_no_srv)),
+          eval,
+          how = "replace",
+          envir = list(input = input)
+        )
       })
 
       r_values <- reactive({

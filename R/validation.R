@@ -1,7 +1,6 @@
 #' Validate field generic
 #'
-#' Checks the value of a field with \link{value} and
-#' apply corrections whenever necessary.
+#' Validator functions for fields.
 #'
 #' @param x A Field
 #' @export
