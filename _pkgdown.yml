@@ -1,5 +1,10 @@
-url: ~
+url: https://blockr-org.github.io/blockr/
+
+home:
+  title: Building blocks for data manipulation and visualization operations.
+
 template:
+  light-switch: true
   bootstrap: 5
   bslib:
     info: "#E6F2FD"
@@ -9,27 +14,16 @@ template:
       <link href ="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css">
 
-navbar:
-  bg: info
-  type: light
-  structure:
-    right: [reference, github, dark-mode]
-  components:
-    home: ~
-    dark-mode:
-      href: "#dark-mode"
-
 articles:
 - title: User guide
-  desc: ~
-  navbar: User Guide
+  navbar: ~
   contents:
-  - "`blockr_examples`"
-  - "`data-blocks`"
-  - "`registry`"
-  - "`plot-block`"
-  - "`new-field`"
-  - "`developer-guide`"
+  - blockr_examples
+  - data-blocks
+  - registry
+  - plot-block
+  - new-field
+  - developer-guide
 
 reference:
 - title: Fields core elements
