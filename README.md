@@ -23,6 +23,13 @@ writing a single line of code.
 
 ![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
 
+To get started, we invite you to read this
+[vignette](https://blockr-org.github.io/blockr/articles/blockr.html).
+
+To get a better idea of `{blockr}` capabilities in various data context,
+you can look at this
+[vignette](https://blockr-org.github.io/blockr/articles/blockr_examples.html).
+
 ## Key features
 
 1.  **User-Friendly Interface**: Build data pipelines with intuitive
