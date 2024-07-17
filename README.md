@@ -19,8 +19,6 @@ data pipelines. It allows users to create **powerful** data workflows
 using pre-built **blocks** that can be easily **connected**, all without
 writing a single line of code.
 
-    #> PhantomJS not found. You can install it with webshot::install_phantomjs(). If it is installed, please make sure the phantomjs executable can be found via the PATH variable.
-
 ![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
 
 To get started, we invite you to read this

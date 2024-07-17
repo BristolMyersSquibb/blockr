@@ -30,7 +30,7 @@ library(DiagrammeR)
 
 `{blockr}` is an R package designed to democratize data analysis by providing a flexible, intuitive, and __code-free__ approach to building data pipelines. It allows users to create __powerful__ data workflows using pre-built __blocks__ that can be easily __connected__, all without writing a single line of code.
 
-```{r, echo=FALSE, eval=TRUE}
+```{r, echo=FALSE, eval=TRUE, message=FALSE}
 mermaid("
   flowchart TD
   subgraph LR workspace[Workspace]
