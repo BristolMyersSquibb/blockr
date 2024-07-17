@@ -9,9 +9,21 @@
 [![codecov](https://codecov.io/github/blockr-org/blockr/graph/badge.svg?token=9AO88LK8FJ)](https://codecov.io/github/blockr-org/blockr)
 <!-- badges: end -->
 
-Building blocks for data manipulation and visualization operations.
+> {blockr} is Shiny’s WordPress (John Coene, 2024)
 
-Key features:
+## Why blockr?
+
+`{blockr}` is an R package designed to democratize data analysis by
+providing a flexible, intuitive, and **code-free** approach to building
+data pipelines. It allows users to create **powerful** data workflows
+using pre-built **blocks** that can be easily **connected**, all without
+writing a single line of code.
+
+    #> PhantomJS not found. You can install it with webshot::install_phantomjs(). If it is installed, please make sure the phantomjs executable can be found via the PATH variable.
+
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
+
+## Key features
 
 1.  **User-Friendly Interface**: Build data pipelines with intuitive
     interface.
@@ -82,17 +94,21 @@ new_geompoint_block <- function(color = character(), shape = character(), ...) {
 
 stack <- new_stack(
   data_block = new_dataset_block("penguins", "palmerpenguins"),
-  filter_block = new_filter_block("sex", "female"), 
+  filter_block = new_filter_block("sex", "female"),
   plot_block = new_ggplot_block("flipper_length_mm", "body_mass_g"),
   layer_block = new_geompoint_block("species", "species")
 )
 serve_stack(stack)
 ```
 
-``` r
-appdir <- system.file("examples", "penguins", package = "blockr")
-appshot(appdir, delay = 3)
-```
+<div class="figure" style="text-align: center">
+
+<img src="vignettes/figures/blockr-penguins-stack.png" alt="Penguins app demo" width="100%" />
+<p class="caption">
+Penguins app demo
+</p>
+
+</div>
 
 ## Contribute
 

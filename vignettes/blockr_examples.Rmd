@@ -1,28 +1,17 @@
 ---
-title: "blockr: case studies"
+title: "Case studies"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{blockr: case studies}
+  %\VignetteIndexEntry{Case studies}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
+library(blockr)
 library(bslib)
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## Why blockr?
-
-`blockr` is an R package designed to democratize data analysis by providing a flexible, intuitive, and code-free approach to building data pipelines. It allows users to create powerful data workflows using pre-built blocks that can be easily connected, all without writing a single line of code.
-
-### Key Features
-
-1. **User-Friendly Interface**: Build data pipelines using a drag-and-drop interface.
-2. **Flexibility**: Easily add, remove, or rearrange blocks in your pipeline.
-3. **Extensibility**: Developers can create custom blocks to extend functionality.
-4. **Reproducibility**: Pipelines created with `blockr` are easily shareable and reproducible, with exportable code.
-5. **Interactivity**: Real-time feedback as you build and modify your pipeline.
 
 ## blockr Across Industries
 
@@ -206,20 +195,19 @@ serve_stack(stock_forecast_stack)
 ```
 
 ```{r blockr-stock, echo=FALSE, fig.cap='Stock model demo', fig.align = 'center', out.width='100%'}
-knitr::include_graphics("vignettes/figures/blockr-stock-demo.png")
+knitr::include_graphics("figures/blockr-stock-demo.png")
 ```
 
 ### 2. Pharmaceutical: Clinical Trial Analysis
 
 #### 2.1 AE Forest Plot
 
-This forest plot visualizes the relative risk of adverse events between two treatment arms in a clinical trial. In this case, it compares "Xanomeline High Dose" to "Xanomeline Low Dose" starting from the [pharmaverseadam](https://github.com/pharmaverse/pharmaverseadam) `adae` dataset.
+This forest plot visualizes the relative risk of adverse events between two treatment arms in a clinical trial. In this case, it compares "Xanomeline High Dose" to "Xanomeline Low Dose" starting from the [pharmaverseadam](https://github.com/pharmaverse/pharmaverseadam) `adae` dataset. As you may notice, the `new_forest_plot_block` is a quite complex block. Part of the code is isolated in a function `create_ae_forest_plot` so that the main block constructor is more readable.
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
   create_app_link(
     "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-CiCCKmu6w1-qhGBtYuG3uagc2hqLcI9N70WDWATR0MA3BphgCkN1St7E0BaG3g0RwU0JaMWUeg1l8kUiVsTF7Ka6ClGVs2BAOAWg4DVp0D2iADg+AAA5B0wGHaxOgRAvbsBYAAL1JGoCdABmAArCOzU2bUCZlELUfYu6yZNqIDsHgIhnIBGnce3STQGDiA-XAAI+UQrRhfW+7ggGt2yVIGqlk1gq4ltQPbNVwsJHGqmghsoBExHjqUU1R4EgdJYd9KOvDiimpewBZh1BpHcMnvwzGtGVGoB0GBW4zQWBjr4iITILAHdYXoqIZw1lBieXsKyTAAV0G0ZHo4lNZOU7qANAwHJnEahzZKZU65KamnWJqpYERqaGgJ2XpqbITTMgAAsTGIrsSeFNe2WAACqNlK2PFIFhdjtDOPcYxaSfj7BxAASAlZBoxI6gyBsrjQTRLVnlFE5S3SsgmWSek91VMawo7GRndQTkPreSux4iCZs7wRR+T9BgDAVs4JwDywcHVtoR7HQaDpTYnBGsRTqllDadXRrHVApyNy3BtVBKEM5g6zmABCAApAAkgAEWpf0srDExSqy4JaZUxZvgbagLZzZC1vQsAuD+pEVkAAyB03NBI815sDB0QKnUW6ZPMBYhC5MrbaNKvW8uYUG81kbnW0ZCCsume2VksAAFllsIuFGtkge2tuah20Je0B2ClHceKdqa52rs3f6Xdn9Qh7bByevHO9+Z1hCt0Rj77U8z7XtUn1-76IhsteBxFUHNkFs2XTAAeSW3gIJq3RSI-R7mbgqOkdfaga+bH93kSXeu7L76DhFfc5kPbGo99KfvZpyc2XYyyp9YgPmGohn2dA6aQOoJMAIJqDMxUMdGmB3lnIIh8zt31fE7ABdX8-5AJa-OjXMsC26IXCgDsD7tORWVrEStKaTk-jrmtpspk9RWSAz1fSPbGkhwIQPsTY25F88QtL81P+DNTkRQjhjgg8ZBLGc0ESKEHJCaFc3gcRt9JitmBkxFKrYdaxZfOYiLj9haG9w-OoGU2J77d4gPISfPo+8SB1bl-Lwbe8HHhTt59YWIukmiyHJEPqZBxj+LDu03wmQnfWmB9MErCSJtpHyIPreSRkhi8QGAtGqz+yBxk45jyzX4N6xB1A6R1qf51CeJkCd48jd6sIMJFZIG2ZsCczqq-pqwYD3TXzX6cR6ADjPpPI04PgZjP4z6cAJidxojTqGbYxBwsDYzUESDNib6sHiAb59YwjqgNas7kBeRgYwhAYtpCyejeglJsBr5cG2ab456oEghMTpAPh1AMCxycEET0H1wiRMEsFcASDJBgARwhhAA", # nolint
-    "app",
     mode = "editor"
   ),
   full_screen = TRUE
@@ -401,16 +389,15 @@ serve_stack(clinical_trial_stack)
 
 #### 2.2 Demographics Table
 
-This demographics table is taken from the `cardinal` package of [FDA Safety Tables and Figures](https://github.com/pharmaverse/cardinal) and demonstrates `gt` and `rtables` outputs starting from the [pharmaverseadam](https://github.com/pharmaverse/pharmaverseadam) `adsl` dataset.
+This demographics table is taken from the `{cardinal}` package of [FDA Safety Tables and Figures](https://github.com/pharmaverse/cardinal) and demonstrates `{gt}` and `{rtables}` outputs starting from the [pharmaverseadam](https://github.com/pharmaverse/pharmaverseadam) `adsl` dataset. As a side note, the below block requires some extra helpers to work properly which you can find [here](https://github.com/blockr-org/blockr.cardinal/blob/72e6e5518d8226d4fdeb599b6e2e31ba03dc7c82/R/methods.R) in the `{blockr.cardinal}` package.
 
-
-```{r cardinal_tables}
+```{r cardinal_tables, eval=FALSE}
 library(shiny)
 library(blockr)
-library(blockr.falcon)
+library(cardinal)
 library(blockr.pharmaverseadam)
 
-cardinal02_block <- function(...) {
+new_cardinal02_block <- function(...) {
   all_cols <- function(data) colnames(data)
 
   fields <- list(
@@ -441,7 +428,7 @@ cardinal02_block <- function(...) {
     )
   })
 
-  blockr::new_block(
+  new_block(
     expr = expr,
     fields = fields,
     ...,
@@ -449,8 +436,8 @@ cardinal02_block <- function(...) {
   )
 }
 
-blockr::register_block(
-  cardinal02_block,
+register_block(
+  new_cardinal02_block,
   "Cardinal 02",
   "A Cardinal 02 table",
   input = "data.frame",
@@ -462,26 +449,28 @@ blockr::register_block(
 # Create the stack
 rtables_stack <- new_stack(
   new_adam_block(selected = "adsl"),
-  cardinal02_block()
+  new_cardinal02_block()
 )
 
 serve_stack(rtables_stack)
 ```
 
+```{r blockr-cardinal, echo=FALSE, fig.cap='Cardinal demo', fig.align = 'center', out.width='100%'}
+knitr::include_graphics("figures/blockr-cardinal-demo.png")
+```
 
 ### 3. Environmental Science: Air Quality Analysis and Prediction
 
 This example demonstrates a pipeline for analyzing air quality data and predicting future pollution levels using actual data from the [openair](https://github.com/cran/openair) package.
-This pipeline imports actual air quality data from the `openair` package and forecasts future pollution levels using an ARIMA model.
+This pipeline imports actual air quality data from the `{openair}` package and forecasts future pollution levels using an ARIMA model.
 
-```{r environment}
+```{r environment, eval=FALSE}
 library(blockr)
 library(openair)
 library(forecast)
 
-
 # Custom block for air quality data import
-air_quality_block <- function(...) {
+new_air_quality_block <- function(...) {
   new_block(
     fields = list(
       site = new_select_field(
@@ -515,7 +504,7 @@ air_quality_block <- function(...) {
 
 
 # Custom block for pollution forecasting
-pollution_forecast_block <- function(columns = character(), ...) {
+new_pollution_forecast_block <- function(columns = character(), ...) {
   all_cols <- function(data) setdiff(colnames(data), c("date", "site", "source"))
 
   new_block(
@@ -542,7 +531,7 @@ pollution_forecast_block <- function(columns = character(), ...) {
 
 # Register custom blocks
 register_block(
-  air_quality_block,
+  new_air_quality_block,
   name = "Air Quality Data",
   description = "Import air quality data",
   classes = c("air_quality_block", "data_block"),
@@ -551,7 +540,7 @@ register_block(
 )
 
 register_block(
-  pollution_forecast_block,
+  new_pollution_forecast_block,
   name = "Pollution Forecast",
   description = "Forecast pollution levels",
   classes = c("pollution_forecast_block", "plot_block"),
@@ -561,18 +550,19 @@ register_block(
 
 # Create the stack
 air_quality_stack <- new_stack(
-  air_quality_block(),
-  pollution_forecast_block(columns = "no2")
+  new_air_quality_block(),
+  new_pollution_forecast_block(columns = "no2")
 )
 
 serve_stack(air_quality_stack)
 ```
+
 ### 4. Marketing: Causal Impact Analysis of Marketing Interventions
 
 This example demonstrates how to use [CausalImpact](https://google.github.io/CausalImpact/CausalImpact.html) to analyze the effect of marketing interventions on sales data. 
-This pipeline generates dummy marketing data with an intervention, then uses CausalImpact to analyze the effect of the intervention on sales.
+This pipeline generates dummy marketing data with an intervention, then uses `{CausalImpact}` to analyze the effect of the intervention on sales. This requires to define a new date field as shown below.
 
-```{r date_field, include=FALSE}
+```{r date_field}
 library(shiny)
 new_date_field <- function(value = Sys.Date(), min = NULL, max = NULL, ...) {
   blockr::new_field(
@@ -591,10 +581,8 @@ date_field <- function(...) {
 #' @method ui_input date_field
 #' @export
 ui_input.date_field <- function(x, id, name) {
-  ns <- NS(input_ids(x, id))
-
   shiny::dateInput(
-    blockr:::input_ids(x, id),
+    blockr::input_ids(x, id),
     name,
     value = blockr::value(x, "value"),
     min = blockr::value(x, "min"),
@@ -613,8 +601,8 @@ validate_field.date_field <- function(x, ...) {
 ui_update.date_field <- function(x, session, id, name) {
   updateDateInput(
     session,
-    blockr:::input_ids(x, id),
-    blockr:::get_field_name(x, name),
+    blockr::input_ids(x, id),
+    blockr::get_field_name(x, name),
     value = blockr::value(x),
     min = blockr::value(x, "min"),
     max = blockr::value(x, "max")
@@ -622,10 +610,7 @@ ui_update.date_field <- function(x, session, id, name) {
 }
 ```
 
-
-
-
-```{r intervention_impact}
+```{r intervention_impact, eval=FALSE}
 library(blockr)
 library(CausalImpact)
 library(dplyr)
@@ -707,12 +692,12 @@ new_causal_impact_block <- function(columns = character(), ...) {
     ),
     expr = quote({
       data <- data.frame(
+        date = data$date,
         y = data[[.(response_var)]],
         x = data[[.(covariate_var)]]
       )
-
-      pre_period <- c(min(data$date), as.Date(.(pre_period_end)))
-      post_period <- c(as.Date(.(post_period_start)), max(data$date))
+      pre_period <- c(min(as.Date(data$date)), as.Date(.(pre_period_end)))
+      post_period <- c(as.Date(.(post_period_start)), max(as.Date(data$date)))
 
       impact <- CausalImpact(data, pre_period, post_period)
       plot(impact)
@@ -749,6 +734,9 @@ marketing_impact_stack <- new_stack(
 serve_stack(marketing_impact_stack)
 ```
 
+```{r blockr-marketing, echo=FALSE, fig.cap='Marketing demo', fig.align = 'center', out.width='100%'}
+knitr::include_graphics("figures/blockr-marketing-demo.png")
+```
 
 ### 5. Dynamical systems
 
@@ -758,7 +746,6 @@ In the below example, we implemented the Lorenz attractor and solve it with the 
 card(
   create_app_link(
     "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhBeTKwcXLyaphIMdtaooqQATAHhymoaQbr6RiaihZY2dg7Oru6e9FHVAfUhTeGR0bHxiSlpEOncLIxQDACefAWSM-OLK3yoDFAEMFCbC-s760XWJWXlM+kQcNQA+kQAJnBP6zIAPOYyAGZOCAEUjuCB8DCQ5IyEDpdIyGSieQQABePz+gOBoJIMj4pFky1kqCWMHY0NhEARCLqlKpCIAGqoZMSGKTgABGAC6MgAVDJlhzuQBqfnAcrcvkCgDMnNw8LpMgAmkyWWzxbzcQL1X9pZzknLaXSAFpM8wCrkarXC5kk9jAGWWsXcnX2znyhEzBEAXzhtP+LDg3Feyl+iJYnEEhpkUCZD2eECc8AYLAIT39gdefHMAA5DFLZOZ2QAGWTlIv690yOixx5PBNJlNpgNBrPFgsAVhLMmL5YNdIINfjibgydT6Zb5WzsnZ06L5fld1pcc+LXEkbp4+DTM37D7VLgAA89kz2C5OA4nOR1wrYhhXlAuBh-vt4NeFTI3nAACztt-vgFArIlbvssRZMhojJqDOSpMtBJpQRWUbvqQYFqCWwEKqQ-rQNwsFznu-42qyNTqBCfDHLIGBrPqMhUQQqQYR6GGIe+8wRpiTJIhQKKelSLFUpCGAEeo3CxCRdRgJ+K5mIMYD3lw0kSCkC7pD6sw5Ac4jojIy6cJp17LlJ6xAUutZXKURCkIpa6VpiA61JoB6ycsKQmXS7z-FATjcFZxDcImHDgZoywYOyzkYJUYC8TR8rLtYcBEDAihsFZ6zpDM7AjgAbh8ekSHweXiMkYBepyQA", # nolint
-    "app",
     mode = "editor"
   ),
   full_screen = TRUE
