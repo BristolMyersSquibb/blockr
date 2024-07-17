@@ -402,3 +402,11 @@ get_block_title <- function(x) {
 module_server_test <- function(id, x, in_dat, is_prev_valid, ...) {
   generate_server(x = x, in_dat = in_dat, id = id, is_prev_valid = is_prev_valid)
 }
+
+pkg_name <- function() utils::packageName()
+
+pkg_env <- function() asNamespace(pkg_name())
+
+set_fun_env <- function(fun, env = pkg_env()) {
+  `environment<-`(fun, env)
+}

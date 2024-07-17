@@ -494,7 +494,7 @@ update_field_components.list_field <- function(x, env = list()) {
 #' @export
 update_field_value.list_field <- function(x, new) {
 
-  if (!length(new)) {
+  if (!length(new) || any(!lengths(new))) {
     return(x)
   }
 

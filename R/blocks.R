@@ -327,7 +327,10 @@ new_summarize_block <- function(func = character(),
   select_names <- function(funcs) funcs
 
   select_choices <- function(funcs) {
-    replicate(length(funcs), function(data) list(choices = colnames(data)))
+    replicate(
+      length(funcs),
+      set_fun_env(function(data) list(choices = colnames(data)))
+    )
   }
 
   summarize_expr <- function(data, funcs, columns) {
@@ -349,7 +352,7 @@ new_summarize_block <- function(func = character(),
       }
     }
 
-    if (!all(lengths(columns))) {
+    if (!length(columns) || any(!lengths(columns))) {
       return(quote(identity()))
     }
 
