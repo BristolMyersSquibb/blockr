@@ -5,89 +5,72 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="blockr">
 <title>3. Case study: create a plot block • blockr</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="3. Case study: create a plot block">
-<meta property="og:description" content="blockr">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><link href="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="3. Case study: create a plot block">
+<link href="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-info" data-bs-theme="light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/blockr.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/blockr.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>User Guide</h6>
-    <a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a>
-    <a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a>
-    <a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a>
-    <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/blockr_examples.html">Case studies</a></li>
+    <li><a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a></li>
+    <li><a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a></li>
+    <li><a class="dropdown-item" href="../articles/new-field.html">4. Case study: create a new field</a></li>
+    <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a></li>
+  </ul>
 </li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-news">
-    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../news/index.html">Changelog</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-news">
+<li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
+  </ul>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-news">
-    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../news/index.html">Changelog</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../#dark-mode"></a>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
 </li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -97,10 +80,11 @@
 <script src="plot-block_files/bslib-component-js-0.7.0/components.min.js"></script><script src="plot-block_files/bslib-component-js-0.7.0/web-components.min.js" type="module"></script><link href="plot-block_files/bslib-component-css-0.7.0/components.css" rel="stylesheet">
 <script src="plot-block_files/bslib-tag-require-0.7.0/tag-require.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>3. Case study: create a plot block</h1>
+
+      <h1>3. Case study: create a plot block</h1>
             
       
-      
+
       <div class="d-none name"><code>plot-block.Rmd</code></div>
     </div>
 
@@ -144,7 +128,7 @@ parameters. As a result, there are many ways to build a ggplot:</p>
 <p>It seems obvious to add new <code>ggplot_block()</code> and geom
 <strong>constructors</strong>. On the Shiny side, we have to handle the
 plot output element. Remember that the <code><a href="../reference/server_output.html">server_output()</a></code>
-<strong>generic</strong> is defined in the <code>{blockr}</code>
+<strong>generic</strong> is defined in the <a href="https://blockr-org.github.io/blockr">blockr</a>
 <code>server.R</code> script. It supports tables with
 <code><a href="../reference/server_output.html">server_output.block()</a></code> and plots with
 <code><a href="../reference/server_output.html">server_output.plot_block()</a></code>. Therefore, we don’t need to
@@ -153,7 +137,7 @@ inherits from the <code>plot_block</code> class to
 <strong>dispatch</strong> to the correct method. Most of our work will
 be on the block side since we’ll have to generate the plot layer by
 layer, each layer being a block. Before writing this vignette,
-<code>{blockr}</code> did not support layer by layer plots. This new
+<a href="https://blockr-org.github.io/blockr">blockr</a> did not support layer by layer plots. This new
 concept required to expose a new way of combining plot expressions to
 generate the entire stack code. With the previous infrastructure, we
 could only do:</p>
@@ -164,7 +148,7 @@ to combine with <code>+</code> such as:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="va">plot_block</span> <span class="op">+</span> <span class="va">layer_block</span></span></code></pre></div>
 <p>All the process is described in the following, which should highlight
-the <strong>flexibility</strong> provided by <code>{blockr}</code>.</p>
+the <strong>flexibility</strong> provided by <a href="https://blockr-org.github.io/blockr">blockr</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="new-block-helpers">New block helpers<a class="anchor" aria-label="anchor" href="#new-block-helpers"></a>
@@ -364,12 +348,12 @@ choices whenever data change.</p>
 <p>Producing the expression, which is certainly the most “technical”
 part, as it involves a bit of <strong>metaprogramming</strong>. The
 expression must not be evaluated in the block, that’s why it is wrapped
-in a <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote()</a></code>. <code>{blockr}</code> is then able to
+in a <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote()</a></code>. <a href="https://blockr-org.github.io/blockr">blockr</a> is then able to
 generate the expression with <code><a href="../reference/generate_code.html">generate_code()</a></code> and evaluate
 it with <code><a href="../reference/evaluate_block.html">evaluate_block()</a></code>.</p>
 <p>Our ggplot expression can be written as:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>In the above expression, you may notice <code>.()</code>, which is
 actually required by <code><a href="../reference/generate_code.html">generate_code()</a></code>. Under the hoods, this
 is needed by <code><a href="https://rdrr.io/r/base/bquote.html" class="external-link">bquote()</a></code> which only evaluates arguments
@@ -388,7 +372,7 @@ explicitly mark what we want to evaluate.</p>
 <span>      y <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">col_y</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span></span>
-<span>      <span class="fu">ggplot</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggplot_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -409,7 +393,7 @@ the point color and shape. We host this information in a
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">default</span>, <span class="va">choices</span><span class="op">)</span></span></code></pre></div>
 <p>The expression is straightforward to get:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span><span class="op">)</span> <span class="co"># Don't forget to wrap it with quote(...).</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span><span class="op">)</span> <span class="co"># Don't forget to wrap it with quote(...).</span></span></code></pre></div>
 <p>Importantly, since we use <code>.(color)</code>, the field name must
 be <strong>color</strong> and conversely for the shape. Also note that,
 since the previous data contains the <code>ggplot</code> object, we must
@@ -428,7 +412,7 @@ names are obtained with
 <span>      shape <span class="op">=</span> <span class="fu"><a href="../reference/select_field.html">new_select_field</a></span><span class="op">(</span><span class="va">shape</span>, <span class="va">data_cols</span>, type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span></span>
-<span>      <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">color</span><span class="op">)</span>, shape <span class="op">=</span> <span class="fu">.</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plot_layer_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -453,7 +437,7 @@ invoke the corresponding <code><a href="../reference/evaluate_block.html">evalua
 <span>  layer_block <span class="op">=</span> <span class="fu">new_geompoint_block</span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"species"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-2645">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-7339">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+ag88AyoFNZObOwlmdl5fNbWqKKkAEwl6RBw1AD6nd1EpCOF4jIAPOYyAGZOEASk7hB8xNwjAB6q6lo5UOtwDHzJsjsjuYcEx+VnF1cyGO-JMiDp6TIyACZQLgjHbKBbLVbrTZ8QFcT47aDwdgwoFQAYQP5DUYzQQYv7LFhwbj-ZRqTKcXH4-EHNRYkbsIlwdYjJaE4nbIi7PayWFQEGc9iyUi5OqHISIuApXC-KkyO604b0xnM1lE-4c3a5Hmo-ncQUyYWitTi2CSsAlKlXGV-OB7VAMQ4ARyckzglNl4x6fBgaFQbGshygcGRNLefD2r3lYdyqQt+KteL+BG4sVJ6k0nsm01EEgCQgmUxmUutb3eMpKAF8fhA6dY4EQYIo2IWc7NwSs1hsSBqrPdHqdyC9ZOxjkajidnpdZO8MJ9vhAZbzdWDFh2od3efDORLkbyACSb6uYxU4kuq4lp8mkd1Una9hWjBncJlTc-qu8MbXA0FCkVwMWQKaxaJviI5oP+D5Ks+KpsuqYF1F+fI-gaf4ARKKQlgmVK2vaTouuQN74nWDYjE2ZB8EGyIfocGA9sUw6jhBYbwXAqTDiwABeTH9Jh0ogcmqb3JoBYjCmuTnNmZh5mAIlFuafFUjO5bpFWC4cFwEjzIsdKcKc4jukuMyHHSvIMi2ZjCfUjQcNJVTcDUdQQA0TRSoEeKya2xmKpm5kSJoSyZOgEnPk5jgjDAMDSXQRD-Lk4WpmMwF-GJElGZBxGNkQzaSX5QjsHUBCEv4eCBGA+VMkVGEQCUDIMAAbnA9IafpukSMkYAVgAukAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -471,7 +455,7 @@ Below is a possible implementation of an interactive
 </p>
 <div id="ggiraphBlockr" class="collapse">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidgohel.github.io/ggiraph/" class="external-link">ggiraph</a></span><span class="op">)</span></span>
 <span></span>
@@ -581,7 +565,7 @@ Below is a possible implementation of an interactive
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -592,15 +576,15 @@ Below is a possible implementation of an interactive
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

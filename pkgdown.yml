@@ -1,11 +1,15 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
+  blockr_examples: blockr_examples.html
   blockr: blockr.html
   data-blocks: data-blocks.html
   developer-guide: developer-guide.html
+  new-field: new-field.html
   plot-block: plot-block.html
   registry: registry.html
-last_built: 2024-07-02T13:00Z
-
+last_built: 2024-07-17T13:02Z
+urls:
+  reference: https://blockr-org.github.io/blockr/reference
+  article: https://blockr-org.github.io/blockr/articles

@@ -5,89 +5,72 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="blockr">
 <title>1. Data blocks • blockr</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="1. Data blocks">
-<meta property="og:description" content="blockr">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><link href="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="1. Data blocks">
+<link href="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-info" data-bs-theme="light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/blockr.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/blockr.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>User Guide</h6>
-    <a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a>
-    <a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a>
-    <a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a>
-    <a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/blockr_examples.html">Case studies</a></li>
+    <li><a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a></li>
+    <li><a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a></li>
+    <li><a class="dropdown-item" href="../articles/new-field.html">4. Case study: create a new field</a></li>
+    <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a></li>
+  </ul>
 </li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-news">
-    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../news/index.html">Changelog</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-news">
+<li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
+  </ul>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-news">
-    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6>
-    <h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../news/index.html">Changelog</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../#dark-mode"></a>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
 </li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -97,10 +80,11 @@
 <script src="data-blocks_files/bslib-component-js-0.7.0/components.min.js"></script><script src="data-blocks_files/bslib-component-js-0.7.0/web-components.min.js" type="module"></script><link href="data-blocks_files/bslib-component-css-0.7.0/components.css" rel="stylesheet">
 <script src="data-blocks_files/bslib-tag-require-0.7.0/tag-require.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>1. Data blocks</h1>
+
+      <h1>1. Data blocks</h1>
             
       
-      
+
       <div class="d-none name"><code>data-blocks.Rmd</code></div>
     </div>
 
@@ -115,7 +99,7 @@ block.</p>
 <div class="section level3">
 <h3 id="package-based-data-block">Package based data block<a class="anchor" aria-label="anchor" href="#package-based-data-block"></a>
 </h3>
-<p><code>{blockr}</code> introduces a <code><a href="../reference/new_dataset_block.html">new_dataset_block()</a></code>
+<p><a href="https://blockr-org.github.io/blockr">blockr</a> introduces a <code><a href="../reference/new_dataset_block.html">new_dataset_block()</a></code>
 which takes as input any package containing a (or multiple) dataset(s).
 This block is constructed as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>new_dataset_block <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
@@ -145,7 +129,7 @@ the <code>package</code> parameter (in the following we leverage the
 <span>  <span class="va">new_select_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-9268">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-4826">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQBE6cRDAA+gAmUFxVheIyADzmMgBmTqWk7hB8GIPJMiDpMjIQcNS19bFwpI2iEoIQ4+PscNxwBOQ1qoFg3FB00mNrqFASUNZw+0JNDBh1XKera4MYZyUAvunpnJdmm0JlMqgDlmcyhVqs8oIszLIzpNphstjt4RJ0iUNgwAG5wMFcZbg8TJMDfAC6QA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -161,7 +145,7 @@ package. In the next part, we see how to import data from a file.</p>
 <div class="section level3">
 <h3 id="reading-data-from-files">Reading data from files<a class="anchor" aria-label="anchor" href="#reading-data-from-files"></a>
 </h3>
-<p><code>{blockr}</code> exposes 2 extra data blocks which have to be
+<p><a href="https://blockr-org.github.io/blockr">blockr</a> exposes 2 extra data blocks which have to be
 combined with one of the 4 following data <strong>parser</strong>
 blocks:</p>
 <ul>
@@ -184,7 +168,7 @@ files).</li>
 location, we recognize that it might not be always possible for security
 reasons.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">new_upload_block</span>,</span>
@@ -192,7 +176,7 @@ reasons.</p>
 <span>  <span class="va">new_select_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-2965">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-8553">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6ZxQEjIAPOYyEHDUAPrlEoIQMnUNjU6oolAAJo2F4rjpHfVNBOwAbkOiEqPtnU3scNxwBKRzZuklqwzTcM1crS3iyWAAvgC6QA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -221,7 +205,7 @@ webR file system so you can play with the block. That said, you can
 definitely upload your own data thanks to the corresponding shinylive
 feature (upload button).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">new_filesbrowser_block</span>,</span>
@@ -229,7 +213,7 @@ feature (upload button).</p>
 <span>  <span class="va">new_select_block</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-1190">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-8512">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6ZxQEjIAPOYyEHDUAPrlEoIQMnUNjQBmLNxw7IxE1OxwDI2F4rjpHfVNBOwAbhOiEtPtnU2j-QSkK2bpJaMMi3DNXK0t4slgAL644NDwVKgU1k5s7BgLi3iEJORKMghOxXgQWANpEIWOxuFAIAATKHCPrcRr9CDWRyNGAwZF0VGNBEKbG45HdTLoMbot6kvF4IR0IgI3I42LsRpJBlgUYAD2RuTgOSE6SEAEFiZk4MiACqJMajUp4ADMAE4MABGXAagAcGAA7NqdVrlfqAKwABmmYBgPGleAATBaLfrRWAJXApbL5QxFdI1Rgzdr9RgACxGgBsuGVOud1u6cFt-WkTpdbo9Xu5cpsCoo0lDFowyqN2tVQeVDst8cTdpTztdSozEO9Od9ebwADkxbguz3u73e6mG+LJc2sz6-SqIwbS0XS8XlaGq0IE0n7bgh+nR+uhNnrLmldH1cWnRgoxrVVblRHlzba4761vPWPrXuD-69argxgdUaTRHK2rNc6zTRttxbfc20PAMHVnc8y1wUMI3Na1gIfUCR2fHcwDfKD-VDTUjUIi8F1DFDB0fMCsIg988FDWDT1gi8rXoqsKIw91wPHVtJ2jENfw1EMtV1KNlWVON2OHTjqO4yDeNNH9v2LXUr31CTu03KjM1fCd20QjViJDc8dVgis4xXGtk3QqSm2w3D5L1KMHQMpjVRNWMrSENCN0ozDtN3XToIIpyDOE1Vf1DAtPLvKyfI42yaLwqcz2-ASdXLNTotXe84psridJ4vSYxnC9S3LJcsss9dNL8l8AsKw96MDHyStVQ0Kui7yauk-ycMC-CwyI8NdXDMTAIsrrfJ6uq+oa-MQuai9w3o8yYuqqaEu5AAhGFiHXBS0rnQTRqioCcu6zbrR29g9v9ENDV1ErY2jCNVsm+L8qEa7bpVM0MC-C8MCYnUvxjVbstii7PrAb6iH2vVgeI9Kj1vd68pkq7drhj9FMEoGjSvDzUPOjbodh-a-uUz8jUNMHKrRp9evJ-NC2MlLdQXM1UZJj6Ma+rH1wLRaQwBnVadTM7IdJvmYYFu7-qI899VMjVbwh9beaZuW6MLINHtFq8y06nn0d6gAReRYH9dU9enB79V-Cs1aqkDTZmi2hXpPj8ce4SHaPN6TcZ93La9gM9f4o1HfE+mg60kPPZZhX9aNUbL2NqXNYTq3kuGh6ELGoMJrj2rsI9nOj3x5ziNVKNQ1VjONbdsvQ5x38nVLQ3ucz5vkXLr2msRvXnuVLnY574OW8TlUjNnKmTRjyWm8nvvW5VdUBPVYSdWWm9G9dlfuX7-1p2Ho0Vedhn46niuhcO4aC-T4mJ+v1fp5eojh9EjVwZd6zD+tMfOiBEwqtTrqdLyJdpo3zDg9acotyzOnHsvV+R816VzZpvFir197-1QYA9B9ca7n2jKxZ+KDS5vwrgpYeyd9RfgdG1IMkkAFCCAR-PGANLykMvlAy6bDCEOjnNXVyWp67dwodA5EzN17s3upGaMlpkEgR1Kw2WN1sY6yRsnHUEVF6QMzqo-B-MNEU2-Fwq8FUl4qLUTIxCrlmoSwLBImxxj1E-VIYtPU29DSMN-u9IxlDtra30oNR68ETSZXIa4oJmNTHW2-F-RRvDDG2JCULTB85oxEwMRrQJUjgnxOSrbdmxoNzpWUehfJ-D3GaO9vBGuo1zS4LitUsmITR4lXgUacsDdrFVLSUU0JJ5QplUQhAtaMSClxI8QpJWPSXr+J5m0mWdiiHbx9qqWCziWmphWVrIZ14wlCVTuUlJeTBkeKIcZUspkjbRIGW4uxnSSmuXLKPSprTLl1PWbObeEUf67OdPsma9kip-QBtOeCV4LTnKmTUsFjUDKbzCeFcZLjHmxPqnJIqypFoWMWZ8vZajEXWyeqiw2gdUluNJbIpWmzRJj36V8ml-U6J-UOlw9qfTcnwuhrSxRwt8WqSWdSrFs0cWNSEYdPWCFWJAotCCuybLEKFkhbjNyfFRUXNZXNGemywk7wDgqpViV5LTiYtOHxySiXApJSqpqoCwpBiiia+1erPH0uBqDCWxcxXTOxbRexdD2a10QlE3lmKA0SqDUch6eo0q0xyWAdWfKZYCs6aAh+xYVpurcewhSylI4XgXnCqNNT2FEJPIWZSqpRpMsjSy8VBbpy1uFdkqlOrm3oKOaLUpoMlHMuJfmnteo23epRnm7t79ip9qwYSoddqR0zr+vGnypkG0pr-k26NlbRm+x8i6-Rkzy3QwLXnJG5VtVpvNj29UbNt7gIxTuitPaLVKRptGY9qbT0y0rYWTlPk9GdpvdnMO3jFady1baxVaj-1HT1LKuuHyHkvrPT2vFwkrXBnbk-P1Xbd2ELxUPW5+kQO-oObMiOyctl8XGlu96qpvmCy1B3J0OblZFxPXFJjTyOnyI1MZBcLouM-p48x+W7crTMXsc+1MvHxXPJFpBkiG4tmie3fJiTsj406PrXJ50Cno3PMct+VyoNmmLotEZmpJmq7Se4Wqcj4m+OHIg4JP80ZBIacY9pxCxHSylnavqFCjatOudme50+pZHYmR8zzGz7ShlLhSqeWtYicGofC4pjp6p7atQXL6hjCW-OD1nLK9qDpQvcey8Z3LqXCz5xNHh4rmdEurPSUI3Tta64iay4Z91kqcbzN1Lh696F2u9QzSGat+KLPVd87qobv0SrxtBih-DIFJugodfu0zup1v0cW+KjN768bA1pjy1rGttvKo9QpfOGrHaDrCwNpbQahZMXtqJKxm2JuDY+wZYaiH13ZIWyV97SVBVMQhQo8SZaXMnYdazQLF4vyuv69ZgHUPioCVniW6MVX4ttex7xIhtDa1Huc7VhFKq1TfjCiaWFMHbtmr0pFJGG4f6qup29pH92QecKg4XKzrPZIfcw7OVytMXs1b54Rmd04ZVZI+SzuDPaQy0NlejsiXHjsK+oe5-HYtSH0bEzT9D79fl41lZShVYuCErrkfik03nRfq6t4WBihZWNxjVODkny7qFwK8VetXQew55fMVk+VmOHcCM9z7E5qnFzjcRwbgeKPzufsXAHm7HvqFCOEn9Yejtmfu4j0ne2wvONx4L7Ao6SvSMx3D9O6hfb43lj3nXyvsjEbQtk-b+vJ9SmGpOtV838vX2K9SmMxcCOLd-o17jdzqoFyWde1j3vHDk8m9NGnxft6rcGS1z5MRSCe9CAAOIUFIEQIg0j0nYY1AF5yYjZeT44jfsg9-H9DKrIJsIuJLgGaBGnLl-rfr-oUlcnqA9CAlzixL9tdgfEqN-nfg-tAXUgAX9AxLqCAWAVfNfpARgTMj8vjgREGM5EGGaBMoQWAGgVAaQYLNFi-o4tzkuAvlNAwSQSYlcn9MNMFFzmIsmp-lJNwX-lcnbNqJTFzl+GaEVnQeIZgYLHispHiuGE6DrgflwcQRIT8k3qrINFQSAVdoobocoUnADHir4hqLvJwRAT-jwbUoLOqqxoJiAZumYY4XoYLCXtqNYVznYTBmIeYUwfmHqAIali-iARUpjiEd4RYeyrjIIc5CxEVqIW6EoWEXRMeNITOM5IaGaLEZvvEegT4fmExHipQewVdhkagaEbwT8uqDDlXM5LgBGMel4WUYkYhGdhQT5OjiIZpjoQkdkYhLAXkaxg6LBGaBtuAaUYwY0euJaD7ARCMr+KAbzg4d0WMSlsJP0cYUosEZkQ0c4fNItAcdEZFNodsYsWcXRK2nke3KrCAeXiUScaMUsRUcnJLocRfn9rlB8TsV8Q8cRH9G4dQYCnEUCXcWsv0bYcIu4fXOpICfUZ8fceGrjNUdQd3u8WicCRiaGAjNqGsQgb0TcQsU4XYtgcIh3FzAZrcVSekjNnkSeNMSAZWAqpSeUXRNKiSfZujmAXUUQeiWsuCfyZQS6K8fYdyT0WaPesGBuMAa9AybKbsVvPye3HSbUcMbBvibCekhEdqI8dMVaDQVsfklkSCcGueAEc5DmvcgCcOiKQSXCccoiXIZyZjpaacXCf4Q1novYT6aKYaSVKukBiAXMQEjCUycll1v6b4oqpOlZsGa6ekgqe4dMdQQQcsjGTyYhDIawTYSxN+rqamQaclhmdUXXBvuAeWbGR4isXrLDtMTMZ4bmfqQ2T8niraQrAUYhC1p-vWfmSlnrHigwuwekWWXmXKbrHkQwoBOaVOvQb6ekgRFYYicWGaFCU6Uui6RWXwT7BylztQZ0R2fuV2cwezARLgSxMUcgVGlaYSYLvAaaZGRaTObseKQiRoewRMkOZ+daSscXhuIuf8XWYBYSSwQRL+e1IOdOZ2SOc2UYXSW8RBYhT0aGHigJOORGVhTccOZhX4S8W+Ucd6ZBWsgFgiZKRFEgQBRhWMSscNDIdMeGPScuU+WKUdNhXhVOdGQxdaUhKsX2W0bMR+QJYSeGawROctP+QhRefmTQUdOGQ6MqFqGaLiehQpURckVXKVGRARRRembjE3qpWaTmf6pxU-sJb+UEX2DulZZWYtO+tMXIcmvxdpbsVUfyQxB3AZTBoRYxY1tIaBVue2ZZauclgJtWeGkGUZcltOMxalqJeBR5SuSGclsSYYU5KJTuVpelWmQlRcYpP2fIYZRJWsolSFc5DWeVZ5YJftk5MAUUeJfVYSZrj5QMeSQFfFY2fuiaR3DghxZFYeZUSVS8brj1RVekjgcaShVuY6flY5VchqdRVztsgBMTvntNf-kIshTlepUgfrstWQWEikRqNsrXruVvm1dSdJi2Q6GxVGRDrdWuT8eNZdfYUZidcsQBh+tMRsZlpvt9SNd2WdUYXgUhDcSDRlX1UdDeVzhsWeYHq9VFRceteMRPrqTDYVY2UXoqWZR4QyTjQeadc2YjQOV9b1VgUIl9oRADSAbQS9QVaTb4cVdUZ9a3izZefmDbHNVMWxZpcdaDYLPCQRDYctPeZ-iTTzXgCsQJCpQ6FGGVUPjtStWEseTVQOUdszT9ecQDCkeyUSVjcLbDT8kaT+T5DmptRXqjXDVho4ouV6cDdTYLILtUYMVTWrVgbDh5gzRpVsTLSOSGC0diQOSbbrSLbzWCaBRsbLqbbjadWoeNTWYBOxEHZhQYdhocfHZHWbSxiVOLWSf5bbdzYpeoU8bIR4YHa7fmKoSSXhaAVtVtrXXRO5uKZodXarXbVgXOYYbgcreBdLa3QOViSJXIYtQnazXXYtLNfab0V7T3csSfnNSeM1bnSjWXZncJW4e1KaM3f9t7csd+U1WafeVPbLeMrPfkR5sbcwhpPLnrW3SZa0bBENZflvbsSHQmYEdrQfenk-fZQOP2CAwA1HaCQJKScYUSYvZ-UBYWElb4uyU3d3XA5JcJc8TMXxXnYnS4cnNndEUuR-QAMJaCfCkAMBoBUIDwsHKYXgboUluikPkOUOoDUPSAAF80XiiQtZ0HMMcAUNUNoLvzblHTNEq5C1QL8OcCsPsNJHA5PTPZm66lSTSOCNsPCMVzyGtQaq0xXXzFMNkMCOyOaMDyzV4ybyOyLXClgBqMmOO63zP5ZX+xOzHFKh2NCMONeyiNUybJ6OqmGMsOeMJ6ONERcIuo6l8NGMyPBNgDsI+OzhcKOwWWSIeMaNePnH0qbwLhDFRNBPpMhPeMGSJliNNJ54oFCBpNyPhofq6gZSMPuPRPqPVPyFES+7n4BONP5PVMpYAzJ6OZN1WaqNNP2OFMcN90KlOgdNcmBPGOxPxM1o+RBZfpbHDPdOmMcN44r6RINOVMjPzOEJVXhLC50UqOzMxMFNxOELiOPRvLjKrPnPNMbO8nunzwLrXVrNzOXOVqC4dUE6p4zNdNfM9NUVQqfp+JuN7PrMZNy1Z7qjZodqAtQvAvPO9GrY0bvK7O2P7PfPoKtOlQXjcqdPIsXMtN91GkSwAspmPOjNXNW5cMMJ+7uXnnYvQtjOgkXqbw7NTUktPMwscklVWhOgurhUEZVOotCzqrGTix1Wssov8tKXe6CtiLI1is4s9N7VzXxq0xzH0W8u0vxMbJSY5p5VpXiv8uhhR7HMXhd6tVyuksSt-MGGqigzwVmvquOuj6U7ZJxVAsOsKtKvFnjF2vmvstotSukZVayuht0taPeWAyMsishsesWtcJsFdzLkxuVpnZ-N76aV6v2t8thsrFpthSMoMn5JZuELEX5yMrRspvFtqrR7cMvQR2b1VsiN-WPSSliJHXM0dtaM+7NuOZyX64DsDxpshTbKqst1+tFuxtFNeJPTizE00sHP0u4wskXiOzIT-21bjvhHERHMutfrKNjsNsLscNA6BZTPJku1zsGvVvou1oLhA0Pnp4Huws6OJk5poXntsuXsvPUZUw6uwOfsCuIyby0x9vtsXuVrmNgv-PO3vv7twfXNiN9kWi-ursPvruDs+wJqg50wkNodW5-QNIPz1pnv9ukdaMGRpuSk8M4f6t4c0Mv3Dygz5vY1ru4tkerZz5cf-vyvFvHmAxSbtSpU0cAeVrxsQZOimSjtSfCeAej1syuTr7lOH0se8f4ebzF2mtKf+uNsEetTJNtvbV3AAC6QAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -252,7 +236,7 @@ this smaller dataset. If you dynamically add a third stack, you can also
 select the third stack output as input of the second stack (it appears
 in the result block select input).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/set_workspace.html">serve_workspace</a></span><span class="op">(</span></span>
@@ -264,7 +248,7 @@ in the result block select input).</p>
 <span>  stack3 <span class="op">=</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="fu"><a href="../reference/new_dataset_block.html">new_dataset_block</a></span><span class="op">(</span><span class="st">"ae"</span>, <span class="st">"blockr.data"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"My workspace"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-3638">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-9642">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwl6exwDABucAD61Fbi7KhQBHCCEDIynAPiAIyqMhBw1B3jEsOjo3MLdVzNpB1VmtxQdAFCVQy19VApuOmrs-OLcNxwBDt7GkIAygAqAKoAIgBNACSf2OYB+Hx+ACEAFIglIlUbJa4jMZcCQAJhm60W6PEfBx8nYTm4r1EEmRNzREwAzNj7kt8TjNrE4GSzJooHAwadzlwESjRqQHE8ZkIALK5GTdBi9fqDITpZJgAC+AF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -273,7 +257,7 @@ in the result block select input).</p>
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -284,15 +268,15 @@ in the result block select input).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
