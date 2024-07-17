@@ -49,6 +49,8 @@ metadata:
 - Returned __output__.
 - ...
 
+In other words, the __registry__ is a __"supermarket"__ for data analysis. As shown below, if you develop your own blocks package and registers blocks on load, these blocks become available to the end user. Therefore this makes it powerful for __collaboration__ between data science teams.
+
 ```{r, echo=FALSE}
 
 mermaid("
