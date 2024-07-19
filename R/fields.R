@@ -625,8 +625,8 @@ update_field_value.kv_field <- function(x, new) {
   }
 
   for (cmp in intersect(names(cmps), names(new))) {
-    new <- update_field_value(cmps[[cmp]], new[[cmp]])
-    x <- set_field_component_value(x, cmp, new)
+    tmp <- update_field_value(cmps[[cmp]], new[[cmp]])
+    x <- set_field_component_value(x, cmp, tmp)
   }
 
   x
