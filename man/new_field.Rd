@@ -5,6 +5,8 @@
 \alias{is_field}
 \alias{new_expression_field}
 \alias{validate_field.expression_field}
+\alias{new_kv_field}
+\alias{validate_field.kv_field}
 \title{Fields}
 \usage{
 new_field(
@@ -22,6 +24,10 @@ is_field(x)
 new_expression_field(value = "", autocomplete = character(), ...)
 
 \method{validate_field}{expression_field}(x)
+
+new_kv_field(value = new_variable_field(), key = new_variable_field(), ...)
+
+\method{validate_field}{kv_field}(x)
 }
 \arguments{
 \item{value}{Field value}
@@ -42,6 +48,8 @@ feature. Default to FALSE. Not yet used.}
 \item{x}{An object inheriting form \code{"field"}}
 
 \item{autocomplete}{Additional autocomplete options}
+
+\item{key}{Key}
 }
 \description{
 Each block consists of a set of fields, which define the type of value

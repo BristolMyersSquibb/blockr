@@ -7,6 +7,7 @@
 \alias{field_component.field}
 \alias{field_value.variable_field}
 \alias{field_value.list_field}
+\alias{field_value.kv_field}
 \title{Get field attribute value}
 \usage{
 field_value(x)
@@ -20,6 +21,8 @@ field_component(x, name)
 \method{field_value}{variable_field}(x)
 
 \method{field_value}{list_field}(x)
+
+\method{field_value}{kv_field}(x)
 }
 \arguments{
 \item{x}{An object inheriting form \code{"field"}}

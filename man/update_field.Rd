@@ -14,6 +14,8 @@
 \alias{update_field_value.hidden_field}
 \alias{update_field_components.list_field}
 \alias{update_field_value.list_field}
+\alias{update_field_components.kv_field}
+\alias{update_field_value.kv_field}
 \title{Update field generic}
 \usage{
 update_field(x, new, env = list())
@@ -43,6 +45,10 @@ update_field_value(x, new)
 \method{update_field_components}{list_field}(x, env = list())
 
 \method{update_field_value}{list_field}(x, new)
+
+\method{update_field_components}{kv_field}(x, env = list())
+
+\method{update_field_value}{kv_field}(x, new)
 }
 \arguments{
 \item{x}{An object inheriting form \code{"field"}}

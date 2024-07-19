@@ -355,6 +355,52 @@ test_that("expression field", {
   expect_s3_class(stack, "stack")
 })
 
+test_that("kv field", {
+
+  new_mutate_kv_block <- function(data, ...) {
+
+    fields <- list(
+      expression = new_kv_field(
+        new_variable_field("expression_field"),
+        new_variable_field("string_field")
+      )
+    )
+
+    new_block(
+      fields = fields,
+      expr = quote(
+        dplyr::mutate(..(expression))
+      ),
+      ...,
+      class = c("mutate_kv_block", "transform_block", "submit_block")
+    )
+  }
+
+  generate_code_mutate_kv <- function(x) {
+
+    if (!is_initialized(x)) {
+      return(quote(identity()))
+    }
+
+    val <- field_value(x[["expression"]])
+    val <- set_names(parse(text = val[["value"]]), val[["key"]])
+
+    do.call(
+      bquote,
+      list(attr(x, "expr"), where = list(expression = val), splice = TRUE)
+    )
+  }
+
+  .S3method("generate_code", "mutate_kv_block", generate_code_mutate_kv)
+
+  stack <- new_stack(
+    new_dataset_block,
+    new_mutate_kv_block
+  )
+
+  expect_s3_class(stack, "stack")
+})
+
 test_that("field name", {
   blk <- new_dataset_block("iris")
   expect_equal(get_field_names(blk), c("package", "Dataset"))

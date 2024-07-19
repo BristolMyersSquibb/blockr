@@ -560,3 +560,74 @@ is_initialized.expression_field <- function(x) {
   val <- field_component(x, "value")
   length(val) && nchar(val) > 0
 }
+
+#' @param key Key
+#' @rdname new_field
+#' @export
+new_kv_field <- function(value = new_variable_field(),
+                         key = new_variable_field(), ...) {
+
+  new_field(value, key = key, ..., class = "kv_field")
+}
+
+kv_field_components <- function(x) {
+  lapply(set_names(nm = c("key", "value")), function(i) field_component(x, i))
+}
+
+#' @rdname new_field
+#' @export
+validate_field.kv_field <- function(x) {
+
+  for (cmp in kv_field_components(x)) {
+    validate_field(cmp)
+  }
+
+  NextMethod()
+}
+
+#' @rdname new_block
+#' @export
+is_initialized.kv_field <- function(x) {
+  Reduce(`&&`, lgl_ply(kv_field_components(x), is_initialized))
+}
+
+#' @rdname field_value
+#' @export
+field_value.kv_field <- function(x) {
+  lapply(kv_field_components(x), field_value)
+}
+
+#' @rdname update_field
+#' @export
+update_field_components.kv_field <- function(x, env = list()) {
+
+  new <- lapply(kv_field_components(x), update_field_components, env = env)
+
+  for (cmp in names(new)) {
+    x <- set_field_component_value(x, cmp, new[[cmp]])
+  }
+
+  x
+}
+
+#' @rdname update_field
+#' @export
+update_field_value.kv_field <- function(x, new) {
+
+  if (!length(new) || any(!lengths(new))) {
+    return(x)
+  }
+
+  cmps <- kv_field_components(x)
+
+  if (is.null(names(new))) {
+    names(new) <- names(cmps)
+  }
+
+  for (cmp in intersect(names(cmps), names(new))) {
+    new <- update_field_value(cmps[[cmp]], new[[cmp]])
+    x <- set_field_component_value(x, cmp, new)
+  }
+
+  x
+}

@@ -692,6 +692,20 @@ ui_input.expression_field <- function(x, id, name) {
   )
 }
 
+#' @rdname ui_input
+#' @export
+ui_input.kv_field <- function(x, id, name) {
+
+  fields <- kv_field_components(x)
+
+  args <- c(
+    list(id = paste0(id, "_cont")),
+    map(ui_input, fields, input_ids(x, id), names(fields))
+  )
+
+  do.call(div, args)
+}
+
 #' @param session Shiny session
 #' @rdname ui_input
 #' @export
@@ -881,6 +895,32 @@ ui_update.expression_field <- function(x, session, id, name) {
 
 #' @rdname ui_input
 #' @export
+ui_update.kv_field <- function(x, session, id, name) {
+  ns <- session$ns
+  ns_id <- ns(id)
+
+  removeUI(
+    selector = paste0("#", ns_id, "_cont", " > div"),
+    multiple = TRUE,
+    session = session
+  )
+
+  fields <- kv_field_components(x)
+
+  insertUI(
+    selector = paste0("#", ns_id, "_cont"),
+    ui = do.call(
+      tagList,
+      map(
+        ui_input, fields, input_ids(x, ns_id), paste0(name, ": ", names(fields))
+      )
+    ),
+    session = session
+  )
+}
+
+#' @rdname ui_input
+#' @export
 input_ids <- function(x, ...) {
   UseMethod("input_ids", x)
 }
@@ -897,8 +937,7 @@ input_ids.field <- function(x, name, ...) {
   name
 }
 
-#' @rdname generate_ui
-#' @param name Input name.
+#' @rdname ui_input
 #' @export
 input_ids.list_field <- function(x, name, ...) {
 
@@ -915,6 +954,19 @@ input_ids.list_field <- function(x, name, ...) {
 #' @export
 input_ids.hidden_field <- function(x, name, ...) {
   character()
+}
+
+#' @rdname ui_input
+#' @export
+input_ids.kv_field <- function(x, name, ...) {
+
+  cmp <- c("key", "value")
+
+  Map(
+    input_ids,
+    lapply(cmp, function(i) field_component(x, i)),
+    paste(name, cmp, sep = "_")
+  )
 }
 
 #' Render block output generic

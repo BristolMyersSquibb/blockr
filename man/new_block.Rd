@@ -4,6 +4,7 @@
 \alias{new_block}
 \alias{is_block}
 \alias{is_initialized.expression_field}
+\alias{is_initialized.kv_field}
 \title{Blocks}
 \usage{
 new_block(fields, expr, name = rand_names(), ..., class = character())
@@ -11,6 +12,8 @@ new_block(fields, expr, name = rand_names(), ..., class = character())
 is_block(x)
 
 \method{is_initialized}{expression_field}(x)
+
+\method{is_initialized}{kv_field}(x)
 }
 \arguments{
 \item{fields}{A list of field, each entry inheriting from \code{"field"}}

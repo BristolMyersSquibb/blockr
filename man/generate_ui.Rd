@@ -6,7 +6,6 @@
 \alias{generate_ui.stack}
 \alias{generate_ui.workspace}
 \alias{ui_update.expression_field}
-\alias{input_ids.list_field}
 \title{UI}
 \usage{
 generate_ui(x, ...)
@@ -18,8 +17,6 @@ generate_ui(x, ...)
 \method{generate_ui}{workspace}(x, id, ...)
 
 \method{ui_update}{expression_field}(x, session, id, name)
-
-\method{input_ids}{list_field}(x, name, ...)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
@@ -29,8 +26,6 @@ generate_ui(x, ...)
 \item{id}{UI IDs}
 
 \item{.hidden}{Whether to initialise the block hidden.}
-
-\item{name}{Input name.}
 }
 \description{
 Generic for UI generation

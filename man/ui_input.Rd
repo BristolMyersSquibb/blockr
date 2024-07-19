@@ -15,6 +15,7 @@
 \alias{ui_input.hidden_field}
 \alias{ui_input.list_field}
 \alias{ui_input.expression_field}
+\alias{ui_input.kv_field}
 \alias{ui_update}
 \alias{ui_update.string_field}
 \alias{ui_update.select_field}
@@ -27,10 +28,13 @@
 \alias{ui_update.filesbrowser_field}
 \alias{ui_update.hidden_field}
 \alias{ui_update.list_field}
+\alias{ui_update.kv_field}
 \alias{input_ids}
 \alias{input_ids.block}
 \alias{input_ids.field}
+\alias{input_ids.list_field}
 \alias{input_ids.hidden_field}
+\alias{input_ids.kv_field}
 \title{UI input generic}
 \usage{
 ui_input(x, id, name)
@@ -61,6 +65,8 @@ ui_input(x, id, name)
 
 \method{ui_input}{expression_field}(x, id, name)
 
+\method{ui_input}{kv_field}(x, id, name)
+
 ui_update(x, session, id, name)
 
 \method{ui_update}{string_field}(x, session, id, name)
@@ -85,13 +91,19 @@ ui_update(x, session, id, name)
 
 \method{ui_update}{list_field}(x, session, id, name)
 
+\method{ui_update}{kv_field}(x, session, id, name)
+
 input_ids(x, ...)
 
 \method{input_ids}{block}(x, ...)
 
 \method{input_ids}{field}(x, name, ...)
 
+\method{input_ids}{list_field}(x, name, ...)
+
 \method{input_ids}{hidden_field}(x, name, ...)
+
+\method{input_ids}{kv_field}(x, name, ...)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
