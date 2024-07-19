@@ -309,9 +309,9 @@ test_that("list field", {
   expect_identical(field_value(field), Map(`[`, dat2, c(1L, 0L, 1L, 0L, 1L)))
 })
 
-test_that("mutate_one can be done", {
+test_that("expression field", {
 
-  new_mutate_one_block <- function(data, ...) {
+  new_mutate_expr_block <- function(data, ...) {
 
     fields <- list(
       col_name = new_string_field("new_col"),
@@ -324,19 +324,20 @@ test_that("mutate_one can be done", {
         dplyr::mutate(..(expression))
       ),
       ...,
-      class = c("mutate_one_block", "transform_block", "submit_block")
+      class = c("mutate_expr_block", "transform_block", "submit_block")
     )
   }
 
-  generate_code_mutate_one <- function(x) {
+  generate_code_mutate_expr <- function(x) {
 
-    if (is_initialized(x)) {
-      val <- parse(text = field_value(x[["expression"]]))
-    } else {
-      val <- expression(NULL)
+    if (!is_initialized(x)) {
+      return(quote(identity()))
     }
 
-    names(val) <- field_value(x[["col_name"]])
+    val <- set_names(
+      parse(text = field_value(x[["expression"]])),
+      field_value(x[["col_name"]])
+    )
 
     do.call(
       bquote,
@@ -344,15 +345,15 @@ test_that("mutate_one can be done", {
     )
   }
 
-  .S3method("generate_code", "mutate_one_block", generate_code_mutate_one)
+  .S3method("generate_code", "mutate_expr_block", generate_code_mutate_expr)
 
   stack <- new_stack(
     new_dataset_block,
-    new_mutate_one_block
+    new_mutate_expr_block
   )
 
   expect_s3_class(stack, "stack")
- })
+})
 
 test_that("field name", {
   blk <- new_dataset_block("iris")

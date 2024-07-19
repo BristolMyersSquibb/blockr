@@ -860,13 +860,23 @@ ui_update.expression_field <- function(x, session, id, name) {
     assign(iids, observers, envir = ace_observer_env)
   }
 
-  shinyAce::updateAceEditor(
-    session,
-    input_ids(x, id),
-    field_value(x), # value updates reset the cursor due to value state
-                    # changes triggering an update -> only update if needbe
-    autoCompleteList = list(extra_values = field_component(x, "autocomplete"))
-  )
+  val <- field_value(x)
+  xtr <- field_component(x, "autocomplete")
+
+  if (identical(session$input[[input_ids(x, id)]], val)) {
+    shinyAce::updateAceEditor(
+      session,
+      input_ids(x, id),
+      autoCompleteList = list(extra_values = xtr)
+    )
+  } else {
+    shinyAce::updateAceEditor(
+      session,
+      input_ids(x, id),
+      field_value(x),
+      autoCompleteList = list(extra_values = xtr)
+    )
+  }
 }
 
 #' @rdname ui_input
