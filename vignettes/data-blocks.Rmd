@@ -31,12 +31,11 @@ note_box <- function(..., color) {
 
 ## Introduction
 
-Data blocks are the starting point of any __stack__ and are required by any __transform__ or __plot__ block.
+Data blocks are the starting point of any __stack__ and are required by any subsequent __transform__ or __plot__ blocks.
 
 ### Package based data block
 
-`{blockr}` introduces a `new_dataset_block()` which takes as input any package containing a (or multiple) dataset(s).
-This block is constructed as follows:
+To add a data set, use the function `new_dataset_block()`, passing a package name to the `package` arg that contains any number of datasets:
 
 ```r
 new_dataset_block <- function(
@@ -49,8 +48,7 @@ new_dataset_block <- function(
 }
 ```
 
-By default, the selected dataset is from the `datasets` package but you can actually provide any dataset you like by changing the `package` parameter
-(in the following we leverage the `{blockr.data}` datasets with the lab data pre-selected):
+The `new_dataset_block()` function defaults to using the base R `datasets` package, but you can supply any valid package containing one or multiple data sets. Here, we use the `{blockr.data}` package to select the `"lab"` data set:
 
 ```r
 # Define the custom data block
@@ -87,15 +85,11 @@ note_box(
 )
 ```
 
-In practice, you'll always call `new_dataset_block()` and not `new_dataset_block()` (internal constructor).
-
-Overall, this block is good for testing or if you get your own data package. In the next part, we see how to import
-data from a file.
-
 ### Reading data from files
 
-`{blockr}` exposes 2 extra data blocks which have to be combined with one 
-of the 4 following data __parser__ blocks:
+In addition to loading data from a package, blockr also contains a block to upload data from a file.
+`{blockr}` exposes two extra data blocks which have to be combined with one 
+of the four following data __parser__ blocks:
 
 - `new_xpt_block`, reads xpt files (and sas7bdat files).
 - `new_rds_block`, reads rds files.
@@ -105,8 +99,7 @@ of the 4 following data __parser__ blocks:
 #### Upload data
 
 If you want to load data from any location on your computer, `new_upload_block()` is what you need.
-Since the `new_upload_block()` temporarily moves the data in a custom location, we recognize that it might not be always possible
-for security reasons.
+Since the `new_upload_block()` temporarily moves data into a custom location, for security reasons, it might not be always possible.
 
 ```r
 library(blockr)
@@ -133,8 +126,8 @@ card(
 #### Files browser block
 
 `new_filesbrowser_block()` can read data from the __server file system__.
-It means that if no data is available on the server, you won't see anything.
-You can customize the accessible locations as follows, through the `volumes` parameter:
+This means that if no data is available on the server, you won't see anything.
+The accessible locations can be customized through the `volumes` parameter like so:
 
 ```r
 custom_filesbrowser_block <- function(...) {
@@ -146,8 +139,8 @@ custom_filesbrowser_block <- function(...) {
 }
 ```
 
-In the following demonstration, we uploaded a dummy dataset on the webR file system so you can play with
-the block. That said, you can definitely upload your own data thanks to the corresponding
+In the following demonstration, dummy dataset has been uploaded to the webR file system so you can play with
+the block. But, you can also upload your own data thanks to the corresponding
 shinylive feature (upload button).
 
 ```r
@@ -178,10 +171,10 @@ a single variable block.
 
 ### Reading data from another stack
 
-`new_result_block()` allows to read data from another stack. From the below code, the first stack contains
+`new_result_block()` allows you to read data from another stack. From the below code, the first stack contains
 a `new_dataset_block()` from which we can select some columns with `new_select_block()`. In the second stack,
-we can reuse this smaller dataset. If you dynamically add a third stack, you can also select the third stack
-output as input of the second stack (it appears in the result block select input).
+we can reuse this smaller dataset. If you dynamically add a third stack, you can also select the third stack's
+output as input to the second stack (it appears in the result block select input).
 
 ```r
 library(blockr)
