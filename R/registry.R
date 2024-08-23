@@ -273,3 +273,36 @@ construct_block <- function(block, ...) {
 
   block(...)
 }
+
+# Useful for add_block_ui
+get_block_by_class <- function(cl) {
+  dropNulls(lapply(available_blocks(), \(blk) {
+    cls <- attr(blk, "classes")
+    if (cl %in% cls) {
+      list(
+        name = attr(blk, "name"),
+        ctor = attr(blk, "classes")[1],
+        description = attr(blk, "description"),
+        input = attr(blk, "input"),
+        output = attr(blk, "output"),
+        package = attr(blk, "pkg")
+      )
+    }
+  }))
+}
+
+get_data_blocks <- function(cl = "data_block") {
+  get_block_by_class(cl)
+}
+
+get_transform_blocks <- function(cl = "transform_block") {
+  get_block_by_class(cl)
+}
+
+get_plot_blocks <- function(cl = "plot_block") {
+  get_block_by_class(cl)
+}
+
+get_plotlayer_blocks <- function(cl = "plot_layer_block") {
+  get_block_by_class(cl)
+}

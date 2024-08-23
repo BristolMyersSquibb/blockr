@@ -286,19 +286,78 @@ add_block_ui <- function(ns = identity) {
     off_canvas(
       id = ns("addBlockCanvas"),
       title = "Blocks",
-      position = "bottom",
-      radioButtons(
-        ns("selected_block"),
-        "Choose a block",
-        choices = names(available_blocks()),
-        inline = TRUE
-      ),
-      actionButton(
-        add_block_ui_id,
-        icon("plus"),
-        `data-bs-dismiss` = "offcanvas"
+      position = "start",
+      create_block_choices(ns),
+      div(
+        class = "d-flex justify-content-center",
+        actionButton(
+          add_block_ui_id,
+          icon("plus"),
+          `data-bs-dismiss` = "offcanvas"
+        )
       )
     )
+  )
+}
+
+create_blk_pills <- function(blks, ns) {
+  nm <- strsplit(as.character(substitute(blks)), "_")[[1]][1]
+  bg_cl <- switch(
+    nm,
+    "data" = "primary",
+    "transform" = "secondary",
+    "plot" = "success"
+  )
+
+  pills_ui <- if (length(blks) == 0) {
+    h6("No blocks available")
+  } else {
+    lapply(blks, \(blk) {
+      tagList(
+        tags$input(
+          name = "options-add-blk",
+          type = "radio",
+          class = "btn-check",
+          autocomplete = "off",
+          id = blk[["ctor"]]
+        ),
+        tags$label(
+          class = sprintf("btn btn-sm btn-outline-%s", bg_cl),
+          `for` = blk[["ctor"]],
+          blk[["name"]],
+          bslib::popover(
+            icon("info-circle"),
+            blk[["description"]],
+            options = list(trigger = "hover")
+          ),
+          onclick = sprintf(
+            "Shiny.setInputValue('%s', '%s')", 
+            ns("selected_block"),
+            blk[["ctor"]]
+          )
+        )
+      )
+    })
+  }
+
+  div(
+    class = sprintf("%s-block-pills mb-4", nm),
+    h1(sprintf("%s blocks", toupper(nm))),
+    pills_ui
+  )
+}
+
+create_block_choices <- function(ns) {
+  data_blocks <- get_data_blocks()
+  transform_blocks <- get_transform_blocks()
+  plot_blocks <- get_plot_blocks()
+  plotlayer_blocks <- get_plotlayer_blocks()
+
+  tagList(
+    create_blk_pills(data_blocks, ns),
+    create_blk_pills(transform_blocks, ns),
+    create_blk_pills(plot_blocks, ns),
+    create_blk_pills(plotlayer_blocks, ns)
   )
 }
 
@@ -401,7 +460,9 @@ stack_header <- function(x, ...) {
 
 #' @rdname stack_header
 #' @importFrom shiny icon tags div
-stack_header.stack <- function(x, title, ns, ...) {
+#' @param add_block_func Function to add blocks within a stack. This allows
+#' for customization. Default to \link{add_block_ui}.
+stack_header.stack <- function(x, title, ns, add_block_func = add_block_ui, ...) {
   icon <- iconEdit()
 
   edit_class <- "text-decoration-none stack-edit-toggle"
@@ -428,7 +489,7 @@ stack_header.stack <- function(x, title, ns, ...) {
           class = "text-decoration-none stack-remove",
           icon("trash")
         ),
-        add_block_ui(ns),
+        add_block_func(ns),
         actionLink(
           ns("copy"),
           class = "text-decoration-none stack-copy-code",
