@@ -340,9 +340,9 @@ create_blk_pills <- function(blks, ns) {
     })
   }
 
-  div(
-    class = sprintf("%s-block-pills mb-4", nm),
-    h1(sprintf("%s blocks", toupper(nm))),
+  bslib::accordion_panel(
+    value = sprintf("%s-block-pills mb-4", nm),
+    title = sprintf("%s blocks", toupper(nm)),
     pills_ui
   )
 }
@@ -353,7 +353,10 @@ create_block_choices <- function(ns) {
   plot_blocks <- get_plot_blocks()
   plotlayer_blocks <- get_plotlayer_blocks()
 
-  tagList(
+  bslib::accordion(
+    id = ns("add-block-accordion"),
+    multiple = TRUE,
+    open = TRUE,
     create_blk_pills(data_blocks, ns),
     create_blk_pills(transform_blocks, ns),
     create_blk_pills(plot_blocks, ns),
