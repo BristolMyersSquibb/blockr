@@ -359,6 +359,10 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         vals$stack <- set_stack_title(vals$stack, input$newTitle)
       })
 
+      # TBD: The stack could have attributes like: add_block = TRUE.
+      # If yes, we can call the corresponding modules/func on the UI/Server side.
+      add_block_server(vals, input, session)
+
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
       observeEvent(
@@ -367,6 +371,10 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
           get_last_block_data(vals$blocks)()
         ),
         {
+
+          #browser()
+          # TO DO: control stack state for add block
+
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
@@ -383,56 +391,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         )
       })
 
-      observeEvent(input$remove, {
-        showModal(
-          modalDialog(
-            title = "Remove stack",
-            p("Are you sure you want to remove this stack?"),
-            div(
-              class = "d-flex",
-              div(
-                class = "flex-grow-1",
-                actionButton(
-                  session$ns("cancelRemove"),
-                  "Cancel",
-                  icon = icon("times")
-                )
-              ),
-              div(
-                class = "flex-shrink-1",
-                actionButton(
-                  session$ns("acceptRemove"),
-                  "Confirm",
-                  class = "bg-danger",
-                  icon = icon("trash")
-                )
-              )
-            ),
-            footer = NULL
-          )
-        )
-      })
-
-      observeEvent(input$cancelRemove, {
-        removeModal()
-      })
-
-      observeEvent(input$acceptRemove, {
-        on.exit(removeModal())
-        removeUI(
-          sprintf("#%s", session$ns(NULL))
-        )
-        vals$removed <- TRUE
-        rm_workspace_stack(id, workspace = workspace)
-      })
-
-      observeEvent(input$add, {
-        add_block_stack(
-          block_to_add = available_blocks()[[input$selected_block]], # pass in block constructor
-          position = NULL,
-          vals = vals
-        )
-      })
+      # Handle stack removal
+      remove_stack_server(vals, input, session, id, workspace)
 
       observeEvent(input$rendered, {
         session$sendCustomMessage(
@@ -447,6 +407,127 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       vals
     }
   )
+}
+
+remove_stack_server <- function(vals, input, session, id, workspace) {
+  observeEvent(input$remove, {
+    showModal(
+      modalDialog(
+        title = "Remove stack",
+        p("Are you sure you want to remove this stack?"),
+        div(
+          class = "d-flex",
+          div(
+            class = "flex-grow-1",
+            actionButton(
+              session$ns("cancelRemove"),
+              "Cancel",
+              icon = icon("times")
+            )
+          ),
+          div(
+            class = "flex-shrink-1",
+            actionButton(
+              session$ns("acceptRemove"),
+              "Confirm",
+              class = "bg-danger",
+              icon = icon("trash")
+            )
+          )
+        ),
+        footer = NULL
+      )
+    )
+  })
+
+  observeEvent(input$cancelRemove, {
+    removeModal()
+  })
+
+  observeEvent(input$acceptRemove, {
+    on.exit(removeModal())
+    removeUI(
+      sprintf("#%s", session$ns(NULL))
+    )
+    vals$removed <- TRUE
+    rm_workspace_stack(id, workspace = workspace)
+  })
+}
+
+add_block_server <- function(vals, input, session) {
+  observeEvent(vals$blocks, {
+    if (length(vals$blocks) == 0) {
+      shiny::insertUI(
+        sprintf("#%s", session$ns("stack-status-messages")),
+        ui = div(
+          class = "alert alert-primary",
+          role = "alert",
+          id = session$ns("stack-status-message"),
+          "Stack has no blocks. Please add a data block."
+        )
+      )
+      bslib::accordion_panel_set(
+        "add-block-accordion",
+        values = "data-block-pills"
+      )
+    } else {
+      bslib::accordion_panel_set(
+        "add-block-accordion",
+        values = c(
+          "data-block-pills",
+          "transform-block-pills",
+          "plot-block-pills",
+          "plotlayer-block-pills"
+        )
+      )
+    }
+  })
+
+  observeEvent(input$selected_block, {
+    # Also check validity
+    removeUI(sprintf("#%s", session$ns("stack-status-message")))
+    new_blk <- available_blocks()[[input$selected_block]]
+    cls <- attr(new_blk, "classes")
+
+    if ("data_block" %in% cls && length(vals$blocks) > 0) {
+      shiny::insertUI(
+        sprintf("#%s", session$ns("stack-status-messages")),
+        ui = div(
+          class = "alert alert-primary",
+          role = "alert",
+          id = session$ns("stack-status-message"),
+          "Stack already has a data block. You can either add
+        tranform or plot blocks"
+        )
+      )
+      return(NULL)
+    }
+
+    if (length(vals$blocks) > 0) {
+      last_stack_blk <- available_blocks()[[class(vals$stack[[length(vals$stack)]])[1]]]
+      if (attr(last_stack_blk, "output") != attr(new_blk, "input")) {
+        shiny::insertUI(
+          sprintf("#%s", session$ns("stack-status-messages")),
+          ui = div(
+            class = "alert alert-primary",
+            role = "alert",
+            id = session$ns("stack-status-message"),
+            "Blocks are not compatible. Please make sure the output of the last
+            block can be used as input for the next block"
+          )
+        )
+      }
+    }
+  })
+
+  # Provided by add_block_ui actionButton
+  observeEvent(input$add, {
+    add_block_stack(
+      block_to_add = available_blocks()[[input$selected_block]], # pass in block constructor
+      position = NULL,
+      vals = vals
+    )
+  })
 }
 
 #' Remove stack/block generic

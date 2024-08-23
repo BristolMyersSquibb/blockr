@@ -287,9 +287,10 @@ add_block_ui <- function(ns = identity) {
       id = ns("addBlockCanvas"),
       title = "Blocks",
       position = "start",
+      div(id = ns("stack-status-messages"), class = "m-2"),
       create_block_choices(ns),
       div(
-        class = "d-flex justify-content-center",
+        class = "mt-2",
         actionButton(
           add_block_ui_id,
           icon("plus"),
@@ -341,7 +342,7 @@ create_blk_pills <- function(blks, ns) {
   }
 
   bslib::accordion_panel(
-    value = sprintf("%s-block-pills mb-4", nm),
+    value = sprintf("%s-block-pills", nm),
     title = sprintf("%s blocks", toupper(nm)),
     pills_ui
   )
@@ -356,7 +357,6 @@ create_block_choices <- function(ns) {
   bslib::accordion(
     id = ns("add-block-accordion"),
     multiple = TRUE,
-    open = TRUE,
     create_blk_pills(data_blocks, ns),
     create_blk_pills(transform_blocks, ns),
     create_blk_pills(plot_blocks, ns),
