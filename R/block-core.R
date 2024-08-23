@@ -67,7 +67,7 @@ initialize_block.data_block <- function(x, ...) {
 
   for (field in names(x)) {
     x[[field]] <- initialize_field(x[[field]], env)
-    env <- c(env, set_names(list(value(x[[field]])), field))
+    env <- c(env, set_names(list(field_value(x[[field]])), field))
   }
 
   x
@@ -81,7 +81,7 @@ initialize_block.block <- function(x, data, ...) {
 
   for (field in names(x)) {
     x[[field]] <- initialize_field(x[[field]], env)
-    env <- c(env, set_names(list(value(x[[field]])), field))
+    env <- c(env, set_names(list(field_value(x[[field]])), field))
   }
 
   x

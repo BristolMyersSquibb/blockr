@@ -14,7 +14,7 @@ new_string_field <- function(value = character(), ...) {
 #' @rdname validate_field
 #' @export
 validate_field.string_field <- function(x) {
-  validate_string(value(x))
+  validate_string(field_component(x, "value"))
   NextMethod()
 }
 
@@ -38,11 +38,11 @@ new_select_field <- function(value = character(), choices = character(),
 #' @export
 validate_field.select_field <- function(x) {
 
-  mul <- value(x, "multiple")
+  mul <- field_component(x, "multiple")
 
   validate_bool(mul, "multiple")
 
-  val <- value(x)
+  val <- field_component(x, "value")
 
   if (mul) {
     validate_character(val)
@@ -50,7 +50,7 @@ validate_field.select_field <- function(x) {
     validate_string(val)
   }
 
-  if (!all(val %in% value(x, "choices"))) {
+  if (!all(val %in% field_component(x, "choices"))) {
     validation_failure("selected value(s) not among provided choices",
                        class = "enum_failure")
   }
@@ -72,7 +72,7 @@ new_switch_field <- function(value = FALSE, ...) {
 #' @rdname validate_field
 #' @export
 validate_field.switch_field <- function(x) {
-  validate_bool(value(x))
+  validate_bool(field_component(x, "value"))
   NextMethod()
 }
 
@@ -93,9 +93,9 @@ new_numeric_field <- function(value = numeric(), min = numeric(),
 #' @export
 validate_field.numeric_field <- function(x) {
 
-  val <- value(x)
-  min <- value(x, "min")
-  max <- value(x, "max")
+  val <- field_component(x, "value")
+  min <- field_component(x, "min")
+  max <- field_component(x, "max")
 
   validate_number(val)
 
@@ -140,12 +140,18 @@ new_upload_field <- function(value = character(), ...) {
 #' @export
 validate_field.upload_field <- function(x) {
 
-  val <- value(x)
+  val <- field_component(x, "value")
 
   validate_string(val)
   validate_file(val)
 
   NextMethod()
+}
+
+#' @rdname update_field
+#' @export
+update_field_value.upload_field <- function(x, new, ...) {
+  NextMethod(new = new$datapath)
 }
 
 #' Files browser field constructor
@@ -165,12 +171,12 @@ new_filesbrowser_field <- function(value = character(), volumes = character(),
 #' @export
 validate_field.filesbrowser_field <- function(x) {
 
-  val <- value(x)
+  val <- field_component(x, "value")
 
   validate_string(val)
   validate_file(val)
 
-  vol <- value(x, "volumes")
+  vol <- field_component(x, "volumes")
 
   if (!is.character(vol) && !length(vol)) {
     validation_failure("expecting a nonzero length character vector as ",
@@ -180,29 +186,143 @@ validate_field.filesbrowser_field <- function(x) {
   NextMethod()
 }
 
+#' @rdname update_field
+#' @export
+update_field_value.filesbrowser_field <- function(x, new, ...) {
+
+  if (is.integer(new)) {
+    return(x)
+  }
+
+  files <- shinyFiles::parseFilePaths(field_component(x, "volumes"), new)
+
+  NextMethod(new = unname(files$datapath))
+}
+
 #' Variable field constructor
 #'
 #' Variable field is intended to conditionally display
 #' different field based on a condition.
 #'
-#' @note Currently broken. Don't use.
-#'
 #' @inheritParams new_string_field
 #' @rdname variable_field
 #' @param field Field type
 #' @param components Variable list of field components
+#' @param package Package weher to find the field constructor (as
+#'   `new_{class_name}`)
 #' @export
-new_variable_field <- function(field = character(), components = list(), ...) {
+new_variable_field <- function(field = character(), components = list(),
+                               package = "blockr", ...) {
 
-  new_field(NULL, field = field, components = as.list(components), ...,
-            class = "variable_field")
+  if (!is.function(components)) {
+    components <- as.list(components)
+  }
+
+  new_field(NULL, field = field, components = components, package = package,
+            ..., class = "variable_field")
+}
+
+#' @rdname initialize
+#' @export
+is_initialized.variable_field <- function(x) {
+  is_variable_field_ready(x) && is_initialized(materialize_variable_field(x))
+}
+
+is_variable_field_ready <- function(x) {
+  all(lengths(get_field_component_values(x, c("field", "package"))) > 0)
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.variable_field <- function(x) {
+
+  validate_string(field_component(x, "field"))
+  validate_string(field_component(x, "package"))
+
   validate_field(materialize_variable_field(x))
+
   NextMethod()
+}
+
+#' @rdname field_value
+#' @export
+field_value.variable_field <- function(x) {
+
+  if (!is_variable_field_ready(x)) {
+    return(list())
+  }
+
+  field_value(materialize_variable_field(x))
+}
+
+materialize_variable_field <- function(x) {
+
+  res <- materialize_field(
+    get_field_component_value(x, "field"),
+    get_field_component_value(x, "components"),
+    get_field_component_value(x, "package")
+  )
+
+  copy_attrs(res, x)
+}
+
+materialize_field <- function(field, components, package) {
+  fun <- do.call("::", list(pkg = package, name = paste0("new_", field)))
+  do.call(fun, coal(components, list()))
+}
+
+copy_attrs <- function(x, y) {
+
+  attributes(x) <- c(
+    some_attrs(y, drop = c("class", "names")),
+    list(class = class(x), names = names(x))
+  )
+
+  x
+}
+
+some_attrs <- function(x, drop = c("class", "names")) {
+  res <- attributes(x)
+  res[!names(res) %in% drop]
+}
+
+rm_attrs <- function(x, keep = "names") {
+  attributes(x) <- attributes(x)[keep]
+  x
+}
+
+#' @rdname update_field
+#' @export
+update_field_components.variable_field <- function(x, env = list()) {
+
+  val <- field_value(x)
+  tmp <- update_functional_field_components(x, env)
+
+  res <- materialize_variable_field(tmp)
+  res <- update_field_components(res, env)
+
+  if (!identical(val, list())) {
+    res <- update_field_value(res, val)
+  }
+
+  res <- rm_attrs(res)
+
+  set_field_component_value(tmp, "components", res)
+}
+
+#' @rdname update_field
+#' @export
+update_field_value.variable_field <- function(x, new) {
+
+  if (!length(new)) {
+    return(x)
+  }
+
+  res <- materialize_variable_field(x)
+  res <- update_field_value(res, new)
+  res <- rm_attrs(res)
+
+  set_field_component_value(x, "components", res)
 }
 
 #' Range field constructor
@@ -222,9 +342,9 @@ new_range_field <- function(value = numeric(), min = numeric(),
 #' @export
 validate_field.range_field <- function(x) {
 
-  val <- value(x)
-  min <- value(x, "min")
-  max <- value(x, "max")
+  val <- field_component(x, "value")
+  min <- field_component(x, "min")
+  max <- field_component(x, "max")
 
   validate_number(val[1L])
   validate_number(val[2L])
@@ -257,28 +377,146 @@ new_hidden_field <- function(value = expression(), ...) {
   new_field(value, ..., class = "hidden_field")
 }
 
+#' @rdname update_field
+#' @export
+update_field_value.hidden_field <- function(x, ...) {
+  x
+}
+
 #' List field constructor
 #'
 #' A field that can contain subfields. See \link{new_filter_block} for
 #' a usecase.
 #'
-#' @inheritParams new_string_field
-#' @param sub_fields Fields contained in `list_field`
+#' @inheritParams new_variable_field
+#' @param name Sub-field name(s)
 #' @rdname list_field
 #' @export
-new_list_field <- function(sub_fields = list(), ...) {
-  new_field(NULL, sub_fields = sub_fields, ..., class = "list_field")
+new_list_field <- function(field = character(), components = list(),
+                           name = character(), package = "blockr", ...) {
+
+  args <- c(
+    list(field = field, components = components, package = package),
+    list(...)
+  )
+
+  args <- c(
+    list(value = NULL, name = name),
+    args,
+    list(class = "list_field")
+  )
+
+  do.call(new_field, args)
+}
+
+#' @rdname initialize
+#' @export
+is_initialized.list_field <- function(x) {
+  is_list_field_ready(x) &&
+    all(lgl_ply(materialize_list_field(x), is_initialized))
+}
+
+is_list_field_ready <- function(x) {
+  all(lengths(get_field_component_values(x, c("field", "name", "package"))) > 0)
+}
+
+#' @rdname field_value
+#' @export
+field_value.list_field <- function(x) {
+
+  if (!is_list_field_ready(x)) {
+    return(list())
+  }
+
+  lapply(materialize_list_field(x), field_value)
+}
+
+materialize_list_field <- function(x) {
+
+  args <- lapply(
+    set_names(nm = setdiff(list_field_components(x), c("value", "name"))),
+    function(i) get_field_component_value(x, i)
+  )
+
+  fld <- do.call(Map, c(new_variable_field, args))
+  nme <- get_field_component_value(x, "name")
+
+  set_names(fld, nme)
 }
 
 #' @rdname validate_field
 #' @export
 validate_field.list_field <- function(x) {
 
-  for (sub in get_sub_fields(x)) {
+  cmps <- c("field", "name", "package")
+  lens <- set_names(integer(3L), cmps)
+
+  for (cmp in cmps) {
+    tmp <- field_component(x, cmp)
+    lens[cmp] <- length(tmp)
+    validate_character(tmp)
+  }
+
+  if (any(lens != max(lens) & lens != 1L)) {
+    validation_failure("expecting same lengths (up to length 1)",
+                       class = "length_failure")
+  }
+
+  for (sub in materialize_list_field(x)) {
     validate_field(sub)
   }
 
   NextMethod()
+}
+
+#' @rdname update_field
+#' @export
+update_field_components.list_field <- function(x, env = list()) {
+
+  val <- field_value(x)
+  tmp <- update_functional_field_components(x, env)
+
+  res <- materialize_list_field(tmp)
+  res <- lapply(res, update_field_components, env)
+
+  nme <- intersect(names(res), names(val))
+
+  if (length(nme)) {
+    res[nme] <- Map(update_field_value, res[nme], val[nme])
+  }
+
+  res <- lapply(res, get_field_component, "components")
+
+  set_field_component_value(tmp, "components", res)
+}
+
+#' @rdname update_field
+#' @export
+update_field_value.list_field <- function(x, new) {
+
+  if (!length(new) || any(!lengths(new))) {
+    return(x)
+  }
+
+  new <- as.list(new)
+  nme <- get_field_component_value(x, "name")
+
+  if (is.null(names(new))) {
+    stopifnot(length(new) == length(nme))
+    names(new) <- nme
+  } else {
+    new <- new[nme]
+  }
+
+  res <- Map(
+    update_field_value,
+    materialize_list_field(x),
+    new
+  )
+
+  cmp <- lapply(res, get_field_component, "components")
+
+  set_field_component_value(x, "components", cmp)
 }
 
 #' Result field constructor

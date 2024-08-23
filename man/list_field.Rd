@@ -4,10 +4,23 @@
 \alias{new_list_field}
 \title{List field constructor}
 \usage{
-new_list_field(sub_fields = list(), ...)
+new_list_field(
+  field = character(),
+  components = list(),
+  name = character(),
+  package = "blockr",
+  ...
+)
 }
 \arguments{
-\item{sub_fields}{Fields contained in \code{list_field}}
+\item{field}{Field type}
+
+\item{components}{Variable list of field components}
+
+\item{name}{Sub-field name(s)}
+
+\item{package}{Package weher to find the field constructor (as
+\verb{new_\{class_name\}})}
 
 \item{...}{Other parameters passed to \link{new_field} and may be needed
 by \link{ui_input} to pass more options to the related shiny input.}

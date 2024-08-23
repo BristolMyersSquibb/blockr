@@ -113,14 +113,17 @@ set_names <- function(object = nm, nm) {
   object
 }
 
-coal <- function(..., fail_null = TRUE) {
+zero_length <- Negate(length)
+
+coal <- function(..., fail = TRUE, continue = is.null) {
+
   for (i in seq_len(...length())) {
     x <- ...elt(i)
-    if (is.null(x)) next else return(x)
+    if (continue(x)) next else return(x)
   }
 
-  if (isTRUE(fail_null)) {
-    stop("No non-NULL value encountered")
+  if (isTRUE(fail)) {
+    stop("Cannot continue")
   }
 
   NULL
@@ -150,7 +153,7 @@ splice_args <- function(expr, ...) {
 }
 
 type_trans <- function(x) {
-  res <- value(x)
+  res <- field_value(x)
 
   switch(attr(x, "type"),
     literal = res,
@@ -398,4 +401,12 @@ get_block_title <- function(x) {
 # id as first argument, so we can test via shiny::testSever
 module_server_test <- function(id, x, in_dat, is_prev_valid, ...) {
   generate_server(x = x, in_dat = in_dat, id = id, is_prev_valid = is_prev_valid)
+}
+
+pkg_name <- function() utils::packageName()
+
+pkg_env <- function() asNamespace(pkg_name())
+
+set_fun_env <- function(fun, env = pkg_env()) {
+  `environment<-`(fun, env)
 }

@@ -191,79 +191,79 @@ new_result_block <- function(...) {
 #' @export
 new_filter_block <- function(columns = character(), values = character(),
                              filter_fun = "==", ...) {
+
   sub_fields <- function(data, columns) {
+
     determine_field <- function(x) {
-      switch(class(x),
-        factor = new_select_field,
-        numeric = new_range_field,
-        new_string_field
+      switch(
+        class(x),
+        factor = "select_field",
+        numeric = "numeric_field",
+        "string_field"
       )
     }
 
-    field_args <- function(x) {
-      switch(class(x),
-        factor = list(levels(x)[1L], choices = levels(x)),
-        numeric = list(range(x), min = min(x), max = max(x)),
+    chr_ply(data[, columns, drop = FALSE], determine_field)
+  }
+
+  sub_args <- function(data, columns) {
+
+    determine_args <- function(x) {
+      switch(
+        class(x),
+        factor = list(choices = levels(x)),
+        numeric = list(min = min(x), max = max(x)),
         list()
       )
     }
 
-    cols <- data[, columns, drop = FALSE]
-
-    ctor <- lapply(cols, determine_field)
-    args <- lapply(cols, field_args)
-
-    Map(do.call, ctor, args)
+    lapply(data[, columns, drop = FALSE], determine_args)
   }
 
+  sub_names <- function(columns) columns
 
-  filter_exps <- function(data, values, filter_func) {
-    filter_exp <- function(cls, col, val) {
-      if (is.null(val)) {
-        return(quote(TRUE))
-      }
+  filter_exps <- function(data, columns, values, filter_func) {
 
-      switch(cls,
-        numeric = bquote(
-          dplyr::between(.(column), ..(values)),
-          list(column = as.name(col), values = val),
-          splice = TRUE
-        ),
-        bquote(
-          eval(call(.(filter_func), .(column), .(value))),
-          list(column = as.name(col), value = val, filter_func = filter_func)
-        )
+    filter_exp <- function(fun, col, val) {
+      bquote(
+        eval(call(.(filter_func), .(column), .(value))),
+        list(column = as.name(col), value = val, filter_func = fun)
       )
     }
 
-    cols <- names(values)
-
     Reduce(
       function(x, y) bquote(.(lhs) | .(rhs), list(lhs = x, rhs = y)),
-      Map(filter_exp, chr_ply(data[, cols, drop = FALSE], class), cols, values)
+      Map(filter_exp, filter_func, columns, values)
     )
   }
 
   col_choices <- function(data) colnames(data)
 
+  fun_opts <- function(data, columns) {
+
+    determine_opts <- function(x) {
+
+      default <- c("==", "!=")
+
+      res <- switch(
+        class(x),
+        numeric = c(default, ">", "<", ">=", "<="),
+        character = c(default, "startsWith", "endsWith", "grepl"),
+        default
+      )
+
+      list(choices = res)
+    }
+
+    lapply(data[, columns, drop = FALSE], determine_opts)
+  }
+
   fields <- list(
-    columns = new_select_field(columns, col_choices, multiple = TRUE, title = "Columns"),
-    filter_func = new_select_field(
-      filter_fun,
-      choices = c(
-        "==",
-        "!=",
-        "!startsWith",
-        "startsWith",
-        "grepl",
-        ">",
-        "<",
-        ">=",
-        "<="
-      ),
-      title = "Comparison"
-    ),
-    values = new_list_field(sub_fields, title = "Value"),
+    columns = new_select_field(columns, col_choices, multiple = TRUE,
+                               title = "Columns"),
+    filter_func = new_list_field("select_field", fun_opts, sub_names,
+                                 title = "Comparison"),
+    values = new_list_field(sub_fields, sub_args, sub_names, title = "Value"),
     expression = new_hidden_field(filter_exps)
   )
 
@@ -323,50 +323,23 @@ new_select_block <- function(columns = character(), ...) {
 #' @export
 new_summarize_block <- function(func = character(),
                                 default_columns = character(), ...) {
-  if (length(default_columns) > 0) {
-    stopifnot(length(func) == length(default_columns))
-  }
 
-  # Columns are only a select input
-  sub_fields <- function(data, funcs) {
-    all_cols <- colnames(data)
-    tmp_selects <- lapply(
-      seq_along(funcs),
-      function(i) {
-        default <- if (length(default_columns) > 0) {
-          default_columns[[i]]
-        } else {
-          all_cols[[1]]
-        }
+  select_names <- function(funcs) funcs
 
-        new_select_field(value = default, choices = all_cols)
-      }
+  select_choices <- function(funcs) {
+    replicate(
+      length(funcs),
+      set_fun_env(function(data) list(choices = colnames(data)))
     )
-    names(tmp_selects) <- funcs
-    tmp_selects
   }
 
   summarize_expr <- function(data, funcs, columns) {
-    # Build expressions that will go inside the summarize
-    if (length(funcs) == 0) {
-      return(quote(TRUE))
-    }
-    if (length(columns) == 0) {
-      return(quote(TRUE))
-    }
 
-    tmp_exprs <- lapply(funcs, function(fun) {
-      col <- columns[[fun]]
+    do_one <- function(fun) {
 
-      if (is.null(col)) {
-        return(quote(TRUE))
-      }
-      if (!any(col %in% colnames(data))) {
-        return(quote(TRUE))
-      }
-      col <- as.name(col)
+      col <- as.name(columns[[fun]])
 
-      expr <- if (fun == "se") {
+      if (identical(fun, "se")) {
         bquote(
           sd(.(column), na.rm = TRUE) / sqrt(n()),
           list(column = col)
@@ -374,45 +347,45 @@ new_summarize_block <- function(func = character(),
       } else {
         bquote(
           .(fun)(.(column), na.rm = TRUE),
-          list(
-            fun = as.name(fun),
-            column = col
-          )
+          list(fun = as.name(fun), column = col)
         )
       }
+    }
 
-      bquote(
-        .(expr),
-        list(
-          expr = expr,
-          column = col
-        )
-      )
-    })
-
-    names(tmp_exprs) <- toupper(names(columns))
+    if (!length(columns) || any(!lengths(columns))) {
+      return(quote(identity()))
+    }
 
     bquote(
       dplyr::summarise(..(exprs), .groups = "drop"),
-      list(exprs = tmp_exprs),
+      list(exprs = lapply(set_names(funcs, toupper(names(columns))), do_one)),
       splice = TRUE
     )
   }
 
+  if (length(default_columns) > 0) {
+
+    stopifnot(length(func) == length(default_columns))
+
+    select_choices <- set_functional_field_component_value(
+      select_choices,
+      Map(
+        set_functional_field_component_value,
+        select_choices(func),
+        default_columns
+      )
+    )
+  }
+
   func_choices <- c(
-    "mean",
-    "median",
-    "sd",
-    "se",
-    "min",
-    "max",
-    "n",
-    "n_distinct"
+    "mean", "median", "sd", "se", "min", "max", "n", "n_distinct"
   )
 
   fields <- list(
-    funcs = new_select_field(func, func_choices, multiple = TRUE, title = "Functions"),
-    columns = new_list_field(sub_fields, title = "Columns"),
+    funcs = new_select_field(func, func_choices, multiple = TRUE,
+                             title = "Functions"),
+    columns = new_list_field("select_field", select_choices, select_names,
+                             title = "Columns"),
     expression = new_hidden_field(summarize_expr)
   )
 

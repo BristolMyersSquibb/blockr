@@ -59,6 +59,5 @@ validation_failure(..., class = character())
 \item{class}{Condition class (will be a subclass of \code{validation_failure})}
 }
 \description{
-Checks the value of a field with \link{value} and
-apply corrections whenever necessary.
+Validator functions for fields.
 }

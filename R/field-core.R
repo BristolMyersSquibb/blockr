@@ -14,10 +14,8 @@
 #'
 #' @export
 #' @rdname new_field
-new_field <- function(value, ..., type = c("literal", "name"),
-                      title = "",
-                      descr = "",
-                      status = c("active", "disabled", "invisible"),
+new_field <- function(value, ..., type = c("literal", "name"), title = "",
+                      descr = "", status = c("active", "disabled", "invisible"),
                       class = character()) {
 
   x <- list(value = value, ...)
@@ -57,13 +55,13 @@ initialize_field <- function(x, env = list()) {
 #' @rdname initialize_field
 #' @export
 initialize_field.field <- function(x, env = list()) {
-  eval_set_field_value(x, env)
+  update_functional_field_components(x, env)
 }
 
 #' @rdname initialize
 #' @export
 is_initialized.field <- function(x) {
-  all(lengths(values(x)) > 0)
+  all(lengths(get_field_component_values(x)) > 0)
 }
 
 #' Update field generic
@@ -85,44 +83,50 @@ update_field <- function(x, new, env = list()) {
 #' @rdname update_field
 #' @export
 update_field.field <- function(x, new, env = list()) {
-
-  if (length(new)) {
-    value(x) <- new
-  }
-
-  eval_set_field_value(x, env)
+  x <- update_field_components(x, env)
+  x <- update_field_value(x, new)
+  x
 }
 
 #' @rdname update_field
 #' @export
-update_field.hidden_field <- function(x, new, env = list()) {
-  eval_set_field_value(x, env)
+update_field.field <- function(x, new, env = list()) {
+  x <- update_field_components(x, env)
+  x <- update_field_value(x, new)
+  x
 }
 
-eval_set_field_value <- function(x, env) {
+#' @rdname update_field
+#' @export
+update_field_components <- function(x, env = list()) {
+  UseMethod("update_field_components", x)
+}
 
-  for (cmp in names(x)[lgl_ply(x, is.function)]) {
+#' @rdname update_field
+#' @export
+update_field_components.field <- function(x, env = list()) {
 
-    fun <- x[[cmp]]
-    arg <- env[methods::formalArgs(fun)]
+  update_field_value(
+    update_functional_field_components(x, env),
+    field_value(x)
+  )
+}
 
-    if (all(lengths(arg))) {
+#' @rdname update_field
+#' @export
+update_field_value <- function(x, new) {
+  UseMethod("update_field_value", x)
+}
 
-      tmp <- try(do.call(fun, arg), silent = TRUE)
+#' @rdname update_field
+#' @export
+update_field_value.field <- function(x, new) {
 
-      if (inherits(tmp, "try-error")) {
-        log_error(tmp)
-      } else if (length(tmp)) {
-        value(x, cmp) <- tmp
-      }
-
-    } else {
-
-      log_debug("skipping field eval for ", cmp)
-    }
+  if (length(new)) {
+    set_field_component_value(x, "value", new)
+  } else {
+    x
   }
-
-  x
 }
 
 #' Get field attribute value
@@ -131,173 +135,27 @@ eval_set_field_value <- function(x, env) {
 #' return the result attribute instead.
 #'
 #' @inheritParams is_field
-#' @param name Field component name
 #' @returns Field value
-#' @rdname value
 #' @export
-value <- function(x, name = "value") UseMethod("value", x)
+field_value <- function(x) UseMethod("field_value", x)
 
-#' @rdname value
+#' @rdname field_value
 #' @export
-value.field <- function(x, name = "value") get_field_value(x, name)
+field_value.field <- function(x) field_component(x, "value")
 
-get_field_value <- function(x, name) {
-
-  res <- x[[name]]
-
-  if (is.function(res)) {
-    return(attr(res, "result"))
-  }
-
-  res
-}
-
-#' @rdname value
+#' @param name Component name
+#' @rdname field_value
 #' @export
-value.variable_field <- function(x, name = "value") {
-  value(materialize_variable_field(x), name)
-}
+field_component <- function(x, name) UseMethod("field_component", x)
 
-materialize_variable_field <- function(x) {
-  do.call(paste0("new_", x[["field"]]), x[["components"]])
-}
-
-#' @rdname value
+#' @rdname field_value
 #' @export
-value.list_field <- function(x, name = "value") {
-
-  if (identical(name, "value")) {
-    return(lapply(get_sub_fields(x), value, name))
-  }
-
-  NextMethod()
+field_component.field <- function(x, name) {
+  get_field_component_value(x, name)
 }
 
-#' Get all values from a field
-#'
-#' This calls \link{value} on all the field's names.
-#'
-#' @inheritParams value
-#' @returns A list containing all values.
+#' @returns Field value
 #' @export
-values <- function(x, name = names(x)) {
-  set_names(lapply(name, function(n) value(x, n)), name)
-}
-
-#' Assign new value to a field attribute.
-#'
-#' @param value Field value
-#' @rdname value
-#' @export
-#' @returns The field.
-`value<-` <- function(x, name = "value", value) {
-  if (length(value)) {
-    UseMethod("value<-", x)
-  } else {
-    x
-  }
-}
-
-#' @rdname value
-#' @export
-`value<-.field` <- function(x, name = "value", value) {
-  set_field_value(x, value, name)
-}
-
-set_field_value <- function(x, value, name) {
-
-  if (is.function(x[[name]])) {
-    if (!is.null(value)) attr(x[[name]], "result") <- value
-  } else {
-    x[[name]] <- value
-  }
-
-  x
-}
-
-#' @rdname value
-#' @export
-`value<-.upload_field` <- function(x, name = "value", value) {
-
-  if (!identical(name, "value")) {
-    return(NextMethod())
-  }
-
-  NextMethod(value = value$datapath)
-}
-
-#' @rdname value
-#' @export
-`value<-.filesbrowser_field` <- function(x, name = "value", value) {
-
-  if (!identical(name, "value")) {
-    return(NextMethod())
-  }
-
-  if (is.integer(value)) {
-    return(x)
-  }
-
-  files <- shinyFiles::parseFilePaths(value(x, "volumes"), value)
-
-  NextMethod(value = unname(files$datapath))
-}
-
-#' @rdname value
-#' @export
-`value<-.list_field` <- function(x, name = "value", value) {
-
-  if (identical(name, "value")) {
-
-    tmp <- get_sub_fields(x)
-
-    if (length(names(value))) {
-      hit <- intersect(names(value), names(tmp))
-      tmp[hit] <- Map(`value<-`, tmp[hit], name, value)
-    } else {
-      stopifnot(length(tmp) == length(value))
-      tmp <- Map(`value<-`, tmp, name, value)
-    }
-
-    set_sub_fields(x, tmp)
-
-  } else if (identical(name, "sub_fields")) {
-
-    tmp <- value(x)
-    x <- set_sub_fields(x, value)
-
-    value(x) <- tmp
-
-    x
-
-  } else {
-
-    stop("Unrecognized list_field component")
-  }
-}
-
-get_sub_fields <- function(x) get_field_value(x, "sub_fields")
-
-set_sub_fields <- function(x, val) set_field_value(x, val, "sub_fields")
-
-#' @export
-#' @rdname update_field
-#' @param field Field element.
-#' @param name To pass a name if no title attribute.
-get_field_name <- function(field, name = "") {
-  title <- attr(field, "title")
-
-  if (title == "") {
-    return(name)
-  }
-
-  title
-}
-
-get_field_names <- function(x) {
-  titles <- character(length(x))
-  for (i in seq_along(x)) {
-    titles[i] <- get_field_name(x[[i]], names(x)[i])
-  }
-  titles
+value <- function(x, name = "value") {
+  switch(name, value = field_value(x), field_component(x, name))
 }
