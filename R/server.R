@@ -552,6 +552,8 @@ handle_remove.block <- function(x, vals,
           attr(vals$stack[[i]], "position") <- i
           vals$blocks[[i]] <- init_block(i, vals)
         }
+      } else {
+        vals$stack[[to_remove]] <- NULL
       }
     }
   )
