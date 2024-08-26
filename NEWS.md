@@ -1,5 +1,26 @@
 # blockr 0.0.2.9000
 
+## Breaking changes
+- Added new `category` to the registry. Now when a block is registered, you must pass a category parameter (which is used by the add block feature to sort blocks):
+
+```r
+register_block(
+  constructor = new_tail_block,
+  name = "tail block",
+  description = "return last n rows",
+  category = "transform",
+  classes = c("tail_block", "transform_block"),
+  input = "data.frame",
+  output = "data.frame"
+)
+
+# Adding category to avoid 
+# error: argument "category" is missing, with no default
+```
+
+## Feature
+- Improved __add__ new block.
+
 ## Doc
 - Improved `registry` and `getting started` vignettes.
 - Add new `case studies` vignette to present blockr in various contexts.

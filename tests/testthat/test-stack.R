@@ -68,7 +68,6 @@ test_that("stacks demo works", {
   )
 
   stack_inputs <- c(
-    "mystack-add",
     "mystack-copy",
     "mystack-newTitle",
     "mystack-remove"
@@ -93,6 +92,7 @@ test_that("stacks demo works", {
   # Add a block
   app$click(selector = ".stack-add-block")
   app$click(selector = "#mystack-add-block-dataset_block")
+  app$run_js("Shiny.setInputValue('mystack-add-block-selected_block', 'dataset_block')")
   app$click(selector = "#mystack-add-block-confirm")
 
   app$expect_values(

@@ -158,9 +158,9 @@
         },
         {
           "name": "bs3compat",
-          "version": "0.7.0",
+          "version": "0.8.0",
           "src": {
-            "href": "bs3compat-0.7.0"
+            "href": "bs3compat-0.8.0"
           },
           "meta": null,
           "script": [

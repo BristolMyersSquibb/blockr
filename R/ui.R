@@ -290,7 +290,7 @@ add_block_ui <- function(id) {
       div(id = ns("status-messages"), class = "m-2"),
       div(id = ns("block-choices")),
       div(
-        class = "mt-2",
+        class = "d-flex justify-content-center align-items-center mt-4",
         actionButton(
           add_block_ui_id,
           icon("plus"),
@@ -307,42 +307,38 @@ create_blk_pills <- function(blks, ns) {
   bg_cl <- switch(
     nm,
     "data" = "primary",
-    "parser" = "tertiary",
+    "parser" = "ight",
     "transform" = "secondary",
-    "light"
+    "dark"
   )
 
-  pills_ui <- if (length(blks) == 0) {
-    h6("No blocks available")
-  } else {
-    apply(blks, 1, \(blk) {
-      tagList(
-        tags$input(
-          name = "options-add-blk",
-          type = "radio",
-          class = "btn-check",
-          autocomplete = "off",
-          id = ns(blk[["ctor"]])
+  pills_ui <- apply(blks, 1, \(blk) {
+    tagList(
+      tags$input(
+        name = "options-add-blk",
+        type = "radio",
+        class = "btn-check",
+        autocomplete = "off",
+        id = ns(blk[["ctor"]])
+      ),
+      tags$label(
+        class = sprintf("btn btn-sm btn-outline-%s", bg_cl),
+        `for` = ns(blk[["ctor"]]),
+        blk[["name"]],
+        bslib::popover(
+          icon("info-circle"),
+          blk[["description"]],
+          title = sprintf("From package: %s", blk[["package"]]),
+          options = list(trigger = "hover")
         ),
-        tags$label(
-          class = sprintf("btn btn-sm btn-outline-%s", bg_cl),
-          `for` = ns(blk[["ctor"]]),
-          blk[["name"]],
-          bslib::popover(
-            icon("info-circle"),
-            blk[["description"]],
-            title = sprintf("From package: %s", blk[["package"]]),
-            options = list(trigger = "hover")
-          ),
-          onclick = sprintf(
-            "window.Shiny.setInputValue('%s', '%s')", 
-            ns("selected_block"),
-            blk[["ctor"]]
-          )
+        onclick = sprintf(
+          "window.Shiny.setInputValue('%s', '%s')", 
+          ns("selected_block"),
+          blk[["ctor"]]
         )
       )
-    })
-  }
+    )
+  })
 
   bslib::accordion_panel(
     value = sprintf("%s-block-pills", nm),
@@ -352,18 +348,22 @@ create_blk_pills <- function(blks, ns) {
 }
 
 create_block_choices <- function(blks, ns) {
-  cats <- split(blks, blks$category)
-
   removeUI(sprintf("#%s", ns("accordion")), immediate = TRUE)
-  insertUI(
-    sprintf("#%s", ns("block-choices")),
-    ui = bslib::accordion(
-      class = "accordion-flush",
+
+  blks_ui <- if (nrow(blks) == 0) {
+    h6(id = ns("accordion"), "No compatible blocks found.")
+  } else {
+    cats <- split(blks, blks$category)
+    bslib::accordion(
       id = ns("accordion"),
       multiple = TRUE,
       open = TRUE,
       lapply(cats, create_blk_pills, ns)
-    ),
+    )
+  }
+  insertUI(
+    sprintf("#%s", ns("block-choices")),
+    ui = blks_ui,
     immediate = TRUE
   )
 }

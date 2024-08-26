@@ -1,6 +1,5 @@
 {
   "input": {
-    "mystack-add": 1,
     "mystack-copy": 1,
     "mystack-newTitle": "Stack",
     "mystack-remove": 1
