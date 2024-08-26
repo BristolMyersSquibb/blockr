@@ -266,12 +266,12 @@ generate_ui.block <- function(x, id, ...,
 #' Combined to the blocks registry API, this allows to select a block from R
 #' like \code{available_blocks()[[input$selected_block]]}.
 #'
-#' @param ns Stack namespace. Default to \link{identity} so
-#' that it can be used when the stack is the top level element.
+#' @param id Module id.
 #'
 #' @export
-add_block_ui <- function(ns = identity) {
-  add_block_ui_id <- ns("add")
+add_block_ui <- function(id) {
+  ns <- shiny::NS(id)
+  add_block_ui_id <- ns("confirm")
 
   log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
 
@@ -287,8 +287,8 @@ add_block_ui <- function(ns = identity) {
       id = ns("addBlockCanvas"),
       title = "Blocks",
       position = "start",
-      div(id = ns("stack-status-messages"), class = "m-2"),
-      create_block_choices(ns),
+      div(id = ns("status-messages"), class = "m-2"),
+      div(id = ns("block-choices")),
       div(
         class = "mt-2",
         actionButton(
@@ -302,37 +302,40 @@ add_block_ui <- function(ns = identity) {
 }
 
 create_blk_pills <- function(blks, ns) {
-  nm <- strsplit(as.character(substitute(blks)), "_")[[1]][1]
+  nm <- blks[1, "category"]
+
   bg_cl <- switch(
     nm,
     "data" = "primary",
+    "parser" = "tertiary",
     "transform" = "secondary",
-    "plot" = "success"
+    "light"
   )
 
   pills_ui <- if (length(blks) == 0) {
     h6("No blocks available")
   } else {
-    lapply(blks, \(blk) {
+    apply(blks, 1, \(blk) {
       tagList(
         tags$input(
           name = "options-add-blk",
           type = "radio",
           class = "btn-check",
           autocomplete = "off",
-          id = blk[["ctor"]]
+          id = ns(blk[["ctor"]])
         ),
         tags$label(
           class = sprintf("btn btn-sm btn-outline-%s", bg_cl),
-          `for` = blk[["ctor"]],
+          `for` = ns(blk[["ctor"]]),
           blk[["name"]],
           bslib::popover(
             icon("info-circle"),
             blk[["description"]],
+            title = sprintf("From package: %s", blk[["package"]]),
             options = list(trigger = "hover")
           ),
           onclick = sprintf(
-            "Shiny.setInputValue('%s', '%s')", 
+            "window.Shiny.setInputValue('%s', '%s')", 
             ns("selected_block"),
             blk[["ctor"]]
           )
@@ -343,24 +346,25 @@ create_blk_pills <- function(blks, ns) {
 
   bslib::accordion_panel(
     value = sprintf("%s-block-pills", nm),
-    title = sprintf("%s blocks", toupper(nm)),
+    title = sprintf("%s blocks", nm),
     pills_ui
   )
 }
 
-create_block_choices <- function(ns) {
-  data_blocks <- get_data_blocks()
-  transform_blocks <- get_transform_blocks()
-  plot_blocks <- get_plot_blocks()
-  plotlayer_blocks <- get_plotlayer_blocks()
+create_block_choices <- function(blks, ns) {
+  cats <- split(blks, blks$category)
 
-  bslib::accordion(
-    id = ns("add-block-accordion"),
-    multiple = TRUE,
-    create_blk_pills(data_blocks, ns),
-    create_blk_pills(transform_blocks, ns),
-    create_blk_pills(plot_blocks, ns),
-    create_blk_pills(plotlayer_blocks, ns)
+  removeUI(sprintf("#%s", ns("accordion")), immediate = TRUE)
+  insertUI(
+    sprintf("#%s", ns("block-choices")),
+    ui = bslib::accordion(
+      class = "accordion-flush",
+      id = ns("accordion"),
+      multiple = TRUE,
+      open = TRUE,
+      lapply(cats, create_blk_pills, ns)
+    ),
+    immediate = TRUE
   )
 }
 
@@ -392,7 +396,16 @@ generate_ui.stack <- function(x, id = NULL, ...) {
       )
     ),
     useBlockr(),
-    tags$script(HTML(sprintf("Shiny.setInputValue('%s', 1);", ns("rendered"))))
+    tags$script(
+      HTML(
+        sprintf(
+          "$(document).on('shiny:connected', function() {
+            window.Shiny.setInputValue('%s', 1);
+          });", 
+          ns("rendered")
+        )
+      )
+    )
   )
 }
 
@@ -492,7 +505,7 @@ stack_header.stack <- function(x, title, ns, add_block_func = add_block_ui, ...)
           class = "text-decoration-none stack-remove",
           icon("trash")
         ),
-        add_block_func(ns),
+        add_block_func(ns("add-block")),
         actionLink(
           ns("copy"),
           class = "text-decoration-none stack-copy-code",

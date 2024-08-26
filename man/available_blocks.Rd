@@ -20,6 +20,7 @@ register_block(
   constructor,
   name,
   description,
+  category,
   classes,
   input,
   output,
@@ -30,6 +31,7 @@ register_blocks(
   constructor,
   name,
   description,
+  category,
   classes,
   input,
   output,
@@ -45,7 +47,7 @@ construct_block(block, ...)
 
 \item{constructor}{Block constructor}
 
-\item{name, description}{Metadata describing the block}
+\item{name, description, category}{Metadata describing the block}
 
 \item{classes}{Block classes}
 

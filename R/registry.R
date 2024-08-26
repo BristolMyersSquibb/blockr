@@ -42,17 +42,19 @@ block_name <- block_descrs_getter(block_descr_getter("name"))
 #' @export
 block_descr <- block_descrs_getter(block_descr_getter("description"))
 
-new_block_descr <- function(constructor, name, description, classes, input,
+new_block_descr <- function(constructor, name, description, category, classes, input,
                             output, pkg) {
 
   stopifnot(
     is.function(constructor), is_string(name), is_string(description),
+    is_string(category),
     is.character(classes), length(classes) >= 1L,
     is_string(input), is_string(output), is_string(pkg)
   )
 
   structure(
-    constructor, name = name, description = description, classes = classes,
+    constructor, name = name, description = description, 
+    category = category, classes = classes,
     input = input, output = output, package = pkg, class = "block_descr"
   )
 }
@@ -60,17 +62,17 @@ new_block_descr <- function(constructor, name, description, classes, input,
 block_registry <- new.env()
 
 #' @param constructor Block constructor
-#' @param name,description Metadata describing the block
+#' @param name,description,category Metadata describing the block
 #' @param classes Block classes
 #' @param input,output Object types the block consumes and produces
 #' @param package Package where block is defined
 #'
 #' @rdname available_blocks
 #' @export
-register_block <- function(constructor, name, description, classes, input,
+register_block <- function(constructor, name, description, category, classes, input,
                            output, package = NA_character_) {
 
-  descr <- new_block_descr(constructor, name, description, classes, input,
+  descr <- new_block_descr(constructor, name, description, category, classes, input,
                            output, package)
 
   id <- classes[1L]
@@ -85,7 +87,7 @@ register_block <- function(constructor, name, description, classes, input,
 #' @param ... Forwarded to `register_block()`
 #' @rdname available_blocks
 #' @export
-register_blocks <- function(constructor, name, description, classes, input,
+register_blocks <- function(constructor, name, description, category, classes, input,
                             output, package = NA_character_) {
 
   if (length(constructor) == 1L && !is.list(classes)) {
@@ -97,6 +99,7 @@ register_blocks <- function(constructor, name, description, classes, input,
     constructor = constructor,
     name = name,
     description = description,
+    category = category,
     classes = classes,
     input = input,
     output = output,
@@ -202,6 +205,24 @@ register_blockr_blocks <- function(pkg) {
       "Select n first rows of dataset",
       "Mutate block"
     ),
+    category = c(
+      "data",
+      "data",
+      "data",
+      "data",
+      "parser",
+      "parser",
+      "parser",
+      "parser",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform"
+    ),
     classes = list(
       c("dataset_block", "data_block"),
       c("result_block", "data_block"),
@@ -274,35 +295,30 @@ construct_block <- function(block, ...) {
   block(...)
 }
 
-# Useful for add_block_ui
-get_block_by_class <- function(cl) {
-  dropNulls(lapply(available_blocks(), \(blk) {
-    cls <- attr(blk, "classes")
-    if (cl %in% cls) {
-      list(
-        name = attr(blk, "name"),
-        ctor = attr(blk, "classes")[1],
-        description = attr(blk, "description"),
-        input = attr(blk, "input"),
-        output = attr(blk, "output"),
-        package = attr(blk, "pkg")
-      )
-    }
-  }))
-}
-
-get_data_blocks <- function(cl = "data_block") {
-  get_block_by_class(cl)
-}
-
-get_transform_blocks <- function(cl = "transform_block") {
-  get_block_by_class(cl)
-}
-
-get_plot_blocks <- function(cl = "plot_block") {
-  get_block_by_class(cl)
-}
-
-get_plotlayer_blocks <- function(cl = "plot_layer_block") {
-  get_block_by_class(cl)
+#' List available blocks as a data.frame
+#' 
+#' Provides an alternate way of displaying 
+#' the registry information.
+#' This can be useful to create dynamic UI elements
+#' like in \link{add_block_ui}.
+#' 
+#' @return A dataframe.
+#' 
+#' @export
+get_registry <- function() {
+  res <- lapply(seq_along(available_blocks()), \(i) {
+    blk <- available_blocks()[[i]]
+    attrs <- attributes(blk)
+    data.frame(
+      name = attrs[["name"]],
+      ctor = names(available_blocks())[[i]],
+      description = attrs[["description"]],
+      category = attrs[["category"]],
+      classes = paste(attrs[["classes"]], collapse = ", "),
+      input = attrs[["input"]],
+      output = attrs[["output"]],
+      package = attrs[["package"]]
+    )
+  })
+  do.call(rbind, res)
 }

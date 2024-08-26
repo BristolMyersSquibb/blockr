@@ -4,11 +4,10 @@
 \alias{add_block_ui}
 \title{Add block UI interface}
 \usage{
-add_block_ui(ns = identity)
+add_block_ui(id)
 }
 \arguments{
-\item{ns}{Stack namespace. Default to \link{identity} so
-that it can be used when the stack is the top level element.}
+\item{id}{Module id.}
 }
 \description{
 Useful to allow stack to add blocks to it.

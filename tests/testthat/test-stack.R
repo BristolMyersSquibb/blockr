@@ -92,8 +92,8 @@ test_that("stacks demo works", {
 
   # Add a block
   app$click(selector = ".stack-add-block")
-  app$set_inputs("mystack-selected_block" = "dataset_block")
-  app$click(selector = "#mystack-add")
+  app$click(selector = "#mystack-add-block-dataset_block")
+  app$click(selector = "#mystack-add-block-confirm")
 
   app$expect_values(
     input = stack_inputs,

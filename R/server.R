@@ -361,7 +361,15 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       # TBD: The stack could have attributes like: add_block = TRUE.
       # If yes, we can call the corresponding modules/func on the UI/Server side.
-      add_block_server(vals, input, session)
+      block_to_add <- add_block_server("add-block", vals)
+      # This can only be done from the stack level
+      observeEvent(block_to_add$confirm(), {
+        add_block_stack(
+          block_to_add = available_blocks()[[block_to_add$selected()]], # pass in block constructor
+          position = NULL,
+          vals = vals
+        )
+      })
 
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
@@ -371,10 +379,6 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
           get_last_block_data(vals$blocks)()
         ),
         {
-
-          #browser()
-          # TO DO: control stack state for add block
-
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
@@ -454,78 +458,44 @@ remove_stack_server <- function(vals, input, session, id, workspace) {
   })
 }
 
-add_block_server <- function(vals, input, session) {
-  observeEvent(vals$blocks, {
-    if (length(vals$blocks) == 0) {
-      shiny::insertUI(
-        sprintf("#%s", session$ns("stack-status-messages")),
-        ui = div(
-          class = "alert alert-primary",
-          role = "alert",
-          id = session$ns("stack-status-message"),
-          "Stack has no blocks. Please add a data block."
-        )
-      )
-      bslib::accordion_panel_set(
-        "add-block-accordion",
-        values = "data-block-pills"
-      )
-    } else {
-      bslib::accordion_panel_set(
-        "add-block-accordion",
-        values = c(
-          "data-block-pills",
-          "transform-block-pills",
-          "plot-block-pills",
-          "plotlayer-block-pills"
-        )
-      )
-    }
-  })
+#' Add block server module
+#' This modules aims at showing extra info in the
+#' offcanvas menu to add blocks. Blocks are added 
+#' at the stack level with another function.
+#' @param id Module id.
+#' @param vals Reactive values.
+add_block_server <- function(id, vals) {
+  moduleServer(id,
+  function(input, output, session) {
 
-  observeEvent(input$selected_block, {
-    # Also check validity
-    removeUI(sprintf("#%s", session$ns("stack-status-message")))
-    new_blk <- available_blocks()[[input$selected_block]]
-    cls <- attr(new_blk, "classes")
+    ns <- session$ns
 
-    if ("data_block" %in% cls && length(vals$blocks) > 0) {
-      shiny::insertUI(
-        sprintf("#%s", session$ns("stack-status-messages")),
-        ui = div(
-          class = "alert alert-primary",
-          role = "alert",
-          id = session$ns("stack-status-message"),
-          "Stack already has a data block. You can either add
-        tranform or plot blocks"
-        )
-      )
-      return(NULL)
-    }
+    # Triggers on init
+    observeEvent(vals$blocks, {
+      # Pills are dynamically updated from the server
+      # depending on the block compatibility
+      create_block_choices(get_compatible_blocks(vals$stack), ns)
 
-    if (length(vals$blocks) > 0) {
-      last_stack_blk <- available_blocks()[[class(vals$stack[[length(vals$stack)]])[1]]]
-      if (attr(last_stack_blk, "output") != attr(new_blk, "input")) {
+      if (length(vals$blocks) == 0) {
         shiny::insertUI(
-          sprintf("#%s", session$ns("stack-status-messages")),
+          sprintf("#%s", ns("status-messages")),
           ui = div(
             class = "alert alert-primary",
             role = "alert",
-            id = session$ns("stack-status-message"),
-            "Blocks are not compatible. Please make sure the output of the last
-            block can be used as input for the next block"
+            id = ns("status-message"),
+            "Stack has no blocks. Start by adding a data block."
           )
         )
+      } else {
+        removeUI(sprintf("#%s", ns("status-messages")))
       }
-    }
-  })
+    })
 
-  # Provided by add_block_ui actionButton
-  observeEvent(input$add, {
-    add_block_stack(
-      block_to_add = available_blocks()[[input$selected_block]], # pass in block constructor
-      position = NULL,
-      vals = vals
+    return(
+      list(
+        confirm = reactive(input$confirm),
+        selected = reactive(input$selected_block)
+      )
     )
   })
 }
@@ -853,6 +823,7 @@ add_block_stack <- function(
     vals,
     session = getDefaultReactiveDomain()) {
   vals$stack <- add_block(vals$stack, block_to_add, position)
+  ns <- session$ns
 
   # Call module
   p <- if (is.null(position)) {
@@ -872,12 +843,12 @@ add_block_stack <- function(
     insertUI(
       selector = sprintf(
         "[data-value='%s-block']",
-        session$ns(attr(vals$stack[[p - 1]], "name"))
+        ns(attr(vals$stack[[p - 1]], "name"))
       ),
       where = "afterEnd",
       inject_remove_button(
         vals$stack[[p]],
-        session$ns,
+        ns,
         .hidden = FALSE
       )
     )
@@ -885,12 +856,12 @@ add_block_stack <- function(
     insertUI(
       selector = sprintf(
         "#%sbody",
-        session$ns("")
+        ns("")
       ),
       where = "afterBegin",
       inject_remove_button(
         vals$stack[[p]],
-        session$ns,
+        ns,
         .hidden = FALSE
       )
     )
@@ -903,8 +874,8 @@ add_block_stack <- function(
   session$sendCustomMessage(
     "blockr-add-block",
     list(
-      stack = session$ns(NULL),
-      block = session$ns(attr(vals$stack[[p]], "name"))
+      stack =  ns(NULL),
+      block =  ns(attr(vals$stack[[p]], "name"))
     )
   )
 }

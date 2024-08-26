@@ -7,7 +7,7 @@
 \usage{
 stack_header(x, ...)
 
-\method{stack_header}{stack}(x, title, ns, ...)
+\method{stack_header}{stack}(x, title, ns, add_block_func = add_block_ui, ...)
 }
 \arguments{
 \item{x}{Object for which to generate UI components}
@@ -17,6 +17,9 @@ stack_header(x, ...)
 \item{title}{Stack title.}
 
 \item{ns}{Module namespace}
+
+\item{add_block_func}{Function to add blocks within a stack. This allows
+for customization. Default to \link{add_block_ui}.}
 }
 \description{
 Generic for creating stack header.

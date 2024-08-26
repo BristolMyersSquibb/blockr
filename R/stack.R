@@ -262,6 +262,30 @@ add_block <- function(stack, block, position = NULL) {
   set_stack_blocks(stack, append(stack, list(tmp), position), data)
 }
 
+#' Find stack compatible blocks
+#' 
+#' Given a stack, we use the registry to find
+#' what are the blocks compatible with the last stack block.
+#' If the stack is empy, we return data blocks.
+#' 
+#' @param stack Stack object.
+#' 
+#' @return a dataframe.
+#' 
+#' @export
+get_compatible_blocks <- function(stack) {
+  registry <- get_registry()
+  # Only data blocks can be used for a 0 length stack
+  if (length(stack) == 0) return(registry[registry$category == "data", ])
+
+  # Otherwise we compare the output of the last block
+  # and propose any of the block that have compatible input
+  last_blk <- available_blocks()[[class(stack[[length(stack)]])[1]]]
+  last_blk_output <- attr(last_blk, "output")
+
+  registry[registry$input == last_blk_output, ]
+}
+
 #' @param stack An object inheriting form `"stack"`
 #' @param id Stack ID
 #'
