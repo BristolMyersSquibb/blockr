@@ -27,6 +27,8 @@ register_block(
 - Refine GitHub readme.
 
 ## Fixes
+- Fix issue in `handle_remove.block`: `vals$stack` wasn't correctly updated
+when the last block was removed leading to wrong state.
 - Loading spinner is now correctly hidden when the block visual is updated.
 
 # blockr 0.0.2
