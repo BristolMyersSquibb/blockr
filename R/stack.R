@@ -276,13 +276,29 @@ add_block <- function(stack, block, position = NULL) {
 get_compatible_blocks <- function(stack) {
   registry <- get_registry()
   # Only data blocks can be used for a 0 length stack
-  if (length(stack) == 0) return(registry[registry$category == "data", ])
+  if (length(stack) == 0) {
+    tmp <- registry[registry$category == "data", ]
+    # Drop result block if there are no other stacks
+    if (length(get_workspace_stacks()) <= 1) {
+      tmp <- tmp[tmp$ctor != "result_block", ]
+    }
+    return(tmp)
+  }
   # Otherwise we compare the output of the last block
   # and propose any of the block that have compatible input
-  last_blk <- available_blocks()[[class(stack[[length(stack)]])[1]]]
-  last_blk_output <- attr(last_blk, "output")
+  ctor <- class(stack[[length(stack)]])[1]
+  last_blk_output <- registry[registry$ctor == ctor, "output"]
 
-  registry[registry$category != "data" & registry$input == last_blk_output, ]
+  tmp <- registry[!is.na(registry$input) & registry$input == last_blk_output, ]
+
+  # Insert result block if there are other stacks
+  if (length(get_workspace_stacks()) > 1) {
+    tmp <- rbind(
+      registry[registry$ctor == "result_block", ],
+      tmp
+    )
+  }
+  tmp
 }
 
 #' @param stack An object inheriting form `"stack"`

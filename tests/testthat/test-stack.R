@@ -57,6 +57,31 @@ test_that("Set stack title", {
   )
 })
 
+test_that("Get compatible blocks", {
+  skip_on_cran()
+  stack <- new_stack()
+  res <- get_compatible_blocks(stack)
+  # Might change if we add new data blocks
+  expect_equal(nrow(res), 3)
+  expect_identical(unique(res$category), "data")
+
+  stack <- new_stack(new_dataset_block())
+  res <- get_compatible_blocks(stack)
+  expect_identical(unique(res$category), "transform")
+
+  # Check for workspace and result block
+  stack1 <- new_stack(
+    new_dataset_block,
+    new_filter_block
+  )
+
+  stack2 <- new_stack()
+
+  set_workspace(stack1 = stack1, stack2 = stack2)
+  expect_true("result_block" %in% get_compatible_blocks(stack2)$ctor)
+  expect_true("result_block" %in% get_compatible_blocks(stack1)$ctor)
+})
+
 withr::local_package("shinytest2")
 
 test_that("stacks demo works", {
