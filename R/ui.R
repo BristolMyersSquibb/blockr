@@ -363,8 +363,7 @@ create_block_choices <- function(blks, ns) {
   }
   insertUI(
     sprintf("#%s", ns("block-choices")),
-    ui = blks_ui,
-    immediate = TRUE
+    ui = blks_ui
   )
 }
 
