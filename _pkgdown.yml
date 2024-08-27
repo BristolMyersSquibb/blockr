@@ -133,6 +133,8 @@ reference:
   - "`register_blocks`"
   - "`unregister_blocks`"
   - "`construct_block`"
+  - "`get_compatible_blocks`"
+  - "`get_registry`"
 
 - title: Server utilities
   desc: Shiny server elements
