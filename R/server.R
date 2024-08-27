@@ -462,13 +462,12 @@ remove_stack_server <- function(vals, input, session, id, workspace) {
 
 #' Add block server module
 #' This modules aims at showing extra info in the
-#' offcanvas menu to add blocks. Blocks are added 
+#' offcanvas menu to add blocks. Blocks are added
 #' at the stack level with another function.
 #' @param id Module id.
 #' @param vals Reactive values.
 add_block_server <- function(id, vals) {
-  moduleServer(id,
-  function(input, output, session) {
+  moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 

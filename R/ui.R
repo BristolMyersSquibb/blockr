@@ -332,7 +332,7 @@ create_blk_pills <- function(blks, ns) {
           options = list(trigger = "hover")
         ),
         onclick = sprintf(
-          "window.Shiny.setInputValue('%s', '%s')", 
+          "window.Shiny.setInputValue('%s', '%s')",
           ns("selected_block"),
           blk[["ctor"]]
         )
@@ -401,7 +401,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
         sprintf(
           "$(document).on('shiny:connected', function() {
             window.Shiny.setInputValue('%s', 1);
-          });", 
+          });",
           ns("rendered")
         )
       )

@@ -53,7 +53,7 @@ new_block_descr <- function(constructor, name, description, category, classes, i
   )
 
   structure(
-    constructor, name = name, description = description, 
+    constructor, name = name, description = description,
     category = category, classes = classes,
     input = input, output = output, package = pkg, class = "block_descr"
   )
@@ -296,14 +296,14 @@ construct_block <- function(block, ...) {
 }
 
 #' List available blocks as a data.frame
-#' 
-#' Provides an alternate way of displaying 
+#'
+#' Provides an alternate way of displaying
 #' the registry information.
 #' This can be useful to create dynamic UI elements
 #' like in \link{add_block_ui}.
-#' 
+#'
 #' @return A dataframe.
-#' 
+#'
 #' @export
 get_registry <- function() {
   res <- lapply(seq_along(available_blocks()), \(i) {

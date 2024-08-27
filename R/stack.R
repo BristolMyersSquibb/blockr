@@ -263,15 +263,15 @@ add_block <- function(stack, block, position = NULL) {
 }
 
 #' Find stack compatible blocks
-#' 
+#'
 #' Given a stack, we use the registry to find
 #' what are the blocks compatible with the last stack block.
 #' If the stack is empy, we return data blocks.
-#' 
+#'
 #' @param stack Stack object.
-#' 
+#'
 #' @return a dataframe.
-#' 
+#'
 #' @export
 get_compatible_blocks <- function(stack) {
   registry <- get_registry()
