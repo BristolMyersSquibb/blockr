@@ -476,9 +476,7 @@ stack_header <- function(x, ...) {
 
 #' @rdname stack_header
 #' @importFrom shiny icon tags div
-#' @param add_block_func Function to add blocks within a stack. This allows
-#' for customization. Default to \link{add_block_ui}.
-stack_header.stack <- function(x, title, ns, add_block_func = add_block_ui, ...) {
+stack_header.stack <- function(x, title, ns, ...) {
   icon <- iconEdit()
 
   edit_class <- "text-decoration-none stack-edit-toggle"
@@ -505,7 +503,7 @@ stack_header.stack <- function(x, title, ns, add_block_func = add_block_ui, ...)
           class = "text-decoration-none stack-remove",
           icon("trash")
         ),
-        add_block_func(ns("add-block")),
+        add_block_ui(ns("add-block")),
         actionLink(
           ns("copy"),
           class = "text-decoration-none stack-copy-code",

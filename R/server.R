@@ -415,6 +415,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
 #' Helper function that removes a stack
 #' @keywords internal
+#' @noRd
 remove_stack_server <- function(vals, input, session, id, workspace) {
   observeEvent(input$remove, {
     showModal(
