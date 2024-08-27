@@ -282,9 +282,7 @@ get_compatible_blocks <- function(stack) {
   last_blk <- available_blocks()[[class(stack[[length(stack)]])[1]]]
   last_blk_output <- attr(last_blk, "output")
 
-  registry[
-    registry$category != "data" &
-    registry$input == last_blk_output, ]
+  registry[registry$category != "data" & registry$input == last_blk_output, ]
 }
 
 #' @param stack An object inheriting form `"stack"`
