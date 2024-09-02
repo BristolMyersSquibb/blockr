@@ -58,12 +58,18 @@ test_that("Set stack title", {
 })
 
 test_that("Get compatible blocks", {
-  skip_on_cran()
   stack <- new_stack()
   res <- get_compatible_blocks(stack)
   # Might change if we add new data blocks
   expect_equal(nrow(res), 3)
   expect_identical(unique(res$category), "data")
+
+  # Uncategorized block
+  attr(block_registry$dataset_block, "category") <- "uncategorized"
+  stack <- new_stack()
+  res <- get_compatible_blocks(stack)
+  expect_equal(nrow(res), 3)
+  expect_contains(unique(res$category), c("data", "uncategorized"))
 
   stack <- new_stack(new_dataset_block())
   res <- get_compatible_blocks(stack)

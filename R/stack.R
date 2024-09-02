@@ -277,7 +277,7 @@ get_compatible_blocks <- function(stack) {
   registry <- get_registry()
   # Only data blocks can be used for a 0 length stack
   if (length(stack) == 0) {
-    tmp <- registry[registry$category == "data", ]
+    tmp <- registry[is.na(registry$input), ]
     # Drop result block if there are no other stacks
     if (length(get_workspace_stacks()) <= 1) {
       tmp <- tmp[tmp$ctor != "result_block", ]
