@@ -69,7 +69,7 @@ block_registry <- new.env()
 #'
 #' @rdname available_blocks
 #' @export
-register_block <- function(constructor, name, description, category, classes, input,
+register_block <- function(constructor, name, description, category = "uncategorized", classes, input,
                            output, package = NA_character_) {
 
   descr <- new_block_descr(constructor, name, description, category, classes, input,
@@ -87,7 +87,7 @@ register_block <- function(constructor, name, description, category, classes, in
 #' @param ... Forwarded to `register_block()`
 #' @rdname available_blocks
 #' @export
-register_blocks <- function(constructor, name, description, category, classes, input,
+register_blocks <- function(constructor, name, description, category = "uncategorized", classes, input,
                             output, package = NA_character_) {
 
   if (length(constructor) == 1L && !is.list(classes)) {

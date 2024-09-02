@@ -1,7 +1,8 @@
 # blockr 0.0.2.9000
 
-## Breaking changes
-- Added new `category` to the registry. Now when a block is registered, you must pass a category parameter (which is used by the add block feature to sort blocks):
+## Feature
+- Improved __add__ new block.
+- Added new `category` to the registry. Now when a block is registered, you may pass a category parameter (which is used by the add block feature to sort blocks):
 
 ```r
 register_block(
@@ -13,13 +14,7 @@ register_block(
   input = "data.frame",
   output = "data.frame"
 )
-
-# Adding category to avoid 
-# error: argument "category" is missing, with no default
-```
-
-## Feature
-- Improved __add__ new block.
+If not passed, the block will belong to `uncategorized` blocks (default).
 
 ## Doc
 - Improved `registry` and `getting started` vignettes.
