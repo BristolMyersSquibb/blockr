@@ -14,6 +14,8 @@ register_block(
   input = "data.frame",
   output = "data.frame"
 )
+```
+
 If not passed, the block will belong to `uncategorized` blocks (default).
 
 ## Doc
