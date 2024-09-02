@@ -221,7 +221,7 @@ register_blocks(
   ),
   input = c(NA_character_, "data.frame", "data.frame", "data.frame"),
   output = c("data.frame", "data.frame", "data.frame", "data.frame"),
-  package = pkg
+  package = "<PKG_NAME>"
 )
 ```
 
