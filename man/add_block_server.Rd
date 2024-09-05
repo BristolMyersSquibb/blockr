@@ -2,10 +2,7 @@
 % Please edit documentation in R/server.R
 \name{add_block_server}
 \alias{add_block_server}
-\title{Add block server module
-This modules aims at showing extra info in the
-offcanvas menu to add blocks. Blocks are added
-at the stack level with another function.}
+\title{Add block server module}
 \usage{
 add_block_server(id, vals)
 }
@@ -15,8 +12,7 @@ add_block_server(id, vals)
 \item{vals}{Reactive values.}
 }
 \description{
-Add block server module
 This modules aims at showing extra info in the
 offcanvas menu to add blocks. Blocks are added
-at the stack level with another function.
+at the stack level with another function, add_block_stack.
 }

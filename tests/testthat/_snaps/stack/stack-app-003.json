@@ -5,7 +5,7 @@
     "mystack-remove": 0
   },
   "export": {
-    "mystack-n_blocks": 1,
+    "mystack-n_blocks": 2,
     "mystack-removed": false,
     "mystack-stack": [
       {
@@ -31,6 +31,18 @@
             "\"stackloss\", \"swiss\", \"trees\", \"warpbreaks\", \"women\"))"
           ],
           "multiple": false
+        }
+      },
+      {
+        "columns": {
+          "value": [
+
+          ],
+          "choices": [
+            "structure(function (data) ",
+            "colnames(data), result = c(\"Time\", \"demand\"))"
+          ],
+          "multiple": true
         }
       }
     ]

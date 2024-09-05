@@ -11,7 +11,6 @@ add_block_ui(id)
 }
 \description{
 Useful to allow stack to add blocks to it.
-The selected block can be accessed through \code{input$selected_block}.
-Combined to the blocks registry API, this allows to select a block from R
-like \code{available_blocks()[[input$selected_block]]}.
+The selected block can be accessed through \code{input$search}
+within \link{add_block_server}.
 }

@@ -6,7 +6,7 @@
   },
   "export": {
     "mystack-n_blocks": 2,
-    "mystack-removed": false,
+    "mystack-removed": true,
     "mystack-stack": [
       {
         "package": {

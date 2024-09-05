@@ -122,9 +122,17 @@ test_that("stacks demo works", {
 
   # Add a block
   app$click(selector = ".stack-add-block")
-  app$click(selector = "#mystack-add-block-dataset_block")
-  app$run_js("Shiny.setInputValue('mystack-add-block-selected_block', 'dataset_block')")
-  app$click(selector = "#mystack-add-block-confirm")
+  app$set_inputs("mystack-add-block-search" = "dataset_block")
+
+  app$expect_values(
+    input = stack_inputs,
+    export = stack_exports,
+    screenshot_args = list(
+      delay = 1
+    )
+  )
+
+  app$set_inputs("mystack-add-block-search" = "select_block")
 
   app$expect_values(
     input = stack_inputs,

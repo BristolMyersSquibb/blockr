@@ -363,7 +363,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       # If yes, we can call the corresponding modules/func on the UI/Server side.
       block_to_add <- add_block_server("add-block", vals)
       # This can only be done from the stack level
-      observeEvent(block_to_add$confirm(), {
+      observeEvent(block_to_add$selected(), {
         add_block_stack(
           block_to_add = available_blocks()[[block_to_add$selected()]], # pass in block constructor
           position = NULL,
@@ -462,9 +462,10 @@ remove_stack_server <- function(vals, input, session, id, workspace) {
 }
 
 #' Add block server module
+#' 
 #' This modules aims at showing extra info in the
 #' offcanvas menu to add blocks. Blocks are added
-#' at the stack level with another function.
+#' at the stack level with another function, add_block_stack.
 #' @param id Module id.
 #' @param vals Reactive values.
 add_block_server <- function(id, vals) {
@@ -473,10 +474,23 @@ add_block_server <- function(id, vals) {
     ns <- session$ns
 
     # Triggers on init
+    blk_choices <- reactiveVal(NULL)
     observeEvent(vals$blocks, {
       # Pills are dynamically updated from the server
       # depending on the block compatibility
-      create_block_choices(get_compatible_blocks(vals$stack), ns)
+      blk_choices(get_compatible_blocks(vals$stack))
+      shinyWidgets::updateVirtualSelect(
+        "search",
+        choices = shinyWidgets::prepare_choices(
+          blk_choices(),
+          .data$name,
+          .data$ctor,
+          group_by = .data$category,
+          description = .data$description
+        )
+      )
+
+      #create_block_choices(blk_choices(), ns)
 
       if (length(vals$blocks) == 0) {
         shiny::insertUI(
@@ -489,14 +503,16 @@ add_block_server <- function(id, vals) {
           )
         )
       } else {
-        removeUI(sprintf("#%s", ns("status-messages")))
+        removeUI(sprintf("#%s", ns("status-message")))
       }
     })
 
     return(
       list(
-        confirm = reactive(input$confirm),
-        selected = reactive(input$selected_block)
+        selected = reactive({
+          req(nchar(input$search) > 0)
+          input$search
+        })
       )
     )
   })

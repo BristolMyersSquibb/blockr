@@ -262,9 +262,8 @@ generate_ui.block <- function(x, id, ...,
 #' Add block UI interface
 #'
 #' Useful to allow stack to add blocks to it.
-#' The selected block can be accessed through `input$selected_block`.
-#' Combined to the blocks registry API, this allows to select a block from R
-#' like \code{available_blocks()[[input$selected_block]]}.
+#' The selected block can be accessed through `input$search`
+#' within \link{add_block_server}.
 #'
 #' @param id Module id.
 #'
@@ -288,82 +287,47 @@ add_block_ui <- function(id) {
       title = "Blocks",
       position = "start",
       div(id = ns("status-messages"), class = "m-2"),
-      div(id = ns("block-choices")),
-      div(
-        class = "d-flex justify-content-center align-items-center mt-4",
-        actionButton(
-          add_block_ui_id,
-          icon("plus"),
-          `data-bs-dismiss` = "offcanvas"
-        )
-      )
-    )
-  )
-}
-
-create_blk_pills <- function(blks, ns) {
-  nm <- blks[1, "category"]
-
-  bg_cl <- switch(
-    nm,
-    "data" = "primary",
-    "parser" = "ight",
-    "transform" = "secondary",
-    "dark"
-  )
-
-  pills_ui <- apply(blks, 1, \(blk) {
-    tagList(
-      tags$input(
-        name = "options-add-blk",
-        type = "radio",
-        class = "btn-check",
-        autocomplete = "off",
-        id = ns(blk[["ctor"]])
-      ),
-      tags$label(
-        class = sprintf("btn btn-sm btn-outline-%s", bg_cl),
-        `for` = ns(blk[["ctor"]]),
-        blk[["name"]],
-        bslib::popover(
-          icon("info-circle"),
-          blk[["description"]],
-          title = sprintf("From package: %s", blk[["package"]]),
-          options = list(trigger = "hover")
+      tags$head(
+        # Hide the select dropdown as we just need the searchbar
+        tags$script(
+          HTML(
+            sprintf(
+              "$(document).one('shiny:inputchanged', function(e) {
+                if (e.name === 'my_stack-rendered') {
+                  $('#%s')
+                    .find('.vscomp-toggle-button')
+                    .css('display', 'none');
+                }
+              });
+              ", ns("search"))
+          )
         ),
-        onclick = sprintf(
-          "window.Shiny.setInputValue('%s', '%s')",
-          ns("selected_block"),
-          blk[["ctor"]]
+        # Remove ugly shadow on hover
+        tags$style(
+          ".vscomp-wrapper.keep-always-open.focused,
+          .vscomp-wrapper.keep-always-open:focus,
+          .vscomp-wrapper.keep-always-open:hover {
+            box-shadow: none;
+          }
+          "
         )
+      ),
+      shinyWidgets::virtualSelectInput(
+        ns("search"),
+        "",
+        searchPlaceholderText = "Search for blocks",
+        choices = list(),
+        search = TRUE,
+        showValueAsTags = TRUE,
+        html = TRUE,
+        markSearchResults = TRUE,
+        optionsCount = 3,
+        keepAlwaysOpen = TRUE,
+        searchGroup = TRUE,
+        searchByStartsWith = TRUE,
+        hasOptionDescription = TRUE
       )
     )
-  })
-
-  bslib::accordion_panel(
-    value = sprintf("%s-block-pills", nm),
-    title = sprintf("%s blocks", nm),
-    pills_ui
-  )
-}
-
-create_block_choices <- function(blks, ns) {
-  removeUI(sprintf("#%s", ns("accordion")), immediate = TRUE)
-
-  blks_ui <- if (nrow(blks) == 0) {
-    h6(id = ns("accordion"), "No compatible blocks found.")
-  } else {
-    cats <- split(blks, blks$category)
-    bslib::accordion(
-      id = ns("accordion"),
-      multiple = TRUE,
-      open = TRUE,
-      lapply(cats, create_blk_pills, ns)
-    )
-  }
-  insertUI(
-    sprintf("#%s", ns("block-choices")),
-    ui = blks_ui
   )
 }
 

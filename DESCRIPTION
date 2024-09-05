@@ -39,7 +39,8 @@ Imports:
     shinyFiles,
     memuse,
     haven,
-    rlang
+    rlang,
+    shinyWidgets
 Remotes:
     blockr-org/blockr.data,
     DivadNojnarg/DiagrammeR
