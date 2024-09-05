@@ -291,15 +291,17 @@ add_block_ui <- function(id) {
         # Hide the select dropdown as we just need the searchbar
         tags$script(
           HTML(
-            sprintf(
-              "$(document).one('shiny:inputchanged', function(e) {
+            sprintf("
+              $(document).one('shiny:inputchanged', function(e) {
                 if (e.name === 'my_stack-rendered') {
                   $('#%s')
                     .find('.vscomp-toggle-button')
                     .css('display', 'none');
                 }
               });
-              ", ns("search"))
+              ",
+              ns("search")
+            )
           )
         ),
         # Remove ugly shadow on hover
