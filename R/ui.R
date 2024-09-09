@@ -323,11 +323,12 @@ add_block_ui <- function(id) {
         showValueAsTags = TRUE,
         html = TRUE,
         markSearchResults = TRUE,
-        optionsCount = 3,
+        optionsCount = 10,
         keepAlwaysOpen = TRUE,
         searchGroup = TRUE,
-        searchByStartsWith = TRUE,
-        hasOptionDescription = TRUE
+        #searchByStartsWith = TRUE,
+        hasOptionDescription = TRUE,
+        width = "100%"
       )
     )
   )
