@@ -20,22 +20,22 @@ register_block(
   constructor,
   name,
   description,
-  category = "uncategorized",
   classes,
   input,
   output,
-  package = NA_character_
+  package = NA_character_,
+  category = "uncategorized"
 )
 
 register_blocks(
   constructor,
   name,
   description,
-  category = "uncategorized",
   classes,
   input,
   output,
-  package = NA_character_
+  package = NA_character_,
+  category = "uncategorized"
 )
 
 unregister_blocks(ids = NULL, package = NULL)
@@ -47,13 +47,16 @@ construct_block(block, ...)
 
 \item{constructor}{Block constructor}
 
-\item{name, description, category}{Metadata describing the block}
+\item{name, description}{Metadata describing the block}
 
 \item{classes}{Block classes}
 
 \item{input, output}{Object types the block consumes and produces}
 
 \item{package}{Package where block is defined}
+
+\item{category}{Useful to sort blocks by topics. If not specified,
+blocks are uncategorized.}
 
 \item{ids}{Character vector of block IDs (first entry in class attribute)}
 

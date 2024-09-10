@@ -361,7 +361,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
 
       # TBD: The stack could have attributes like: add_block = TRUE.
       # If yes, we can call the corresponding modules/func on the UI/Server side.
-      block_to_add <- add_block_server("add-block", vals)
+      block_to_add <- add_block_server(x, "add-block", vals)
       # This can only be done from the stack level
       observeEvent(block_to_add$selected(), {
         add_block_stack(
@@ -461,14 +461,29 @@ remove_stack_server <- function(vals, input, session, id, workspace) {
   })
 }
 
-#' Add block server module
+#' Add block server generic
 #'
 #' This modules aims at showing extra info in the
 #' offcanvas menu to add blocks. Blocks are added
 #' at the stack level with another function, add_block_stack.
-#' @param id Module id.
+#'
+#' @rdname add_block
+#' @export
+add_block_server <- function(x, ...) {
+  stopifnot(inherits(x, "stack"))
+  UseMethod("add_block_server", x)
+}
+
+#' Default add block server module
+#'
+#' This modules aims at showing extra info in the
+#' offcanvas menu to add blocks. Blocks are added
+#' at the stack level with another function, add_block_stack.
+#'
 #' @param vals Reactive values.
-add_block_server <- function(id, vals) {
+#' @rdname add_block
+#' @export
+add_block_server.default <- function(x, id, vals) {
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
@@ -479,10 +494,14 @@ add_block_server <- function(id, vals) {
       # Pills are dynamically updated from the server
       # depending on the block compatibility
       blk_choices(get_compatible_blocks(vals$stack))
+
+      choices <- blk_choices()
+      choices$name <- paste(choices$package, sep = "::", choices$ctor)
+
       shinyWidgets::updateVirtualSelect(
         "search",
         choices = shinyWidgets::prepare_choices(
-          blk_choices(),
+          choices,
           .data$name,
           .data$ctor,
           group_by = .data$category,

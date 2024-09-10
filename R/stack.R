@@ -286,8 +286,8 @@ get_compatible_blocks <- function(stack) {
   }
   # Otherwise we compare the output of the last block
   # and propose any of the block that have compatible input
-  ctor <- class(stack[[length(stack)]])[1]
-  last_blk_output <- registry[registry$ctor == ctor, "output"]
+  cls <- paste(class(stack[[length(stack)]]), collapse = ", ")
+  last_blk_output <- registry[grep(cls, registry$classes), "output"]
 
   tmp <- registry[!is.na(registry$input) & registry$input == last_blk_output, ]
 

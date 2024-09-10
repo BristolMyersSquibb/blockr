@@ -42,8 +42,8 @@ block_name <- block_descrs_getter(block_descr_getter("name"))
 #' @export
 block_descr <- block_descrs_getter(block_descr_getter("description"))
 
-new_block_descr <- function(constructor, name, description, category, classes, input,
-                            output, pkg) {
+new_block_descr <- function(constructor, name, description, classes, input,
+                            output, pkg, category) {
 
   stopifnot(
     is.function(constructor), is_string(name), is_string(description),
@@ -54,18 +54,20 @@ new_block_descr <- function(constructor, name, description, category, classes, i
 
   structure(
     constructor, name = name, description = description,
-    category = category, classes = classes,
-    input = input, output = output, package = pkg, class = "block_descr"
+    classes = classes, input = input, output = output,
+    package = pkg, category = category, class = "block_descr"
   )
 }
 
 block_registry <- new.env()
 
 #' @param constructor Block constructor
-#' @param name,description,category Metadata describing the block
+#' @param name,description Metadata describing the block
 #' @param classes Block classes
 #' @param input,output Object types the block consumes and produces
 #' @param package Package where block is defined
+#' @param category Useful to sort blocks by topics. If not specified,
+#' blocks are uncategorized.
 #'
 #' @rdname available_blocks
 #' @export
@@ -73,15 +75,15 @@ register_block <- function(
   constructor,
   name,
   description,
-  category = "uncategorized",
   classes,
   input,
   output,
-  package = NA_character_
+  package = NA_character_,
+  category = "uncategorized"
 ) {
 
-  descr <- new_block_descr(constructor, name, description, category, classes, input,
-                           output, package)
+  descr <- new_block_descr(constructor, name, description, classes, input,
+                           output, package, category)
 
   id <- classes[1L]
 
@@ -99,11 +101,11 @@ register_blocks <- function(
   constructor,
   name,
   description,
-  category = "uncategorized",
   classes,
   input,
   output,
-  package = NA_character_
+  package = NA_character_,
+  category = "uncategorized"
 ) {
 
   if (length(constructor) == 1L && !is.list(classes)) {
@@ -115,11 +117,11 @@ register_blocks <- function(
     constructor = constructor,
     name = name,
     description = description,
-    category = category,
     classes = classes,
     input = input,
     output = output,
-    package = package
+    package = package,
+    category = category
   )
 
   invisible(res)
@@ -221,24 +223,6 @@ register_blockr_blocks <- function(pkg) {
       "Select n first rows of dataset",
       "Mutate block"
     ),
-    category = c(
-      "data",
-      "data",
-      "data",
-      "data",
-      "parser",
-      "parser",
-      "parser",
-      "parser",
-      "transform",
-      "transform",
-      "transform",
-      "transform",
-      "transform",
-      "transform",
-      "transform",
-      "transform"
-    ),
     classes = list(
       c("dataset_block", "data_block"),
       c("result_block", "data_block"),
@@ -293,7 +277,25 @@ register_blockr_blocks <- function(pkg) {
       "data.frame",
       "data.frame"
     ),
-    package = pkg
+    package = pkg,
+    category = c(
+      "data",
+      "data",
+      "data",
+      "data",
+      "parser",
+      "parser",
+      "parser",
+      "parser",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform",
+      "transform"
+    )
   )
 }
 
@@ -326,11 +328,10 @@ get_registry <- function() {
     blk <- available_blocks()[[i]]
     attrs <- attributes(blk)
     data.frame(
-      name = attrs[["name"]],
       ctor = names(available_blocks())[[i]],
       description = attrs[["description"]],
       category = attrs[["category"]],
-      classes = paste(attrs[["classes"]], collapse = ", "),
+      classes = paste(c(attrs[["classes"]], "block"), collapse = ", "),
       input = attrs[["input"]],
       output = attrs[["output"]],
       package = attrs[["package"]]

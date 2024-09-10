@@ -259,7 +259,21 @@ generate_ui.block <- function(x, id, ...,
   )
 }
 
-#' Add block UI interface
+#' Add block UI generic
+#'
+#' Useful to allow stack to add blocks to it.
+#'
+#' @param x Stack object.
+#' @param ...
+#'
+#' @export
+#' @rdname add_block
+add_block_ui <- function(x, ...) {
+  stopifnot(inherits(x, "stack"))
+  UseMethod("add_block_ui", x)
+}
+
+#' Default add block UI interface
 #'
 #' Useful to allow stack to add blocks to it.
 #' The selected block can be accessed through `input$search`
@@ -268,7 +282,8 @@ generate_ui.block <- function(x, id, ...,
 #' @param id Module id.
 #'
 #' @export
-add_block_ui <- function(id) {
+#' @rdname add_block
+add_block_ui.default <- function(x, id) {
   ns <- shiny::NS(id)
   add_block_ui_id <- ns("confirm")
 
@@ -312,6 +327,15 @@ add_block_ui <- function(id) {
             box-shadow: none;
           }
           "
+        ),
+        tags$head(
+          tags$script(HTML("
+            function colorText(data) {
+              console.log(data);
+              let text = `<span class='badge text-bg-secondary'>${data.label}</span>`;
+              return text;
+            }"
+          ))
         )
       ),
       shinyWidgets::virtualSelectInput(
@@ -328,7 +352,8 @@ add_block_ui <- function(id) {
         searchGroup = TRUE,
         #searchByStartsWith = TRUE,
         hasOptionDescription = TRUE,
-        width = "100%"
+        width = "100%",
+        labelRenderer = "colorText"
       )
     )
   )
@@ -469,7 +494,7 @@ stack_header.stack <- function(x, title, ns, ...) {
           class = "text-decoration-none stack-remove",
           icon("trash")
         ),
-        add_block_ui(ns("add-block")),
+        add_block_ui(x, ns("add-block")),
         actionLink(
           ns("copy"),
           class = "text-decoration-none stack-copy-code",
