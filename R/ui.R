@@ -264,7 +264,7 @@ generate_ui.block <- function(x, id, ...,
 #' Useful to allow stack to add blocks to it.
 #'
 #' @param x Stack object.
-#' @param ...
+#' @param ... For generic consistency
 #'
 #' @export
 #' @rdname add_block

@@ -21,7 +21,7 @@ add_block_ui(x, ...)
 \arguments{
 \item{x}{Stack object.}
 
-\item{...}{}
+\item{...}{For generic consistency}
 
 \item{id}{Module id.}
 
