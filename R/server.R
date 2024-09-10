@@ -483,7 +483,7 @@ add_block_server <- function(x, ...) {
 #' @param vals Reactive values.
 #' @rdname add_block
 #' @export
-add_block_server.default <- function(x, id, vals) {
+add_block_server.default <- function(x, id, vals, ...) {
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns

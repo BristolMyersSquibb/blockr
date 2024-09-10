@@ -283,7 +283,7 @@ add_block_ui <- function(x, ...) {
 #'
 #' @export
 #' @rdname add_block
-add_block_ui.default <- function(x, id) {
+add_block_ui.default <- function(x, id, ...) {
   ns <- shiny::NS(id)
   add_block_ui_id <- ns("confirm")
 

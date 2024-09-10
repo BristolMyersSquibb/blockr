@@ -10,13 +10,13 @@
 \usage{
 add_block_server(x, ...)
 
-\method{add_block_server}{default}(x, id, vals)
+\method{add_block_server}{default}(x, id, vals, ...)
 
 add_block(stack, block, position = NULL)
 
 add_block_ui(x, ...)
 
-\method{add_block_ui}{default}(x, id)
+\method{add_block_ui}{default}(x, id, ...)
 }
 \arguments{
 \item{x}{Stack object.}
