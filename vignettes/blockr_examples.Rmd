@@ -104,6 +104,7 @@ blockr::register_block(
   constructor = filter_in_block,
   name = "Filter in",
   description = "Filter on a vector",
+  category = "transform",
   classes = c("filter_in_block", "transform_block"),
   input = "data.frame",
   output = "data.frame"
@@ -172,6 +173,7 @@ register_block(
   new_stock_data_block,
   name = "Stock Data",
   description = "Fetch stock data",
+  category = "data",
   classes = c("stock_data_block", "data_block"),
   input = NA_character_,
   output = "data.frame"
@@ -180,6 +182,7 @@ register_block(
   new_prophet_forecast_block,
   name = "Prophet Forecast",
   description = "Forecast using Prophet",
+  category = "plot",
   classes = c("prophet_forecast_block", "plot_block"),
   input = "data.frame",
   output = "plot"
@@ -371,6 +374,7 @@ register_block(
   new_forest_plot_block,
   name = "Adverse Event Forest Plot",
   description = "Create a forest plot of adverse events comparing two treatment arms",
+  category = "plot",
   classes = c("adverse_event_plot_block", "plot_block"),
   input = "data.frame",
   output = "plot"
@@ -440,6 +444,7 @@ register_block(
   new_cardinal02_block,
   "Cardinal 02",
   "A Cardinal 02 table",
+  category = "table",
   input = "data.frame",
   output = "list",
   classes = c("cardinal02_block", "rtables_block", "submit_block")
@@ -534,6 +539,7 @@ register_block(
   new_air_quality_block,
   name = "Air Quality Data",
   description = "Import air quality data",
+  category = "data",
   classes = c("air_quality_block", "data_block"),
   input = NA_character_,
   output = "data.frame"
@@ -543,6 +549,7 @@ register_block(
   new_pollution_forecast_block,
   name = "Pollution Forecast",
   description = "Forecast pollution levels",
+  category = "plot",
   classes = c("pollution_forecast_block", "plot_block"),
   input = "data.frame",
   output = "plot"
@@ -712,6 +719,7 @@ register_block(
   new_marketing_data_block,
   name = "Marketing Data",
   description = "Load and prepare marketing data",
+  category = "data",
   classes = c("marketing_data_block", "data_block"),
   input = NA_character_,
   output = "data.frame"
@@ -720,6 +728,7 @@ register_block(
   new_causal_impact_block,
   name = "Causal Impact Analysis",
   description = "Perform Causal Impact analysis on marketing data",
+  category = "plot",
   classes = c("causal_impact_block", "plot_block"),
   input = "data.frame",
   output = "plot"

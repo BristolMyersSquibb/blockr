@@ -57,6 +57,37 @@ test_that("Set stack title", {
   )
 })
 
+test_that("Get compatible blocks", {
+  stack <- new_stack()
+  res <- get_compatible_blocks(stack)
+  # Might change if we add new data blocks
+  expect_equal(nrow(res), 3)
+  expect_identical(unique(res$category), "data")
+
+  # Uncategorized block
+  attr(block_registry$dataset_block, "category") <- "uncategorized"
+  stack <- new_stack()
+  res <- get_compatible_blocks(stack)
+  expect_equal(nrow(res), 3)
+  expect_contains(unique(res$category), c("data", "uncategorized"))
+
+  stack <- new_stack(new_dataset_block())
+  res <- get_compatible_blocks(stack)
+  expect_identical(unique(res$category), "transform")
+
+  # Check for workspace and result block
+  stack1 <- new_stack(
+    new_dataset_block,
+    new_filter_block
+  )
+
+  stack2 <- new_stack()
+
+  set_workspace(stack1 = stack1, stack2 = stack2)
+  expect_true("result_block" %in% get_compatible_blocks(stack2)$ctor)
+  expect_true("result_block" %in% get_compatible_blocks(stack1)$ctor)
+})
+
 withr::local_package("shinytest2")
 
 test_that("stacks demo works", {
@@ -68,7 +99,6 @@ test_that("stacks demo works", {
   )
 
   stack_inputs <- c(
-    "mystack-add",
     "mystack-copy",
     "mystack-newTitle",
     "mystack-remove"
@@ -92,8 +122,17 @@ test_that("stacks demo works", {
 
   # Add a block
   app$click(selector = ".stack-add-block")
-  app$set_inputs("mystack-selected_block" = "dataset_block")
-  app$click(selector = "#mystack-add")
+  app$set_inputs("mystack-add-block-search" = "dataset_block")
+
+  app$expect_values(
+    input = stack_inputs,
+    export = stack_exports,
+    screenshot_args = list(
+      delay = 1
+    )
+  )
+
+  app$set_inputs("mystack-add-block-search" = "select_block")
 
   app$expect_values(
     input = stack_inputs,

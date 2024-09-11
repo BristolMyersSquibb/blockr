@@ -1,11 +1,31 @@
 # blockr 0.0.2.9000
 
+## Feature
+- Improved __add__ new block.
+- Added new `category` to the registry. Now when a block is registered, you may pass a category parameter (which is used by the add block feature to sort blocks):
+
+```r
+register_block(
+  constructor = new_tail_block,
+  name = "tail block",
+  description = "return last n rows",
+  category = "transform",
+  classes = c("tail_block", "transform_block"),
+  input = "data.frame",
+  output = "data.frame"
+)
+```
+
+If not passed, the block will belong to `uncategorized` blocks (default).
+
 ## Doc
 - Improved `registry` and `getting started` vignettes.
 - Add new `case studies` vignette to present blockr in various contexts.
 - Refine GitHub readme.
 
 ## Fixes
+- Fix issue in `handle_remove.block`: `vals$stack` wasn't correctly updated
+when the last block was removed leading to wrong state.
 - Loading spinner is now correctly hidden when the block visual is updated.
 
 # blockr 0.0.2

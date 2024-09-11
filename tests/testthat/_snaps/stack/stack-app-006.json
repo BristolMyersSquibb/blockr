@@ -1,13 +1,12 @@
 {
   "input": {
-    "mystack-add": 1,
     "mystack-copy": 1,
     "mystack-newTitle": "Stack",
     "mystack-remove": 1
   },
   "export": {
-    "mystack-n_blocks": 1,
-    "mystack-removed": true,
+    "mystack-n_blocks": 2,
+    "mystack-removed": false,
     "mystack-stack": [
       {
         "package": {
@@ -32,6 +31,18 @@
             "\"stackloss\", \"swiss\", \"trees\", \"warpbreaks\", \"women\"))"
           ],
           "multiple": false
+        }
+      },
+      {
+        "columns": {
+          "value": [
+
+          ],
+          "choices": [
+            "structure(function (data) ",
+            "colnames(data), result = c(\"Time\", \"demand\"))"
+          ],
+          "multiple": true
         }
       }
     ]

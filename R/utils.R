@@ -200,6 +200,7 @@ off_canvas <- function(
     tabindex = "-1",
     id = id,
     `aria-labelledby` = label,
+    `data-bs-scroll` = "true",
     tags$div(
       class = "offcanvas-header",
       tags$h5(
@@ -213,7 +214,7 @@ off_canvas <- function(
         `aria-label` = "Close"
       )
     ),
-    tags$div(class = "offcanvas-body small", ...)
+    tags$div(class = "offcanvas-body", ...)
   )
 }
 

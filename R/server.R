@@ -359,6 +359,18 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         vals$stack <- set_stack_title(vals$stack, input$newTitle)
       })
 
+      # TBD: The stack could have attributes like: add_block = TRUE.
+      # If yes, we can call the corresponding modules/func on the UI/Server side.
+      block_to_add <- add_block_server(x, "add-block", vals)
+      # This can only be done from the stack level
+      observeEvent(block_to_add$selected(), {
+        add_block_stack(
+          block_to_add = available_blocks()[[block_to_add$selected()]], # pass in block constructor
+          position = NULL,
+          vals = vals
+        )
+      })
+
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
       observeEvent(
@@ -383,56 +395,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         )
       })
 
-      observeEvent(input$remove, {
-        showModal(
-          modalDialog(
-            title = "Remove stack",
-            p("Are you sure you want to remove this stack?"),
-            div(
-              class = "d-flex",
-              div(
-                class = "flex-grow-1",
-                actionButton(
-                  session$ns("cancelRemove"),
-                  "Cancel",
-                  icon = icon("times")
-                )
-              ),
-              div(
-                class = "flex-shrink-1",
-                actionButton(
-                  session$ns("acceptRemove"),
-                  "Confirm",
-                  class = "bg-danger",
-                  icon = icon("trash")
-                )
-              )
-            ),
-            footer = NULL
-          )
-        )
-      })
-
-      observeEvent(input$cancelRemove, {
-        removeModal()
-      })
-
-      observeEvent(input$acceptRemove, {
-        on.exit(removeModal())
-        removeUI(
-          sprintf("#%s", session$ns(NULL))
-        )
-        vals$removed <- TRUE
-        rm_workspace_stack(id, workspace = workspace)
-      })
-
-      observeEvent(input$add, {
-        add_block_stack(
-          block_to_add = available_blocks()[[input$selected_block]], # pass in block constructor
-          position = NULL,
-          vals = vals
-        )
-      })
+      # Handle stack removal
+      remove_stack_server(vals, input, session, id, workspace)
 
       observeEvent(input$rendered, {
         session$sendCustomMessage(
@@ -447,6 +411,130 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       vals
     }
   )
+}
+
+#' Helper function that removes a stack
+#' @keywords internal
+#' @noRd
+remove_stack_server <- function(vals, input, session, id, workspace) {
+  observeEvent(input$remove, {
+    showModal(
+      modalDialog(
+        title = "Remove stack",
+        p("Are you sure you want to remove this stack?"),
+        div(
+          class = "d-flex",
+          div(
+            class = "flex-grow-1",
+            actionButton(
+              session$ns("cancelRemove"),
+              "Cancel",
+              icon = icon("times")
+            )
+          ),
+          div(
+            class = "flex-shrink-1",
+            actionButton(
+              session$ns("acceptRemove"),
+              "Confirm",
+              class = "bg-danger",
+              icon = icon("trash")
+            )
+          )
+        ),
+        footer = NULL
+      )
+    )
+  })
+
+  observeEvent(input$cancelRemove, {
+    removeModal()
+  })
+
+  observeEvent(input$acceptRemove, {
+    on.exit(removeModal())
+    removeUI(
+      sprintf("#%s", session$ns(NULL))
+    )
+    vals$removed <- TRUE
+    rm_workspace_stack(id, workspace = workspace)
+  })
+}
+
+#' Add block server generic
+#'
+#' This modules aims at showing extra info in the
+#' offcanvas menu to add blocks. Blocks are added
+#' at the stack level with another function, add_block_stack.
+#'
+#' @rdname add_block
+#' @export
+add_block_server <- function(x, ...) {
+  stopifnot(inherits(x, "stack"))
+  UseMethod("add_block_server", x)
+}
+
+#' Default add block server module
+#'
+#' This modules aims at showing extra info in the
+#' offcanvas menu to add blocks. Blocks are added
+#' at the stack level with another function, add_block_stack.
+#'
+#' @param vals Reactive values.
+#' @rdname add_block
+#' @export
+add_block_server.default <- function(x, id, vals, ...) {
+  moduleServer(id, function(input, output, session) {
+
+    ns <- session$ns
+
+    # Triggers on init
+    blk_choices <- reactiveVal(NULL)
+    observeEvent(vals$blocks, {
+      # Pills are dynamically updated from the server
+      # depending on the block compatibility
+      blk_choices(get_compatible_blocks(vals$stack))
+
+      choices <- blk_choices()
+      choices$name <- paste(choices$package, sep = "::", choices$ctor)
+
+      shinyWidgets::updateVirtualSelect(
+        "search",
+        choices = shinyWidgets::prepare_choices(
+          choices,
+          .data$name,
+          .data$ctor,
+          group_by = .data$category,
+          description = .data$description
+        )
+      )
+
+      #create_block_choices(blk_choices(), ns)
+
+      if (length(vals$blocks) == 0) {
+        shiny::insertUI(
+          sprintf("#%s", ns("status-messages")),
+          ui = div(
+            class = "alert alert-primary",
+            role = "alert",
+            id = ns("status-message"),
+            "Stack has no blocks. Start by adding a data block."
+          )
+        )
+      } else {
+        removeUI(sprintf("#%s", ns("status-message")))
+      }
+    })
+
+    return(
+      list(
+        selected = reactive({
+          req(nchar(input$search) > 0)
+          input$search
+        })
+      )
+    )
+  })
 }
 
 #' Remove stack/block generic
@@ -499,6 +587,8 @@ handle_remove.block <- function(x, vals,
           attr(vals$stack[[i]], "position") <- i
           vals$blocks[[i]] <- init_block(i, vals)
         }
+      } else {
+        vals$stack[[to_remove]] <- NULL
       }
     }
   )
@@ -772,6 +862,7 @@ add_block_stack <- function(
     vals,
     session = getDefaultReactiveDomain()) {
   vals$stack <- add_block(vals$stack, block_to_add, position)
+  ns <- session$ns
 
   # Call module
   p <- if (is.null(position)) {
@@ -791,12 +882,12 @@ add_block_stack <- function(
     insertUI(
       selector = sprintf(
         "[data-value='%s-block']",
-        session$ns(attr(vals$stack[[p - 1]], "name"))
+        ns(attr(vals$stack[[p - 1]], "name"))
       ),
       where = "afterEnd",
       inject_remove_button(
         vals$stack[[p]],
-        session$ns,
+        ns,
         .hidden = FALSE
       )
     )
@@ -804,12 +895,12 @@ add_block_stack <- function(
     insertUI(
       selector = sprintf(
         "#%sbody",
-        session$ns("")
+        ns("")
       ),
       where = "afterBegin",
       inject_remove_button(
         vals$stack[[p]],
-        session$ns,
+        ns,
         .hidden = FALSE
       )
     )
@@ -822,8 +913,8 @@ add_block_stack <- function(
   session$sendCustomMessage(
     "blockr-add-block",
     list(
-      stack = session$ns(NULL),
-      block = session$ns(attr(vals$stack[[p]], "name"))
+      stack =  ns(NULL),
+      block =  ns(attr(vals$stack[[p]], "name"))
     )
   )
 }

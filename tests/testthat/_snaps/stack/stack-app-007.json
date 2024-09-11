@@ -1,21 +1,19 @@
 {
   "input": {
-    "mystack-copy": 0,
+    "mystack-copy": 1,
     "mystack-newTitle": "Stack",
-    "mystack-remove": 0
+    "mystack-remove": 1
   },
   "export": {
-    "mystack-n_blocks": 1,
-    "mystack-removed": false,
+    "mystack-n_blocks": 2,
+    "mystack-removed": true,
     "mystack-stack": [
       {
         "package": {
           "value": "datasets"
         },
         "dataset": {
-          "value": [
-
-          ],
+          "value": "BOD",
           "choices": [
             "structure(function (package) ",
             "{",
@@ -33,6 +31,18 @@
             "\"stackloss\", \"swiss\", \"trees\", \"warpbreaks\", \"women\"))"
           ],
           "multiple": false
+        }
+      },
+      {
+        "columns": {
+          "value": [
+
+          ],
+          "choices": [
+            "structure(function (data) ",
+            "colnames(data), result = c(\"Time\", \"demand\"))"
+          ],
+          "multiple": true
         }
       }
     ]

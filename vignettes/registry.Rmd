@@ -169,6 +169,7 @@ register_block(
   constructor = new_tail_block,
   name = "tail block",
   description = "return last n rows",
+  category = "transform",
   classes = c("tail_block", "transform_block"),
   input = "data.frame",
   output = "data.frame"
@@ -211,6 +212,7 @@ register_blocks(
     "select columns in a table",
     "summarize data groups"
   ),
+  category = c("data", rep("transform", 3)),
   classes = list(
     c("dataset_block", "data_block"),
     c("filter_block", "transform_block", "submit_block"),
@@ -219,7 +221,7 @@ register_blocks(
   ),
   input = c(NA_character_, "data.frame", "data.frame", "data.frame"),
   output = c("data.frame", "data.frame", "data.frame", "data.frame"),
-  package = pkg
+  package = "<PKG_NAME>"
 )
 ```
 
