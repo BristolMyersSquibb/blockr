@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,8 +78,8 @@
 
 <script src="registry_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="registry_files/d3-3.3.8/d3.min.js"></script><script src="registry_files/dagre-0.4.0/dagre-d3.min.js"></script><script src="registry_files/mermaid-10.6.0/dist/mermaid.slim.min.js"></script><link href="registry_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="registry_files/chromatography-0.1/chromatography.js"></script><script src="registry_files/DiagrammeR-binding-1.0.10.9000/DiagrammeR.js"></script><link href="registry_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="registry_files/bslib-component-js-0.7.0/components.min.js"></script><script src="registry_files/bslib-component-js-0.7.0/web-components.min.js" type="module"></script><link href="registry_files/bslib-component-css-0.7.0/components.css" rel="stylesheet">
-<script src="registry_files/bslib-tag-require-0.7.0/tag-require.js"></script><div class="row">
+<script src="registry_files/bslib-component-js-0.8.0/components.min.js"></script><script src="registry_files/bslib-component-js-0.8.0/web-components.min.js" type="module"></script><link href="registry_files/bslib-component-css-0.8.0/components.css" rel="stylesheet">
+<script src="registry_files/bslib-tag-require-0.8.0/tag-require.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>2. Blocks registry</h1>
@@ -205,6 +205,7 @@ returns the <code>n</code> last rows of the selected dataset:</p>
 <span>  constructor <span class="op">=</span> <span class="va">new_tail_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"tail block"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"return last n rows"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"transform"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tail_block"</span>, <span class="st">"transform_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"data.frame"</span></span>
@@ -220,7 +221,7 @@ returns the <code>n</code> last rows of the selected dataset:</p>
 <span><span class="co">#&gt; [16] "upload_block"       "xpt_block"</span></span></code></pre></div>
 <p>We can now run the demo app to add blocks. The new
 <code>tail_block</code> should be visible in the new choices:</p>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-1655">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-5901">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6RBw1AD6XCzclYXiMgA85jIAZk4QBKTuEHwAJlBcshCVDETUymoQTvAMLBrJshgryTIg6ekyMqPjk5UwUAAeza0dXT0kA0NQaxB711wl21s7FfWiEoIQ29ttLHBuP0pjJMpxvr9frsJiDylUZnMFpV-oD+nxoZNZABGAAyIzGMIOx2evyWr22cCOqAYqhkAEcnERyHwavwfmoMOiCZNUmSfr8CNxYiCNEJWR8zAExQwoBw2lYYBKJClcOSZCsMK8SgBfTb3OD2ThwBhK8QQ9QkTgMJzdKy0uHVKC1U2q-nQeC0sVO7gyBrSV79ODsAjzVCXdmBMDyUhOBg-IWcHZyGH+-mC4VB2misDiv14SOkGVyhWmlWvNioJykT1gQZcDBtGXwVPbIhVyvVtRCOtQBtNuBCdIldKcKASU5vKqjr4OnvsOCkU0lecMABucEq07NW+SYG1AF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -242,6 +243,7 @@ returns the <code>n</code> last rows of the selected dataset:</p>
 <span>    <span class="st">"select columns in a table"</span>,</span>
 <span>    <span class="st">"summarize data groups"</span></span>
 <span>  <span class="op">)</span>,</span>
+<span>  category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"transform"</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dataset_block"</span>, <span class="st">"data_block"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"filter_block"</span>, <span class="st">"transform_block"</span>, <span class="st">"submit_block"</span><span class="op">)</span>,</span>
@@ -250,7 +252,7 @@ returns the <code>n</code> last rows of the selected dataset:</p>
 <span>  <span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA_character_</span>, <span class="st">"data.frame"</span>, <span class="st">"data.frame"</span>, <span class="st">"data.frame"</span><span class="op">)</span>,</span>
 <span>  output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data.frame"</span>, <span class="st">"data.frame"</span>, <span class="st">"data.frame"</span>, <span class="st">"data.frame"</span><span class="op">)</span>,</span>
-<span>  package <span class="op">=</span> <span class="va">pkg</span></span>
+<span>  package <span class="op">=</span> <span class="st">"&lt;PKG_NAME&gt;"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">

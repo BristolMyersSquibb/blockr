@@ -13,7 +13,6 @@
 <url><loc>https://blockr-org.github.io/blockr/index.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/news/index.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/add_block.html</loc></url>
-<url><loc>https://blockr-org.github.io/blockr/reference/add_block_ui.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/available_blocks.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/block_body.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/block_code.html</loc></url>
@@ -32,6 +31,8 @@
 <url><loc>https://blockr-org.github.io/blockr/reference/generate_code.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/generate_server.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/generate_ui.html</loc></url>
+<url><loc>https://blockr-org.github.io/blockr/reference/get_compatible_blocks.html</loc></url>
+<url><loc>https://blockr-org.github.io/blockr/reference/get_registry.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/handle_remove.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/hidden_field.html</loc></url>
 <url><loc>https://blockr-org.github.io/blockr/reference/index.html</loc></url>

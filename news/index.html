@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,22 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.2.9000" id="blockr-0029000">blockr 0.0.2.9000<a class="anchor" aria-label="anchor" href="#blockr-0029000"></a></h2>
 <div class="section level3">
+<h3 id="feature-0-0-2-9000">Feature<a class="anchor" aria-label="anchor" href="#feature-0-0-2-9000"></a></h3>
+<ul><li>Improved <strong>add</strong> new block.</li>
+<li>Added new <code>category</code> to the registry. Now when a block is registered, you may pass a category parameter (which is used by the add block feature to sort blocks):</li>
+</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/available_blocks.html">register_block</a></span><span class="op">(</span></span>
+<span>  constructor <span class="op">=</span> <span class="va">new_tail_block</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"tail block"</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"return last n rows"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"transform"</span>,</span>
+<span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tail_block"</span>, <span class="st">"transform_block"</span><span class="op">)</span>,</span>
+<span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"data.frame"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>If not passed, the block will belong to <code>uncategorized</code> blocks (default).</p>
+</div>
+<div class="section level3">
 <h3 id="doc-0-0-2-9000">Doc<a class="anchor" aria-label="anchor" href="#doc-0-0-2-9000"></a></h3>
 <ul><li>Improved <code>registry</code> and <code>getting started</code> vignettes.</li>
 <li>Add new <code>case studies</code> vignette to present blockr in various contexts.</li>
@@ -64,7 +80,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="fixes-0-0-2-9000">Fixes<a class="anchor" aria-label="anchor" href="#fixes-0-0-2-9000"></a></h3>
-<ul><li>Loading spinner is now correctly hidden when the block visual is updated.</li>
+<ul><li>Fix issue in <code>handle_remove.block</code>: <code>vals$stack</code> wasn’t correctly updated when the last block was removed leading to wrong state.</li>
+<li>Loading spinner is now correctly hidden when the block visual is updated.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -73,7 +90,7 @@
 <h3 id="breaking-changes-0-0-2">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-2"></a></h3>
 <ul><li>Change blocks and fields constructor names to <code>new_*_block</code> and <code>new_*_field</code>. For instance, for the select block, users are now supposed to use <code><a href="../reference/new_select_block.html">new_select_block()</a></code> and not <code>select_block</code>.</li>
 <li>Remove <code>data</code> from block constructor:</li>
-</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_select_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">columns</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -83,7 +100,7 @@
 <ul><li>New validation functions: <code><a href="../reference/validate_field.html">validate_field()</a></code> and <code>validate_block()</code> to check that values are consistent with data. These are used to then propagate any error to the user via JavaScript.</li>
 <li>Evaluation stops whenever a block isn’t valid and the app should not crash.</li>
 <li>We can now instantiate block outside the stack with default parameter values (or use the old way with constructors):</li>
-</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+</ul><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># New way</span></span>
 <span><span class="va">data_blk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_dataset_block.html">new_dataset_block</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="st">"lab"</span>, package <span class="op">=</span> <span class="st">"blockr.data"</span><span class="op">)</span></span>
 <span><span class="va">select_blk</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_select_block.html">new_select_block</a></span><span class="op">(</span><span class="st">"STUDYID"</span><span class="op">)</span></span>

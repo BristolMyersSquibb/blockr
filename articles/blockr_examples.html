@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,8 +77,8 @@
 
 
 <link href="blockr_examples_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="blockr_examples_files/bslib-component-js-0.7.0/components.min.js"></script><script src="blockr_examples_files/bslib-component-js-0.7.0/web-components.min.js" type="module"></script><link href="blockr_examples_files/bslib-component-css-0.7.0/components.css" rel="stylesheet">
-<script src="blockr_examples_files/bslib-tag-require-0.7.0/tag-require.js"></script><div class="row">
+<script src="blockr_examples_files/bslib-component-js-0.8.0/components.min.js"></script><script src="blockr_examples_files/bslib-component-js-0.8.0/web-components.min.js" type="module"></script><link href="blockr_examples_files/bslib-component-css-0.8.0/components.css" rel="stylesheet">
+<script src="blockr_examples_files/bslib-tag-require-0.8.0/tag-require.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Case studies</h1>
@@ -165,6 +165,7 @@ select the stock items and generate the data. The
 <span>  <span class="va">new_stock_data_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Stock Data"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Fetch stock data"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"data"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"stock_data_block"</span>, <span class="st">"data_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"data.frame"</span></span>
@@ -173,6 +174,7 @@ select the stock items and generate the data. The
 <span>  <span class="va">new_prophet_forecast_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Prophet Forecast"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Forecast using Prophet"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"plot"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prophet_forecast_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"plot"</span></span>
@@ -205,7 +207,7 @@ the <a href="https://github.com/pharmaverse/pharmaverseadam" class="external-lin
 <code>new_forest_plot_block</code> is a quite complex block. Part of the
 code is isolated in a function <code>create_ae_forest_plot</code> so
 that the main block constructor is more readable.</p>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-3138">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-8176">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/editor/#code=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-CiCCKmu6w1-qhGBtYuG3uagc2hqLcI9N70WDWATR0MA3BphgCkN1St7E0BaG3g0RwU0JaMWUeg1l8kUiVsTF7Ka6ClGVs2BAOAWg4DVp0D2iADg+AAA5B0wGHaxOgRAvbsBYAAL1JGoCdABmAArCOzU2bUCZlELUfYu6yZNqIDsHgIhnIBGnce3STQGDiA-XAAI+UQrRhfW+7ggGt2yVIGqlk1gq4ltQPbNVwsJHGqmghsoBExHjqUU1R4EgdJYd9KOvDiimpewBZh1BpHcMnvwzGtGVGoB0GBW4zQWBjr4iITILAHdYXoqIZw1lBieXsKyTAAV0G0ZHo4lNZOU7qANAwHJnEahzZKZU65KamnWJqpYERqaGgJ2XpqbITTMgAAsTGIrsSeFNe2WAACqNlK2PFIFhdjtDOPcYxaSfj7BxAASAlZBoxI6gyBsrjQTRLVnlFE5S3SsgmWSek91VMawo7GRndQTkPreSux4iCZs7wRR+T9BgDAVs4JwDywcHVtoR7HQaDpTYnBGsRTqllDadXRrHVApyNy3BtVBKEM5g6zmABCAApAAkgAEWpf0srDExSqy4JaZUxZvgbagLZzZC1vQsAuD+pEVkAAyB03NBI815sDB0QKnUW6ZPMBYhC5MrbaNKvW8uYUG81kbnW0ZCCsume2VksAAFllsIuFGtkge2tuah20Je0B2ClHceKdqa52rs3f6Xdn9Qh7bByevHO9+Z1hCt0Rj77U8z7XtUn1-76IhsteBxFUHNkFs2XTAAeSW3gIJq3RSI-R7mbgqOkdfaga+bH93kSXeu7L76DhFfc5kPbGo99KfvZpyc2XYyyp9YgPmGohn2dA6aQOoJMAIJqDMxUMdGmB3lnIIh8zt31fE7ABdX8-5AJa-OjXMsC26IXCgDsD7tORWVrEStKaTk-jrmtpspk9RWSAz1fSPbGkhwIQPsTY25F88QtL81P+DNTkRQjhjgg8ZBLGc0ESKEHJCaFc3gcRt9JitmBkxFKrYdaxZfOYiLj9haG9w-OoGU2J77d4gPISfPo+8SB1bl-Lwbe8HHhTt59YWIukmiyHJEPqZBxj+LDu03wmQnfWmB9MErCSJtpHyIPreSRkhi8QGAtGqz+yBxk45jyzX4N6xB1A6R1qf51CeJkCd48jd6sIMJFZIG2ZsCczqq-pqwYD3TXzX6cR6ADjPpPI04PgZjP4z6cAJidxojTqGbYxBwsDYzUESDNib6sHiAb59YwjqgNas7kBeRgYwhAYtpCyejeglJsBr5cG2ab456oEghMTpAPh1AMCxycEET0H1wiRMEsFcASDJBgARwhhAA" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
@@ -359,6 +361,7 @@ that the main block constructor is more readable.</p>
 <span>  <span class="va">new_forest_plot_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Adverse Event Forest Plot"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Create a forest plot of adverse events comparing two treatment arms"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"plot"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"adverse_event_plot_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"plot"</span></span>
@@ -433,6 +436,7 @@ in the <code>{blockr.cardinal}</code> package.</p>
 <span>  <span class="va">new_cardinal02_block</span>,</span>
 <span>  <span class="st">"Cardinal 02"</span>,</span>
 <span>  <span class="st">"A Cardinal 02 table"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"table"</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"list"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cardinal02_block"</span>, <span class="st">"rtables_block"</span>, <span class="st">"submit_block"</span><span class="op">)</span></span>
@@ -530,6 +534,7 @@ package and forecasts future pollution levels using an ARIMA model.</p>
 <span>  <span class="va">new_air_quality_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Air Quality Data"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Import air quality data"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"data"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"air_quality_block"</span>, <span class="st">"data_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"data.frame"</span></span>
@@ -539,6 +544,7 @@ package and forecasts future pollution levels using an ARIMA model.</p>
 <span>  <span class="va">new_pollution_forecast_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Pollution Forecast"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Forecast pollution levels"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"plot"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pollution_forecast_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"plot"</span></span>
@@ -708,6 +714,7 @@ sales. This requires to define a new date field as shown below.</p>
 <span>  <span class="va">new_marketing_data_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Marketing Data"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Load and prepare marketing data"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"data"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"marketing_data_block"</span>, <span class="st">"data_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"data.frame"</span></span>
@@ -716,6 +723,7 @@ sales. This requires to define a new date field as shown below.</p>
 <span>  <span class="va">new_causal_impact_block</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"Causal Impact Analysis"</span>,</span>
 <span>  description <span class="op">=</span> <span class="st">"Perform Causal Impact analysis on marketing data"</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"plot"</span>,</span>
 <span>  classes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"causal_impact_block"</span>, <span class="st">"plot_block"</span><span class="op">)</span>,</span>
 <span>  input <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"plot"</span></span>
@@ -742,7 +750,7 @@ it with the <code>{pracma}</code> R package (technically, the reason
 using <code>{pracma}</code> over <a href="http://desolve.r-forge.r-project.org/" class="external-link">deSolve</a> or
 <a href="https://github.com/SciML/diffeqr" class="external-link">diffeqr</a> is because only <code>{pracma}</code> is
 available for shinylive required by the embeded demo).</p>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-7823">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-4438">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
 <iframe class="html-fill-item" src="https://shinylive.io/r/editor/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhBeTKwcXLyaphIMdtaooqQATAHhymoaQbr6RiaihZY2dg7Oru6e9FHVAfUhTeGR0bHxiSlpEOncLIxQDACefAWSM-OLK3yoDFAEMFCbC-s760XWJWXlM+kQcNQA+kQAJnBP6zIAPOYyAGZOCAEUjuCB8DCQ5IyEDpdIyGSieQQABePz+gOBoJIMj4pFky1kqCWMHY0NhEARCLqlKpCIAGqoZMSGKTgABGAC6MgAVDJlhzuQBqfnAcrcvkCgDMnNw8LpMgAmkyWWzxbzcQL1X9pZzknLaXSAFpM8wCrkarXC5kk9jAGWWsXcnX2znyhEzBEAXzhtP+LDg3Feyl+iJYnEEhpkUCZD2eECc8AYLAIT39gdefHMAA5DFLZOZ2QAGWTlIv690yOixx5PBNJlNpgNBrPFgsAVhLMmL5YNdIINfjibgydT6Zb5WzsnZ06L5fld1pcc+LXEkbp4+DTM37D7VLgAA89kz2C5OA4nOR1wrYhhXlAuBh-vt4NeFTI3nAACztt-vgFArIlbvssRZMhojJqDOSpMtBJpQRWUbvqQYFqCWwEKqQ-rQNwsFznu-42qyNTqBCfDHLIGBrPqMhUQQqQYR6GGIe+8wRpiTJIhQKKelSLFUpCGAEeo3CxCRdRgJ+K5mIMYD3lw0kSCkC7pD6sw5Ac4jojIy6cJp17LlJ6xAUutZXKURCkIpa6VpiA61JoB6ycsKQmXS7z-FATjcFZxDcImHDgZoywYOyzkYJUYC8TR8rLtYcBEDAihsFZ6zpDM7AjgAbh8ekSHweXiMkYBepyQA" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>

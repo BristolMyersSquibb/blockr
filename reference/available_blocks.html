@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,8 @@
 <span>  <span class="va">classes</span>,</span>
 <span>  <span class="va">input</span>,</span>
 <span>  <span class="va">output</span>,</span>
-<span>  package <span class="op">=</span> <span class="cn">NA_character_</span></span>
+<span>  package <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"uncategorized"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">register_blocks</span><span class="op">(</span></span>
@@ -84,7 +85,8 @@
 <span>  <span class="va">classes</span>,</span>
 <span>  <span class="va">input</span>,</span>
 <span>  <span class="va">output</span>,</span>
-<span>  package <span class="op">=</span> <span class="cn">NA_character_</span></span>
+<span>  package <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  category <span class="op">=</span> <span class="st">"uncategorized"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">unregister_blocks</span><span class="op">(</span>ids <span class="op">=</span> <span class="cn">NULL</span>, package <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
@@ -118,6 +120,11 @@
 
 <dt id="arg-package">package<a class="anchor" aria-label="anchor" href="#arg-package"></a></dt>
 <dd><p>Package where block is defined</p></dd>
+
+
+<dt id="arg-category">category<a class="anchor" aria-label="anchor" href="#arg-category"></a></dt>
+<dd><p>Useful to sort blocks by topics. If not specified,
+blocks are uncategorized.</p></dd>
 
 
 <dt id="arg-ids">ids<a class="anchor" aria-label="anchor" href="#arg-ids"></a></dt>
