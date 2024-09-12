@@ -1,7 +1,7 @@
 # blockr 0.0.2.9020
 
 ## Feature
-- Improved `submit` feature for blocks. Now submit isn't not added as a class but as an optional block attribute. When you design a block, you can pass the `submit` parameter like so:
+- Improved `submit` feature for blocks. Now submit isn't added as a class but as an optional block attribute. When you design a block, you can pass the `submit` parameter like so:
 
 ```r
 new_super_block <- function(submit = 0, ...) {
