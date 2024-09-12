@@ -1,6 +1,32 @@
-# blockr 0.0.2.9000
+# blockr 0.0.2.9020
 
 ## Feature
+- Improved `submit` feature for blocks. Now submit isn't not added as a class but as an optional block attribute. When you design a block, you can pass the `submit` parameter like so:
+
+```r
+new_super_block <- function(submit = 0, ...) {
+  fields <- list()
+  new_block(
+    fields = fields,
+    expr = quote(print("test")),
+    submit = submit,
+    ...,
+    class = "my_block"
+  )
+}
+```
+
+When `submit = 0`, it will add a submit button but computations are blocked (clicking on it is required). Internally, each time
+the `input$submit` is clicked, the submit attribute is incremented by 1 to stay in sync with the UI button. This is useful when the stack is serialized, since this state is kept so that computations can be automatically re-triggered on restore, if `submit > 0`.
+
+```r
+serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = 0)))
+
+# Simulate what happens when restoring a serialised stack
+# with submit > 0
+serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = 1)))
+```
+
 - Improved __add__ new block.
 - Added new `category` to the registry. Now when a block is registered, you may pass a category parameter (which is used by the add block feature to sort blocks):
 

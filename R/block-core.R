@@ -25,14 +25,6 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
-  # Add submit button
-  if ("submit_block" %in% class) {
-    fields <- c(
-      fields,
-      submit = list(new_submit_field())
-    )
-  }
-
   structure(fields,
     name = name, expr = expr, result = NULL, ...,
     class = c(class, "block")

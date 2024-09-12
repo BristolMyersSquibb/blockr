@@ -4,7 +4,12 @@
 \alias{new_summarize_block}
 \title{Summarize block}
 \usage{
-new_summarize_block(func = character(), default_columns = character(), ...)
+new_summarize_block(
+  func = character(),
+  default_columns = character(),
+  submit = 0,
+  ...
+)
 }
 \arguments{
 \item{func}{Summarize function to apply.}
@@ -13,6 +18,11 @@ new_summarize_block(func = character(), default_columns = character(), ...)
 you can also pass predefined selected column for each summary.
 Therefore when not of length 0, columns should have the same length
 as func.}
+
+\item{submit}{Whether this block requires to press a submit button to get
+the results. Numeric, default to 0. If 0, then no computation is triggered
+and the user needs to click on the button to see the block result. If > 0,
+computation is automatically triggered.}
 
 \item{...}{Further (metadata) attributes}
 }

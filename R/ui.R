@@ -159,7 +159,13 @@ block_header.block <- function(x, ns, hidden_class, ...) {
       ),
       data_info(x, ns),
       div(
-        class = "block-tools flex-shrink-1"
+        class = "block-tools flex-shrink-1",
+        if (!is.null(attr(x, "submit"))) {
+          actionLink(
+            ns("submit"),
+            iconPlay()
+          )
+        }
       )
     )
   )
@@ -331,7 +337,6 @@ add_block_ui.default <- function(x, id, ...) {
         tags$head(
           tags$script(HTML("
             function colorText(data) {
-              console.log(data);
               let text = `<span class='badge text-bg-secondary'>${data.label}</span>`;
               return text;
             }"
@@ -962,6 +967,10 @@ iconOutput <- function() {
 #' @importFrom shiny icon
 iconTrash <- function() {
   icon("trash")
+}
+
+iconPlay <- function() {
+  icon("play")
 }
 
 #' Block icon generic

@@ -188,9 +188,13 @@ new_result_block <- function(...) {
 #' @param columns Columns used for filtering
 #' @param values Values used for filtering
 #' @param filter_fun Filter function for the expression
+#' @param submit Whether this block requires to press a submit button to get
+#' the results. Numeric, default to 0. If 0, then no computation is triggered
+#' and the user needs to click on the button to see the block result. If > 0,
+#' computation is automatically triggered.
 #' @export
 new_filter_block <- function(columns = character(), values = character(),
-                             filter_fun = "==", ...) {
+                             filter_fun = "==", submit = 0, ...) {
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
@@ -274,8 +278,9 @@ new_filter_block <- function(columns = character(), values = character(),
   new_block(
     fields = fields,
     expr = expr,
+    submit = submit,
     ...,
-    class = c("filter_block", "transform_block", "submit_block")
+    class = c("filter_block", "transform_block")
   )
 }
 
@@ -320,9 +325,10 @@ new_select_block <- function(columns = character(), ...) {
 #' you can also pass predefined selected column for each summary.
 #' Therefore when not of length 0, columns should have the same length
 #' as func.
+#' @inheritParams new_filter_block
 #' @export
 new_summarize_block <- function(func = character(),
-                                default_columns = character(), ...) {
+                                default_columns = character(), submit = 0, ...) {
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -422,8 +428,9 @@ new_summarize_block <- function(func = character(),
   new_block(
     fields = fields,
     expr = quote(.(expression)),
+    submit = submit,
     ...,
-    class = c("summarize_block", "transform_block", "submit_block")
+    class = c("summarize_block", "transform_block")
   )
 }
 
@@ -492,10 +499,11 @@ new_group_by_block <- function(columns = character(), ...) {
 #' @param y Second dataset for join.
 #' @param type Join type.
 #' @param by Join columns.
+#' @inheritParams new_filter_block
 #'
 #' @export
 new_join_block <- function(y = NULL, type = character(), by = character(),
-                           ...) {
+                           submit = 0, ...) {
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
   }
@@ -522,8 +530,9 @@ new_join_block <- function(y = NULL, type = character(), by = character(),
   new_block(
     fields = fields,
     expr = quote(.(join_func)(y = .(y), by = .(by))),
+    submit = submit,
     ...,
-    class = c("join_block", "transform_block", "submit_block")
+    class = c("join_block", "transform_block")
   )
 }
 

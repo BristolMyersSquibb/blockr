@@ -199,6 +199,7 @@ reference:
 
 news:
  releases:
+ - text: "blockr 0.0.2.9020"
  - text: "blockr 0.0.2"
  - text: "blockr 0.0.1.9000"
  

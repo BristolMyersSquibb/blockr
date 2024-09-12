@@ -8,6 +8,7 @@ new_filter_block(
   columns = character(),
   values = character(),
   filter_fun = "==",
+  submit = 0,
   ...
 )
 }
@@ -17,6 +18,11 @@ new_filter_block(
 \item{values}{Values used for filtering}
 
 \item{filter_fun}{Filter function for the expression}
+
+\item{submit}{Whether this block requires to press a submit button to get
+the results. Numeric, default to 0. If 0, then no computation is triggered
+and the user needs to click on the button to see the block result. If > 0,
+computation is automatically triggered.}
 
 \item{...}{Further (metadata) attributes}
 }
