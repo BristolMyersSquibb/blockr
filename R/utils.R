@@ -280,7 +280,7 @@ send_error_to_ui <- function(blk, is_valid, session) {
   )
 
   # Send validation message
-  if (!is_valid$block) {
+  if (!is_valid$block && length(is_valid$message)) {
     insertUI(
       selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
       ui = div(
