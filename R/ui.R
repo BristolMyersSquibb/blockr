@@ -157,16 +157,17 @@ block_header.block <- function(x, ns, hidden_class, ...) {
           class = "fw-bold m-0"
         )
       ),
-      data_info(x, ns),
-      div(
-        class = "block-tools flex-shrink-1",
-        if (!is.null(attr(x, "submit"))) {
+      if (!is.null(attr(x, "submit"))) {
+        div(class = "flex-grow-1",
           actionLink(
             ns("submit"),
-            iconPlay()
+            iconPlay(),
+            class = "p-0 btn btn-link"
           )
-        }
-      )
+        )
+      },
+      data_info(x, ns),
+      div(class = "block-tools flex-shrink-1")
     )
   )
 }
