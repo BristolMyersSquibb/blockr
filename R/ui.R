@@ -145,6 +145,22 @@ block_header <- function(x, ...) {
 block_header.block <- function(x, ns, hidden_class, ...) {
   title <- get_block_title(x)
 
+  submit_ui <- NULL
+  if (!is.null(attr(x, "submit"))) {
+    submit_ui <- div(class = "flex-grow-1",
+      bslib::input_task_button(
+        ns("submit"),
+        iconPlay(),
+        class = "p-0 btn-link"
+      )
+    )
+
+    submit_ui <- htmltools::tagQuery(submit_ui)$
+      find(".btn")$
+      removeClass("btn-primary")$
+      allTags()
+  }
+
   div(
     class = sprintf("m-0 card-title block-title %s", hidden_class),
     div(
@@ -157,15 +173,7 @@ block_header.block <- function(x, ns, hidden_class, ...) {
           class = "fw-bold m-0"
         )
       ),
-      if (!is.null(attr(x, "submit"))) {
-        div(class = "flex-grow-1",
-          actionLink(
-            ns("submit"),
-            iconPlay(),
-            class = "p-0 btn btn-link"
-          )
-        )
-      },
+      submit_ui,
       data_info(x, ns),
       div(class = "block-tools flex-shrink-1")
     )
