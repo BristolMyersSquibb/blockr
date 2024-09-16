@@ -150,15 +150,11 @@ block_header.block <- function(x, ns, hidden_class, ...) {
     submit_ui <- div(class = "flex-grow-1",
       bslib::input_task_button(
         ns("submit"),
-        iconPlay(),
-        class = "p-0 btn-link"
+        "Run",
+        icon = iconPlay(),
+        class = "btn-sm btn-success"
       )
     )
-
-    submit_ui <- htmltools::tagQuery(submit_ui)$
-      find(".btn")$
-      removeClass("btn-primary")$
-    allTags()
   }
 
   div(
