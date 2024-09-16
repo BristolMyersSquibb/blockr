@@ -322,19 +322,16 @@ has_method <- function(x, generic) {
 
 #' Create shinylive iframe
 #'
-#' @param app_code base64 app code. You can create it from https://shinylive.io/r
-#' by writing code and click on share and copy the link. The code is located at
-#' the end of the url.
+#' Useful for pkgdown website
+#'
+#' @param url app url. A shinylive link.
 #' @param mode How to display the shinylive app. Default to app mode.
 #' @param header Whether to display the shinylive header. Default to TRUE.
-#'
-#' @export
-create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) {
+#' @keywords internal
+create_app_link <- function(url, mode = c("app", "editor"), header = TRUE) {
   mode <- match.arg(mode)
 
-  app_url <- sprintf(
-    "https://shinylive.io/r/%s/#code=%s", mode, app_code
-  )
+  if (mode != "editor") app_url <- gsub("editor", mode, url)
 
   if (!header) {
     app_url <- paste0(app_url, "&h=0")
@@ -351,6 +348,17 @@ create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) 
     allow = "autoplay",
     `data-external` = "1"
   )
+}
+
+code_chunk <- function(output, language = "r") {
+  cat(paste0("```", language))
+  cat(output)
+  cat("\n```\n")
+}
+
+print_shinylive_r_code <- function(name) {
+  path <- sprintf("inst/shinylive/apps/%s/app.R", name)
+  code_chunk(cat(paste(readLines(path)[-1], collapse = "\n")))
 }
 
 get_block_title <- function(x) {

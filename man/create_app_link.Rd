@@ -4,12 +4,10 @@
 \alias{create_app_link}
 \title{Create shinylive iframe}
 \usage{
-create_app_link(app_code, mode = c("app", "editor"), header = TRUE)
+create_app_link(url, mode = c("app", "editor"), header = TRUE)
 }
 \arguments{
-\item{app_code}{base64 app code. You can create it from https://shinylive.io/r
-by writing code and click on share and copy the link. The code is located at
-the end of the url.}
+\item{url}{app url. A shinylive link.}
 
 \item{mode}{How to display the shinylive app. Default to app mode.}
 

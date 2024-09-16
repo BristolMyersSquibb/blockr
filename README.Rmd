@@ -84,7 +84,7 @@ To get a better idea of `{blockr}` capabilities in various data context, you can
 You can install the development version of blockr from [GitHub](https://github.com/) with:
 
 ```r
-pak::pak("blockr-org/blockr")
+pak::pak("BristolMyersSquibb/blockr")
 ```
 
 ## Example: palmer penguins case study

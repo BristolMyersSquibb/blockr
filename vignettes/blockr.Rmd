@@ -31,7 +31,7 @@ note_box <- function(..., color) {
 ```
 
 ```{r echo=FALSE}
-knitr::include_url("https://blockr-org.github.io/useR2024")
+knitr::include_url("https://bristolmyerssquibb.github.io/useR2024")
 ```
 
 ## Get started
