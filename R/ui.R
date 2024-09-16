@@ -158,7 +158,7 @@ block_header.block <- function(x, ns, hidden_class, ...) {
     submit_ui <- htmltools::tagQuery(submit_ui)$
       find(".btn")$
       removeClass("btn-primary")$
-      allTags()
+    allTags()
   }
 
   div(
