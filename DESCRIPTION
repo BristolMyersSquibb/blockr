@@ -32,7 +32,6 @@ Imports:
     bslib,
     methods,
     DT,
-    blockr.data,
     htmltools,
     shinyAce,
     jsonlite,
@@ -42,8 +41,8 @@ Imports:
     rlang,
     shinyWidgets
 Remotes:
-    blockr-org/blockr.data,
     DivadNojnarg/DiagrammeR
+    BristolMyersSquibb/blockr.data
 Suggests: 
     knitr,
     rmarkdown,
@@ -55,6 +54,7 @@ Suggests:
     withr,
     ggplot2,
     vdiffr,
-    palmerpenguins
+    palmerpenguins,
+    blockr.data
 Config/testthat/edition: 3
 VignetteBuilder: knitr
