@@ -5,7 +5,7 @@ library(blockr)
 new_tail_block <- function(data, n_rows = numeric(), ...) {
 
   n_rows_max <- function(data) nrow(data)
-  
+
   new_block(
     fields = list(
       n_rows = new_numeric_field(n_rows, 1L, n_rows_max)

@@ -39,7 +39,7 @@ new_geompoint_block <- function(color = character(), shape = character(), ...) {
 }
 
 stack <- new_stack(
-  data_block = new_dataset_block("penguins", "palmerpenguins"), 
+  data_block = new_dataset_block("penguins", "palmerpenguins"),
   plot_block = new_ggplot_block("flipper_length_mm", "body_mass_g"),
   layer_block = new_geompoint_block("species", "species")
 )

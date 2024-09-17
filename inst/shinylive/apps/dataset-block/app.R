@@ -10,7 +10,7 @@ custom_data_block <- function(...) {
 }
 
 stack <- new_stack(
-  custom_data_block, 
+  custom_data_block,
   new_select_block
 )
 serve_stack(stack)

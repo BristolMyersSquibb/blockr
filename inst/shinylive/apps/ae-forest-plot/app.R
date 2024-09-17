@@ -1,5 +1,5 @@
-webr::install("blockr", repos = c("https://bristolmyerssquibb.github.io/webr-repos", "https://repo.r-wasm.org")) #nolint
-webr::install("blockr.pharmaverseadam", repos = c("https://bristolmyerssquibb.github.io/webr-repos", "https://repo.r-wasm.org")) #nolint
+webr::install("blockr", repos = c("https://bristolmyerssquibb.github.io/webr-repos", "https://repo.r-wasm.org"))
+webr::install("blockr.pharmaverseadam", repos = c("https://bristolmyerssquibb.github.io/webr-repos", "https://repo.r-wasm.org"))
 
 library(blockr)
 library(dplyr)

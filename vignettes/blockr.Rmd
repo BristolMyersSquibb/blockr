@@ -71,7 +71,15 @@ card(
 
 ### Toward a dashboard
 
-What if you aim at creating a more ambitious pipeline? In that case, you don't need one cooking recipie but multiple, so you can organise your own dinner party. Below is a slightly more complex application, where you can add multiple stacks and connect them together.
+What if you aim at creating a more ambitious pipeline? In that case, you don't need one cooking recipie but multiple, so you can organise your own dinner party. Below is a slightly more complex application, where you can add multiple stacks and connect them together. This are the following step to connect 2 stacks together:
+
+- Click on "Add stack".
+- Add a new dataset block with the default BOD dataset.
+- Add a filter block. Target the Time column with values between 1 and 2, then click "submit". You should get only 2 rows.
+- Click on "Add stack".
+- Add a new result block in this second stack. You should see the same result as in the first stack.
+
+Doing so, you can build you analysis step by step in a modular way.
 
 ```{r, echo=FALSE}
 # shinylive container
