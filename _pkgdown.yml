@@ -1,4 +1,4 @@
-url: https://blockr-org.github.io/blockr/
+url: https://bristolmyerssquibb.github.io/blockr/
 
 home:
   title: Building blocks for data manipulation and visualization operations.
@@ -14,16 +14,23 @@ template:
       <link href ="https://raw.githubusercontent.com/rstudio/bslib/main/inst/components/dist/card/card.min.js">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/font/bootstrap-icons.css">
 
-articles:
-- title: User guide
-  navbar: ~
-  contents:
-  - blockr_examples
-  - data-blocks
-  - registry
-  - plot-block
-  - new-field
-  - developer-guide
+navbar:
+ components:
+   articles:
+    text: Developer guides
+    menu:
+    - text: Data blocks
+      href: articles/data-blocks.html
+    - text: Block registry
+      href: articles/registry.html
+    - text: How to create a plot block?
+      href: articles/plot-block.html
+    - text: How to create a new field?
+      href: articles/new-field.html
+    - text: More examples
+      href: articles/blockr-examples.html
+    - text: Internals
+      href: articles/internals.html
 
 reference:
 - title: Fields core elements
@@ -201,4 +208,3 @@ news:
  releases:
  - text: "blockr 0.0.2"
  - text: "blockr 0.0.1.9000"
- 

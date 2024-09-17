@@ -14,5 +14,6 @@ create_app_link(url, mode = c("app", "editor"), header = TRUE)
 \item{header}{Whether to display the shinylive header. Default to TRUE.}
 }
 \description{
-Create shinylive iframe
+Useful for pkgdown website
 }
+\keyword{internal}

@@ -35,9 +35,9 @@ button before moving forward, which prevents the plot from appearing
 first. This is to prevent long running task from being run unecessarily.
 You can find more in other vignettes.
 
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-2397">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-6180">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZDaRkhHT0DY3CiDAYQ6ih2GAwiBg8hAEp8gQhi7lcGKAYrPhExSSKIMsZK6tQeeAZUCg8XDgamiqq+Dw9UUVIAJgbiiDhqAH0RsaJSedqJGQAeEJkAMycIAlIAiD5ibnmAD1V1LUqoI9s+fNlz+asbgjuKx4Zn2QwgPyMhAxWKMhkABMoFx5udlNs9gcjic+NCuMDztB4Ow0TCoNMIBDZgt1uJBESIXsWHBuJDlGoypwKVSqdc1CT5uxaXAjvNdjS6WcLFdZOioHCLOxZKQrF0bkJsXACrhwayZB8OXMuTy+QLaZDhRcrGL8ZLuNKZLL5WpFbBlWAGqyXmqIXBLqgGDdnCs4Cz1UtxnwYGhUGwPDcoHBceyZBg+JcXhqbvGrIUnVSXZSIQRuBkGepNIGVmtRBJokJlqsySrXXHAWqGgBfMEQTkeOBEGCKNjVsviLY7faHY4kI05T7fB7kP5J9h3G23e6-f71jDA0ElSni80IofI0encWYixK3HigAkx9bxO1ZP9EP1dILTNID6p5wnWoW3O4vNWT6Gp+DCmrC8IynKcAKpA9q1tmVLzmgUHfjqf56oKhqIV0oESuBVqQdBSoFHWWasu6nrek4vrvhCHZdvMPZkHwUa4sBKbjgwc4LshcZ8FhcCFLI7AsAAXjxUwkaq8G5vmnyaFW8x5jYDClnUFZgApNaOlJrKAhgjbFC2W6cA8A6IpyJkSP6O5kjcnLityfZ1PJ3S9Ow6ltJYthdBAPRsO52lqgK3AzqpGwocFoX3kI3KXOpuxwCGf5wRCmn9nZ2rFk5VlCLsZToLYindD48wwDA6l0EQkJWKV+aLClMhKYVtkoXR3ZEL2YXkjFXQEDSAWyD1vL9cREANNyDAAG5wFyXBWZZ4j5GATYALpAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZDaRkhHT0DY3CiDAYQ6ih2GAwiBg8hAEp8mQBiCAs2UgEIKu5XBigGKz4RMUl8mrqGptQeeAZUCg8XDnaIWsYuvg8PVFFSACZRqog4agB9admiUjWWiRkAHhCZADMnCAJSAIg+Ym41gA9VdS0GqEvbPnzZO7WrZ4Ir3qHwYX1kGAhRRAVSqMhkABMoFw1ndlEdTudLtc+IiuEU7tB4OwcUioEsIHCVus9uJBBS4acWHBuPDlGpapw6QyGU81FS1uxmXBLmsTkyWbcLI9ZLioCiLOxZKQrANnkJCXACrhYdyZP8+asBUKRWLmfDJfcrDLSfLuIqZMrVWp1bBNWBRtzvjq4XAHqgGM9nNs4FzdZs5nwYGhUGwPM8oHBibyZBg+A9vnrnqmrIUPQyvfS4QRuBk2epNOHtrtRBJokItjsaVrvSmITrRgBfGEQfkeOBEGCKCrV1qHY5nC5XEgWnIAoHvcigjPsV5Ol5vEFg1sYKHduGy21o8eYqc3WX4iwa4mygAk573Mn5NNDcNNLLLHNIL4Zd1nBvWgrcMKOxvuav4MNayKokqKpwGqkCus2hYMiuaBwf+RpASa4rmqhAyQXK0EOrB8EagULYFtyvr+oGTjBt+cJ9gOaxDmQfAJsS4FZjODDLqu6EpnweFwIUsjsCwABeAmLBR2rIcWpYApoDZrCWNgMCOtZ4DEYAqU27pydyEIYO2VRdtUHBcPs6L8pw7y0jqB40s8-KyoKjY1g5umDMM7B1rpvS2AMEBDGwfkGTqYrcIumniC5hpRTFz5CIKDz+SccBRkBSFwnpnnxeslYea0mgnLU6C2Kpgw+GsMAwP5dBEPCVi1aWGw5TIamVc5GFMYORDDslYDsAMBBMuFsgpaN43kRAoyCgwABucAClZtJ2RIoxgB2AC6QA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsOptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
 <template>Expand</template>
@@ -107,16 +107,14 @@ Note that the `{blockr.ggplot2}`
 [package](https://github.com/BristolMyersSquibb/blockr.ggplot2) exposes
 some ready to use blocks as shown above.
 
-## blockr at a glance
-
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+## How to get started?
 
 To get started, we invite you to read this
-[vignette](https://blockr-org.github.io/blockr/articles/blockr.html).
+[vignette](https://bristolmyerssquibb.github.io/blockr/articles/blockr.html).
 
 To get a better idea of `{blockr}` capabilities in various data context,
 you can look at this
-[vignette](https://blockr-org.github.io/blockr/articles/blockr_examples.html).
+[vignette](https://bristolmyerssquibb.github.io/blockr/articles/blockr_examples.html).
 
 ## Key features
 

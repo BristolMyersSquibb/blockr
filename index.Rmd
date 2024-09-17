@@ -57,53 +57,16 @@ You can of course start with a totally empty dashboard and create your own analy
 2. On the other hand, it provides __developers__ with a set of tools to seamlessly create new blocks, thereby enhancing the entire framework and fostering __collaboration__ within organizations teams. For instance, regarding the previous example, below is what it takes to create such dashboard.
 
 ```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
-print_shinylive_r_code("palmer-penguins")
+blockr:::print_shinylive_r_code("palmer-penguins")
 ```
 
 Note that the `{blockr.ggplot2}` [package](https://github.com/BristolMyersSquibb/blockr.ggplot2) exposes some ready to use blocks as shown above.
 
-## blockr at a glance
+## How to get started?
 
-```{r, echo=FALSE, message=FALSE}
-mermaid("
-  flowchart TD
-  subgraph LR workspace[Workspace]
-    subgraph stack1[Stack]
-      direction LR
-      subgraph input_block[Block 1]
-        input(Data: dataset, browser, ...)
-      end
-      subgraph transform_block[Block 2]
-        transform(Transform block: filter, select ...)
-      end
-      subgraph output_block[Block 3]
-        output(Result/transform: plot, filter, ...)
-      end
-      input_block --> |data| transform_block --> |data| output_block
-    end
-    subgraph stack2[Stack 2]
-      stack1_data[Stack 1 data] --> |data| transform2[Transform]
-    end
-    stack1 --> |data| stack2
-    subgraph stackn[Stack n]
-      stacki_data[Stack i data] --> |data| transformn[Transform] --> |data| Visualize
-    end
-    stack2 ---> |... data| stackn
-  end
-  ",
-  width = "100%"
-) |>
-  htmlwidgets::onRender(
-    "function(el, x) {
-      el.classList.add('text-center')
-    }
-    "
-  )
-```
+To get started, we invite you to read this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/blockr.html).
 
-To get started, we invite you to read this [vignette](https://blockr-org.github.io/blockr/articles/blockr.html).
-
-To get a better idea of `{blockr}` capabilities in various data context, you can look at this [vignette](https://blockr-org.github.io/blockr/articles/blockr_examples.html).
+To get a better idea of `{blockr}` capabilities in various data context, you can look at this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/blockr_examples.html).
 
 ## Key features
 

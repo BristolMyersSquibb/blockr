@@ -34,9 +34,60 @@ note_box <- function(..., color) {
 knitr::include_url("https://bristolmyerssquibb.github.io/useR2024")
 ```
 
-## Get started
+# Get started
 
-`{blockr}` provides plug and play blocks which can be used to import, transform and visualize data.
+`{blockr}` provides plug and play __blocks__ which can be used to import, transform and visualize data. This guide provides an entry point for end users without extensive coding skills, as well as developers.
+
+## {blockr} for non coders
+
+In that case, you likely just want to get started to create your first data pipeline.
+
+### The user interface
+
+This is what the `{blockr}` interface looks. We designed it to be like a cooking __recipie__, where blocks correspond to the different __steps__.
+Within each block are some __inputs__ that allow you to change parameters. For instance, when you import the data, you may want to select a given dataset or specify a file from your computer or on a server. In figure \@ref(fig:blockr-ui),
+the `airquality` dataset is imported. On the top center of the block, you can see information about the number of rows and columns. Then, a filter block is added and target the `Ozone` column. Notice the __validation__ message as the value is missing. The submit button can't be clicked as long as the input is empty, which prevents from triggering errors in downstream blocks. Each block can be collapsed/uncollapsed and removed with the corresponding buttons located on the top right corner. As you can see, we group all related blocks inside a common container, the __stack__, which can also be collapse and removed.
+
+```{r blockr-ui, echo=FALSE, fig.cap='User Interface Overview', fig.align = 'center', out.width='100%'}
+knitr::include_graphics("figures/blockr-ui.png")
+```
+
+### Starting from scratch
+
+When you start from scratch, there are actually no blocks in the interface and you have to add them one by one.
+To add a new block, you can click on the `+` icon on the stack top right corner. This opens a sidebar on the left side, where it is possible to search for blocks. To make things easier, all the suggested blocks are compatible with the current state of the pipeline. For instance, when the stack is empty, only entry point blocks are suggested, so you can import data. Then, after clicking on the block, the suggestion list changes so you can, for instance, filter data or select only a subset of columns, and more.
+
+```{r, echo=FALSE}
+# shinylive container
+card(
+  blockr:::create_app_link(
+    blockr:::shinylive_links["empty-stack"],
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
+
+### Toward a dashboard
+
+What if you aim at creating a more ambitious pipeline? In that case, you don't need one cooking recipie but multiple, so you can organise your own dinner party. Below is a slightly more complex application, where you can add multiple stacks and connect them together.
+
+```{r, echo=FALSE}
+# shinylive container
+card(
+  blockr:::create_app_link(
+    blockr:::shinylive_links["workspace-kitchen-sink"],
+    "app",
+    header = FALSE
+  ),
+  full_screen = TRUE
+)
+```
+
+## {blockr} for developers
+
+In the following section, we describe the building blocks behind blockr so you can start creating your blocks.
 
 ### Introduction
 
@@ -75,7 +126,7 @@ mermaid("
   )
 ```
 
-Under the hoods, blocks are composed of __fields__. The latter are translated into shiny inputs used to convey interactivity within the block. As you can see in the below diagram, fields are combined to compute an expression, which eventually leads to a block result after evaluation. For a data block, there is no data input.
+Under the hoods, blocks are composed of __fields__. The latter are translated into shiny inputs used to convey __interactivity__ within the block. As you can see in the below diagram, fields are combined to compute an __expression__, which eventually leads to a block __result__ after __evaluation__. For a data block, there is no data input.
 
 ```{r, echo=FALSE}
 mermaid(
@@ -148,22 +199,20 @@ mermaid(
   )
 ```
 
-
-### The user interface
-
-By default, only the last __stack__ block is visible, all others are collapsed.
-To preview all block you can set `options("BLOCKR_DEV" = TRUE)`.
-
-```{r blockr-ui, echo=FALSE, fig.cap='User Interface Overview', fig.align = 'center', out.width='100%'}
-knitr::include_graphics("figures/blockr-ui.png")
-```
-
 ### Create a stack
 
 To create a __stack__, you call `new_stack()` and feed it all the required __blocks__.
 Below is a simple stack providing a dataset selector and a filter operation. `serve_stack()` is a simple
 wrapper to run the corresponding shiny app. Note that with `serve_stack()`, you don't need to worry about
 specifying any __modules IDs__, they are automatically handled by `{blockr}`.
+
+blocks can be instantiated either by calling their constructor name and passed to the stack:
+
+```r
+stack <- new_stack(new_dataset_block)
+```
+
+Alternatively, it is possible to create block with specific parameter values, as shown below:
 
 ```r
 library(blockr)
@@ -177,112 +226,22 @@ stack <- new_stack(
 serve_stack(stack)
 ```
 
-```{r, eval=TRUE, echo=FALSE}
-card(
-  create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwlmdl5fKg88AyoFNZObOwl6ZxQEjIAPOYyEHDUAPpDEoIQMjJVAIyqk9MzdVzscKQzVXx73HAE5DUbQl0QPX0BbRJQ1nBXYG3cHTd3HCm46csqgAmDZTWYAMxY3HIDEOogWxG4ThgHDe7C6BBYcH8eBkADceE5sW8AII1OCZOApdIlPYMPFwOZcBbzcTJMAAXwAukA", # nolint
-    "app",
-    header = FALSE
-  ),
-  full_screen = TRUE
-)
-```
+By default, only the last __stack__ block is visible, all others are collapsed.
+To preview all block you can set `options("BLOCKR_DEV" = TRUE)`.
 
 ```{r, eval=TRUE, echo=FALSE}
 note_box(
   "You'll notice that some blocks, such as the `filter_block`
-  have a submit button. The reason was to prevent any expansive task
-  to run without explicit user approval. That said, this feature is
-  still very much experimental and might change in the future.",
+  have a submit button. This is to prevent any expansive task
+  from running without explicit user approval.",
   color = "primary"
-)
-```
-
-
-In the next example, we'll see how to create an which can dynamically add or remove blocks.
-
-### Dynamically add a block
-
-The stack exposes a helper button to add a block in the top right corner of the card header. 
-It triggers an [offcanvas](https://getbootstrap.com/docs/5.3/components/offcanvas/)
-UI panel, that basically allows one to select any block available in the 
-registered blocks [vignette](https://blockr-org.github.io/blockr/articles/registry.html).
-
-As a side note, there's another mechanism that works to add blocks, which we describe in the
-following. It is more verbose but allows you to 
-bring your own custom UI. On the UI side, we call `generate_ui()`,
-which is nothing more than calling the stack module UI and `generate_server()` in the Shiny server function. If you leave `id` NULL,
-the namespace is automatically handled. To get the list of available blocks, we leverage the `{blockr}` registry namely `available_blocks()` which exposes the
-currently registered blocks. You can learn more about the registry in the dedicated
-[vignette](https://blockr-org.github.io/blockr/articles/registry.html). 
-`add_block_ui()` is a UI helper to show a button as well
-as the necessary interface to contain the new block choice.
-Within an `observer` we listen to the "add block" button. Then, we pass the new block in the `new_block` slot of the `generate_server()` function.
-It accepts the name of the block to insert as well as its position in the stack (here we append and leave `NULL`).
-
-```{r, eval=TRUE, echo=FALSE}
-note_box(
-  "Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo)
-  utilises `{masonry}` (https://github.com/blockr-org/masonry) to provide
-  a better user experience, allowing one to drag and drop blocks
-  within the stack.",
-  color = "primary"
-)
-```
-
-```r
-library(shiny)
-library(blockr)
-
-stack <- new_stack(new_dataset_block)
-shinyApp(
-  ui = bslib::page_fluid(
-    add_block_ui(),
-    generate_ui(stack, id = "mystack")
-  ),
-  server = function(input, output, session) {
-    vals <- reactiveValues(new_block = NULL)
-    stack <- generate_server(
-      stack,
-      id = "mystack",
-      new_block = reactive(vals$new_block)
-    )
-
-    observeEvent(input$add, {
-      block <- available_blocks()[[input$selected_block]]
-      # add_block expect the current stack, the block to add and its position
-      # (NULL is fine for the position, in that case the block will
-      # go at the end)
-      vals$new_block <- list(block = block)
-    })
-  }
-)
-```
-
-Blocks can be removed in any context. Keep in mind that a stack can't contain 2 data blocks.
-
-```{r, eval=TRUE, echo=FALSE}
-note_box(
-  "At the moment, we don't check whether removing a block breaks the pipeline.",
-  color = "danger"
-)
-```
-
-```{r, eval=TRUE, echo=FALSE}
-card(
-  create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwl6ZxQEjIAPOYyEHDUAPrNEnwl7HAMAG5w-VyDA+LJYAC+ALpAA", # nolint
-    "app",
-    header = FALSE
-  ),
-  full_screen = TRUE
 )
 ```
 
 ### Example with modules
 
-The stack can be nested within modules. This is what we do in
-[`{blockr.demo}`](https://github.com/blockr-org/block.demo).
+This might be useful if you consider embedding blockr in your own application.
+The stack can be nested within modules.
 
 ```r
 library(shiny)
@@ -328,27 +287,36 @@ shinyApp(ui, server)
 ### Connect stacks: the workspace
 
 The __workspace__ allows you to create more complex analysis by connecting stacks together and get a dashboard.
-To know more about this you can read the following [article](https://blockr-org.github.io/blockr/articles/data-blocks.html#reading-data-from-another-stack).
+To know more about this you can read the following [article](https://bristolmyerssquibb.github.io/blockr/articles/data-blocks.html#reading-data-from-another-stack).
 
-```{r, echo=FALSE}
-mermaid(
-  "flowchart TD
-  subgraph s1[Stack 1]
-    direction TB
-    input_s1(Data)
-    transform_s1(Transform)
-    input_s1 --> |data| transform_s1
-  end
-  transform_s1 --> |data| input_s2
-  subgraph s2[Stack 2]
-    direction TB
-    input_s2(Data)
-    transform_s2(Transform)
-    output_s2(Visualize)
-    input_s2 --> |data| transform_s2 --> |data| output_s2
+```{r, echo=FALSE, message=FALSE}
+mermaid("
+  flowchart TD
+  subgraph LR workspace[Workspace]
+    subgraph stack1[Stack]
+      direction LR
+      subgraph input_block[Block 1]
+        input(Data: dataset, browser, ...)
+      end
+      subgraph transform_block[Block 2]
+        transform(Transform block: filter, select ...)
+      end
+      subgraph output_block[Block 3]
+        output(Result/transform: plot, filter, ...)
+      end
+      input_block --> |data| transform_block --> |data| output_block
+    end
+    subgraph stack2[Stack 2]
+      stack1_data[Stack 1 data] --> |data| transform2[Transform]
+    end
+    stack1 --> |data| stack2
+    subgraph stackn[Stack n]
+      stacki_data[Stack i data] --> |data| transformn[Transform] --> |data| Visualize
+    end
+    stack2 ---> |... data| stackn
   end
   ",
-  height = "600px"
+  width = "100%"
 ) |>
   htmlwidgets::onRender(
     "function(el, x) {

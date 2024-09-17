@@ -32,15 +32,6 @@ note_box <- function(..., color) {
 
 ## Introduction
 
-```{r, eval=TRUE, echo=FALSE}
-note_box(
-  "This part is likely more dedicated to developers than users. However,
-  it might be useful whenever you design custom blocks and want to register
-  them in `{blockr}`.",
-  color = "primary"
-)
-```
-
 The __registry__ is a __environment__ which provides access to multiple __blocks__ as well as some
 metadata:
 
@@ -187,8 +178,8 @@ visible in the new choices:
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
-  create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6RBw1AD6XCzclYXiMgA85jIAZk4QBKTuEHwAJlBcshCVDETUymoQTvAMLBrJshgryTIg6ekyMqPjk5UwUAAeza0dXT0kA0NQaxB711wl21s7FfWiEoIQ29ttLHBuP0pjJMpxvr9frsJiDylUZnMFpV-oD+nxoZNZABGAAyIzGMIOx2evyWr22cCOqAYqhkAEcnERyHwavwfmoMOiCZNUmSfr8CNxYiCNEJWR8zAExQwoBw2lYYBKJClcOSZCsMK8SgBfTb3OD2ThwBhK8QQ9QkTgMJzdKy0uHVKC1U2q-nQeC0sVO7gyBrSV79ODsAjzVCXdmBMDyUhOBg-IWcHZyGH+-mC4VB2misDiv14SOkGVyhWmlWvNioJykT1gQZcDBtGXwVPbIhVyvVtRCOtQBtNuBCdIldKcKASU5vKqjr4OnvsOCkU0lecMABucEq07NW+SYG1AF0gA", # nolint
+  blockr:::create_app_link(
+    blockr:::shinylive_links["registry-demo"],
     "app",
     header = FALSE
   ),

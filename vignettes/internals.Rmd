@@ -1,8 +1,8 @@
 ---
-title: "Developer guide"
+title: "6: Internals"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Developer guide}
+  %\VignetteIndexEntry{6: Internals}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

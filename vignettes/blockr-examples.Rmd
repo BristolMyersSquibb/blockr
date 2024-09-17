@@ -1,8 +1,8 @@
 ---
-title: "Case studies"
+title: "5: Case studies"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Case studies}
+  %\VignetteIndexEntry{5: Case studies}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## blockr Across Industries
 
-The flexibility of `blockr` makes it valuable across various industries. Let's explore how it can be applied in different sectors with detailed examples. Somex examples require to create a new field such as the `new_slider_field` described in the corresponding vignette.
+The __flexibility__ of `blockr` makes it valuable across various __industries__. Let's explore how it can be applied in different sectors with detailed examples. Some examples require to create a new field such as the `new_slider_field` described in the corresponding [vignette](https://bristolmyerssquibb.github.io/blockr/articles/new-field.html).
 
 ```{r slider_block, include=FALSE}
 # Provided by John, new_range_field not working
@@ -209,9 +209,10 @@ This forest plot visualizes the relative risk of adverse events between two trea
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
-  create_app_link(
-    "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-CiCCKmu6w1-qhGBtYuG3uagc2hqLcI9N70WDWATR0MA3BphgCkN1St7E0BaG3g0RwU0JaMWUeg1l8kUiVsTF7Ka6ClGVs2BAOAWg4DVp0D2iADg+AAA5B0wGHaxOgRAvbsBYAAL1JGoCdABmAArCOzU2bUCZlELUfYu6yZNqIDsHgIhnIBGnce3STQGDiA-XAAI+UQrRhfW+7ggGt2yVIGqlk1gq4ltQPbNVwsJHGqmghsoBExHjqUU1R4EgdJYd9KOvDiimpewBZh1BpHcMnvwzGtGVGoB0GBW4zQWBjr4iITILAHdYXoqIZw1lBieXsKyTAAV0G0ZHo4lNZOU7qANAwHJnEahzZKZU65KamnWJqpYERqaGgJ2XpqbITTMgAAsTGIrsSeFNe2WAACqNlK2PFIFhdjtDOPcYxaSfj7BxAASAlZBoxI6gyBsrjQTRLVnlFE5S3SsgmWSek91VMawo7GRndQTkPreSux4iCZs7wRR+T9BgDAVs4JwDywcHVtoR7HQaDpTYnBGsRTqllDadXRrHVApyNy3BtVBKEM5g6zmABCAApAAkgAEWpf0srDExSqy4JaZUxZvgbagLZzZC1vQsAuD+pEVkAAyB03NBI815sDB0QKnUW6ZPMBYhC5MrbaNKvW8uYUG81kbnW0ZCCsume2VksAAFllsIuFGtkge2tuah20Je0B2ClHceKdqa52rs3f6Xdn9Qh7bByevHO9+Z1hCt0Rj77U8z7XtUn1-76IhsteBxFUHNkFs2XTAAeSW3gIJq3RSI-R7mbgqOkdfaga+bH93kSXeu7L76DhFfc5kPbGo99KfvZpyc2XYyyp9YgPmGohn2dA6aQOoJMAIJqDMxUMdGmB3lnIIh8zt31fE7ABdX8-5AJa-OjXMsC26IXCgDsD7tORWVrEStKaTk-jrmtpspk9RWSAz1fSPbGkhwIQPsTY25F88QtL81P+DNTkRQjhjgg8ZBLGc0ESKEHJCaFc3gcRt9JitmBkxFKrYdaxZfOYiLj9haG9w-OoGU2J77d4gPISfPo+8SB1bl-Lwbe8HHhTt59YWIukmiyHJEPqZBxj+LDu03wmQnfWmB9MErCSJtpHyIPreSRkhi8QGAtGqz+yBxk45jyzX4N6xB1A6R1qf51CeJkCd48jd6sIMJFZIG2ZsCczqq-pqwYD3TXzX6cR6ADjPpPI04PgZjP4z6cAJidxojTqGbYxBwsDYzUESDNib6sHiAb59YwjqgNas7kBeRgYwhAYtpCyejeglJsBr5cG2ab456oEghMTpAPh1AMCxycEET0H1wiRMEsFcASDJBgARwhhAA", # nolint
-    mode = "editor"
+  blockr:::create_app_link(
+    blockr:::shinylive_links["ae-forest-plot"],
+    "editor",
+    header = FALSE
   ),
   full_screen = TRUE
 )
@@ -231,163 +232,8 @@ Toggle code
 
 <div class="collapse" id="forest-block">
 
-```r
-library(dplyr)
-library(tidyr)
-library(forestplot)
-library(blockr.pharmaverseadam)
-
-# Function to create adverse event forest plot
-create_ae_forest_plot <- function(data, usubjid_col, arm_col, aedecod_col, n_events) {
-  data <- data |> filter(.data[[arm_col]] != "Placebo")
-  # Convert column names to strings
-  usubjid_col <- as.character(substitute(usubjid_col))
-  arm_col <- as.character(substitute(arm_col))
-  aedecod_col <- as.character(substitute(aedecod_col))
-
-  # Calculate the total number of subjects in each arm
-  n_subjects <- data |>
-    select(all_of(c(usubjid_col, arm_col))) |>
-    distinct() |>
-    group_by(across(all_of(arm_col))) |>
-    summarise(n = n(), .groups = "drop")
-
-  # Calculate AE frequencies and proportions
-  ae_summary <- data |>
-    group_by(across(all_of(c(arm_col, aedecod_col)))) |>
-    summarise(n_events = n_distinct(.data[[usubjid_col]]), .groups = "drop") |>
-    left_join(n_subjects, by = arm_col) |>
-    mutate(proportion = n_events / n)
-
-  # Select top N most frequent AEs across all arms
-  top_aes <- ae_summary |>
-    group_by(across(all_of(aedecod_col))) |>
-    summarise(total_events = sum(n_events), .groups = "drop") |>
-    top_n(n_events, total_events) |>
-    pull(all_of(aedecod_col))
-
-  # Get unique treatment arms
-  arms <- unique(data[[arm_col]])
-  if (length(arms) != 2) {
-    stop("This plot requires exactly two treatment arms.")
-  }
-  active_arm <- arms[1]
-  control_arm <- arms[2]
-
-  # Filter for top AEs and calculate relative risk
-  ae_rr <- ae_summary |>
-    filter(.data[[aedecod_col]] %in% top_aes) |>
-    pivot_wider(
-      id_cols = all_of(aedecod_col),
-      names_from = all_of(arm_col),
-      values_from = c(n_events, n, proportion)
-    ) |>
-    mutate(
-      RR = .data[[paste0("proportion_", active_arm)]] / .data[[paste0("proportion_", control_arm)]],
-      lower_ci = exp(log(RR) - 1.96 * sqrt(
-        1 / .data[[paste0("n_events_", active_arm)]] +
-          1 / .data[[paste0("n_events_", control_arm)]] -
-          1 / .data[[paste0("n_", active_arm)]] -
-          1 / .data[[paste0("n_", control_arm)]]
-      )),
-      upper_ci = exp(log(RR) + 1.96 * sqrt(
-        1 / .data[[paste0("n_events_", active_arm)]] +
-          1 / .data[[paste0("n_events_", control_arm)]] -
-          1 / .data[[paste0("n_", active_arm)]] -
-          1 / .data[[paste0("n_", control_arm)]]
-      ))
-    )
-
-  # Prepare data for forest plot
-  forest_data <- ae_rr |>
-    mutate(
-      label = paste0(
-        .data[[aedecod_col]], " (",
-        .data[[paste0("n_events_", active_arm)]], "/", .data[[paste0("n_", active_arm)]], " vs ",
-        .data[[paste0("n_events_", control_arm)]], "/", .data[[paste0("n_", control_arm)]], ")"
-      )
-    )
-
-  # Create forest plot
-  forestplot::forestplot(
-    labeltext = cbind(
-      forest_data$label,
-      sprintf("%.2f (%.2f-%.2f)", forest_data$RR, forest_data$lower_ci, forest_data$upper_ci)
-    ),
-    mean = forest_data$RR,
-    lower = forest_data$lower_ci,
-    upper = forest_data$upper_ci,
-    align = c("l", "r"),
-    graphwidth = unit(60, "mm"),
-    cex = 0.9,
-    lineheight = unit(8, "mm"),
-    boxsize = 0.35,
-    col = fpColors(box = "royalblue", line = "darkblue", summary = "royalblue"),
-    txt_gp = fpTxtGp(label = gpar(cex = 0.9), ticks = gpar(cex = 0.9), xlab = gpar(cex = 0.9)),
-    xlab = paste("Relative Risk (", active_arm, " / ", control_arm, ")"),
-    zero = 1,
-    lwd.zero = 2,
-    lwd.ci = 2,
-    xticks = c(0.5, 1, 2, 4),
-    grid = TRUE,
-    title = paste("Relative Risk of Adverse Events (", active_arm, " vs ", control_arm, ")")
-  )
-}
-
-new_forest_plot_block <- function(...) {
-  new_block(
-    fields = list(
-      usubjid_col = new_select_field(
-        "USUBJID",
-        function(data) colnames(data),
-        multiple = FALSE,
-        title = "Subject ID Column"
-      ),
-      arm_col = new_select_field(
-        "ACTARM",
-        function(data) colnames(data),
-        multiple = FALSE,
-        title = "Treatment Arm Column"
-      ),
-      aedecod_col = new_select_field(
-        "AEDECOD",
-        function(data) colnames(data),
-        multiple = FALSE,
-        title = "AE Term Column"
-      ),
-      n_events = new_numeric_field(
-        10,
-        min = 5, max = 20, step = 1,
-        title = "Number of Top AEs to Display"
-      )
-    ),
-    expr = quote({
-      create_ae_forest_plot(data, .(usubjid_col), .(arm_col), .(aedecod_col), .(n_events))
-    }),
-    class = c("adverse_event_plot_block", "plot_block"),
-    ...
-  )
-}
-
-# Register the custom block
-register_block(
-  new_forest_plot_block,
-  name = "Adverse Event Forest Plot",
-  description = "Create a forest plot of adverse events comparing two treatment arms",
-  category = "plot",
-  classes = c("adverse_event_plot_block", "plot_block"),
-  input = "data.frame",
-  output = "plot"
-)
-
-# Create the stack
-clinical_trial_stack <- new_stack(
-  new_adam_block(selected = "adae"),
-  # filter_in_block(),
-  new_forest_plot_block()
-)
-
-serve_stack(clinical_trial_stack)
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+blockr:::print_shinylive_r_code("ae-forest-plot")
 ```
 </div>
 
@@ -753,9 +599,10 @@ In the below example, we implemented the Lorenz attractor and solve it with the 
 
 ```{r, eval=TRUE, echo=FALSE}
 card(
-  create_app_link(
-    "NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhBeTKwcXLyaphIMdtaooqQATAHhymoaQbr6RiaihZY2dg7Oru6e9FHVAfUhTeGR0bHxiSlpEOncLIxQDACefAWSM-OLK3yoDFAEMFCbC-s760XWJWXlM+kQcNQA+kQAJnBP6zIAPOYyAGZOCAEUjuCB8DCQ5IyEDpdIyGSieQQABePz+gOBoJIMj4pFky1kqCWMHY0NhEARCLqlKpCIAGqoZMSGKTgABGAC6MgAVDJlhzuQBqfnAcrcvkCgDMnNw8LpMgAmkyWWzxbzcQL1X9pZzknLaXSAFpM8wCrkarXC5kk9jAGWWsXcnX2znyhEzBEAXzhtP+LDg3Feyl+iJYnEEhpkUCZD2eECc8AYLAIT39gdefHMAA5DFLZOZ2QAGWTlIv690yOixx5PBNJlNpgNBrPFgsAVhLMmL5YNdIINfjibgydT6Zb5WzsnZ06L5fld1pcc+LXEkbp4+DTM37D7VLgAA89kz2C5OA4nOR1wrYhhXlAuBh-vt4NeFTI3nAACztt-vgFArIlbvssRZMhojJqDOSpMtBJpQRWUbvqQYFqCWwEKqQ-rQNwsFznu-42qyNTqBCfDHLIGBrPqMhUQQqQYR6GGIe+8wRpiTJIhQKKelSLFUpCGAEeo3CxCRdRgJ+K5mIMYD3lw0kSCkC7pD6sw5Ac4jojIy6cJp17LlJ6xAUutZXKURCkIpa6VpiA61JoB6ycsKQmXS7z-FATjcFZxDcImHDgZoywYOyzkYJUYC8TR8rLtYcBEDAihsFZ6zpDM7AjgAbh8ekSHweXiMkYBepyQA", # nolint
-    mode = "editor"
+  blockr:::create_app_link(
+    blockr:::shinylive_links["ode-demo"],
+    "editor",
+    header = FALSE
   ),
   full_screen = TRUE
 )
@@ -775,55 +622,7 @@ Toggle code
 
 <div class="collapse" id="lorenz-mod">
 
-```r
-library(blockr)
-library(pracma)
-library(blockr.ggplot2)
-
-new_ode_block <- function(...) {
-
-  lorenz <- function (t, y, parms) {
-    c(
-      X = parms[1] * y[1] + y[2] * y[3],
-      Y = parms[2] * (y[2] - y[3]),
-      Z = -y[1] * y[2] + parms[3] * y[2] - y[3]
-    )
-  }
-
-  fields <- list(
-    a = new_numeric_field(-8/3, -10, 20),
-    b = new_numeric_field(-10, -50, 100),
-    c = new_numeric_field(28, 1, 100)
-  )
-
-  new_block(
-    fields = fields,
-    expr = substitute(
-      as.data.frame(
-        ode45(
-          fun, 
-          y0 = c(X = 1, Y = 1, Z = 1),
-          t0 = 0,
-          tfinal = 100,
-          parms = c(.(a), .(b), .(c))
-        )
-      ),
-      list(fun = lorenz)
-    ),
-    ...,
-    class = c("ode_block", "data_block")
-  )
-}
-
-stack <- new_stack(
-  new_ode_block,
-  # Coming from blockr.ggplot2
-  new_ggplot_block(
-    func = c("x", "y"), 
-    default_columns = c("y.1", "y.2")
-  ), 
-  new_geompoint_block
-)
-serve_stack(stack)
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+blockr:::print_shinylive_r_code("ode-demo")
 ```
 </div>
