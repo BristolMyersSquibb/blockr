@@ -121,17 +121,6 @@ In the following demonstration, dummy dataset has been uploaded to the webR file
 the block. But, you can also upload your own data thanks to the corresponding
 shinylive feature (upload button).
 
-```r
-library(blockr)
-
-stack <- new_stack(
-  new_filesbrowser_block,
-  new_csv_block,
-  new_select_block
-)
-serve_stack(stack)
-```
-
 ```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
 # shinylive container
 card(
