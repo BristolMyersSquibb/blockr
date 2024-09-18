@@ -34,14 +34,14 @@
 <li class="active nav-item"><a class="nav-link" href="../articles/blockr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/blockr_examples.html">Case studies</a></li>
-    <li><a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a></li>
-    <li><a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a></li>
-    <li><a class="dropdown-item" href="../articles/new-field.html">4. Case study: create a new field</a></li>
-    <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-guides" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer guides</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-guides">
+<li><a class="dropdown-item" href="../articles/data-blocks.html">Data blocks</a></li>
+    <li><a class="dropdown-item" href="../articles/registry.html">Block registry</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-block.html">How to create a plot block?</a></li>
+    <li><a class="dropdown-item" href="../articles/new-field.html">How to create a new field?</a></li>
+    <li><a class="dropdown-item" href="../articles/blockr-examples.html">More examples</a></li>
+    <li><a class="dropdown-item" href="../articles/internals.html">Internals</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -76,10 +76,10 @@
 
 
 
-<script src="blockr_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="blockr_files/d3-3.3.8/d3.min.js"></script><script src="blockr_files/dagre-0.4.0/dagre-d3.min.js"></script><script src="blockr_files/mermaid-10.6.0/dist/mermaid.slim.min.js"></script><link href="blockr_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="blockr_files/chromatography-0.1/chromatography.js"></script><script src="blockr_files/DiagrammeR-binding-1.0.10.9000/DiagrammeR.js"></script><link href="blockr_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<link href="blockr_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="blockr_files/bslib-component-js-0.8.0/components.min.js"></script><script src="blockr_files/bslib-component-js-0.8.0/web-components.min.js" type="module"></script><link href="blockr_files/bslib-component-css-0.8.0/components.css" rel="stylesheet">
-<script src="blockr_files/bslib-tag-require-0.8.0/tag-require.js"></script><div class="row">
+<script src="blockr_files/bslib-tag-require-0.8.0/tag-require.js"></script><script src="blockr_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="blockr_files/d3-3.3.8/d3.min.js"></script><script src="blockr_files/dagre-0.4.0/dagre-d3.min.js"></script><script src="blockr_files/mermaid-10.6.0/dist/mermaid.slim.min.js"></script><link href="blockr_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="blockr_files/chromatography-0.1/chromatography.js"></script><script src="blockr_files/DiagrammeR-binding-1.0.10.9000/DiagrammeR.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>blockr</h1>
@@ -91,19 +91,105 @@
 
     
     
-<iframe src="https://blockr-org.github.io/useR2024" width="700" height="400px" data-external="1">
+<iframe src="https://bristolmyerssquibb.github.io/useR2024" width="700" height="400px" data-external="1">
 </iframe>
 <div class="section level2">
 <h2 id="get-started">Get started<a class="anchor" aria-label="anchor" href="#get-started"></a>
 </h2>
-<p><a href="https://blockr-org.github.io/blockr">blockr</a> provides plug and play blocks which can be used
-to import, transform and visualize data.</p>
+<p><a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> provides plug and play <strong>blocks</strong>
+which can be used to import, transform and visualize data. This guide
+provides an entry point for end users without extensive coding skills,
+as well as developers.</p>
 <div class="section level3">
-<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h3 id="blockr-for-non-coders">{blockr} for non coders<a class="anchor" aria-label="anchor" href="#blockr-for-non-coders"></a>
 </h3>
-<p><a href="https://blockr-org.github.io/blockr">blockr</a> aims at abstracting the logic behind common
+<p>In that case, you likely just want to get started to create your
+first data pipeline.</p>
+<div class="section level4">
+<h4 id="the-user-interface">The user interface<a class="anchor" aria-label="anchor" href="#the-user-interface"></a>
+</h4>
+<p>This is what the <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> interface looks. We designed
+it to be like a cooking <strong>recipie</strong>, where blocks
+correspond to the different <strong>steps</strong>. Within each block
+are some <strong>inputs</strong> that allow you to change parameters.
+For instance, when you import the data, you may want to select a given
+dataset or specify a file from your computer or on a server. In figure
+@ref(fig:blockr-ui), the <code>airquality</code> dataset is imported. On
+the top center of the block, you can see information about the number of
+rows and columns. Then, a filter block is added and target the
+<code>Ozone</code> column. Notice the <strong>validation</strong>
+message as the value is missing. The submit button can’t be clicked as
+long as the input is empty, which prevents from triggering errors in
+downstream blocks. Each block can be collapsed/uncollapsed and removed
+with the corresponding buttons located on the top right corner. As you
+can see, we group all related blocks inside a common container, the
+<strong>stack</strong>, which can also be collapse and removed.</p>
+<div class="figure" style="text-align: center">
+<img src="figures%2Fblockr-ui.png" alt="User Interface Overview" width="100%"><p class="caption">
+User Interface Overview
+</p>
+</div>
+</div>
+<div class="section level4">
+<h4 id="starting-from-scratch">Starting from scratch<a class="anchor" aria-label="anchor" href="#starting-from-scratch"></a>
+</h4>
+<p>When you start from scratch, there are actually no blocks in the
+interface and you have to add them one by one. To add a new block, you
+can click on the <code>+</code> icon on the stack top right corner. This
+opens a sidebar on the left side, where it is possible to search for
+blocks. To make things easier, all the suggested blocks are compatible
+with the current state of the pipeline. For instance, when the stack is
+empty, only entry point blocks are suggested, so you can import data.
+Then, after clicking on the block, the suggestion list changes so you
+can, for instance, filter data or select only a subset of columns, and
+more.</p>
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-9185">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZDaRkhHT0DY3CiDAYQ6ih2GAwiBg8hAEp8mQBiCAs2UgEIKu5XBigGKz4RMUl8mrqGppaJBgwAEygudohaxi7m0V7PD1RRUgAmEbH6xsnWvoIG-rYeZc61nskMVC0GmCgAN1t2OChBmH3xw6nj0-Orm7h2ftJHjue3VefQ8Hk4Q3YcyIpCeqyBGwwBFqEBYW24GFILHgyO+I1uDGuAH1wRI+BA4NRiVxSflZCx+qoYmBrCTxAUqmAAL4AXSAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
+</bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
+</div>
+</div>
+<div class="section level4">
+<h4 id="toward-a-dashboard">Toward a dashboard<a class="anchor" aria-label="anchor" href="#toward-a-dashboard"></a>
+</h4>
+<p>What if you aim at creating a more ambitious pipeline? In that case,
+you don’t need one cooking recipie but multiple, so you can organise
+your own dinner party. Below is a slightly more complex application,
+where you can add multiple stacks and connect them together. This are
+the following step to connect 2 stacks together:</p>
+<ul>
+<li>Click on “Add stack”.</li>
+<li>Add a new dataset block with the default BOD dataset.</li>
+<li>Add a filter block. Target the Time column with values between 1 and
+2, then click “submit”. You should get only 2 rows.</li>
+<li>Click on “Add stack”.</li>
+<li>Add a new result block in this second stack. You should see the same
+result as in the first stack.</li>
+</ul>
+<p>Doing so, you can build you analysis step by step in a modular
+way.</p>
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-3545">
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZDaRkhHT0DY3CiDAYQ6ih2GAwiBg8hAEp8mQBiCAs2UgEIKu5XBigGKz4RMUl8qqqAE2SCHn52OFIAfWoc8XZUKAI4WQaPZTVazj5Sb244VRiwAFkrGVGGccnpgvbqjlsANzgRsYmpuD4CdYbNgDEAQQAZAGUAUTOYAAvgBdIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
+</bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="blockr-for-developers">{blockr} for developers<a class="anchor" aria-label="anchor" href="#blockr-for-developers"></a>
+</h3>
+<p>In the following section, we describe the building blocks behind
+blockr so you can start creating your blocks.</p>
+<div class="section level4">
+<h4 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h4>
+<p><a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> aims at abstracting the logic behind common
 data pipeline tasks under <strong>blocks</strong>, without requiring any
-programming background. Besides, <a href="https://blockr-org.github.io/blockr">blockr</a> exposes multiple
+programming background. Besides, <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> exposes multiple
 tools so that advanced developers can easily extend it. We assume that a
 <strong>stack</strong> is a succession of dependent blocks. We designed
 3 kinds of blocks:</p>
@@ -123,10 +209,12 @@ either by a transform blocks or an output block. This means that, at the
 moment, there can only be one output block per stack.</p>
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:600px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":"\n  flowchart TD\n  subgraph stack1[Stack]\n    direction TB\n    subgraph input_block[Block 1]\n      input(Data: dataset, browser, ...)\n    end\n    subgraph transform_block[Block 2]\n      transform(Transform block: filter, select ...)\n    end\n    subgraph output_block[Block 3]\n      output(Result/transform: plot, filter, ...)\n    end\n    input_block --> |data| transform_block --> |data| output_block\n  end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script><p>Under the hoods, blocks are composed of <strong>fields</strong>. The
-latter are translated into shiny inputs used to convey interactivity
-within the block. As you can see in the below diagram, fields are
-combined to compute an expression, which eventually leads to a block
-result after evaluation. For a data block, there is no data input.</p>
+latter are translated into shiny inputs used to convey
+<strong>interactivity</strong> within the block. As you can see in the
+below diagram, fields are combined to compute an
+<strong>expression</strong>, which eventually leads to a block
+<strong>result</strong> after <strong>evaluation</strong>. For a data
+block, there is no data input.</p>
 <div id="htmlwidget-e5c8c404fe174e4c81bd" style="width:700px;height:800px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"diagram":"flowchart TD\n  blk_data_in(Data input)\n  blk_data_out[Output]\n  subgraph blk_block[Block]\n    subgraph blk_field1[Field 1]\n      value(Value)\n      title(Title)\n      descr(Description)\n      status(Status)\n    end\n    blk_field2(Field 2)\n    blk_field1 --> blk_expr\n    blk_field2 --> blk_expr\n    blk_expr(Expression)\n    blk_res(result)\n    blk_expr --> blk_res\n  end\n  blk_data_in --> blk_block --> blk_data_out\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script><p>For instance, if we assume a filter <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a>
 <strong>expression</strong>:</p>
@@ -144,30 +232,24 @@ corresponds to <code>cond1 &amp;&amp; cond2 &amp;&amp; ...</code>.</p>
 <div id="htmlwidget-36aa3d2a04d42bbc2145" style="width:700px;height:700px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"diagram":"flowchart TD\n  filt_data_in[Data input]\n  filt_data_out[Transformed data]\n  subgraph filt_block[Filter block]\n    filt_select_col[Select columns]\n    filt_filter_func[Filter function ==, !=]\n    filt_filter_val[Filter values]\n    filt_expr[Expression]\n    filt_res[Result]\n\n    filt_select_col --> filt_expr\n    filt_select_col --> |depends| filt_filter_val\n    filt_filter_val --> filt_expr\n    filt_filter_func --> filt_expr\n\n    filt_expr --> filt_res\n  end\n  filt_data_in --> filt_block --> filt_data_out\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
 </div>
-<div class="section level3">
-<h3 id="the-user-interface">The user interface<a class="anchor" aria-label="anchor" href="#the-user-interface"></a>
-</h3>
-<p>By default, only the last <strong>stack</strong> block is visible,
-all others are collapsed. To preview all block you can set
-<code>options("BLOCKR_DEV" = TRUE)</code>.</p>
-<div class="figure" style="text-align: center">
-<img src="figures/blockr-ui.png" alt="User Interface Overview" width="100%"><p class="caption">
-User Interface Overview
-</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="create-a-stack">Create a stack<a class="anchor" aria-label="anchor" href="#create-a-stack"></a>
-</h3>
+<div class="section level4">
+<h4 id="create-a-stack">Create a stack<a class="anchor" aria-label="anchor" href="#create-a-stack"></a>
+</h4>
 <p>To create a <strong>stack</strong>, you call <code><a href="../reference/new_stack.html">new_stack()</a></code>
 and feed it all the required <strong>blocks</strong>. Below is a simple
 stack providing a dataset selector and a filter operation.
 <code><a href="../reference/new_stack.html">serve_stack()</a></code> is a simple wrapper to run the corresponding
 shiny app. Note that with <code><a href="../reference/new_stack.html">serve_stack()</a></code>, you don’t need to
 worry about specifying any <strong>modules IDs</strong>, they are
-automatically handled by <a href="https://blockr-org.github.io/blockr">blockr</a>.</p>
+automatically handled by <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a>.</p>
+<p>blocks can be instantiated either by calling their constructor name
+and passed to the stack:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">new_dataset_block</span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, it is possible to create block with specific parameter
+values, as shown below:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bristolmyerssquibb.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">blockr.data</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span>
 <span></span>
@@ -176,93 +258,21 @@ automatically handled by <a href="https://blockr-org.github.io/blockr">blockr</a
 <span>  block2 <span class="op">=</span> <span class="fu"><a href="../reference/new_filter_block.html">new_filter_block</a></span><span class="op">(</span>columns <span class="op">=</span> <span class="st">"species"</span>, values <span class="op">=</span> <span class="st">"Adelie"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-5523">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwlmdl5fKg88AyoFNZObOwl6ZxQEjIAPOYyEHDUAPpDEoIQMjJVAIyqk9MzdVzscKQzVXx73HAE5DUbQl0QPX0BbRJQ1nBXYG3cHTd3HCm46csqgAmDZTWYAMxY3HIDEOogWxG4ThgHDe7C6BBYcH8eBkADceE5sW8AII1OCZOApdIlPYMPFwOZcBbzcTJMAAXwAukA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
-</div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
-</bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
-</div>
+<p>By default, only the last <strong>stack</strong> block is visible,
+all others are collapsed. To preview all block you can set
+<code>options("BLOCKR_DEV" = TRUE)</code>.</p>
 <div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">You'll notice that some blocks, such as the `filter_block`
-  have a submit button. The reason was to prevent any expansive task
-  to run without explicit user approval. That said, this feature is
-  still very much experimental and might change in the future.</div>
-<p>In the next example, we’ll see how to create an which can dynamically
-add or remove blocks.</p>
+  have a submit button. This is to prevent any expansive task
+  from running without explicit user approval.</div>
 </div>
-<div class="section level3">
-<h3 id="dynamically-add-a-block">Dynamically add a block<a class="anchor" aria-label="anchor" href="#dynamically-add-a-block"></a>
-</h3>
-<p>The stack exposes a helper button to add a block in the top right
-corner of the card header. It triggers an <a href="https://getbootstrap.com/docs/5.3/components/offcanvas/" class="external-link">offcanvas</a>
-UI panel, that basically allows one to select any block available in the
-registered blocks <a href="https://blockr-org.github.io/blockr/articles/registry.html">vignette</a>.</p>
-<p>As a side note, there’s another mechanism that works to add blocks,
-which we describe in the following. It is more verbose but allows you to
-bring your own custom UI. On the UI side, we call
-<code><a href="../reference/generate_ui.html">generate_ui()</a></code>, which is nothing more than calling the stack
-module UI and <code><a href="../reference/generate_server.html">generate_server()</a></code> in the Shiny server
-function. If you leave <code>id</code> NULL, the namespace is
-automatically handled. To get the list of available blocks, we leverage
-the <a href="https://blockr-org.github.io/blockr">blockr</a> registry namely
-<code><a href="../reference/available_blocks.html">available_blocks()</a></code> which exposes the currently registered
-blocks. You can learn more about the registry in the dedicated <a href="https://blockr-org.github.io/blockr/articles/registry.html">vignette</a>.
-<code><a href="../reference/add_block.html">add_block_ui()</a></code> is a UI helper to show a button as well as
-the necessary interface to contain the new block choice. Within an
-<code>observer</code> we listen to the “add block” button. Then, we pass
-the new block in the <code>new_block</code> slot of the
-<code><a href="../reference/generate_server.html">generate_server()</a></code> function. It accepts the name of the
-block to insert as well as its position in the stack (here we append and
-leave <code>NULL</code>).</p>
-<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">Note that `{blockr.demo}` (https://github.com/blockr-org/block.demo)
-  utilises `{masonry}` (https://github.com/blockr-org/masonry) to provide
-  a better user experience, allowing one to drag and drop blocks
-  within the stack.</div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span><span class="va">new_dataset_block</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span>
-<span>  ui <span class="op">=</span> <span class="fu">bslib</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">page_fluid</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/add_block.html">add_block_ui</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/generate_ui.html">generate_ui</a></span><span class="op">(</span><span class="va">stack</span>, id <span class="op">=</span> <span class="st">"mystack"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  server <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">vals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html" class="external-link">reactiveValues</a></span><span class="op">(</span>new_block <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span>    <span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_server.html">generate_server</a></span><span class="op">(</span></span>
-<span>      <span class="va">stack</span>,</span>
-<span>      id <span class="op">=</span> <span class="st">"mystack"</span>,</span>
-<span>      new_block <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">vals</span><span class="op">$</span><span class="va">new_block</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">add</span>, <span class="op">{</span></span>
-<span>      <span class="va">block</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/available_blocks.html">available_blocks</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">selected_block</span><span class="op">]</span><span class="op">]</span></span>
-<span>      <span class="co"># add_block expect the current stack, the block to add and its position</span></span>
-<span>      <span class="co"># (NULL is fine for the position, in that case the block will</span></span>
-<span>      <span class="co"># go at the end)</span></span>
-<span>      <span class="va">vals</span><span class="op">$</span><span class="va">new_block</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>block <span class="op">=</span> <span class="va">block</span><span class="op">)</span></span>
-<span>    <span class="op">}</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Blocks can be removed in any context. Keep in mind that a stack can’t
-contain 2 data blocks.</p>
-<div class="m-3 p-2 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3">At the moment, we don't check whether removing a block breaks the pipeline.</div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-2211">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+YWSGAAmUFwl6ZxQEjIAPOYyEHDUAPrNEnwl7HAMAG5w-VyDA+LJYAC+ALpAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
-</div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
-</bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="section level3">
-<h3 id="example-with-modules">Example with modules<a class="anchor" aria-label="anchor" href="#example-with-modules"></a>
-</h3>
-<p>The stack can be nested within modules. This is what we do in <a href="https://github.com/blockr-org/block.demo" class="external-link"><code>{blockr.demo}</code></a>.</p>
+<div class="section level4">
+<h4 id="example-with-modules">Example with modules<a class="anchor" aria-label="anchor" href="#example-with-modules"></a>
+</h4>
+<p>This might be useful if you consider embedding blockr in your own
+application. The stack can be nested within modules.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bristolmyerssquibb.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_stack.html">new_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">new_dataset_block</span>,</span>
@@ -300,14 +310,15 @@ contain 2 data blocks.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="connect-stacks-the-workspace">Connect stacks: the workspace<a class="anchor" aria-label="anchor" href="#connect-stacks-the-workspace"></a>
-</h3>
+<div class="section level4">
+<h4 id="connect-stacks-the-workspace">Connect stacks: the workspace<a class="anchor" aria-label="anchor" href="#connect-stacks-the-workspace"></a>
+</h4>
 <p>The <strong>workspace</strong> allows you to create more complex
 analysis by connecting stacks together and get a dashboard. To know more
-about this you can read the following <a href="https://blockr-org.github.io/blockr/articles/data-blocks.html#reading-data-from-another-stack">article</a>.</p>
-<div id="htmlwidget-febe03efa1a2d8d52a86" style="width:700px;height:600px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"diagram":"flowchart TD\n  subgraph s1[Stack 1]\n    direction TB\n    input_s1(Data)\n    transform_s1(Transform)\n    input_s1 --> |data| transform_s1\n  end\n  transform_s1 --> |data| input_s2\n  subgraph s2[Stack 2]\n    direction TB\n    input_s2(Data)\n    transform_s2(Transform)\n    output_s2(Visualize)\n    input_s2 --> |data| transform_s2 --> |data| output_s2\n  end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
+about this you can read the following <a href="https://bristolmyerssquibb.github.io/blockr/articles/data-blocks.html#reading-data-from-another-stack">article</a>.</p>
+<div id="htmlwidget-febe03efa1a2d8d52a86" style="width:100%;height:432.632880098888px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"diagram":"\n  flowchart TD\n  subgraph LR workspace[Workspace]\n    subgraph stack1[Stack]\n      direction LR\n      subgraph input_block[Block 1]\n        input(Data: dataset, browser, ...)\n      end\n      subgraph transform_block[Block 2]\n        transform(Transform block: filter, select ...)\n      end\n      subgraph output_block[Block 3]\n        output(Result/transform: plot, filter, ...)\n      end\n      input_block --> |data| transform_block --> |data| output_block\n    end\n    subgraph stack2[Stack 2]\n      stack1_data[Stack 1 data] --> |data| transform2[Transform]\n    end\n    stack1 --> |data| stack2\n    subgraph stackn[Stack n]\n      stacki_data[Stack i data] --> |data| transformn[Transform] --> |data| Visualize\n    end\n    stack2 ---> |... data| stackn\n  end\n  "},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n      el.classList.add('text-center')\n    }\n    ","data":null}]}}</script>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -321,7 +332,7 @@ about this you can read the following <a href="https://blockr-org.github.io/bloc
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

@@ -34,14 +34,14 @@
 <li class="nav-item"><a class="nav-link" href="../articles/blockr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/blockr_examples.html">Case studies</a></li>
-    <li><a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a></li>
-    <li><a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a></li>
-    <li><a class="dropdown-item" href="../articles/new-field.html">4. Case study: create a new field</a></li>
-    <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-guides" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer guides</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-guides">
+<li><a class="dropdown-item" href="../articles/data-blocks.html">Data blocks</a></li>
+    <li><a class="dropdown-item" href="../articles/registry.html">Block registry</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-block.html">How to create a plot block?</a></li>
+    <li><a class="dropdown-item" href="../articles/new-field.html">How to create a new field?</a></li>
+    <li><a class="dropdown-item" href="../articles/blockr-examples.html">More examples</a></li>
+    <li><a class="dropdown-item" href="../articles/internals.html">Internals</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -94,9 +94,6 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<div class="m-3 p-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">This part is likely more dedicated to developers than users. However,
-  it might be useful whenever you design custom blocks and want to register
-  them in `{blockr}`.</div>
 <p>The <strong>registry</strong> is a <strong>environment</strong> which
 provides access to multiple <strong>blocks</strong> as well as some
 metadata:</p>
@@ -119,7 +116,7 @@ teams.</p>
 <div class="section level2">
 <h2 id="previewing-available-blocks">Previewing available blocks<a class="anchor" aria-label="anchor" href="#previewing-available-blocks"></a>
 </h2>
-<p>Upon loading, <a href="https://blockr-org.github.io/blockr">blockr</a> <strong>registers</strong> its
+<p>Upon loading, <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> <strong>registers</strong> its
 internal <strong>blocks</strong> with
 <code>register_blockr_blocks()</code>. You won’t have to call this
 function as it is not exported anyway. This makes the
@@ -221,9 +218,9 @@ returns the <code>n</code> last rows of the selected dataset:</p>
 <span><span class="co">#&gt; [16] "upload_block"       "xpt_block"</span></span></code></pre></div>
 <p>We can now run the demo app to add blocks. The new
 <code>tail_block</code> should be visible in the new choices:</p>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-5901">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-6922">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkQ6RBw1AD6XCzclYXiMgA85jIAZk4QBKTuEHwAJlBcshCVDETUymoQTvAMLBrJshgryTIg6ekyMqPjk5UwUAAeza0dXT0kA0NQaxB711wl21s7FfWiEoIQ29ttLHBuP0pjJMpxvr9frsJiDylUZnMFpV-oD+nxoZNZABGAAyIzGMIOx2evyWr22cCOqAYqhkAEcnERyHwavwfmoMOiCZNUmSfr8CNxYiCNEJWR8zAExQwoBw2lYYBKJClcOSZCsMK8SgBfTb3OD2ThwBhK8QQ9QkTgMJzdKy0uHVKC1U2q-nQeC0sVO7gyBrSV79ODsAjzVCXdmBMDyUhOBg-IWcHZyGH+-mC4VB2misDiv14SOkGVyhWmlWvNioJykT1gQZcDBtGXwVPbIhVyvVtRCOtQBtNuBCdIldKcKASU5vKqjr4OnvsOCkU0lecMABucEq07NW+SYG1AF0gA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZpGSEdPQNjcKIMBhDqKHYYDCIGDyEASjyBCCLuVwYoBis+ETFJQuKICDhqAH0uFm4WmokZAB4QmQAzJwgCUgCIPgATKC5ZCBaGImplNQgneAYWDTzZDH28mRAiopkZBaWVlpgoAA8+geHR8ZJp2ahDiEu3rnrT8+aXVEEkEEDOZ0GLDg3CmqxkpU4oPB4IuyzhTVa6022xakOhUz4qJWsgAjAAZeaLNHXO71ZG7f5nOC3VAMVQyZxEch8dr8MFqDCEqkrAoMsHggjcdJwjRCXlA2pROXlDiDbIwBUSfK4RkyfYYf71AC+Jy+cC8nFsmvESPUJE4DCcY2y7IxbSgHWtOvF0Hg7LlHu4Mm64mk-ymcHYBC2qBe-OiYHkpCcDDBUs45zkaLD4sl0sj7NlYHlIaVxZV7DVDA1pbAYrObFQTlI-rAMy4GEG5XgObORGbTZbaiE7agne7cCERT+HC4PX6ANanCgILdo-YcFI1vqG4YADc4C1lyDj+J6mAjQBdIA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
@@ -288,7 +285,7 @@ If you had to remove multiple blocks at once, you can pass a vector in
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

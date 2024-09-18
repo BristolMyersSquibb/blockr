@@ -34,14 +34,14 @@
 <li class="nav-item"><a class="nav-link" href="../articles/blockr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/blockr_examples.html">Case studies</a></li>
-    <li><a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a></li>
-    <li><a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a></li>
-    <li><a class="dropdown-item" href="../articles/new-field.html">4. Case study: create a new field</a></li>
-    <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-guides" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer guides</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-guides">
+<li><a class="dropdown-item" href="../articles/data-blocks.html">Data blocks</a></li>
+    <li><a class="dropdown-item" href="../articles/registry.html">Block registry</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-block.html">How to create a plot block?</a></li>
+    <li><a class="dropdown-item" href="../articles/new-field.html">How to create a new field?</a></li>
+    <li><a class="dropdown-item" href="../articles/blockr-examples.html">More examples</a></li>
+    <li><a class="dropdown-item" href="../articles/internals.html">Internals</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -128,7 +128,7 @@ parameters. As a result, there are many ways to build a ggplot:</p>
 <p>It seems obvious to add new <code>ggplot_block()</code> and geom
 <strong>constructors</strong>. On the Shiny side, we have to handle the
 plot output element. Remember that the <code><a href="../reference/server_output.html">server_output()</a></code>
-<strong>generic</strong> is defined in the <a href="https://blockr-org.github.io/blockr">blockr</a>
+<strong>generic</strong> is defined in the <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a>
 <code>server.R</code> script. It supports tables with
 <code><a href="../reference/server_output.html">server_output.block()</a></code> and plots with
 <code><a href="../reference/server_output.html">server_output.plot_block()</a></code>. Therefore, we don’t need to
@@ -137,7 +137,7 @@ inherits from the <code>plot_block</code> class to
 <strong>dispatch</strong> to the correct method. Most of our work will
 be on the block side since we’ll have to generate the plot layer by
 layer, each layer being a block. Before writing this vignette,
-<a href="https://blockr-org.github.io/blockr">blockr</a> did not support layer by layer plots. This new
+<a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> did not support layer by layer plots. This new
 concept required to expose a new way of combining plot expressions to
 generate the entire stack code. With the previous infrastructure, we
 could only do:</p>
@@ -148,7 +148,7 @@ to combine with <code>+</code> such as:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="va">plot_block</span> <span class="op">+</span> <span class="va">layer_block</span></span></code></pre></div>
 <p>All the process is described in the following, which should highlight
-the <strong>flexibility</strong> provided by <a href="https://blockr-org.github.io/blockr">blockr</a>.</p>
+the <strong>flexibility</strong> provided by <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="new-block-helpers">New block helpers<a class="anchor" aria-label="anchor" href="#new-block-helpers"></a>
@@ -348,7 +348,7 @@ choices whenever data change.</p>
 <p>Producing the expression, which is certainly the most “technical”
 part, as it involves a bit of <strong>metaprogramming</strong>. The
 expression must not be evaluated in the block, that’s why it is wrapped
-in a <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote()</a></code>. <a href="https://blockr-org.github.io/blockr">blockr</a> is then able to
+in a <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote()</a></code>. <a href="https://bristolmyerssquibb.github.io/blockr">blockr</a> is then able to
 generate the expression with <code><a href="../reference/generate_code.html">generate_code()</a></code> and evaluate
 it with <code><a href="../reference/evaluate_block.html">evaluate_block()</a></code>.</p>
 <p>Our ggplot expression can be written as:</p>
@@ -437,9 +437,9 @@ invoke the corresponding <code><a href="../reference/evaluate_block.html">evalua
 <span>  layer_block <span class="op">=</span> <span class="fu">new_geompoint_block</span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"species"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/new_stack.html">serve_stack</a></span><span class="op">(</span><span class="va">stack</span><span class="op">)</span></span></code></pre></div>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-7506">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-5128">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDcLIxQDACefKYSDGkZWQw5+ag88AyoFNZObOwlmdl5fNbWqKKkAEwl6RBw1AD6nd1EpCOF4jIAPOYyAGZOEASk7hB8xNwjAB6q6lo5UOtwDHzJsjsjuYcEx+VnF1cyGO-JMiDp6TIyACZQLgjHbKBbLVbrTZ8QFcT47aDwdgwoFQAYQP5DUYzQQYv7LFhwbj-ZRqTKcXH4-EHNRYkbsIlwdYjJaE4nbIi7PayWFQEGc9iyUi5OqHISIuApXC-KkyO604b0xnM1lE-4c3a5Hmo-ncQUyYWitTi2CSsAlKlXGV-OB7VAMQ4ARyckzglNl4x6fBgaFQbGshygcGRNLefD2r3lYdyqQt+KteL+BG4sVJ6k0nsm01EEgCQgmUxmUutb3eMpKAF8fhA6dY4EQYIo2IWc7NwSs1hsSBqrPdHqdyC9ZOxjkajidnpdZO8MJ9vhAZbzdWDFh2od3efDORLkbyACSb6uYxU4kuq4lp8mkd1Una9hWjBncJlTc-qu8MbXA0FCkVwMWQKaxaJviI5oP+D5Ks+KpsuqYF1F+fI-gaf4ARKKQlgmVK2vaTouuQN74nWDYjE2ZB8EGyIfocGA9sUw6jhBYbwXAqTDiwABeTH9Jh0ogcmqb3JoBYjCmuTnNmZh5mAIlFuafFUjO5bpFWC4cFwEjzIsdKcKc4jukuMyHHSvIMi2ZjCfUjQcNJVTcDUdQQA0TRSoEeKya2xmKpm5kSJoSyZOgEnPk5jgjDAMDSXQRD-Lk4WpmMwF-GJElGZBxGNkQzaSX5QjsHUBCEv4eCBGA+VMkVGEQCUDIMAAbnA9IafpukSMkYAVgAukAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZpGSEdPQNjcKIMBhDqKHYYDCIGDyEASjyBCCLuVwYoBis+ETFJQohSxgqq1B54BlQKDxcOesbyyr4PD1RRUgAmeqKIOGoAfWHRolI5mokZAB4QmQAzJwgCUgCIPmJuOYAPVXUtCqhD2z482TO5q2uCW-KHhifZDABeRkICKRRkMgAJlAuHMzsotrt9odjnwoVwgWdoPB2KjoVAphBwTN5mtxIJCeDdiw4NwIco1KVOOTKZSrmpiXN2DS4Ic5jtqbTThZLrI0VBYRZ2LJSFZOtchFi4PlcGCWTJ3uzZpzubz+TSIULzlZRXiJdwpTIZXK1ArYEqwPUWc9VeC4BdUAxrs5lnBmWrFmM+DA0Kg2B5rlA4Di2TIMHwLs91dc41YCo7Kc6KeCCNx0vT1JoA8tVqIJFEhEsVqTlS7YwDVfUAL6giAcjxwIgwRRsKul8SbbZ7A5HEiG7IfL73ci-RPsW7Wm53H5-OsYIEg4oUsVm+GDpEjk5ijEWRU4sUAEiPLaJWtJfvBetp+cZpHvlLO4818y53B5K0fBofgwJownC0qynA8qQHaNZZpSc5oJBX7ar+uoCgaCGdCB4pgZaEFQYq+S1pmLJuh6XpOD6b7gu2nZzN2ZB8JGOJAcmY4MLO85IbGfCYXABSyOwLAAF7cZMxEqnBOZ5h8miVnMuY2AwJa1OWYDydWDqSSyAIYA2RTNpunD3P2CIcsZEh+tupLXByYpcr2tRyV0PSRHg0TqW0tidBA3RsG5JEyBpfa2VqRaOZZQg7KU6C2ApXQ+HMMAwGpdBEBCVhJXmCyweCilxTZyG0V2RA9ipkVgOwnQENSbmyEIVU8rVREQPUXIMAAbnAnJcJZFniPUYCNgAukAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
@@ -455,7 +455,7 @@ Below is a possible implementation of an interactive
 </p>
 <div id="ggiraphBlockr" class="collapse">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blockr-org.github.io/blockr">blockr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bristolmyerssquibb.github.io/blockr">blockr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidgohel.github.io/ggiraph/" class="external-link">ggiraph</a></span><span class="op">)</span></span>
 <span></span>
@@ -576,7 +576,7 @@ Below is a possible implementation of an interactive
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

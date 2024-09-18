@@ -34,14 +34,14 @@
 <li class="nav-item"><a class="nav-link" href="../articles/blockr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/blockr_examples.html">Case studies</a></li>
-    <li><a class="dropdown-item" href="../articles/data-blocks.html">1. Data blocks</a></li>
-    <li><a class="dropdown-item" href="../articles/registry.html">2. Blocks registry</a></li>
-    <li><a class="dropdown-item" href="../articles/plot-block.html">3. Case study: create a plot block</a></li>
-    <li><a class="dropdown-item" href="../articles/new-field.html">4. Case study: create a new field</a></li>
-    <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer guide</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-developer-guides" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Developer guides</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-developer-guides">
+<li><a class="dropdown-item" href="../articles/data-blocks.html">Data blocks</a></li>
+    <li><a class="dropdown-item" href="../articles/registry.html">Block registry</a></li>
+    <li><a class="dropdown-item" href="../articles/plot-block.html">How to create a plot block?</a></li>
+    <li><a class="dropdown-item" href="../articles/new-field.html">How to create a new field?</a></li>
+    <li><a class="dropdown-item" href="../articles/blockr-examples.html">More examples</a></li>
+    <li><a class="dropdown-item" href="../articles/internals.html">Internals</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -189,19 +189,86 @@ block</strong> where the selected column field updates the value field
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>We can test our newly created field in a custom block.</p>
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-7721">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init data-full-screen="false" data-require-bs-caller="card()" data-require-bs-version="5" id="bslib-card-6785">
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<iframe class="html-fill-item" src="https://shinylive.io/r/editor/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IZFjJAWiIMA5hmstSWgK50MLIodqNz8xe2kyQjp6Bsa+RBgM5tRQ7DAYVtZCAJTJAhDp3CyMUAwAnnymEgxpGRAQcNQA+uxZACZwDFUAZixw3HUyADzmMs1OEASk7hCCEDITMgBuPE5wqjIQTvAMLBrJuOmTMjBsC0sra3wbW5MwUAAe+8uNRyfjk5wK14frmw8TGF-JMiCnRZJmBVqq12nUxtsZtw5gsoXN3ttduM1EiEWdLgtzhc0RMnqgFnicTIvhgiQRuLFlGohLUWA0mqCOkJTqUAL7pdJOFhVNioJykDC0+ktNodbq9fqDYYkPjYmR02TQeA-P4PdhaNh5ZhCxoASQgfNIEMmAKYrAN-J5dXYstkdPu2yVcCJcPmalNzFdtsCYFdKSJSIWHsQXrlQiR-tOEyxQdExU9szg3vDl0jHxkeNjZjNodkNPIqBSLPS7LKULpUHIIrBgvqjWrYp6fQGQxGspVpyh4umifbp0DTdzPojYFK0Yxg97YbAWKLaoL3aH+YUc87PArVYOdEafChpVOLGaMj43Ao1kcfCRqV+UZ79UrcCqW53qOHbDnE1LB6PJ7PF6x16qpC651A+T7LNuDCXpceYzqmo6nF+DyHsep4QOeWh8HigG3uWoGbhBO6Ej6eIfjISETAAcnAFykAAsnAjhEOCbIcks3JOKg+FwLWdL1oynRNpKrYynK7BwOw7AjHadSKrAcAdg8nHcQAynWDD6oaxq4hJUkkESwa8padI2nK9pEk6BlxoCIZTg6JrWTmU6wSO9kTMGS5wRcabbB5zkkQWZGsWU8j2E8DAqQAzPATHgkIXI8hapABDS6kNnUAQJUZAo6gyop1KUoUsOFUUxVozGaAlykPilYC5elmUcVxD68cKAn7uUlQ1FkBCPgC3bCdKozNAwRAwAsAAMsgkoppwQFUo3UMoTYCAIfD4VAPwQIt62VptbETAJy29FknDaXIRBLfsXX1QJ50TK6CwjWNRLRnsahTbe45XGo82Lewr0ZguagAIyA8MpCngsQgqe0cBDBdS3MumY4yB1EzAlUALnUdT35QDt40agDALAAjk4RDkOtqDcHkZq0r1WFwKTVRoXwGB8P9qSpBZ8nQ2Aal8STDPzAC0i3iSZIUpJCwaKlax9dZtWkAwUAcM0VgwFjSsIQ8wXpOJDBTI+nBQBIxqY6b5u3pjG3iaQ2tmJoLCrP4o4WTdPWK07ACsqOlMkYCsgAukAA" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
+<iframe class="html-fill-item" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YOtyIEA1gyG4ABAzioi7GQF4ZBQWAAWpUqnaIA9IcYtORbjACecBu3YBHAK4s6dDAHMWpLU-csiQ1pGAFp5RXZpGSEdPQNjcKIMBhDqKHYYDCIGDyEASjyBCCLuVwYoBis+ETFJQuKICDhqAH12UoATWxaAMxY4bg6ZAB4QmR6nCAJSAIhBCBlFmQA3Hic4VRkIJ3gGFg083CKlmRg2Te3d-b5D46WYKAAPC53ba9uFpc4FF6uDo8+iwwwLyMhAdxqEiYiCarT6Aw68xOq24602KPWAJOZwWahxWPuT02D0eBMW31QmwpZJkwIwNII3HSyjUQnaLC6DF6-UGQju9QAvkUii4WmxUE5SBh2ZzuQiRmMJlMZiQ+KSZBzZNB4KDwZ92Fo2FZmDLbABJCAS0hIpaQyTMcWSsUddhq2Qcj4nbVwGkYjZqO3Qv1u6JgP35Gk4zaB5jB9VCHERu6LEnR0RQ2NrOAhhNPJOAmQUtO1INZnNgCn5flFIUNFEcqDkOWDaWdbrwwYK8aTaazNW6u4ortx+op86jFZl+NgRNgUenIkTuOyXOPKv68iUpdTlcVzfrwc8BtNy50Wx8FH1O4sHoyPjcCgeHx8HEFMHJyedRtwFqn8-40NZ3nWtr1ve9H2fEk3z1ZEjw6b9fx2M8GBfJ5dxJddFhAz4bzvB8ICfLQ+ApaCP3reCTyQ89qVDSs5zubDFgAOTgR5SAAWTgHwiERQVhW2FgWicVAKLgVsOXbHkhgnJVe1VdV2DgexZndDotVgOAB0+YTRIAZTbBgLStG1ySU9gVI-GNWEtJ0OVddUPRpb0aSskcXPTe1EGXQC2HzE5XJ3QC8zndyS0zVFs2nOj5z4hp5C8b4GF0gBmeBuMRIRRUdUgojZAzmw6KIspsqVTS5DsOnqeKzHIJLUq4rQeM0UUdO-XKK3yiqisE1ryHE2UKqvRpmjaUoCB-O0u1klU5h6BgiBgTYAAZZDpLS7ggFp5uoZQJwEAQ+AoqBQQgbbDsbY7+MWCrdrGUpOBMuQiB2i4RrKgrHsWP1NjmhaaTHXEZBWj8UyJNRNu29h-sLTdNgARmhmZSAfTYhF0gY4GmJ6dr5AsYqurYRrtR6bp+qSoY-VjUAYTZnCIchDtQbgrGhdlxuIuAHBafC+AwPhIYKAonI01GwH0iSabZjY7WkD86QZJl7E2DQ8v2CaPPa0hyg4HpshgFoZfoz5YqKRSGGWH9OCgCQbVhNouBtj87aOxTSANjzNBYPZIhCp23rG9Xaj4ABWfGIHqMABQAXSAA&amp;h=0" height="700" width="100%" style="border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;" allowfullscreen="" allow="autoplay" data-external="1"></iframe>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()"><template>Expand</template><button aria-expanded="false" aria-label="Expand card" class="bslib-full-screen-enter badge rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;fill:currentColor;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg></button>
 </bslib-tooltip><script data-bslib-card-init>bslib.Card.initializeAllCards();</script>
 </div>
 <p class="text-center">
-<a class="btn btn-primary" data-bs-toggle="collapse" href="#lorenz-mod" role="button" aria-expanded="false" aria-controls="slider-field"> Toggle code </a>
+<a class="btn btn-primary" data-bs-toggle="collapse" href="#slider-field" role="button" aria-expanded="false" aria-controls="slider-field"> Toggle code </a>
 </p>
 <div id="slider-field" class="collapse">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_slice_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">from</span> <span class="op">=</span> <span class="fl">0</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bristolmyerssquibb.github.io/blockr">blockr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new_slider_field</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">value</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="va">min</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="va">max</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="va">step</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/new_field.html">new_field</a></span><span class="op">(</span></span>
+<span>    value <span class="op">=</span> <span class="va">value</span>,</span>
+<span>    min <span class="op">=</span> <span class="va">min</span>,</span>
+<span>    max <span class="op">=</span> <span class="va">max</span>,</span>
+<span>    step <span class="op">=</span> <span class="va">step</span>,</span>
+<span>    <span class="va">...</span>,</span>
+<span>    class <span class="op">=</span> <span class="st">"slider_field"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">ui_input.slider_field</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span></span>
+<span>    <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/ui_input.html">input_ids</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span><span class="op">)</span>,</span>
+<span>    <span class="va">name</span>,</span>
+<span>    value <span class="op">=</span> <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"value"</span><span class="op">)</span>,</span>
+<span>    min <span class="op">=</span> <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"min"</span><span class="op">)</span>,</span>
+<span>    max <span class="op">=</span> <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"max"</span><span class="op">)</span>,</span>
+<span>    step <span class="op">=</span> <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"step"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">validate_field.slider_field</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">val</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>  <span class="va">min</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"min"</span><span class="op">)</span></span>
+<span>  <span class="va">max</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"max"</span><span class="op">)</span></span>
+<span>  <span class="va">step</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"step"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu">validate_number</span><span class="op">(</span><span class="va">val</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">min</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">validate_number</span><span class="op">(</span><span class="va">min</span>, <span class="st">"min"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">max</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">validate_number</span><span class="op">(</span><span class="va">max</span>, <span class="st">"max"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">step</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">validate_number</span><span class="op">(</span><span class="va">step</span>, <span class="st">"step"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">NextMethod</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">ui_update.slider_field</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">session</span>, <span class="va">id</span>, <span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSliderInput.html" class="external-link">updateSliderInput</a></span><span class="op">(</span></span>
+<span>    <span class="va">session</span>,</span>
+<span>    <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/ui_input.html">input_ids</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span><span class="op">)</span>,</span>
+<span>    <span class="va">name</span>,</span>
+<span>    <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>    <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"min"</span><span class="op">)</span>,</span>
+<span>    <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"max"</span><span class="op">)</span>,</span>
+<span>    <span class="fu">blockr</span><span class="fu">::</span><span class="fu"><a href="../reference/value.html">value</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"step"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/ns-internal.html" class="external-link">registerS3method</a></span><span class="op">(</span><span class="st">"ui_input"</span>, <span class="st">"slider_field"</span>, <span class="va">ui_input.slider_field</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/ns-internal.html" class="external-link">registerS3method</a></span><span class="op">(</span><span class="st">"ui_update"</span>, <span class="st">"slider_field"</span>, <span class="va">ui_update.slider_field</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new_slice_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">from</span> <span class="op">=</span> <span class="fl">0</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
 <span>  <span class="va">n_rows</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
@@ -243,7 +310,7 @@ block</strong> where the selected column field updates the value field
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
