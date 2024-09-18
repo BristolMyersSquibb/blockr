@@ -322,28 +322,25 @@ has_method <- function(x, generic) {
 
 #' Create shinylive iframe
 #'
-#' @param app_code base64 app code. You can create it from https://shinylive.io/r
-#' by writing code and click on share and copy the link. The code is located at
-#' the end of the url.
+#' Useful for pkgdown website
+#'
+#' @param url app url. A shinylive link.
 #' @param mode How to display the shinylive app. Default to app mode.
 #' @param header Whether to display the shinylive header. Default to TRUE.
-#'
-#' @export
-create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) {
+#' @keywords internal
+create_app_link <- function(url, mode = c("app", "editor"), header = TRUE) {
   mode <- match.arg(mode)
 
-  app_url <- sprintf(
-    "https://shinylive.io/r/%s/#code=%s", mode, app_code
-  )
+  if (mode != "editor") url <- gsub("editor", mode, url)
 
   if (!header) {
-    app_url <- paste0(app_url, "&h=0")
+    url <- paste0(url, "&h=0")
   }
 
   tags$iframe(
     # To allow the content to fill the full screen card
     class = "html-fill-item",
-    src = app_url,
+    src = url,
     height = "700",
     width = "100%",
     style = "border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem;",
@@ -351,6 +348,19 @@ create_app_link <- function(app_code, mode = c("app", "editor"), header = TRUE) 
     allow = "autoplay",
     `data-external` = "1"
   )
+}
+
+code_chunk <- function(output, language = "r") {
+  cat(paste0("```", language))
+  cat(output)
+  cat("\n```\n")
+}
+
+print_shinylive_r_code <- function(name) {
+  path <- system.file(sprintf("shinylive/apps/%s/app.R", name), package = "blockr")
+  lines <- readLines(path)
+  to_remove <- grep("webr::", lines)
+  code_chunk(cat(paste(lines[-to_remove], collapse = "\n")))
 }
 
 get_block_title <- function(x) {

@@ -6,5 +6,6 @@ linters: linters_with_defaults(
   )
 exclusions: list(
     "inst/examples/cdisc-plot/example.R",
-    "inst/sandbox"
+    "inst/sandbox",
+    "inst/shinylive"
   )

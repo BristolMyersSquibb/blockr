@@ -19,7 +19,7 @@ Authors@R:
     )
 Description: A framework for data manipulation and visualization using a
     web-based point and click user interface.
-URL: https://blockr-org.github.io/blockr, https://blockr-org.github.io/blockr/
+URL: https://bristolmyerssquibb.github.io/blockr
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -32,7 +32,6 @@ Imports:
     bslib,
     methods,
     DT,
-    blockr.data,
     htmltools,
     shinyAce,
     jsonlite,
@@ -42,8 +41,8 @@ Imports:
     rlang,
     shinyWidgets
 Remotes:
-    blockr-org/blockr.data,
-    DivadNojnarg/DiagrammeR
+    DivadNojnarg/DiagrammeR,
+    BristolMyersSquibb/blockr.data
 Suggests: 
     knitr,
     rmarkdown,
@@ -55,6 +54,9 @@ Suggests:
     withr,
     ggplot2,
     vdiffr,
-    palmerpenguins
+    palmerpenguins,
+    blockr.data
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
