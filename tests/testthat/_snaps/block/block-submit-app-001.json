@@ -1,0 +1,12 @@
+{
+  "input": {
+    "my_stack-block_2-submit": 0
+  },
+  "output": {
+    "my_stack-block_2-res": [
+      "",
+      "NULL",
+      "c(\"shiny.silent.error\", \"validation\")"
+    ]
+  }
+}
