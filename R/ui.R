@@ -146,7 +146,7 @@ block_header.block <- function(x, ns, hidden_class, ...) {
   title <- get_block_title(x)
 
   submit_ui <- NULL
-  if (!is.null(attr(x, "submit"))) {
+  if (attr(x, "submit") > -1) {
     submit_ui <- div(class = "flex-grow-1",
       bslib::input_task_button(
         ns("submit"),

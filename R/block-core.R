@@ -9,6 +9,11 @@
 #' @param expr A quoted expression (compatible with partial substitution as
 #' implemented in [base::bquote()] and intended for evaluation in the context
 #' of the fields)
+#' @param submit Whether this block requires to press a submit button to get
+#' the results. Boolean, default to FALSE, which means no submit button.
+#' If NA, then no computation is triggered and the user needs to click on the button
+#' to see the block result. If TRUE, computation is automatically triggered and the button
+#' is shown (which is useful when restoring a stack).
 #' @param ... Further (metadata) attributes
 #' @param class Block subclass
 #'
@@ -16,7 +21,8 @@
 #' @import blockr.data
 #' @import dplyr
 #' @importFrom stats setNames
-new_block <- function(fields, expr, name = rand_names(), ...,
+new_block <- function(fields, expr, name = rand_names(),
+                      submit = FALSE, ...,
                       class = character()) {
   stopifnot(
     is.list(fields),
@@ -25,8 +31,14 @@ new_block <- function(fields, expr, name = rand_names(), ...,
     is_string(name)
   )
 
+  if (is.na(submit)) {
+    submit <- 0
+  } else {
+    submit <- if (submit) 1 else -1
+  }
+
   structure(fields,
-    name = name, expr = expr, result = NULL, ...,
+    name = name, expr = expr, result = NULL, submit = submit, ...,
     class = c(class, "block")
   )
 }
