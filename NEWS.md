@@ -1,10 +1,10 @@
 # blockr 0.0.2.9020
 
 ## Feature
-- Improved `submit` feature for blocks. Now submit isn't added as a class but as an optional block attribute. When you design a block, you can pass the `submit` parameter like so:
+- Improved `submit` feature for blocks. Now submit isn't added as a class but as a special block attribute. When you design a block, you can pass the `submit` parameter like so:
 
 ```r
-new_super_block <- function(submit = 0, ...) {
+new_super_block <- function(submit = NA, ...) {
   fields <- list()
   new_block(
     fields = fields,
@@ -16,15 +16,14 @@ new_super_block <- function(submit = 0, ...) {
 }
 ```
 
-When `submit = 0`, it will add a submit button but computations are blocked (clicking on it is required). Internally, each time
-the `input$submit` is clicked, the submit attribute is incremented by 1 to stay in sync with the UI button. This is useful when the stack is serialized, since this state is kept so that computations can be automatically re-triggered on restore, if `submit > 0`.
+When `submit = NA`, it will add a submit button but computations are blocked, as clicking on it is required. Internally, once the `input$submit` is clicked, the submit attribute is set to `TRUE`. This is useful when the stack is serialized, since this state is kept so that computations can be automatically re-triggered on restore. When `submit = TRUE`, a button is shown and the result is also computed. When `submit = FALSE`, no button is shown.
 
 ```r
-serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = 0)))
-
+# You can disable the submit button for filter block
+serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = FALSE)))
+serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = NA)))
 # Simulate what happens when restoring a serialised stack
-# with submit > 0
-serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = 1)))
+serve_stack(new_stack(new_dataset_block(), new_filter_block(columns = "Time", submit = TRUE)))
 ```
 
 - Improved __add__ new block.
