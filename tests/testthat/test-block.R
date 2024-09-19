@@ -372,6 +372,24 @@ test_that("blocks can be constructed with default args", {
   }
 })
 
+test_that("submit works", {
+  blk <- new_dataset_block()
+  expect_identical(attr(blk, "submit"), -1)
+
+  blk <- new_filter_block()
+  expect_identical(attr(blk, "submit"), 0)
+  blk <- new_filter_block(submit = FALSE)
+  expect_identical(attr(blk, "submit"), -1)
+  blk <- new_filter_block(submit = TRUE)
+  expect_identical(attr(blk, "submit"), 1)
+
+  blk <- new_join_block()
+  expect_identical(attr(blk, "submit"), 0)
+
+  blk <- new_summarize_block()
+  expect_identical(attr(blk, "submit"), 0)
+})
+
 test_that("blocks can be updated", {
 
   block_test_server <- function(id, x, dat = NULL, ...) {
