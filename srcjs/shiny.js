@@ -27,5 +27,7 @@ window.Shiny.addCustomMessageHandler("validate-block", (_msg) => {});
 window.Shiny.addCustomMessageHandler("validate-input", (_msg) => {});
 
 window.Shiny.addCustomMessageHandler("toggle-submit", (msg) => {
-  $(`#${msg.id}`).prop("disabled", !msg.state);
+  $(`#${msg.id}`)
+    .toggleClass("disabled", !msg.state)
+    .attr("aria-disabled", !msg.state)
 });

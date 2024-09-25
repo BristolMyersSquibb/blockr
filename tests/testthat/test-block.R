@@ -1,5 +1,4 @@
 test_that("data blocks", {
-
   dat1 <- datasets::iris
 
   blk1 <- new_dataset_block()
@@ -38,7 +37,6 @@ test_that("data blocks", {
 })
 
 test_that("filter blocks", {
-
   data <- datasets::iris
 
   blk1 <- new_filter_block()
@@ -65,7 +63,6 @@ test_that("filter blocks", {
 })
 
 test_that("select blocks", {
-
   data <- datasets::iris
 
   blk1 <- new_select_block()
@@ -92,7 +89,6 @@ test_that("select blocks", {
 })
 
 test_that("arrange blocks", {
-
   data <- datasets::iris
 
   blk1 <- new_arrange_block()
@@ -117,7 +113,6 @@ test_that("arrange blocks", {
 })
 
 test_that("group_by blocks", {
-
   data <- datasets::iris
 
   blk1 <- new_group_by_block()
@@ -142,7 +137,6 @@ test_that("group_by blocks", {
 })
 
 test_that("join blocks", {
-
   datx <- dplyr::band_members
   daty <- dplyr::band_instruments
 
@@ -170,7 +164,6 @@ test_that("join blocks", {
 })
 
 test_that("head blocks", {
-
   data <- datasets::iris
 
   blk1 <- new_head_block()
@@ -197,7 +190,6 @@ test_that("head blocks", {
 })
 
 test_that("summarize block", {
-
   data <- datasets::iris
 
   blk1 <- new_summarize_block()
@@ -225,7 +217,6 @@ test_that("summarize block", {
 
 
 test_that("upload block", {
-
   blk1 <- new_upload_block()
 
   expect_s3_class(blk1, "data_block")
@@ -252,7 +243,6 @@ test_that("upload block", {
 })
 
 test_that("filesbrowser block", {
-
   blk1 <- new_filesbrowser_block()
 
   expect_s3_class(blk1, "data_block")
@@ -279,7 +269,6 @@ test_that("filesbrowser block", {
 })
 
 test_that("csv parser block", {
-
   data <- datasets::iris
 
   path <- withr::local_tempfile()
@@ -298,7 +287,6 @@ test_that("csv parser block", {
 })
 
 test_that("json parser block", {
-
   data <- datasets::iris
 
   path <- withr::local_tempfile()
@@ -317,7 +305,6 @@ test_that("json parser block", {
 })
 
 test_that("rds parser block", {
-
   data <- datasets::iris
 
   path <- withr::local_tempfile()
@@ -336,7 +323,6 @@ test_that("rds parser block", {
 })
 
 test_that("xpt parser block", {
-
   data <- datasets::iris
   colnames(data) <- gsub("\\.", "_", colnames(data))
 
@@ -366,20 +352,38 @@ test_that("block title", {
 })
 
 test_that("blocks can be constructed with default args", {
-
   for (block in available_blocks()) {
     expect_s3_class(do.call(block, list()), "block")
   }
 })
 
-test_that("blocks can be updated", {
+test_that("submit works", {
+  blk <- new_dataset_block()
+  expect_identical(attr(blk, "submit"), -1)
 
+  blk <- new_filter_block()
+  expect_identical(attr(blk, "submit"), 0)
+  blk <- new_filter_block(submit = FALSE)
+  expect_identical(attr(blk, "submit"), -1)
+  blk <- new_filter_block(submit = TRUE)
+  expect_identical(attr(blk, "submit"), 1)
+
+  blk <- new_join_block()
+  expect_identical(attr(blk, "submit"), 0)
+
+  blk <- new_summarize_block()
+  expect_identical(attr(blk, "submit"), 0)
+})
+
+test_that("blocks can be updated", {
   block_test_server <- function(id, x, dat = NULL, ...) {
     if (is.null(dat)) {
       generate_server(x = x, id = id, ...)
     } else {
-      generate_server(x = x, in_dat = shiny::reactive(dat), id = id,
-                      is_prev_valid = shiny::reactive(TRUE), ...)
+      generate_server(
+        x = x, in_dat = shiny::reactive(dat), id = id,
+        is_prev_valid = shiny::reactive(TRUE), ...
+      )
     }
   }
 
@@ -568,5 +572,73 @@ test_that("block demo works", {
     input = blocks_inputs,
     export = blocks_exports,
     output = blocks_outputs
+  )
+})
+
+test_that("submit e2e", {
+  skip_on_cran()
+  skip_on_covr()
+
+  stack <- new_stack(
+    block_1 = new_dataset_block("anscombe"),
+    block_2 = new_filter_block(columns = "x1", values = 10, filter_fun = ">")
+  )
+
+  blocks_app <- serve_stack(stack)
+
+  app <- AppDriver$new(
+    blocks_app,
+    name = "block-submit-app"
+  )
+
+  app$click(selector = ".stack-edit-toggle")
+
+  app$expect_values(
+    # Button should be 0
+    input = "my_stack-block_2-submit",
+    # res should not be computed
+    output = "my_stack-block_2-res",
+    screenshot_args = FALSE
+  )
+
+  # Submit
+  app$click(selector = "#my_stack-block_2-submit")
+
+  app$expect_values(
+    # Button should be 1
+    input = "my_stack-block_2-submit",
+    # res should be computed
+    output = "my_stack-block_2-res",
+    screenshot_args = FALSE
+  )
+
+  # Submit is disabled if block is invalid
+  app$set_inputs("my_stack-block_2-filter_func" = "")
+  submit_btn <- app$get_html(selector = "#my_stack-block_2-submit")
+  expect_true(grepl("disabled", submit_btn))
+
+  app$stop()
+
+  # Autoclick on submit
+  stack <- new_stack(
+    block_1 = new_dataset_block("anscombe"),
+    block_2 = new_filter_block(columns = "x1", values = 10, filter_fun = ">", submit = TRUE)
+  )
+
+  blocks_app <- serve_stack(stack)
+
+  app <- AppDriver$new(
+    blocks_app,
+    name = "block-autosubmit-app"
+  )
+
+  app$click(selector = ".stack-edit-toggle")
+
+  app$expect_values(
+    # Button should be 1
+    input = "my_stack-block_2-submit",
+    # res should be computed
+    output = "my_stack-block_2-res",
+    screenshot_args = FALSE
   )
 })

@@ -190,7 +190,19 @@ generate_server_block <- function(
       # join that can have computationally intense tasks
       # and have nested fields, we require to click on
       # the action button before doing anything.
-      out_dat <- if ("submit_block" %in% class(x)) {
+      if (attr(x, "submit") > -1) {
+        # Increment submit attribute for serialization
+        # So that if a block is serialised with submit = TRUE
+        # computations are automatically triggered on restore
+        # Only do it once.
+        observeEvent(input$submit, {
+          tmp <- blk()
+          attr(tmp, "submit") <- TRUE
+          blk(tmp)
+        }, once = TRUE)
+      }
+
+      out_dat <- if (attr(x, "submit") > -1) {
         eventReactive(input$submit, {
           req(is_valid$block)
           if (is.null(in_dat())) {
@@ -198,7 +210,9 @@ generate_server_block <- function(
           } else {
             evaluate_block(blk(), data = in_dat())
           }
-        })
+          # Trigger computation if submit attr is > 0
+          # useful when restoring workspace
+        }, ignoreNULL = !attr(x, "submit") > 0)
       } else {
         reactive({
           req(is_valid$block)

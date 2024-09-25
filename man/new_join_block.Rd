@@ -4,7 +4,13 @@
 \alias{new_join_block}
 \title{Join block}
 \usage{
-new_join_block(y = NULL, type = character(), by = character(), ...)
+new_join_block(
+  y = NULL,
+  type = character(),
+  by = character(),
+  submit = NA,
+  ...
+)
 }
 \arguments{
 \item{y}{Second dataset for join.}
@@ -12,6 +18,12 @@ new_join_block(y = NULL, type = character(), by = character(), ...)
 \item{type}{Join type.}
 
 \item{by}{Join columns.}
+
+\item{submit}{Whether this block requires to press a submit button to get
+the results. Boolean, default to FALSE, which means no submit button.
+If NA, then no computation is triggered and the user needs to click on the button
+to see the block result. If TRUE, computation is automatically triggered and the button
+is shown (which is useful when restoring a stack).}
 
 \item{...}{Further (metadata) attributes}
 }

@@ -259,8 +259,7 @@ send_error_to_ui <- function(blk, is_valid, session) {
   )
 
   # Toggle submit field
-  # FIXME: maybe we want to handle this outside the function?
-  if ("submit_block" %in% class(blk)) {
+  if (!is.null(attr(blk, "submit"))) {
     session$sendCustomMessage(
       "toggle-submit",
       list(state = is_valid$block, id = ns("submit"))
@@ -281,7 +280,7 @@ send_error_to_ui <- function(blk, is_valid, session) {
   )
 
   # Send validation message
-  if (!is_valid$block) {
+  if (!is_valid$block && length(is_valid$message)) {
     insertUI(
       selector = sprintf("[data-value=\"%s\"] .block-validation", ns("block")),
       ui = div(

@@ -5,7 +5,14 @@
 \alias{is_block}
 \title{Blocks}
 \usage{
-new_block(fields, expr, name = rand_names(), ..., class = character())
+new_block(
+  fields,
+  expr,
+  name = rand_names(),
+  submit = FALSE,
+  ...,
+  class = character()
+)
 
 is_block(x)
 }
@@ -17,6 +24,12 @@ implemented in \code{\link[base:bquote]{base::bquote()}} and intended for evalua
 of the fields)}
 
 \item{name}{Block name}
+
+\item{submit}{Whether this block requires to press a submit button to get
+the results. Boolean, default to FALSE, which means no submit button.
+If NA, then no computation is triggered and the user needs to click on the button
+to see the block result. If TRUE, computation is automatically triggered and the button
+is shown (which is useful when restoring a stack).}
 
 \item{...}{Further (metadata) attributes}
 

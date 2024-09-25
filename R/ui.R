@@ -145,6 +145,18 @@ block_header <- function(x, ...) {
 block_header.block <- function(x, ns, hidden_class, ...) {
   title <- get_block_title(x)
 
+  submit_ui <- NULL
+  if (attr(x, "submit") > -1) {
+    submit_ui <- div(class = "flex-grow-1",
+      bslib::input_task_button(
+        ns("submit"),
+        "Run",
+        icon = iconPlay(),
+        class = "btn-sm btn-success"
+      )
+    )
+  }
+
   div(
     class = sprintf("m-0 card-title block-title %s", hidden_class),
     div(
@@ -157,10 +169,9 @@ block_header.block <- function(x, ns, hidden_class, ...) {
           class = "fw-bold m-0"
         )
       ),
+      submit_ui,
       data_info(x, ns),
-      div(
-        class = "block-tools flex-shrink-1"
-      )
+      div(class = "block-tools flex-shrink-1")
     )
   )
 }
@@ -331,7 +342,6 @@ add_block_ui.default <- function(x, id, ...) {
         tags$head(
           tags$script(HTML("
             function colorText(data) {
-              console.log(data);
               let text = `<span class='badge text-bg-secondary'>${data.label}</span>`;
               return text;
             }"
@@ -962,6 +972,10 @@ iconOutput <- function() {
 #' @importFrom shiny icon
 iconTrash <- function() {
   icon("trash")
+}
+
+iconPlay <- function() {
+  icon("play")
 }
 
 #' Block icon generic
