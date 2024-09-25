@@ -19,6 +19,15 @@ generate_server.result_field <- function(x, ...) {
 
     moduleServer(id, function(input, output, session) {
 
+      update_choices <- function(sess, sel, opts) {
+        updateSelectInput(
+          sess,
+          "select-stack",
+          choices = setdiff(opts, current_stack()),
+          selected = sel
+        )
+      }
+
       get_result <- function(inp) {
 
         res <- get_stack_result(
@@ -30,23 +39,20 @@ generate_server.result_field <- function(x, ...) {
         res
       }
 
+      workspace_stacks <- attr(get_workspace(), "reactive_stack_directory")
+
+      if (is.null(workspace_stacks)) {
+        workspace_stacks <- function() list_workspace_stacks()
+      }
+
       current_stack <- function() {
         res <- strsplit(session$ns(NULL), "-")[[1L]]
         res[length(res) - 2L]
       }
 
-      stack_opts <- function() {
-        setdiff(list_workspace_stacks(), current_stack())
-      }
-
-      opts <- reactivePoll(100, session, stack_opts, stack_opts)
-
       observeEvent(
-        opts(),
-        updateSelectInput(session, "select-stack",
-          choices = opts(),
-          selected = input[["select-stack"]]
-        )
+        workspace_stacks(),
+        update_choices(session, input[["select-stack"]], workspace_stacks())
       )
 
       reactive({
@@ -585,6 +591,10 @@ generate_server.workspace <- function(x, id, ...) {
         clear_workspace_stacks(workspace = x)
         vals$stacks <- NULL
         removeUI(".stack-col", multiple = TRUE)
+      })
+
+      attr(x, "reactive_stack_directory") <- reactive({
+        names(vals$stacks)
       })
 
       # Serialize

@@ -19,7 +19,7 @@ test_that("result block", {
   expect_s3_class(ui, "shiny.tag")
 })
 
-test_that("result server works", {
+test_that("result field server works", {
 
   set_workspace(
     stack1 = new_stack(new_dataset_block),
@@ -28,8 +28,8 @@ test_that("result server works", {
   )
 
   shiny::testServer(
-    generate_server(new_result_field()), {
-      expect_setequal(opts(), c("stack1", "stack2"))
+    generate_server(new_result_field("stack1")), {
+      expect_setequal(workspace_stacks(), c("stack1", "stack2"))
     }
   )
 })
