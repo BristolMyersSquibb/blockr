@@ -11,7 +11,7 @@ stack as the y parameter expects a dataframe from another stack."><link href="ht
 
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9020</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,7 @@ stack as the y parameter expects a dataframe from another stack."><link href="ht
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2.9020</h6></li>
     <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6></li>
     <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6></li>
     <li><hr class="dropdown-divider"></li>
@@ -67,7 +68,13 @@ stack as the <code>y</code> parameter expects a dataframe from another stack.</p
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">new_join_block</span><span class="op">(</span>y <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">new_join_block</span><span class="op">(</span></span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  submit <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,6 +91,14 @@ stack as the <code>y</code> parameter expects a dataframe from another stack.</p
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
 <dd><p>Join columns.</p></dd>
+
+
+<dt id="arg-submit">submit<a class="anchor" aria-label="anchor" href="#arg-submit"></a></dt>
+<dd><p>Whether this block requires to press a submit button to get
+the results. Boolean, default to FALSE, which means no submit button.
+If NA, then no computation is triggered and the user needs to click on the button
+to see the block result. If TRUE, computation is automatically triggered and the button
+is shown (which is useful when restoring a stack).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
