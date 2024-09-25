@@ -19,15 +19,6 @@ generate_server.result_field <- function(x, ...) {
 
     moduleServer(id, function(input, output, session) {
 
-      update_choices <- function(sess, sel, opts) {
-        updateSelectInput(
-          sess,
-          "select-stack",
-          choices = setdiff(opts, current_stack()),
-          selected = sel
-        )
-      }
-
       get_result <- function(inp) {
         res <- get_stack_result(
           get_workspace_stack(inp)
@@ -50,14 +41,14 @@ generate_server.result_field <- function(x, ...) {
         }
       }
 
-      current_stack <- function() {
-        res <- strsplit(session$ns(NULL), "-")[[1L]]
-        res[length(res) - 2L]
-      }
-
       observeEvent(
         workspace_stacks(),
-        update_choices(session, input[["select-stack"]], workspace_stacks())
+        updateSelectInput(
+          session,
+          "select-stack",
+          choices = result_field_stack_opts(session$ns, workspace_stacks()),
+          selected = input[["select-stack"]]
+        )
       )
 
       reactive({
