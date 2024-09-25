@@ -14,22 +14,20 @@ generate_server <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.result_field <- function(x, ...) {
+
   function(id, init = NULL, data = NULL) {
+
     moduleServer(id, function(input, output, session) {
-      get_result <- function() {
-        inp <- input[["select-stack"]]
 
-        if (length(inp) && inp %in% list_workspace_stacks()) {
-          get_stack_result(
-            get_workspace_stack(inp)
-          )
-        } else {
-          data.frame()
-        }
-      }
+      get_result <- function(inp) {
 
-      result_hash <- function() {
-        rlang::hash(get_result())
+        res <- get_stack_result(
+          get_workspace_stack(inp)
+        )
+
+        attr(res, "result_field_stack_name") <- inp
+
+        res
       }
 
       current_stack <- function() {
@@ -51,7 +49,9 @@ generate_server.result_field <- function(x, ...) {
         )
       )
 
-      reactivePoll(100, session, result_hash, get_result)
+      reactive({
+        get_result(input[["select-stack"]])
+      })
     })
   }
 }
@@ -370,7 +370,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)()
+            get_last_block_data(vals$blocks)
           )
         }
       )

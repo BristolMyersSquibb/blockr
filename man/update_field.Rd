@@ -4,6 +4,7 @@
 \alias{update_field}
 \alias{update_field.field}
 \alias{update_field.hidden_field}
+\alias{update_field.result_field}
 \alias{get_field_name}
 \title{Update field generic}
 \usage{
@@ -12,6 +13,8 @@ update_field(x, new, env = list())
 \method{update_field}{field}(x, new, env = list())
 
 \method{update_field}{hidden_field}(x, new, env = list())
+
+\method{update_field}{result_field}(x, new, env = list())
 
 get_field_name(field, name = "")
 }

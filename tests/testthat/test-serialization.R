@@ -35,7 +35,7 @@ test_that("json ser/deser for the workspace", {
     new_filter_block
   )
 
-  set_workspace(stack = x)
+  set_workspace(stack = x, force = TRUE)
   set_workspace_title("foo")
   set_workspace_settings("{\"foo\": \"bar\"}")
 

@@ -99,6 +99,12 @@ update_field.hidden_field <- function(x, new, env = list()) {
   eval_set_field_value(x, env)
 }
 
+#' @rdname update_field
+#' @export
+update_field.result_field <- function(x, new, env = list()) {
+  NextMethod(new = attr(new, "result_field_stack_name"))
+}
+
 eval_set_field_value <- function(x, env) {
 
   for (cmp in names(x)[lgl_ply(x, is.function)]) {
@@ -171,6 +177,35 @@ value.list_field <- function(x, name = "value") {
   }
 
   NextMethod()
+}
+
+#' @rdname value
+#' @export
+value.result_field <- function(x, name = "value") {
+
+  stopifnot(identical(name, "value"))
+
+  field <- get_field_value(x, "value")
+
+  if (length(field) && field %in% list_workspace_stacks()) {
+
+    res <- get_stack_result(get_workspace_stack(field))
+
+    if (inherits(res, "reactive")) {
+
+      if (is.null(getDefaultReactiveDomain())) {
+        list()
+      } else {
+        res()
+      }
+
+    } else {
+      res
+    }
+
+  } else {
+    list()
+  }
 }
 
 #' Get all values from a field

@@ -10,6 +10,7 @@
 \alias{validate_field.variable_field}
 \alias{validate_field.range_field}
 \alias{validate_field.list_field}
+\alias{validate_field.result_field}
 \alias{validate_field.keyvalue_field}
 \alias{validate_field}
 \alias{validate_field.field}
@@ -36,6 +37,8 @@
 \method{validate_field}{range_field}(x)
 
 \method{validate_field}{list_field}(x)
+
+\method{validate_field}{result_field}(x)
 
 \method{validate_field}{keyvalue_field}(x)
 

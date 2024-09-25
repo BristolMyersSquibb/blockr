@@ -165,10 +165,13 @@ new_xpt_block <- function(...) {
 #' another one. This isn't relevant for single stack apps.
 #'
 #' @inheritParams new_block
+#' @param stack Stack name
+#'
 #' @export
-new_result_block <- function(...) {
+new_result_block <- function(stack = character(), ...) {
+
   fields <- list(
-    stack = new_result_field(title = "Stack")
+    stack = new_result_field(stack, title = "Stack")
   )
 
   new_block(
