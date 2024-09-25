@@ -33,3 +33,20 @@ test_that("result field server works", {
     }
   )
 })
+
+withr::local_package("shinytest2")
+
+test_that("result server works", {
+
+  skip_on_cran()
+
+  app <- AppDriver$new(
+    system.file("examples/result/app.R", package = "blockr"),
+    name = "result-app"
+  )
+
+  app$expect_values(
+    input = "select-stack",
+    export = "stacks"
+  )
+})

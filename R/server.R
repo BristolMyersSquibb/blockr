@@ -29,7 +29,6 @@ generate_server.result_field <- function(x, ...) {
       }
 
       get_result <- function(inp) {
-
         res <- get_stack_result(
           get_workspace_stack(inp)
         )
@@ -41,8 +40,14 @@ generate_server.result_field <- function(x, ...) {
 
       workspace_stacks <- attr(get_workspace(), "reactive_stack_directory")
 
+      exportTestValues(
+        stacks = workspace_stacks()
+      )
+
       if (is.null(workspace_stacks)) {
-        workspace_stacks <- function() list_workspace_stacks()
+        workspace_stacks <- function() {
+          list_workspace_stacks()
+        }
       }
 
       current_stack <- function() {
