@@ -14,11 +14,8 @@ generate_server <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.result_field <- function(x, ...) {
-
   function(id, init = NULL, data = NULL) {
-
     moduleServer(id, function(input, output, session) {
-
       get_result <- function(inp) {
         res <- get_stack_result(
           get_workspace_stack(inp)
@@ -85,12 +82,11 @@ update_ui <- function(b, is_srv, session, l_init) {
 }
 
 generate_server_block <- function(
-  x,
-  in_dat = NULL,
-  id,
-  display = c("table", "plot"),
-  is_prev_valid
-) {
+    x,
+    in_dat = NULL,
+    id,
+    display = c("table", "plot"),
+    is_prev_valid) {
   display <- match.arg(display)
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
@@ -159,28 +155,31 @@ generate_server_block <- function(
 
       # This will also trigger when the previous block
       # valid status changes.
-      obs$update_blk <- observeEvent(c(r_values(), in_dat(), is_prev_valid()), {
-        # 1. upd blk,
-        b <- update_blk(
-          b = blk(),
-          value = r_values(),
-          is_srv = is_srv,
-          input = input,
-          data = in_dat()
-        )
-        blk(b)
-        log_debug("Updating block ", class(x)[[1]])
+      obs$update_blk <- observeEvent(c(r_values(), in_dat(), is_prev_valid()),
+        {
+          # 1. upd blk,
+          b <- update_blk(
+            b = blk(),
+            value = r_values(),
+            is_srv = is_srv,
+            input = input,
+            data = in_dat()
+          )
+          blk(b)
+          log_debug("Updating block ", class(x)[[1]])
 
-        # 2. Update UI
-        update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
-        log_debug("Updating UI of block ", class(x)[[1]])
+          # 2. Update UI
+          update_ui(b = blk(), is_srv = is_srv, session = session, l_init = l_init)
+          log_debug("Updating UI of block ", class(x)[[1]])
 
-        # Validating
-        is_valid$block <- validate_block(blk())
-        is_valid$message <- attr(is_valid$block, "msg")
-        is_valid$fields <- attr(is_valid$block, "fields")
-        log_debug("Validating block ", class(x)[[1]])
-      }, priority = 1000)
+          # Validating
+          is_valid$block <- validate_block(blk())
+          is_valid$message <- attr(is_valid$block, "msg")
+          is_valid$fields <- attr(is_valid$block, "fields")
+          log_debug("Validating block ", class(x)[[1]])
+        },
+        priority = 1000
+      )
 
       # Propagate message to user
       obs$surface_error <- observe({
@@ -197,24 +196,30 @@ generate_server_block <- function(
         # So that if a block is serialised with submit = TRUE
         # computations are automatically triggered on restore
         # Only do it once.
-        observeEvent(input$submit, {
-          tmp <- blk()
-          attr(tmp, "submit") <- TRUE
-          blk(tmp)
-        }, once = TRUE)
+        observeEvent(input$submit,
+          {
+            tmp <- blk()
+            attr(tmp, "submit") <- TRUE
+            blk(tmp)
+          },
+          once = TRUE
+        )
       }
 
       out_dat <- if (attr(x, "submit") > -1) {
-        eventReactive(input$submit, {
-          req(is_valid$block)
-          if (is.null(in_dat())) {
-            evaluate_block(blk())
-          } else {
-            evaluate_block(blk(), data = in_dat())
-          }
-          # Trigger computation if submit attr is > 0
-          # useful when restoring workspace
-        }, ignoreNULL = !attr(x, "submit") > 0)
+        eventReactive(input$submit,
+          {
+            req(is_valid$block)
+            if (is.null(in_dat())) {
+              evaluate_block(blk())
+            } else {
+              evaluate_block(blk(), data = in_dat())
+            }
+            # Trigger computation if submit attr is > 0
+            # useful when restoring workspace
+          },
+          ignoreNULL = !attr(x, "submit") > 0
+        )
       } else {
         reactive({
           req(is_valid$block)
@@ -501,7 +506,6 @@ add_block_server <- function(x, ...) {
 #' @export
 add_block_server.default <- function(x, id, vals, ...) {
   moduleServer(id, function(input, output, session) {
-
     ns <- session$ns
 
     # Triggers on init
@@ -525,7 +529,7 @@ add_block_server.default <- function(x, id, vals, ...) {
         )
       )
 
-      #create_block_choices(blk_choices(), ns)
+      # create_block_choices(blk_choices(), ns)
 
       if (length(vals$blocks) == 0) {
         shiny::insertUI(
@@ -695,7 +699,9 @@ generate_server.workspace <- function(x, id, ...) {
 
       attr(x, "reactive_stack_directory") <- reactive({
         names(vals$stacks)
-      })
+      }) |> bindEvent(
+        chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title")
+      )
 
       # Serialize
       output$serialize <- downloadHandler(
@@ -933,8 +939,8 @@ add_block_stack <- function(
   session$sendCustomMessage(
     "blockr-add-block",
     list(
-      stack =  ns(NULL),
-      block =  ns(attr(vals$stack[[p]], "name"))
+      stack = ns(NULL),
+      block = ns(attr(vals$stack[[p]], "name"))
     )
   )
 }
