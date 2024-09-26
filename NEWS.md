@@ -1,4 +1,4 @@
-# blockr 0.0.2.9000
+# blockr 0.0.2.9030
 
 ## Doc
 - Improved `registry` and `getting started` vignettes.
@@ -7,6 +7,11 @@
 
 ## Fixes
 - Loading spinner is now correctly hidden when the block visual is updated.
+- Fix #366:
+
+  - We no longer need a reactive poll per result field for the data.
+  - The (serialized) field "value" is only the stack name the field refers to (not data).
+  - We no longer need a reactive poll for the stack selector drop-down
 
 # blockr 0.0.2
 
