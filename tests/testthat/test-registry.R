@@ -69,7 +69,8 @@ test_that("3rd party blocks can be registrerd (script)", {
 
   register_block(
     new_dummy_block, "Dummy block", "return first n rows",
-    c("dummy_block", "transform_block"), "data.frame", "data.frame"
+    c("dummy_block", "transform_block"), "data.frame", "data.frame",
+    "transform"
   )
 
   expect_true("dummy_block" %in% list_blocks())
@@ -77,7 +78,8 @@ test_that("3rd party blocks can be registrerd (script)", {
   expect_warning(
     register_block(
       new_dummy_block, "dummy block", "return first n rows",
-      c("dummy_block", "transform_block"), "data.frame", "data.frame"
+      c("dummy_block", "transform_block"), "data.frame", "data.frame",
+      "transform"
     )
   )
 

@@ -262,6 +262,45 @@ add_block <- function(stack, block, position = NULL) {
   set_stack_blocks(stack, append(stack, list(tmp), position), data)
 }
 
+#' Find stack compatible blocks
+#'
+#' Given a stack, we use the registry to find
+#' what are the blocks compatible with the last stack block.
+#' If the stack is empy, we return data blocks.
+#'
+#' @param stack Stack object.
+#'
+#' @return a dataframe.
+#'
+#' @export
+get_compatible_blocks <- function(stack) {
+  registry <- get_registry()
+  # Only data blocks can be used for a 0 length stack
+  if (length(stack) == 0) {
+    tmp <- registry[is.na(registry$input), ]
+    # Drop result block if there are no other stacks
+    if (length(get_workspace_stacks()) <= 1) {
+      tmp <- tmp[tmp$ctor != "result_block", ]
+    }
+    return(tmp)
+  }
+  # Otherwise we compare the output of the last block
+  # and propose any of the block that have compatible input
+  cls <- paste(class(stack[[length(stack)]]), collapse = ", ")
+  last_blk_output <- registry[grep(cls, registry$classes), "output"]
+
+  tmp <- registry[!is.na(registry$input) & registry$input == last_blk_output, ]
+
+  # Insert result block if there are other stacks
+  if (length(get_workspace_stacks()) > 1) {
+    tmp <- rbind(
+      registry[registry$ctor == "result_block", ],
+      tmp
+    )
+  }
+  tmp
+}
+
 #' @param stack An object inheriting form `"stack"`
 #' @param id Stack ID
 #'

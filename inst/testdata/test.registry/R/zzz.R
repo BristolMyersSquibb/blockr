@@ -4,6 +4,7 @@
     constructor = new_dummy_block,
     name = "dummy block",
     description = "Returns input dataset",
+    category = "transform",
     classes = c("dummy_block", "transform_block"),
     input = "data.frame",
     output = "data.frame",

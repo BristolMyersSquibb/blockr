@@ -145,6 +145,18 @@ block_header <- function(x, ...) {
 block_header.block <- function(x, ns, hidden_class, ...) {
   title <- get_block_title(x)
 
+  submit_ui <- NULL
+  if (attr(x, "submit") > -1) {
+    submit_ui <- div(class = "flex-grow-1",
+      bslib::input_task_button(
+        ns("submit"),
+        "Run",
+        icon = iconPlay(),
+        class = "btn-sm btn-success"
+      )
+    )
+  }
+
   div(
     class = sprintf("m-0 card-title block-title %s", hidden_class),
     div(
@@ -157,10 +169,9 @@ block_header.block <- function(x, ns, hidden_class, ...) {
           class = "fw-bold m-0"
         )
       ),
+      submit_ui,
       data_info(x, ns),
-      div(
-        class = "block-tools flex-shrink-1"
-      )
+      div(class = "block-tools flex-shrink-1")
     )
   )
 }
@@ -259,19 +270,33 @@ generate_ui.block <- function(x, id, ...,
   )
 }
 
-#' Add block UI interface
+#' Add block UI generic
 #'
 #' Useful to allow stack to add blocks to it.
-#' The selected block can be accessed through `input$selected_block`.
-#' Combined to the blocks registry API, this allows to select a block from R
-#' like \code{available_blocks()[[input$selected_block]]}.
 #'
-#' @param ns Stack namespace. Default to \link{identity} so
-#' that it can be used when the stack is the top level element.
+#' @param x Stack object.
+#' @param ... For generic consistency
 #'
 #' @export
-add_block_ui <- function(ns = identity) {
-  add_block_ui_id <- ns("add")
+#' @rdname add_block
+add_block_ui <- function(x, ...) {
+  stopifnot(inherits(x, "stack"))
+  UseMethod("add_block_ui", x)
+}
+
+#' Default add block UI interface
+#'
+#' Useful to allow stack to add blocks to it.
+#' The selected block can be accessed through `input$search`
+#' within \link{add_block_server}.
+#'
+#' @param id Module id.
+#'
+#' @export
+#' @rdname add_block
+add_block_ui.default <- function(x, id, ...) {
+  ns <- shiny::NS(id)
+  add_block_ui_id <- ns("confirm")
 
   log_debug("Adding \"add block\" UI with ID ", add_block_ui_id)
 
@@ -286,17 +311,59 @@ add_block_ui <- function(ns = identity) {
     off_canvas(
       id = ns("addBlockCanvas"),
       title = "Blocks",
-      position = "bottom",
-      radioButtons(
-        ns("selected_block"),
-        "Choose a block",
-        choices = names(available_blocks()),
-        inline = TRUE
+      position = "start",
+      div(id = ns("status-messages"), class = "m-2"),
+      tags$head(
+        # Hide the select dropdown as we just need the searchbar
+        tags$script(
+          HTML(
+            sprintf("
+              $(document).one('shiny:inputchanged', function(e) {
+                if (e.name === 'my_stack-rendered') {
+                  $('#%s')
+                    .find('.vscomp-toggle-button')
+                    .css('display', 'none');
+                }
+              });
+              ",
+              ns("search")
+            )
+          )
+        ),
+        # Remove ugly shadow on hover
+        tags$style(
+          ".vscomp-wrapper.keep-always-open.focused,
+          .vscomp-wrapper.keep-always-open:focus,
+          .vscomp-wrapper.keep-always-open:hover {
+            box-shadow: none;
+          }
+          "
+        ),
+        tags$head(
+          tags$script(HTML("
+            function colorText(data) {
+              let text = `<span class='badge text-bg-secondary'>${data.label}</span>`;
+              return text;
+            }"
+          ))
+        )
       ),
-      actionButton(
-        add_block_ui_id,
-        icon("plus"),
-        `data-bs-dismiss` = "offcanvas"
+      shinyWidgets::virtualSelectInput(
+        ns("search"),
+        "",
+        searchPlaceholderText = "Search for blocks",
+        choices = list(),
+        search = TRUE,
+        showValueAsTags = TRUE,
+        html = TRUE,
+        markSearchResults = TRUE,
+        optionsCount = 10,
+        keepAlwaysOpen = TRUE,
+        searchGroup = TRUE,
+        #searchByStartsWith = TRUE,
+        hasOptionDescription = TRUE,
+        width = "100%",
+        labelRenderer = "colorText"
       )
     )
   )
@@ -330,7 +397,16 @@ generate_ui.stack <- function(x, id = NULL, ...) {
       )
     ),
     useBlockr(),
-    tags$script(HTML(sprintf("Shiny.setInputValue('%s', 1);", ns("rendered"))))
+    tags$script(
+      HTML(
+        sprintf(
+          "$(document).on('shiny:connected', function() {
+            window.Shiny.setInputValue('%s', 1);
+          });",
+          ns("rendered")
+        )
+      )
+    )
   )
 }
 
@@ -428,7 +504,7 @@ stack_header.stack <- function(x, title, ns, ...) {
           class = "text-decoration-none stack-remove",
           icon("trash")
         ),
-        add_block_ui(ns),
+        add_block_ui(x, ns("add-block")),
         actionLink(
           ns("copy"),
           class = "text-decoration-none stack-copy-code",
@@ -919,6 +995,10 @@ iconOutput <- function() {
 #' @importFrom shiny icon
 iconTrash <- function() {
   icon("trash")
+}
+
+iconPlay <- function() {
+  icon("play")
 }
 
 #' Block icon generic

@@ -193,7 +193,7 @@ new_result_block <- function(stack = character(), ...) {
 #' @param filter_fun Filter function for the expression
 #' @export
 new_filter_block <- function(columns = character(), values = character(),
-                             filter_fun = "==", ...) {
+                             filter_fun = "==", submit = NA, ...) {
   sub_fields <- function(data, columns) {
     determine_field <- function(x) {
       switch(class(x),
@@ -277,8 +277,9 @@ new_filter_block <- function(columns = character(), values = character(),
   new_block(
     fields = fields,
     expr = expr,
+    submit = submit,
     ...,
-    class = c("filter_block", "transform_block", "submit_block")
+    class = c("filter_block", "transform_block")
   )
 }
 
@@ -325,7 +326,7 @@ new_select_block <- function(columns = character(), ...) {
 #' as func.
 #' @export
 new_summarize_block <- function(func = character(),
-                                default_columns = character(), ...) {
+                                default_columns = character(), submit = NA, ...) {
   if (length(default_columns) > 0) {
     stopifnot(length(func) == length(default_columns))
   }
@@ -425,8 +426,9 @@ new_summarize_block <- function(func = character(),
   new_block(
     fields = fields,
     expr = quote(.(expression)),
+    submit = submit,
     ...,
-    class = c("summarize_block", "transform_block", "submit_block")
+    class = c("summarize_block", "transform_block")
   )
 }
 
@@ -498,7 +500,7 @@ new_group_by_block <- function(columns = character(), ...) {
 #'
 #' @export
 new_join_block <- function(y = NULL, type = character(), by = character(),
-                           ...) {
+                           submit = NA, ...) {
   by_choices <- function(data, y) {
     intersect(colnames(data), colnames(y))
   }
@@ -525,8 +527,9 @@ new_join_block <- function(y = NULL, type = character(), by = character(),
   new_block(
     fields = fields,
     expr = quote(.(join_func)(y = .(y), by = .(by))),
+    submit = submit,
     ...,
-    class = c("join_block", "transform_block", "submit_block")
+    class = c("join_block", "transform_block")
   )
 }
 
