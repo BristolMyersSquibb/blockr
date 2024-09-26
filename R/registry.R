@@ -8,11 +8,9 @@ available_blocks <- function() {
 }
 
 block_descr_getter <- function(field) {
-
   field <- force(field)
 
   function(x) {
-
     stopifnot(inherits(x, "block_descr"))
 
     attr(x, field)
@@ -20,11 +18,9 @@ block_descr_getter <- function(field) {
 }
 
 block_descrs_getter <- function(descr_getter, ptype = character(1L)) {
-
   getter <- force(descr_getter)
 
   function(blocks = available_blocks()) {
-
     if (inherits(blocks, "block_descr")) {
       blocks <- list(blocks)
     }
@@ -44,7 +40,6 @@ block_descr <- block_descrs_getter(block_descr_getter("description"))
 
 new_block_descr <- function(constructor, name, description, classes, input,
                             output, pkg, category) {
-
   stopifnot(
     is.function(constructor), is_string(name), is_string(description),
     is_string(category),
@@ -53,7 +48,8 @@ new_block_descr <- function(constructor, name, description, classes, input,
   )
 
   structure(
-    constructor, name = name, description = description,
+    constructor,
+    name = name, description = description,
     classes = classes, input = input, output = output,
     package = pkg, category = category, class = "block_descr"
   )
@@ -72,18 +68,18 @@ block_registry <- new.env()
 #' @rdname available_blocks
 #' @export
 register_block <- function(
-  constructor,
-  name,
-  description,
-  classes,
-  input,
-  output,
-  package = NA_character_,
-  category = "uncategorized"
-) {
-
-  descr <- new_block_descr(constructor, name, description, classes, input,
-                           output, package, category)
+    constructor,
+    name,
+    description,
+    classes,
+    input,
+    output,
+    package = NA_character_,
+    category = "uncategorized") {
+  descr <- new_block_descr(
+    constructor, name, description, classes, input,
+    output, package, category
+  )
 
   id <- classes[1L]
 
@@ -98,16 +94,14 @@ register_block <- function(
 #' @rdname available_blocks
 #' @export
 register_blocks <- function(
-  constructor,
-  name,
-  description,
-  classes,
-  input,
-  output,
-  package = NA_character_,
-  category = "uncategorized"
-) {
-
+    constructor,
+    name,
+    description,
+    classes,
+    input,
+    output,
+    package = NA_character_,
+    category = "uncategorized") {
   if (length(constructor) == 1L && !is.list(classes)) {
     classes <- list(classes)
   }
@@ -141,13 +135,9 @@ get_block_descr <- function(id) {
 #' @rdname available_blocks
 #' @export
 unregister_blocks <- function(ids = NULL, package = NULL) {
-
   if (is.null(ids) && is.null(package)) {
-
     ids <- list_blocks()
-
   } else if (not_null(package)) {
-
     stopifnot(is_string(package))
 
     pkgs <- eapply(block_registry, `attr`, "package")
@@ -163,7 +153,6 @@ unregister_blocks <- function(ids = NULL, package = NULL) {
 }
 
 register_blockr_blocks <- function(pkg) {
-
   if (missing(pkg)) {
     pkg <- pkg_name()
   }
@@ -232,12 +221,12 @@ register_blockr_blocks <- function(pkg) {
       c("rds_block", "parser_block", "transform_block"),
       c("json_block", "parser_block", "transform_block"),
       c("xpt_block", "parser_block", "transform_block"),
-      c("filter_block", "transform_block", "submit_block"),
+      c("filter_block", "transform_block"),
       c("select_block", "transform_block"),
-      c("summarize_block", "transform_block", "submit_block"),
+      c("summarize_block", "transform_block"),
       c("arrange_block", "transform_block"),
       c("group_by_block", "transform_block"),
-      c("join_block", "transform_block", "submit_block"),
+      c("join_block", "transform_block"),
       c("head_block", "transform_block"),
       c("mutate_block", "transform_block")
     ),
@@ -303,7 +292,6 @@ register_blockr_blocks <- function(pkg) {
 #' @rdname available_blocks
 #' @export
 construct_block <- function(block, ...) {
-
   if (is_string(block)) {
     block <- get_block_descr(block)
   }
