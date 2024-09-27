@@ -147,7 +147,8 @@ block_header.block <- function(x, ns, hidden_class, ...) {
 
   submit_ui <- NULL
   if (attr(x, "submit") > -1) {
-    submit_ui <- div(class = "flex-grow-1",
+    submit_ui <- div(
+      class = "flex-grow-1",
       bslib::input_task_button(
         ns("submit"),
         "Run",
@@ -303,7 +304,8 @@ add_block_ui.default <- function(x, id, ...) {
   tagList(
     tags$a(
       icon("plus"),
-      class = "stack-add-block text-decoration-none",
+      id = ns("add"),
+      class = "stack-add-block text-decoration-none action-button",
       `data-bs-toggle` = "offcanvas",
       `data-bs-target` = sprintf("#%s", ns("addBlockCanvas")),
       `aria-controls` = ns("addBlockCanvas")
@@ -317,15 +319,18 @@ add_block_ui.default <- function(x, id, ...) {
         # Hide the select dropdown as we just need the searchbar
         tags$script(
           HTML(
-            sprintf("
-              $(document).one('shiny:inputchanged', function(e) {
-                if (e.name === 'my_stack-rendered') {
-                  $('#%s')
-                    .find('.vscomp-toggle-button')
-                    .css('display', 'none');
+            sprintf(
+              "$(document).on('shiny:inputchanged', function(e) {
+                if (e.name === '%s') {
+                  $('#%s').one('show.bs.offcanvas', function() {
+                    $('#%s')
+                      .find('.vscomp-toggle-button')
+                      .css('display', 'none');
+                  });
                 }
-              });
-              ",
+              })",
+              ns("add"),
+              ns("addBlockCanvas"),
               ns("search")
             )
           )
@@ -339,13 +344,13 @@ add_block_ui.default <- function(x, id, ...) {
           }
           "
         ),
-        tags$head(
-          tags$script(HTML("
-            function colorText(data) {
+        tags$script(
+          HTML(
+            "function colorText(data) {
               let text = `<span class='badge text-bg-secondary'>${data.label}</span>`;
               return text;
             }"
-          ))
+          )
         )
       ),
       shinyWidgets::virtualSelectInput(
@@ -360,7 +365,7 @@ add_block_ui.default <- function(x, id, ...) {
         optionsCount = 10,
         keepAlwaysOpen = TRUE,
         searchGroup = TRUE,
-        #searchByStartsWith = TRUE,
+        # searchByStartsWith = TRUE,
         hasOptionDescription = TRUE,
         width = "100%",
         labelRenderer = "colorText"
@@ -726,7 +731,6 @@ input_ids.hidden_field <- function(x, name, ...) {
 #' @rdname ui_input
 #' @export
 ui_input.variable_field <- function(x, id, name) {
-
   field <- materialize_variable_field(x)
 
   div(
@@ -752,7 +756,6 @@ ui_input.hidden_field <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.list_field <- function(x, id, name) {
-
   fields <- get_sub_fields(x)
 
   # TODO: indicate nesting of fields, nice version of
