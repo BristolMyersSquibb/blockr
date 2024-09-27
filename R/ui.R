@@ -322,7 +322,7 @@ add_block_ui.default <- function(x, id, ...) {
             sprintf(
               "$(document).on('shiny:inputchanged', function(e) {
                 if (e.name === '%s') {
-                  $('#%s').one('show.bs.offcanvas', function() {
+                  $('#%s').one('shown.bs.offcanvas', function() {
                     $('#%s')
                       .find('.vscomp-toggle-button')
                       .css('display', 'none');
