@@ -36,7 +36,6 @@ test_that("stacks", {
 })
 
 test_that("Set stack title", {
-
   stack_test_server <- function(id, x, ...) {
     generate_server(x, id, ...)
   }
@@ -121,6 +120,9 @@ test_that("stacks demo works", {
   )
 
   # Add a block
+  # (need to click on the add block button to set the input value to 1)
+  # need also to click on the selector to trigger the offcanvas
+  app$click(input = "mystack-add-block-add")
   app$click(selector = ".stack-add-block")
   app$set_inputs("mystack-add-block-search" = "dataset_block")
 
