@@ -510,41 +510,44 @@ add_block_server.default <- function(x, id, vals, ...) {
 
     # Triggers on init
     blk_choices <- reactiveVal(NULL)
-    observeEvent(vals$blocks, {
-      # Pills are dynamically updated from the server
-      # depending on the block compatibility
-      blk_choices(get_compatible_blocks(vals$stack))
+    observeEvent(
+      {
+        req(input$add > 0)
+        c(input$add, vals$blocks)
+      },
+      {
+        # Pills are dynamically updated from the server
+        # depending on the block compatibility
+        blk_choices(get_compatible_blocks(vals$stack))
 
-      choices <- blk_choices()
-      choices$name <- paste(choices$package, sep = "::", choices$ctor)
+        choices <- blk_choices()
+        choices$name <- paste(choices$package, sep = "::", choices$ctor)
 
-      shinyWidgets::updateVirtualSelect(
-        "search",
-        choices = shinyWidgets::prepare_choices(
-          choices,
-          .data$name,
-          .data$ctor,
-          group_by = .data$category,
-          description = .data$description
-        )
-      )
-
-      # create_block_choices(blk_choices(), ns)
-
-      if (length(vals$blocks) == 0) {
-        shiny::insertUI(
-          sprintf("#%s", ns("status-messages")),
-          ui = div(
-            class = "alert alert-primary",
-            role = "alert",
-            id = ns("status-message"),
-            "Stack has no blocks. Start by adding a data block."
+        shinyWidgets::updateVirtualSelect(
+          "search",
+          choices = shinyWidgets::prepare_choices(
+            choices,
+            .data$name,
+            .data$ctor,
+            group_by = .data$category,
+            description = .data$description
           )
         )
-      } else {
+
         removeUI(sprintf("#%s", ns("status-message")))
+        if (length(vals$blocks) == 0) {
+          shiny::insertUI(
+            sprintf("#%s", ns("status-messages")),
+            ui = div(
+              class = "alert alert-primary",
+              role = "alert",
+              id = ns("status-message"),
+              "Stack has no blocks. Start by adding a data block."
+            )
+          )
+        }
       }
-    })
+    )
 
     return(
       list(
