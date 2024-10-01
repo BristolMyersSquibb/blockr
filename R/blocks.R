@@ -9,7 +9,6 @@
 #' @export
 new_dataset_block <- function(selected = character(), package = "datasets",
                               ...) {
-
   is_dataset_eligible <- function(x, pkg) {
     inherits(do.call("::", list(pkg = pkg, name = x)), "data.frame")
   }
@@ -66,7 +65,7 @@ new_upload_block <- function(file_path = character(), ...) {
 #' @param volumes Paths accessible by the shinyFiles browser
 #' @export
 new_filesbrowser_block <- function(file_path = character(),
-                                   volumes = c(home = path.expand("~")), ...) {
+                                   volumes = c(root = "/", home = path.expand("~")), ...) {
   new_block(
     fields = list(
       file = new_filesbrowser_field(file_path,

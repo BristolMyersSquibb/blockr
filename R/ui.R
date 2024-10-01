@@ -856,7 +856,10 @@ ui_update.filesbrowser_field <- function(x, session, id, name) {
   shinyFiles::shinyFileChoose(
     session$input,
     input_ids(x, id),
-    roots = x$volumes
+    roots = x$volumes,
+    defaultRoot = x$defaultRoot,
+    defaultPath = x$defaultPath,
+    filetypes = x$filetypes
   )
 }
 
