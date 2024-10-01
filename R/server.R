@@ -339,6 +339,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
   moduleServer(
     id = id,
     function(input, output, session) {
+      ns <- session$ns
+
       vals <- reactiveValues(
         stack = x,
         blocks = vector("list", length(x)),
@@ -431,9 +433,9 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       # stack UI validation message
       # We only display which block is invalid
       observeEvent(vals$is_valid, {
-        removeUI(sprintf("#%s .stack-validation-message", session$ns(NULL)))
+        removeUI(sprintf("#%s .stack-validation-message", ns(NULL)))
         insertUI(
-          sprintf("#%s .stack-validation", session$ns(NULL)),
+          sprintf("#%s .stack-validation", ns(NULL)),
           ui = div(
             class = "text-danger text-center stack-validation-message",
             HTML(paste(
@@ -443,6 +445,12 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
               collapse = ", </br>"
             ))
           )
+        )
+
+        # Disable copy code button
+        session$sendCustomMessage(
+          "toggle-copy-code",
+          list(state = vals$is_valid, id = ns("copy"))
         )
       })
 
@@ -461,7 +469,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         session$sendCustomMessage(
           "blockr-render-stack",
           list(
-            stack = session$ns(NULL),
+            stack = ns(NULL),
             locked = is_locked(session)
           )
         )
