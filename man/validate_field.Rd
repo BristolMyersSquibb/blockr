@@ -16,6 +16,8 @@
 \alias{validate_field.default}
 \alias{is_valid}
 \alias{is_valid.field}
+\alias{is_valid.block}
+\alias{is_valid.stack}
 \alias{validation_failure}
 \title{Validate field generic}
 \usage{
@@ -48,6 +50,10 @@ validate_field(x)
 is_valid(x)
 
 \method{is_valid}{field}(x)
+
+\method{is_valid}{block}(x)
+
+\method{is_valid}{stack}(x)
 
 validation_failure(..., class = character())
 }

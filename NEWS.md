@@ -1,6 +1,7 @@
-# blockr 0.0.2.9023
+# blockr 0.0.2.9030
 
 ## Feature
+- New validate stack function.
 - Improved `submit` feature for blocks. Now submit isn't added as a class but as a special block attribute. When you design a block, you can pass the `submit` parameter like so:
 
 ```r
