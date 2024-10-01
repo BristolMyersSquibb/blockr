@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">blockr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9022</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9023</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +29,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2.9022</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2.9023</h6></li>
     <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.2</h6></li>
     <li><h6 class="dropdown-header" data-toc-skip>blockr 0.0.1.9000</h6></li>
     <li><hr class="dropdown-divider"></li>
@@ -56,9 +56,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.2.9022" id="blockr-0029022">blockr 0.0.2.9022<a class="anchor" aria-label="anchor" href="#blockr-0029022"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.2.9023" id="blockr-0029023">blockr 0.0.2.9023<a class="anchor" aria-label="anchor" href="#blockr-0029023"></a></h2>
 <div class="section level3">
-<h3 id="feature-0-0-2-9022">Feature<a class="anchor" aria-label="anchor" href="#feature-0-0-2-9022"></a></h3>
+<h3 id="feature-0-0-2-9023">Feature<a class="anchor" aria-label="anchor" href="#feature-0-0-2-9023"></a></h3>
 <ul><li>Improved <code>submit</code> feature for blocks. Now submit isn’t added as a class but as a special block attribute. When you design a block, you can pass the <code>submit</code> parameter like so:</li>
 </ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_super_block</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">submit</span> <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
@@ -93,15 +93,16 @@
 <p>If not passed, the block will belong to <code>uncategorized</code> blocks (default).</p>
 </div>
 <div class="section level3">
-<h3 id="doc-0-0-2-9022">Doc<a class="anchor" aria-label="anchor" href="#doc-0-0-2-9022"></a></h3>
+<h3 id="doc-0-0-2-9023">Doc<a class="anchor" aria-label="anchor" href="#doc-0-0-2-9023"></a></h3>
 <ul><li>Improved <code>registry</code> and <code>getting started</code> vignettes.</li>
 <li>Add new <code>case studies</code> vignette to present blockr in various contexts.</li>
 <li>Refine GitHub readme.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="fixes-0-0-2-9022">Fixes<a class="anchor" aria-label="anchor" href="#fixes-0-0-2-9022"></a></h3>
+<h3 id="fixes-0-0-2-9023">Fixes<a class="anchor" aria-label="anchor" href="#fixes-0-0-2-9023"></a></h3>
 <ul><li>Fix issue in <code>handle_remove.block</code>: <code>vals$stack</code> wasn’t correctly updated when the last block was removed leading to wrong state.</li>
 <li>Loading spinner is now correctly hidden when the block visual is updated.</li>
+<li>Fix <a href="https://github.com/BristolMyersSquibb/blockr/issues/358" class="external-link">#358</a>.</li>
 </ul></div>
 </div>
     <div class="section level2">
