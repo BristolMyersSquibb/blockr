@@ -1,4 +1,4 @@
-# blockr 0.0.2.9023
+# blockr 0.0.2.9030
 
 ## Feature
 - Improved `submit` feature for blocks. Now submit isn't added as a class but as a special block attribute. When you design a block, you can pass the `submit` parameter like so:
@@ -52,6 +52,10 @@ If not passed, the block will belong to `uncategorized` blocks (default).
 - Fix issue in `handle_remove.block`: `vals$stack` wasn't correctly updated
 when the last block was removed leading to wrong state.
 - Loading spinner is now correctly hidden when the block visual is updated.
+- Fix #366:
+  - We no longer need a reactive poll per result field for the data.
+  - The (serialized) field "value" is only the stack name the field refers to (not data).
+  - We no longer need a reactive poll for the stack selector drop-down
 - Fix [#358](https://github.com/BristolMyersSquibb/blockr/issues/358).
 
 # blockr 0.0.2

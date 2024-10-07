@@ -138,7 +138,6 @@ test_that("group_by blocks", {
 
 test_that("join blocks", {
   datx <- dplyr::band_members
-  daty <- dplyr::band_instruments
 
   blk1 <- new_join_block()
 
@@ -151,7 +150,12 @@ test_that("join blocks", {
   expect_equal(nrow(res1), nrow(datx))
   expect_equal(colnames(res1), colnames(datx))
 
-  blk2 <- new_join_block(daty, type = "inner", by = "name")
+  set_workspace(
+    daty = new_stack(new_dataset_block("band_instruments", "dplyr")),
+    force = TRUE
+  )
+
+  blk2 <- new_join_block("daty", type = "inner", by = "name")
 
   expect_s3_class(blk2, "transform_block")
   expect_s3_class(blk2, "join_block")

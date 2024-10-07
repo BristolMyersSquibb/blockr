@@ -16,42 +16,41 @@ generate_server <- function(x, ...) {
 generate_server.result_field <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
-      get_result <- function() {
-        inp <- input[["select-stack"]]
+      get_result <- function(inp) {
+        res <- get_stack_result(
+          get_workspace_stack(inp)
+        )
 
-        if (length(inp) && inp %in% list_workspace_stacks()) {
-          get_stack_result(
-            get_workspace_stack(inp)
-          )
-        } else {
-          data.frame()
+        attr(res, "result_field_stack_name") <- inp
+
+        res
+      }
+
+      workspace_stacks <- attr(get_workspace(), "reactive_stack_directory")
+
+      exportTestValues(
+        stacks = workspace_stacks()
+      )
+
+      if (is.null(workspace_stacks)) {
+        workspace_stacks <- function() {
+          list_workspace_stacks()
         }
       }
 
-      result_hash <- function() {
-        rlang::hash(get_result())
-      }
-
-      current_stack <- function() {
-        res <- strsplit(session$ns(NULL), "-")[[1L]]
-        res[length(res) - 2L]
-      }
-
-      stack_opts <- function() {
-        setdiff(list_workspace_stacks(), current_stack())
-      }
-
-      opts <- reactivePoll(100, session, stack_opts, stack_opts)
-
       observeEvent(
-        opts(),
-        updateSelectInput(session, "select-stack",
-          choices = opts(),
+        workspace_stacks(),
+        updateSelectInput(
+          session,
+          "select-stack",
+          choices = result_field_stack_opts(session$ns, workspace_stacks()),
           selected = input[["select-stack"]]
         )
       )
 
-      reactivePoll(100, session, result_hash, get_result)
+      reactive({
+        get_result(input[["select-stack"]])
+      })
     })
   }
 }
@@ -404,7 +403,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
           vals$stack <- set_stack_blocks(
             vals$stack,
             get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)()
+            get_last_block_data(vals$blocks)
           )
         }
       )
@@ -700,6 +699,12 @@ generate_server.workspace <- function(x, id, ...) {
         vals$stacks <- NULL
         removeUI(".stack-col", multiple = TRUE)
       })
+
+      attr(x, "reactive_stack_directory") <- reactive({
+        names(vals$stacks)
+      }) |> bindEvent(
+        chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title")
+      )
 
       # Serialize
       output$serialize <- downloadHandler(

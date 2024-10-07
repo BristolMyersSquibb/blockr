@@ -4,9 +4,11 @@
 \alias{new_result_block}
 \title{Result block}
 \usage{
-new_result_block(...)
+new_result_block(stack = character(), ...)
 }
 \arguments{
+\item{stack}{Stack name}
+
 \item{...}{Further (metadata) attributes}
 }
 \description{
