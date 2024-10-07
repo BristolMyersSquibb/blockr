@@ -683,18 +683,41 @@ ui_input.filesbrowser_field <- function(x, id, name) {
 #' @rdname ui_input
 #' @export
 ui_input.result_field <- function(x, id, name) {
+
   ns <- NS(input_ids(x, id))
 
   selectizeInput(
     ns("select-stack"),
     name,
-    list_workspace_stacks(),
-    value(x),
+    result_field_stack_opts(ns),
+    get_field_value(x, "value"),
     options = list(
       dropdownParent = "body",
       placeholder = "Please select an option below"
     )
   )
+}
+
+result_field_stack_opts <- function(ns, stacks = list_workspace_stacks()) {
+
+  current_stack <- function(ns) {
+    res <- strsplit(ns(NULL), "-")[[1L]]
+    res[length(res) - 2L]
+  }
+
+  res <- setdiff(stacks, current_stack(ns))
+
+  set_names(res, stack_id_to_name(res))
+}
+
+stack_id_to_name <- function(id) {
+
+  do_one <- function(x) {
+    stk <- get_workspace_stack(x)
+    paste0(get_stack_title(stk), " (", get_stack_name(stk), ")")
+  }
+
+  chr_ply(id, do_one)
 }
 
 #' @rdname ui_input

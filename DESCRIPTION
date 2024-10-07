@@ -26,10 +26,10 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
     magrittr,
-    shiny,
+    shiny (>= 1.8.1),
     dplyr,
     utils,
-    bslib,
+    bslib (>= 0.7.0),
     methods,
     DT,
     htmltools,

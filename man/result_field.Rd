@@ -4,7 +4,7 @@
 \alias{new_result_field}
 \title{Result field constructor}
 \usage{
-new_result_field(value = list(), ...)
+new_result_field(value = character(), ...)
 }
 \arguments{
 \item{value}{Default text input value.}

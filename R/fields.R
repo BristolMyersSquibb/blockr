@@ -289,6 +289,24 @@ validate_field.list_field <- function(x) {
 #' @inheritParams new_string_field
 #' @rdname result_field
 #' @export
-new_result_field <- function(value = list(), ...) {
+new_result_field <- function(value = character(), ...) {
   new_field(value, ..., class = "result_field")
+}
+
+#' @rdname validate_field
+#' @export
+validate_field.result_field <- function(x) {
+
+  field <- get_field_value(x, "value")
+
+  validate_string(field)
+
+  if (!field %in% list_workspace_stacks()) {
+    validation_failure(
+      "result fields have to refer to existing stack names",
+      class = "result_failure"
+    )
+  }
+
+  NextMethod()
 }
