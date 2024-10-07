@@ -53,10 +53,10 @@ If not passed, the block will belong to `uncategorized` blocks (default).
 when the last block was removed leading to wrong state.
 - Loading spinner is now correctly hidden when the block visual is updated.
 - Fix #366:
-
   - We no longer need a reactive poll per result field for the data.
   - The (serialized) field "value" is only the stack name the field refers to (not data).
   - We no longer need a reactive poll for the stack selector drop-down
+- Fix [#358](https://github.com/BristolMyersSquibb/blockr/issues/358).
 
 # blockr 0.0.2
 

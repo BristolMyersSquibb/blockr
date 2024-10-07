@@ -6,7 +6,7 @@
 \usage{
 new_filesbrowser_block(
   file_path = character(),
-  volumes = c(home = path.expand("~")),
+  volumes = c(root = "/", home = path.expand("~")),
   ...
 )
 }
