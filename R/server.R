@@ -206,30 +206,46 @@ generate_server_block <- function(
         )
       }
 
-      out_dat <- if (attr(x, "submit") > -1) {
-        eventReactive(input$submit,
-          {
-            req(is_valid$block)
-            if (is.null(in_dat())) {
-              evaluate_block(blk())
-            } else {
-              evaluate_block(blk(), data = in_dat())
-            }
-            # Trigger computation if submit attr is > 0
-            # useful when restoring workspace
-          },
-          ignoreNULL = !attr(x, "submit") > 0
-        )
-      } else {
-        reactive({
+      reactive_status <- reactiveVal("No task submitted yet")
+
+      out_dat <- ExtendedTask$new(
+        # Need a promise
+        function(...) {
+          mirai::mirai(
+            {
+              if (inherits(x, "select_block")) Sys.sleep(10)
+              if (is.null(in_dat) && !inherits(x, "transform_block")) {
+                blockr::evaluate_block(blk)
+              } else {
+                blockr::evaluate_block(blk, data = in_dat)
+              }
+            },
+            ...
+          )
+        }
+      )
+
+      # From the doc, we need to call task$invoke
+      observeEvent(
+        {
           req(is_valid$block)
-          if (is.null(in_dat()) && !inherits(x, "transform_block")) {
-            evaluate_block(blk())
+          if (attr(x, "submit") > -1) {
+            input$submit
           } else {
-            evaluate_block(blk(), data = in_dat())
+            blk()
           }
-        })
-      }
+        },
+        {
+          reactive_status("Running 🏃")
+          showNotification(reactive_status())
+          out_dat$invoke(in_dat = in_dat(), blk = blk(), x = x)
+        }
+      )
+
+      observeEvent(out_dat$result(), {
+        reactive_status("Task completed ✅")
+        showNotification(reactive_status())
+      })
 
       if (display == "plot") {
         output$plot <- server_output(x, out_dat, output)
@@ -241,11 +257,11 @@ generate_server_block <- function(
 
       if (display != "plot") {
         output$nrow <- renderText({
-          prettyNum(nrow(out_dat()), big.mark = ",")
+          prettyNum(nrow(out_dat$result()), big.mark = ",")
         })
 
         output$ncol <- renderText({
-          prettyNum(ncol(out_dat()), big.mark = ",")
+          prettyNum(ncol(out_dat$result()), big.mark = ",")
         })
       }
 
@@ -263,7 +279,7 @@ generate_server_block <- function(
         )
       })
 
-      download(x, session, out_dat)
+      download(x, session, out_dat$result)
 
       # For shinytest2
       # Note: no need to export data as
@@ -272,13 +288,13 @@ generate_server_block <- function(
       exportTestValues(
         block = blk(),
         # res may be a ggplot object
-        res = out_dat()
+        res = out_dat$result()
       )
 
       return(
         list(
           block = blk,
-          data = out_dat,
+          data = out_dat$result,
           # Needed by the stack to block
           # computations for the next block
           is_valid = reactive(is_valid$block)
@@ -881,7 +897,7 @@ server_output <- function(x, result, output) {
 server_output.block <- function(x, result, output) {
   DT::renderDT(
     {
-      result() |>
+      result$result() |>
         DT::datatable(
           selection = "none",
           options = list(
