@@ -17,6 +17,7 @@ generate_server.result_field <- function(x, ...) {
   function(id, init = NULL, data = NULL) {
     moduleServer(id, function(input, output, session) {
       get_result <- function(inp) {
+        req(inp)
         res <- get_stack_result(
           get_workspace_stack(inp)
         )
