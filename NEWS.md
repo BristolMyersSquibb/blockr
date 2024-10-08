@@ -1,4 +1,4 @@
-# blockr 0.0.2.9030
+# blockr 0.0.2.9031
 
 ## Feature
 - Improved `submit` feature for blocks. Now submit isn't added as a class but as a special block attribute. When you design a block, you can pass the `submit` parameter like so:
