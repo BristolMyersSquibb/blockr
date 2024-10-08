@@ -43,14 +43,28 @@ is_valid.field <- function(x) {
   )
 }
 
-validate_block <- function(x) {
-  tmp <- lapply(names(x), \(name) {
-    is_valid(x[[name]])
+#' @rdname validate_field
+#' @export
+is_valid.block <- function(x) {
+  tmp <- lapply(x, \(field) {
+    is_valid(field)
   })
   structure(
     all(unlist(tmp) == TRUE),
     msgs = unlist(lapply(tmp, \(res) attr(res, "msg"))),
     fields = names(x)[unlist(tmp) != TRUE]
+  )
+}
+
+#' @rdname validate_field
+#' @export
+is_valid.stack <- function(x) {
+  tmp <- lapply(x, \(block) {
+    is_valid(block)
+  })
+  structure(
+    all(unlist(tmp) == TRUE),
+    msgs = which(tmp == FALSE) # captures invalid blocks
   )
 }
 

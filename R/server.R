@@ -173,7 +173,7 @@ generate_server_block <- function(
           log_debug("Updating UI of block ", class(x)[[1]])
 
           # Validating
-          is_valid$block <- validate_block(blk())
+          is_valid$block <- is_valid(blk())
           is_valid$message <- attr(is_valid$block, "msg")
           is_valid$fields <- attr(is_valid$block, "fields")
           log_debug("Validating block ", class(x)[[1]])
@@ -206,30 +206,46 @@ generate_server_block <- function(
         )
       }
 
-      out_dat <- if (attr(x, "submit") > -1) {
-        eventReactive(input$submit,
-          {
-            req(is_valid$block)
-            if (is.null(in_dat())) {
-              evaluate_block(blk())
-            } else {
-              evaluate_block(blk(), data = in_dat())
-            }
-            # Trigger computation if submit attr is > 0
-            # useful when restoring workspace
-          },
-          ignoreNULL = !attr(x, "submit") > 0
-        )
-      } else {
-        reactive({
+      reactive_status <- reactiveVal("No task submitted yet")
+
+      out_dat <- ExtendedTask$new(
+        # Need a promise
+        function(...) {
+          mirai::mirai(
+            {
+              if (inherits(x, "select_block")) Sys.sleep(10)
+              if (is.null(in_dat) && !inherits(x, "transform_block")) {
+                blockr::evaluate_block(blk)
+              } else {
+                blockr::evaluate_block(blk, data = in_dat)
+              }
+            },
+            ...
+          )
+        }
+      )
+
+      # From the doc, we need to call task$invoke
+      observeEvent(
+        {
           req(is_valid$block)
-          if (is.null(in_dat()) && !inherits(x, "transform_block")) {
-            evaluate_block(blk())
+          if (attr(x, "submit") > -1) {
+            input$submit
           } else {
-            evaluate_block(blk(), data = in_dat())
+            blk()
           }
-        })
-      }
+        },
+        {
+          reactive_status("Running 🏃")
+          showNotification(reactive_status())
+          out_dat$invoke(in_dat = in_dat(), blk = blk(), x = x)
+        }
+      )
+
+      observeEvent(out_dat$result(), {
+        reactive_status("Task completed ✅")
+        showNotification(reactive_status())
+      })
 
       if (display == "plot") {
         output$plot <- server_output(x, out_dat, output)
@@ -241,11 +257,11 @@ generate_server_block <- function(
 
       if (display != "plot") {
         output$nrow <- renderText({
-          prettyNum(nrow(out_dat()), big.mark = ",")
+          prettyNum(nrow(out_dat$result()), big.mark = ",")
         })
 
         output$ncol <- renderText({
-          prettyNum(ncol(out_dat()), big.mark = ",")
+          prettyNum(ncol(out_dat$result()), big.mark = ",")
         })
       }
 
@@ -263,7 +279,7 @@ generate_server_block <- function(
         )
       })
 
-      download(x, session, out_dat)
+      download(x, session, out_dat$result)
 
       # For shinytest2
       # Note: no need to export data as
@@ -272,13 +288,13 @@ generate_server_block <- function(
       exportTestValues(
         block = blk(),
         # res may be a ggplot object
-        res = out_dat()
+        res = out_dat$result()
       )
 
       return(
         list(
           block = blk,
-          data = out_dat,
+          data = out_dat$result,
           # Needed by the stack to block
           # computations for the next block
           is_valid = reactive(is_valid$block)
@@ -338,10 +354,13 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
   moduleServer(
     id = id,
     function(input, output, session) {
+      ns <- session$ns
+
       vals <- reactiveValues(
         stack = x,
         blocks = vector("list", length(x)),
-        removed = FALSE
+        removed = FALSE,
+        is_valid = NULL
       )
       # Don't remove: needed by shinytest2
       exportTestValues(
@@ -395,18 +414,60 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
       observeEvent(
-        c(
-          get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)()
-        ),
         {
-          vals$stack <- set_stack_blocks(
-            vals$stack,
-            get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)
+          c(
+            lapply(vals$blocks, \(block) {
+              block$is_valid()
+            }),
+            get_block_vals(vals$blocks)
           )
+        },
+        {
+          # get_last_block_data(vals$blocks)() errors
+          # if any block is invalid
+          tryCatch(
+            {
+              vals$stack <- set_stack_blocks(
+                vals$stack,
+                get_block_vals(vals$blocks),
+                get_last_block_data(vals$blocks)()
+              )
+            },
+            error = function(e) {
+              vals$stack <- set_stack_blocks(
+                vals$stack,
+                get_block_vals(vals$blocks),
+                list()
+              )
+            }
+          )
+          vals$is_valid <- is_valid(vals$stack)
         }
       )
+
+      # stack UI validation message
+      # We only display which block is invalid
+      observeEvent(vals$is_valid, {
+        removeUI(sprintf("#%s .stack-validation-message", ns(NULL)))
+        insertUI(
+          sprintf("#%s .stack-validation", ns(NULL)),
+          ui = div(
+            class = "text-danger text-center stack-validation-message",
+            HTML(paste(
+              lapply(attr(vals$is_valid, "msgs"), \(msg) {
+                sprintf("Block %s is invalid", msg)
+              }),
+              collapse = ", </br>"
+            ))
+          )
+        )
+
+        # Disable copy code button
+        session$sendCustomMessage(
+          "toggle-copy-code",
+          list(state = vals$is_valid, id = ns("copy"))
+        )
+      })
 
       observeEvent(vals$stack, {
         log_debug("UPDADING WORKSPACE with stack ", id)
@@ -423,7 +484,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         session$sendCustomMessage(
           "blockr-render-stack",
           list(
-            stack = session$ns(NULL),
+            stack = ns(NULL),
             locked = is_locked(session)
           )
         )
@@ -836,7 +897,7 @@ server_output <- function(x, result, output) {
 server_output.block <- function(x, result, output) {
   DT::renderDT(
     {
-      result() |>
+      result$result() |>
         DT::datatable(
           selection = "none",
           options = list(
