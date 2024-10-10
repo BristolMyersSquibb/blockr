@@ -174,7 +174,7 @@ generate_server_block <- function(
           log_debug("Updating UI of block ", class(x)[[1]])
 
           # Validating
-          is_valid$block <- validate_block(blk())
+          is_valid$block <- is_valid(blk())
           is_valid$message <- attr(is_valid$block, "msg")
           is_valid$fields <- attr(is_valid$block, "fields")
           log_debug("Validating block ", class(x)[[1]])
@@ -339,10 +339,13 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
   moduleServer(
     id = id,
     function(input, output, session) {
+      ns <- session$ns
+
       vals <- reactiveValues(
         stack = x,
         blocks = vector("list", length(x)),
-        removed = FALSE
+        removed = FALSE,
+        is_valid = NULL
       )
       # Don't remove: needed by shinytest2
       exportTestValues(
@@ -396,18 +399,60 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
       observeEvent(
-        c(
-          get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)()
-        ),
         {
-          vals$stack <- set_stack_blocks(
-            vals$stack,
-            get_block_vals(vals$blocks),
-            get_last_block_data(vals$blocks)
+          c(
+            lapply(vals$blocks, \(block) {
+              block$is_valid()
+            }),
+            get_block_vals(vals$blocks)
           )
+        },
+        {
+          # get_last_block_data(vals$blocks)() errors
+          # if any block is invalid
+          tryCatch(
+            {
+              vals$stack <- set_stack_blocks(
+                vals$stack,
+                get_block_vals(vals$blocks),
+                get_last_block_data(vals$blocks)()
+              )
+            },
+            error = function(e) {
+              vals$stack <- set_stack_blocks(
+                vals$stack,
+                get_block_vals(vals$blocks),
+                list()
+              )
+            }
+          )
+          vals$is_valid <- is_valid(vals$stack)
         }
       )
+
+      # stack UI validation message
+      # We only display which block is invalid
+      observeEvent(vals$is_valid, {
+        removeUI(sprintf("#%s .stack-validation-message", ns(NULL)))
+        insertUI(
+          sprintf("#%s .stack-validation", ns(NULL)),
+          ui = div(
+            class = "text-danger text-center stack-validation-message",
+            HTML(paste(
+              lapply(attr(vals$is_valid, "msgs"), \(msg) {
+                sprintf("Block %s is invalid", msg)
+              }),
+              collapse = ", </br>"
+            ))
+          )
+        )
+
+        # Disable copy code button
+        session$sendCustomMessage(
+          "toggle-copy-code",
+          list(state = vals$is_valid, id = ns("copy"))
+        )
+      })
 
       observeEvent(vals$stack, {
         log_debug("UPDADING WORKSPACE with stack ", id)
@@ -424,7 +469,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         session$sendCustomMessage(
           "blockr-render-stack",
           list(
-            stack = session$ns(NULL),
+            stack = ns(NULL),
             locked = is_locked(session)
           )
         )
