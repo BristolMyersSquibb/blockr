@@ -17,3 +17,11 @@ window.Shiny.addCustomMessageHandler("blockr-copy-code", (msg) => {
     type: "message",
   });
 });
+
+window.Shiny.addCustomMessageHandler("toggle-copy-code", (msg) => {
+  if (!msg.state) {
+    $(`#${msg.id}`).hide()
+  } else {
+    $(`#${msg.id}`).show()
+  }
+});

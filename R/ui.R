@@ -387,6 +387,7 @@ generate_ui.stack <- function(x, id = NULL, ...) {
       class = "card stack border",
       id = id,
       stack_header(x, id, ns),
+      div(class = "stack-validation"),
       div(
         class = "card-body p-1",
         id = sprintf("%s-body", id),

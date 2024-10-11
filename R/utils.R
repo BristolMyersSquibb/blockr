@@ -259,7 +259,7 @@ send_error_to_ui <- function(blk, is_valid, session) {
   )
 
   # Toggle submit field
-  if (!is.null(attr(blk, "submit"))) {
+  if (attr(blk, "submit") > -1) {
     session$sendCustomMessage(
       "toggle-submit",
       list(state = is_valid$block, id = ns("submit"))
