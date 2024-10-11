@@ -14,13 +14,17 @@ generate_server <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.result_field <- function(x, ...) {
-  function(id, init = NULL, data = NULL) {
+  function(id, init = NULL, data = NULL, is_link_valid = NULL) {
     moduleServer(id, function(input, output, session) {
-      get_result <- function(inp) {
-        req(inp)
-        res <- get_stack_result(
-          get_workspace_stack(inp)
-        )
+      get_result <- function(inp = NULL) {
+        if (is.null(inp)) {
+          res <- data.frame()
+          # Needed by ui_update
+          attr(res, "result_field_stack_name") <- ""
+          return(res)
+        }
+        stack <- workspace_stacks()[[inp]]$stack
+        res <- get_stack_result(stack)
 
         attr(res, "result_field_stack_name") <- inp
 
@@ -44,13 +48,17 @@ generate_server.result_field <- function(x, ...) {
         updateSelectInput(
           session,
           "select-stack",
-          choices = result_field_stack_opts(session$ns, workspace_stacks()),
+          choices = result_field_stack_opts(session$ns, names(workspace_stacks())),
           selected = input[["select-stack"]]
         )
       )
 
       reactive({
-        get_result(input[["select-stack"]])
+        if (is_link_valid()) {
+          get_result(input[["select-stack"]])
+        } else {
+          get_result()
+        }
       })
     })
   }
@@ -87,7 +95,7 @@ generate_server_block <- function(
     in_dat = NULL,
     id,
     display = c("table", "plot"),
-    is_prev_valid) {
+    is_prev_valid, linked_stack = NULL) {
   display <- match.arg(display)
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
@@ -95,6 +103,8 @@ generate_server_block <- function(
   if (is.null(in_dat)) {
     in_dat <- reactive(NULL)
     is_prev_valid <- reactive(NULL)
+  } else {
+    linked_stack <- reactive(NULL)
   }
 
   obs_expr <- function(x) {
@@ -136,12 +146,16 @@ generate_server_block <- function(
       l_values_module <- list() # a list with reactive values (module server output)
       for (name in names(x_srv)) {
         l_values_module[[name]] <-
-          generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
+          generate_server(x_srv[[name]])(
+            name,
+            init = l_init[[name]],
+            data = in_dat, 
+            is_link_valid = reactive(linked_stack()$is_valid)
+          )
       }
 
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
-        # if (!is.null(is_prev_valid)) req(is_prev_valid)
         blk_no_srv <- blk()
         blk_no_srv[is_srv] <- NULL # to keep class etc
         eval(obs_expr(blk_no_srv))
@@ -156,7 +170,7 @@ generate_server_block <- function(
 
       # This will also trigger when the previous block
       # valid status changes.
-      obs$update_blk <- observeEvent(c(r_values(), in_dat(), is_prev_valid()),
+      obs$update_blk <- observeEvent(c(r_values(), in_dat(), linked_stack()$is_valid),
         {
           # 1. upd blk,
           b <- update_blk(
@@ -210,7 +224,7 @@ generate_server_block <- function(
       out_dat <- if (attr(x, "submit") > -1) {
         eventReactive(input$submit,
           {
-            req(is_valid$block)
+            if (!is_valid$block) return(data.frame())
             if (is.null(in_dat())) {
               evaluate_block(blk())
             } else {
@@ -223,7 +237,7 @@ generate_server_block <- function(
         )
       } else {
         reactive({
-          req(is_valid$block)
+          if (!is_valid$block) return(data.frame())
           if (is.null(in_dat()) && !inherits(x, "transform_block")) {
             evaluate_block(blk())
           } else {
@@ -291,8 +305,8 @@ generate_server_block <- function(
 
 #' @rdname generate_server
 #' @export
-generate_server.data_block <- function(x, id, ...) {
-  generate_server_block(x = x, in_dat = NULL, id = id, is_prev_valid = NULL)
+generate_server.data_block <- function(x, id, linked_stack, ...) {
+  generate_server_block(x = x, in_dat = NULL, id = id, is_prev_valid = NULL, linked_stack = linked_stack)
 }
 
 #' @param in_dat Reactive input data
@@ -322,7 +336,7 @@ generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.stack <- function(x, id = NULL, new_block = NULL,
-                                  workspace = get_workspace(), ...) {
+                                  workspace = get_workspace(), prev_stack, ...) {
   stopifnot(...length() == 0L)
 
   id <- coal(id, get_stack_name(x))
@@ -345,7 +359,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         stack = x,
         blocks = vector("list", length(x)),
         removed = FALSE,
-        is_valid = NULL
+        is_valid = NULL,
+        prev_stack = NULL
       )
       # Don't remove: needed by shinytest2
       exportTestValues(
@@ -400,6 +415,7 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       # up to the stack so we can properly serialise.
       observeEvent(
         {
+          req(length(vals$blocks) > 0)
           c(
             lapply(vals$blocks, \(block) {
               block$is_valid()
@@ -427,23 +443,31 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
             }
           )
           vals$is_valid <- is_valid(vals$stack)
-        }
+        }, priority = 1000
       )
 
       # stack UI validation message
       # We only display which block is invalid
-      observeEvent(vals$is_valid, {
+      observeEvent(c(vals$is_valid, prev_stack()$is_valid), {
+        vals$prev_stack <- prev_stack()
         removeUI(sprintf("#%s .stack-validation-message", ns(NULL)))
+        msg <- if (is.null(prev_stack()$is_valid)) {
+          HTML(paste(
+            lapply(attr(vals$is_valid, "msgs"), \(msg) {
+              sprintf("Block %s is invalid", msg)
+            }),
+            collapse = ", </br>"
+          ))
+        } else {
+          if (!prev_stack()$is_valid) {
+            "Linked stack isn't valid. Please fix upstream errors."
+          }
+        }
         insertUI(
           sprintf("#%s .stack-validation", ns(NULL)),
           ui = div(
             class = "text-danger text-center stack-validation-message",
-            HTML(paste(
-              lapply(attr(vals$is_valid, "msgs"), \(msg) {
-                sprintf("Block %s is invalid", msg)
-              }),
-              collapse = ", </br>"
-            ))
+            msg
           )
         )
 
@@ -732,7 +756,12 @@ generate_server.workspace <- function(x, id, ...) {
         vals$stacks[[stack_id]] <- generate_server(
           el,
           id = stack_id,
-          new_block = reactive(vals$new_block[[stack_id]])
+          new_block = reactive(vals$new_block[[stack_id]]),
+          prev_stack = if (length(vals$stacks) == 1) {
+            reactive(NULL)
+          } else {
+            reactive(vals$stacks[[length(vals$stacks) - 1]])
+          }
         )
 
         # Handle new block injection
@@ -747,9 +776,16 @@ generate_server.workspace <- function(x, id, ...) {
       })
 
       attr(x, "reactive_stack_directory") <- reactive({
-        names(vals$stacks)
+        vals$stacks
       }) |> bindEvent(
-        chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title")
+        c(
+          chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title"),
+          lapply(vals$stacks, \(stack) {
+            lgl_ply(stack$blocks, \(block) {
+              block$is_valid()
+            })
+          })
+        )
       )
 
       # Serialize
@@ -786,10 +822,16 @@ init.workspace <- function(x, vals, session, ...) {
 
   observeEvent(TRUE, {
     lapply(names(stacks), \(nme) {
+      idx <- which(nme == names(stacks))
       vals$stacks[[nme]] <- generate_server(
         stacks[[nme]],
         id = nme,
-        new_block = reactive(vals$new_block[[nme]])
+        new_block = reactive(vals$new_block[[nme]]),
+        prev_stack = if (idx == 1) {
+          reactive(NULL)
+        } else {
+          reactive(vals$stacks[[nme]])
+        }
       )
     })
   })
@@ -858,6 +900,11 @@ init_block <- function(i, vals) {
       NULL
     } else {
       vals$blocks[[i - 1]]$is_valid
+    },
+    linked_stack = if (i == 1) {
+      reactive(vals$prev_stack)
+    } else {
+      NULL
     }
   )
 }
