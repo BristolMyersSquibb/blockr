@@ -21,6 +21,8 @@ generate_server.result_field <- function(x, ...) {
         res <- get_stack_result(
           get_workspace_stack(inp)
         )
+        # Handle the join block
+        if (is.reactive(res)) res <- res()
 
         attr(res, "result_field_stack_name") <- inp
 
