@@ -44,13 +44,18 @@ generate_server.result_field <- function(x, ...) {
         updateSelectInput(
           session,
           "select-stack",
-          choices = result_field_stack_opts(session$ns, workspace_stacks()),
+          choices = result_field_stack_opts(session$ns, names(workspace_stacks())),
           selected = input[["select-stack"]]
         )
       )
 
       reactive({
-        get_result(input[["select-stack"]])
+        stacks <- workspace_stacks()
+        blocks <- stacks[[input[["select-stack"]]]]$blocks
+        all_valid <- lgl_ply(blocks, \(block) {
+          block$is_valid()
+        })
+        if (all(all_valid) == TRUE) get_result(input[["select-stack"]]) else data.frame()
       })
     })
   }
@@ -159,6 +164,7 @@ generate_server_block <- function(
       obs$update_blk <- observeEvent(c(r_values(), in_dat(), is_prev_valid()),
         {
           # 1. upd blk,
+          is_valid$block <- FALSE
           b <- update_blk(
             b = blk(),
             value = r_values(),
@@ -210,7 +216,7 @@ generate_server_block <- function(
       out_dat <- if (attr(x, "submit") > -1) {
         eventReactive(input$submit,
           {
-            req(is_valid$block)
+            if (!is_valid$block) return(data.frame())
             if (is.null(in_dat())) {
               evaluate_block(blk())
             } else {
@@ -223,10 +229,11 @@ generate_server_block <- function(
         )
       } else {
         reactive({
-          req(is_valid$block)
+          if (!is_valid$block) return(data.frame())
           if (is.null(in_dat()) && !inherits(x, "transform_block")) {
             evaluate_block(blk())
           } else {
+            if (nrow(in_dat()) == 0) return(data.frame())
             evaluate_block(blk(), data = in_dat())
           }
         })
@@ -396,10 +403,15 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       # Any block change: data or input should be sent
       # up to the stack so we can properly serialise.
       observeEvent(
-        c(
-          get_block_vals(vals$blocks),
-          get_last_block_data(vals$blocks)()
-        ),
+        {
+          lapply(vals$blocks, \(block) {
+            req(block)
+          })
+          c(
+            get_block_vals(vals$blocks),
+            get_last_block_data(vals$blocks)()
+          )
+        },
         {
           vals$stack <- set_stack_blocks(
             vals$stack,
@@ -702,9 +714,17 @@ generate_server.workspace <- function(x, id, ...) {
       })
 
       attr(x, "reactive_stack_directory") <- reactive({
-        names(vals$stacks)
+        vals$stacks
       }) |> bindEvent(
-        chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title")
+        c(
+          chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title"),
+          lapply(vals$stack, \(stack) {
+            lgl_ply(stack$blocks, \(block) {
+              block$is_valid()
+              block$block
+            })
+          })
+        )
       )
 
       # Serialize
