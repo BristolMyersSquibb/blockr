@@ -39,7 +39,7 @@ Imports:
     memuse,
     haven,
     rlang,
-    shinyWidgets
+    shinyWidgets (>= 0.8.2)
 Remotes:
     DivadNojnarg/DiagrammeR,
     BristolMyersSquibb/blockr.data
