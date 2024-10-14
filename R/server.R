@@ -50,6 +50,7 @@ generate_server.result_field <- function(x, ...) {
       )
 
       reactive({
+        req(input[["select-stack"]])
         stacks <- workspace_stacks()
         blocks <- stacks[[input[["select-stack"]]]]$blocks
         all_valid <- lgl_ply(blocks, \(block) {
