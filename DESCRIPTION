@@ -1,6 +1,6 @@
 Package: blockr
 Title: A block-based framework for data manipulation and visualization
-Version: 0.0.2.9031
+Version: 0.0.2.9035
 Authors@R: 
     c(person(given = "Nicolas",
              family = "Bennett",
@@ -39,7 +39,7 @@ Imports:
     memuse,
     haven,
     rlang,
-    shinyWidgets
+    shinyWidgets (>= 0.8.2)
 Remotes:
     DivadNojnarg/DiagrammeR,
     BristolMyersSquibb/blockr.data
