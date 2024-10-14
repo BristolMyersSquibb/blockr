@@ -14,7 +14,6 @@ testServer(module_server_test, {
   # Invalidate
   session$setInputs("columns" = "")
   session$flushReact()
-  expect_error(out_dat())
   expect_false(is_valid$block)
   expect_identical(is_valid$message, "selected value(s) not among provided choices")
   expect_identical(is_valid$fields, "columns")

@@ -236,7 +236,9 @@ generate_server_block <- function(
           if (is.null(in_dat()) && !inherits(x, "transform_block")) {
             evaluate_block(blk())
           } else {
-            if (nrow(in_dat()) == 0 && !inherits(x, "parser_block")) return(data.frame())
+            if (inherits(in_dat(), "data.frame") && nrow(in_dat()) == 0) {
+              return(data.frame())
+            }
             evaluate_block(blk(), data = in_dat())
           }
         })
