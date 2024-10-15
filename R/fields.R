@@ -308,5 +308,25 @@ validate_field.result_field <- function(x) {
     )
   }
 
+  # Analyse stack validity.
+  # I believe in the long run we need a validate_stack function.
+  # That's ongoing in another PR. I won't do it here.
+  linked_stack <- get_workspace_stack(field)
+  linked_stack_validation <- lgl_ply(linked_stack, function(blk) {
+    validate_block(blk)
+  })
+
+  is_linked_stack_valid <- all(linked_stack_validation == TRUE)
+  if (!is_linked_stack_valid) {
+    invalid_blks <- which(linked_stack_validation == FALSE)
+    validation_failure(
+      sprintf(
+        "Stack isn't valid. Error observed in block(s) %s",
+        paste(invalid_blks, collapse = ", ")
+      ),
+      class = "result_failure"
+    )
+  }
+
   NextMethod()
 }

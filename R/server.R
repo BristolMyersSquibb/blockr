@@ -41,12 +41,28 @@ generate_server.result_field <- function(x, ...) {
 
       observeEvent(
         workspace_stacks(),
-        updateSelectInput(
-          session,
-          "select-stack",
-          choices = result_field_stack_opts(session$ns, workspace_stacks()),
-          selected = input[["select-stack"]]
-        )
+        {
+          is_field_valid <- try(validate_field(x), silent = TRUE)
+          if (inherits(is_field_valid, "try-error")) {
+            updateSelectInput(
+              session,
+              "select-stack",
+              choices = list()
+            )
+          } else {
+            selected <- if (nchar(input[["select-stack"]]) == 0) {
+              result_field_stack_opts(session$ns, workspace_stacks())[1]
+            } else {
+              input[["select-stack"]]
+            }
+            updateSelectInput(
+              session,
+              "select-stack",
+              choices = result_field_stack_opts(session$ns, workspace_stacks()),
+              selected = selected
+            )
+          }
+        }
       )
 
       reactive({
