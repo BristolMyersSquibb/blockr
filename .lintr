@@ -2,7 +2,8 @@ linters: linters_with_defaults(
   line_length_linter = line_length_linter(100L),
   object_name_linter = NULL, # Because we use S3 and end up with is_initialized.field
   object_usage_linter = NULL,   # When code is WIP this is annoying ...
-  commented_code_linter = NULL  # When code is WIP this is annoying ...
+  commented_code_linter = NULL,  # When code is WIP this is annoying ...
+  complexity_limit = 16L
   )
 exclusions: list(
     "inst/examples/cdisc-plot/example.R",
