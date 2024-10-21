@@ -210,8 +210,9 @@ generate_server_block <- function(
       out_dat <- if (attr(x, "submit") > -1) {
         eventReactive(input$submit,
           {
-            req(is_valid$block)
-            if (is.null(in_dat())) {
+            if (!is_valid$block) {
+              NULL
+            } else if (is.null(in_dat()) && !inherits(x, "transform_block")) {
               evaluate_block(blk())
             } else {
               evaluate_block(blk(), data = in_dat())
@@ -223,8 +224,9 @@ generate_server_block <- function(
         )
       } else {
         reactive({
-          req(is_valid$block)
-          if (is.null(in_dat()) && !inherits(x, "transform_block")) {
+          if (!is_valid$block) {
+            NULL
+          } else if (is.null(in_dat()) && !inherits(x, "transform_block")) {
             evaluate_block(blk())
           } else {
             evaluate_block(blk(), data = in_dat())
@@ -829,7 +831,10 @@ init_block <- function(i, vals) {
 #' @rdname server_output
 #' @export
 server_output <- function(x, result, output) {
-  UseMethod("server_output", x)
+
+  if (not_null(result)) {
+    UseMethod("server_output", x)
+  }
 }
 
 #' @rdname server_output
