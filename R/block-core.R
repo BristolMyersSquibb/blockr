@@ -220,13 +220,18 @@ generate_code.call <- function(x) {
 #' @inherit new_block
 #' @param ... For generic consistency.
 #' @export
-evaluate_block <- function(x, ...) {
+evaluate_block <- function(x, data, ...) {
+
+  if (!missing(data) && is.null(data)) {
+    return(NULL)
+  }
+
   UseMethod("evaluate_block")
 }
 
 #' @rdname evaluate_block
 #' @export
-evaluate_block.data_block <- function(x, ...) {
+evaluate_block.data_block <- function(x, data, ...) {
 
   stopifnot(...length() == 0L)
 

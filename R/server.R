@@ -212,7 +212,7 @@ generate_server_block <- function(
           {
             if (!is_valid$block) {
               NULL
-            } else if (is.null(in_dat()) && !inherits(x, "transform_block")) {
+            } else if (inherits(x, "dataset_block")) {
               evaluate_block(blk())
             } else {
               evaluate_block(blk(), data = in_dat())
@@ -226,7 +226,7 @@ generate_server_block <- function(
         reactive({
           if (!is_valid$block) {
             NULL
-          } else if (is.null(in_dat()) && !inherits(x, "transform_block")) {
+          } else if (inherits(x, "dataset_block")) {
             evaluate_block(blk())
           } else {
             evaluate_block(blk(), data = in_dat())
