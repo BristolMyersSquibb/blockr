@@ -44,14 +44,16 @@ generate_server.result_field <- function(x, ...) {
         updateSelectInput(
           session,
           "select-stack",
-          choices = result_field_stack_opts(session$ns, workspace_stacks()),
+          choices = result_field_stack_opts(session$ns, names(workspace_stacks())),
           selected = input[["select-stack"]]
         )
       )
-
-      reactive({
-        get_result(input[["select-stack"]])
+      res <- reactiveVal()
+      observeEvent(workspace_stacks(), {
+        res(get_result(input[["select-stack"]]))
       })
+
+      res
     })
   }
 }
@@ -110,6 +112,7 @@ generate_server_block <- function(
       ns <- session$ns
       blk <- reactiveVal(x)
       obs <- list()
+      out_dat <- reactiveVal()
 
       ns <- session$ns
 
@@ -151,14 +154,29 @@ generate_server_block <- function(
         values_default <- r_values_default()[names(r_values_default()) != ""]
         values_module <- lapply(l_values_module, \(x) x())
         # keep sort order of x
+        browser()
         c(values_module, values_default)[names(x)]
       })
 
+      # What can make a block change ...
+      update_blk_trigger <- reactive({
+        if (attr(x, "submit") > -1) {
+          input$submit
+        } else {
+          if (inherits(x, "data_block")) {
+            r_values()
+          } else {
+            c(r_values(), in_dat(), req(is_prev_valid()))
+          }
+        }
+     })
+
       # This will also trigger when the previous block
       # valid status changes.
-      obs$update_blk <- observeEvent(c(r_values(), in_dat(), is_prev_valid()),
+      obs$update_blk <- observeEvent(update_blk_trigger(),
         {
-          # 1. upd blk,
+          # 1. update blk,
+          browser()
           b <- update_blk(
             b = blk(),
             value = r_values(),
@@ -178,8 +196,23 @@ generate_server_block <- function(
           is_valid$message <- attr(is_valid$block, "msg")
           is_valid$fields <- attr(is_valid$block, "fields")
           log_debug("Validating block ", class(x)[[1]])
-        },
-        priority = 1000
+
+          # 3. Evaluate block
+          if (inherits(x, "data_block")) {
+            if (is_valid$block) {
+              out_dat(evaluate_block(blk()))
+              log_debug("Evaluating block ", class(x)[[1]])
+            }
+          } else {
+            if (is_prev_valid() && is_valid$block) {
+              out_dat(evaluate_block(blk(), data = in_dat()))
+              log_debug("Evaluating block ", class(x)[[1]])
+            }
+          }
+        # Trigger computation if submit attr is > 0
+        # useful when restoring workspace
+        }#,
+        #ignoreNULL = !attr(x, "submit") > 0
       )
 
       # Propagate message to user
@@ -205,31 +238,6 @@ generate_server_block <- function(
           },
           once = TRUE
         )
-      }
-
-      out_dat <- if (attr(x, "submit") > -1) {
-        eventReactive(input$submit,
-          {
-            req(is_valid$block)
-            if (is.null(in_dat())) {
-              evaluate_block(blk())
-            } else {
-              evaluate_block(blk(), data = in_dat())
-            }
-            # Trigger computation if submit attr is > 0
-            # useful when restoring workspace
-          },
-          ignoreNULL = !attr(x, "submit") > 0
-        )
-      } else {
-        reactive({
-          req(is_valid$block)
-          if (is.null(in_dat()) && !inherits(x, "transform_block")) {
-            evaluate_block(blk())
-          } else {
-            evaluate_block(blk(), data = in_dat())
-          }
-        })
       }
 
       if (display == "plot") {
@@ -702,9 +710,14 @@ generate_server.workspace <- function(x, id, ...) {
       })
 
       attr(x, "reactive_stack_directory") <- reactive({
-        names(vals$stacks)
+        vals$stacks
       }) |> bindEvent(
-        chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title")
+        c(
+          chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title"),
+          lapply(vals$stacks, \(stack) {
+            attr(stack$stack, "result")()
+          })
+        )
       )
 
       # Serialize
