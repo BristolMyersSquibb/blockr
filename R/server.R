@@ -14,48 +14,21 @@ generate_server <- function(x, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.result_field <- function(x, ...) {
-  function(id, init = NULL, data = NULL) {
+  function(id, init = NULL, data = NULL, results = NULL) {
+
     moduleServer(id, function(input, output, session) {
-      get_result <- function(inp) {
-        req(inp)
-        res <- get_stack_result(
-          get_workspace_stack(inp)
-        )
-
-        attr(res, "result_field_stack_name") <- inp
-
-        res
-      }
-
-      workspace_stacks <- attr(get_workspace(), "reactive_stack_directory")
-
-      exportTestValues(
-        stacks = workspace_stacks()
-      )
-
-      if (is.null(workspace_stacks)) {
-        workspace_stacks <- function() {
-          list_workspace_stacks()
-        }
-      }
-
       observeEvent(
-        workspace_stacks(),
+        names(results),
         updateSelectInput(
           session,
           "select-stack",
-          choices = result_field_stack_opts(session$ns, workspace_stacks()),
+          choices = names(results),
           selected = input[["select-stack"]]
         )
       )
-
-      res <- reactiveVal()
-
-      observeEvent(workspace_stacks(), {
-        res(get_result(input[["select-stack"]]))
+      reactive({
+        results()[[input[["select-stack"]]]]
       })
-
-      res
     })
   }
 }
@@ -91,7 +64,8 @@ generate_server_block <- function(
     in_dat = NULL,
     id,
     display = c("table", "plot"),
-    is_prev_valid) {
+    is_prev_valid,
+    results = NULL) {
   display <- match.arg(display)
 
   # if in_dat is NULL (data block), turn it into a reactive expression that
@@ -141,7 +115,7 @@ generate_server_block <- function(
       l_values_module <- list() # a list with reactive values (module server output)
       for (name in names(x_srv)) {
         l_values_module[[name]] <-
-          generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat)
+          generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat, results = results)
       }
 
       # proceed in standard fashion (if fields have no generate_server)
@@ -291,29 +265,45 @@ generate_server_block <- function(
   )
 }
 
+#' @param results Reactive values containing stack results
 #' @rdname generate_server
 #' @export
-generate_server.data_block <- function(x, id, ...) {
-  generate_server_block(x = x, in_dat = NULL, id = id, is_prev_valid = NULL)
+generate_server.data_block <- function(x, id, ..., results = NULL) {
+  generate_server_block(
+    x = x,
+    in_dat = NULL,
+    id = id,
+    is_prev_valid = NULL,
+    results = results
+  )
 }
 
 #' @param in_dat Reactive input data
 #' @param is_prev_valid Useful to validate the current block
 #' @rdname generate_server
 #' @export
-generate_server.transform_block <- function(x, in_dat, id, is_prev_valid, ...) {
-  generate_server_block(x = x, in_dat = in_dat, id = id, is_prev_valid = is_prev_valid)
+generate_server.transform_block <- function(x, in_dat, id, is_prev_valid, ...,
+                                            results = NULL) {
+  generate_server_block(
+    x = x,
+    in_dat = in_dat,
+    id = id,
+    is_prev_valid = is_prev_valid,
+    results = results
+  )
 }
 
 #' @rdname generate_server
 #' @export
-generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...) {
+generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...,
+                                       results = NULL) {
   generate_server_block(
     x = x,
     in_dat = in_dat,
     id = id,
     display = "plot",
-    is_prev_valid = is_prev_valid
+    is_prev_valid = is_prev_valid,
+    results = results
   )
 }
 
@@ -324,7 +314,8 @@ generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...) {
 #' @rdname generate_server
 #' @export
 generate_server.stack <- function(x, id = NULL, new_block = NULL,
-                                  workspace = get_workspace(), ...) {
+                                  results = NULL, workspace = get_workspace(),
+                                  ...) {
   stopifnot(...length() == 0L)
 
   id <- coal(id, get_stack_name(x))
@@ -344,7 +335,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       vals <- reactiveValues(
         stack = x,
         blocks = vector("list", length(x)),
-        removed = FALSE
+        removed = FALSE,
+        result = NULL
       )
       # Don't remove: needed by shinytest2
       exportTestValues(
@@ -353,7 +345,14 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         removed = vals$removed
       )
 
-      init(x, vals, session)
+      observeEvent(
+        length(vals$blocks),
+        {
+          vals$result <- get_last_block_data(vals$blocks)
+        }
+      )
+
+      init(x, vals, session, results)
 
       # For advanced usage. Add new block when not using
       # the stack UI/add button from blockr.
@@ -363,7 +362,12 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
           new_block()
         },
         {
-          add_block_stack(new_block()$block, new_block()$position, vals = vals)
+          add_block_stack(
+            new_block()$block,
+            new_block()$position,
+            vals = vals,
+            results = results
+          )
         }
       )
 
@@ -391,7 +395,8 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
         add_block_stack(
           block_to_add = available_blocks()[[block_to_add$selected()]], # pass in block constructor
           position = NULL,
-          vals = vals
+          vals = vals,
+          results = results
         )
       })
 
@@ -637,7 +642,13 @@ generate_server.workspace <- function(x, id, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-      vals <- reactiveValues(stacks = list(), new_block = list())
+
+      vals <- reactiveValues(
+        stacks = list(),
+        new_block = list(),
+        results = list()
+      )
+
       # Required by shinytest2: don't remove
       # Note: we can't check vals$stack as this is
       # a nested reactiveVal which does not play well
@@ -662,6 +673,13 @@ generate_server.workspace <- function(x, id, ...) {
           sprintf("#%sStackCol", names(to_remove))
         )
       })
+
+      observeEvent(
+        names(vals$stacks),
+        {
+          vals$results <- lapply(vals$stacks, `[[`, "result")
+        }
+      )
 
       # Add stack
       observeEvent(input$add_stack, {
@@ -689,7 +707,10 @@ generate_server.workspace <- function(x, id, ...) {
         vals$stacks[[stack_id]] <- generate_server(
           el,
           id = stack_id,
-          new_block = reactive(vals$new_block[[stack_id]])
+          new_block = reactive(vals$new_block[[stack_id]]),
+          results = reactive(
+            vals$results[setdiff(names(vals$results), stack_id)]
+          )
         )
 
         # Handle new block injection
@@ -746,7 +767,10 @@ init.workspace <- function(x, vals, session, ...) {
       vals$stacks[[nme]] <- generate_server(
         stacks[[nme]],
         id = nme,
-        new_block = reactive(vals$new_block[[nme]])
+        new_block = reactive(vals$new_block[[nme]]),
+        results = reactive({
+          vals$results[setdiff(names(vals$results), nme)]
+        })
       )
     })
   })
@@ -774,11 +798,12 @@ inject_block <- function(input, vals, id) {
 }
 
 #' @export
+#' @param results Reactive values containing stack results
 #' @rdname init
-init.stack <- function(x, vals, ...) {
+init.stack <- function(x, vals, session, results, ...) {
   observeEvent(TRUE, {
     for (i in seq_along(x)) {
-      vals$blocks[[i]] <- init_block(i, vals)
+      vals$blocks[[i]] <- init_block(i, vals, results)
     }
   })
   # Remove block from stack (can't be done within the block)
@@ -794,9 +819,10 @@ init.stack <- function(x, vals, ...) {
 #'
 #' @param i Block position
 #' @param vals Reactive values containing the stack
+#' @param results Reactive values containing stack results
 #'
 #' @keywords internal
-init_block <- function(i, vals) {
+init_block <- function(i, vals, results) {
   generate_server(
     vals$stack[[i]],
     in_dat = if (i == 1) {
@@ -815,7 +841,8 @@ init_block <- function(i, vals) {
       NULL
     } else {
       vals$blocks[[i - 1]]$is_valid
-    }
+    },
+    results = results
   )
 }
 
@@ -892,6 +919,7 @@ add_block_stack <- function(
     block_to_add,
     position = NULL,
     vals,
+    results,
     session = getDefaultReactiveDomain()) {
   vals$stack <- add_block(vals$stack, block_to_add, position)
   ns <- session$ns
@@ -907,7 +935,7 @@ add_block_stack <- function(
     p <- 1L
   }
 
-  vals$blocks[[p]] <- init_block(p, vals)
+  vals$blocks[[p]] <- init_block(p, vals, results)
 
   # Insert UI
   if (p > 1L) {

@@ -14,16 +14,17 @@ generate_server(x, ...)
 
 \method{generate_server}{result_field}(x, ...)
 
-\method{generate_server}{data_block}(x, id, ...)
+\method{generate_server}{data_block}(x, id, ..., results = NULL)
 
-\method{generate_server}{transform_block}(x, in_dat, id, is_prev_valid, ...)
+\method{generate_server}{transform_block}(x, in_dat, id, is_prev_valid, ..., results = NULL)
 
-\method{generate_server}{plot_block}(x, in_dat, id, is_prev_valid, ...)
+\method{generate_server}{plot_block}(x, in_dat, id, is_prev_valid, ..., results = NULL)
 
 \method{generate_server}{stack}(
   x,
   id = NULL,
   new_block = NULL,
+  results = NULL,
   workspace = get_workspace(),
   ...
 )
@@ -36,6 +37,8 @@ generate_server(x, ...)
 \item{...}{Generic consistency}
 
 \item{id}{Unique module id. Useful when the workspace is called as a module.}
+
+\item{results}{Reactive values containing stack results}
 
 \item{in_dat}{Reactive input data}
 

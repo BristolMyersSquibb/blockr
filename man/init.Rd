@@ -10,7 +10,7 @@ init(x, ...)
 
 \method{init}{workspace}(x, vals, session, ...)
 
-\method{init}{stack}(x, vals, ...)
+\method{init}{stack}(x, vals, session, results, ...)
 }
 \arguments{
 \item{x}{Object for which to generate a \code{\link[=moduleServer]{moduleServer()}}}
@@ -20,6 +20,8 @@ init(x, ...)
 \item{vals}{Internal reactive values.}
 
 \item{session}{Shiny session object.}
+
+\item{results}{Reactive values containing stack results}
 }
 \description{
 Handle initialisation of workspace, stacks, ...

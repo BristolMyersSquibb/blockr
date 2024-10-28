@@ -5,7 +5,7 @@
 #' @rdname keyvalue_field
 #' @export
 generate_server.keyvalue_field <- function(x, ...) {
-  function(id, init = NULL, data = NULL) {
+  function(id, init = NULL, data = NULL, results = NULL) {
     moduleServer(id, function(input, output, session) {
       ns <- session$ns
 

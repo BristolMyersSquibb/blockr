@@ -4,12 +4,14 @@
 \alias{init_block}
 \title{Init a single block}
 \usage{
-init_block(i, vals)
+init_block(i, vals, results)
 }
 \arguments{
 \item{i}{Block position}
 
 \item{vals}{Reactive values containing the stack}
+
+\item{results}{Reactive values containing stack results}
 }
 \description{
 Useful for init.blocks but also
