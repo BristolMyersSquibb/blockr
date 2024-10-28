@@ -44,11 +44,13 @@ generate_server.result_field <- function(x, ...) {
         updateSelectInput(
           session,
           "select-stack",
-          choices = result_field_stack_opts(session$ns, names(workspace_stacks())),
+          choices = result_field_stack_opts(session$ns, workspace_stacks()),
           selected = input[["select-stack"]]
         )
       )
+
       res <- reactiveVal()
+
       observeEvent(workspace_stacks(), {
         res(get_result(input[["select-stack"]]))
       })
@@ -154,29 +156,26 @@ generate_server_block <- function(
         values_default <- r_values_default()[names(r_values_default()) != ""]
         values_module <- lapply(l_values_module, \(x) x())
         # keep sort order of x
-        browser()
         c(values_module, values_default)[names(x)]
       })
 
       # What can make a block change ...
-      update_blk_trigger <- reactive({
-        if (attr(x, "submit") > -1) {
-          input$submit
+      update_blk_trigger <- if (attr(x, "submit") > -1) {
+        quote(input$submit)
+      } else {
+        if (inherits(x, "data_block")) {
+          quote(r_values())
         } else {
-          if (inherits(x, "data_block")) {
-            r_values()
-          } else {
-            c(r_values(), in_dat(), req(is_prev_valid()))
-          }
+          quote(c(r_values(), in_dat(), is_prev_valid()))
         }
-     })
+      }
 
       # This will also trigger when the previous block
       # valid status changes.
-      obs$update_blk <- observeEvent(update_blk_trigger(),
+      obs$update_blk <- observeEvent(
+        update_blk_trigger,
         {
           # 1. update blk,
-          browser()
           b <- update_blk(
             b = blk(),
             value = r_values(),
@@ -198,21 +197,16 @@ generate_server_block <- function(
           log_debug("Validating block ", class(x)[[1]])
 
           # 3. Evaluate block
-          if (inherits(x, "data_block")) {
-            if (is_valid$block) {
+          if (is_valid$block) {
+            log_debug("Evaluating block ", class(x)[[1]])
+            if (inherits(x, "data_block")) {
               out_dat(evaluate_block(blk()))
-              log_debug("Evaluating block ", class(x)[[1]])
-            }
-          } else {
-            if (is_prev_valid() && is_valid$block) {
+            } else {
               out_dat(evaluate_block(blk(), data = in_dat()))
-              log_debug("Evaluating block ", class(x)[[1]])
             }
           }
-        # Trigger computation if submit attr is > 0
-        # useful when restoring workspace
-        }#,
-        #ignoreNULL = !attr(x, "submit") > 0
+        },
+        event.quoted = TRUE
       )
 
       # Propagate message to user
@@ -710,14 +704,9 @@ generate_server.workspace <- function(x, id, ...) {
       })
 
       attr(x, "reactive_stack_directory") <- reactive({
-        vals$stacks
+        names(vals$stacks)
       }) |> bindEvent(
-        c(
-          chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title"),
-          lapply(vals$stacks, \(stack) {
-            attr(stack$stack, "result")()
-          })
-        )
+        chr_ply(lapply(vals$stacks, `[[`, "stack"), attr, "title")
       )
 
       # Serialize
