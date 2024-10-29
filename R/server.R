@@ -18,11 +18,14 @@ generate_server.result_field <- function(x, ...) {
 
     moduleServer(id, function(input, output, session) {
       observeEvent(
-        names(results()),
+        chr_ply(results(), attr, "pretty_stack_name"),
         updateSelectInput(
           session,
           "select-stack",
-          choices = names(results()),
+          choices = set_names(
+            names(results()),
+            chr_ply(results(), attr, "pretty_stack_name")
+          ),
           selected = input[["select-stack"]]
         )
       )
@@ -30,6 +33,7 @@ generate_server.result_field <- function(x, ...) {
       reactive({
         req(input[["select-stack"]])
         res <- results()[[input[["select-stack"]]]]
+        req(res)
         attr(res, "result_field_stack_name") <- input[["select-stack"]]
         res
       })
@@ -707,7 +711,7 @@ generate_server.workspace <- function(x, id, ...) {
           el,
           id = stack_id,
           new_block = reactive(vals$new_block[[stack_id]]),
-          results = reactive(lapply(vals$stacks, `[[`, "result"))
+          results = reactive(extract_stack_results(vals$stacks, stack_id))
         )
 
         # Handle new block injection
@@ -759,18 +763,44 @@ init.workspace <- function(x, vals, session, ...) {
   input <- session$input
   stacks <- get_workspace_stacks(workspace = x)
 
-  observeEvent(TRUE, {
+  observeEvent(
+    TRUE,
     lapply(names(stacks), \(nme) {
       vals$stacks[[nme]] <- generate_server(
         stacks[[nme]],
         id = nme,
         new_block = reactive(vals$new_block[[nme]]),
-        results = reactive({
-          lapply(vals$stacks, `[[`, "result")
-        })
+        results = reactive(extract_stack_results(vals$stacks, nme))
       )
     })
-  })
+  )
+}
+
+extract_stack_results <- function(stacks, exclude) {
+
+  set_nme_attr <- function(x, val) {
+
+    if (is.null(x)) {
+      x <- list()
+    }
+
+    attr(x, "pretty_stack_name") <- val
+
+    x
+  }
+
+  tmp <- stacks[setdiff(names(stacks), exclude)]
+
+  if (length(tmp)) {
+    stk <- lapply(tmp, `[[`, "stack")
+    nme <- paste0(
+      chr_ply(stk, get_stack_title), " (", chr_ply(stk, get_stack_name), ")"
+    )
+  } else {
+    nme <- character()
+  }
+
+  Map(set_nme_attr, lapply(tmp, `[[`, "result"), nme)
 }
 
 #' Inject block into stack
