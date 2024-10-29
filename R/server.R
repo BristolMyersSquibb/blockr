@@ -18,11 +18,11 @@ generate_server.result_field <- function(x, ...) {
 
     moduleServer(id, function(input, output, session) {
       observeEvent(
-        names(results),
+        names(results()),
         updateSelectInput(
           session,
           "select-stack",
-          choices = names(results),
+          choices = names(results()),
           selected = input[["select-stack"]]
         )
       )
@@ -149,6 +149,7 @@ generate_server_block <- function(
       obs$update_blk <- observeEvent(
         update_blk_trigger,
         {
+          if (inherits(x, "result_block")) browser()
           # 1. update blk,
           b <- update_blk(
             b = blk(),
@@ -346,9 +347,12 @@ generate_server.stack <- function(x, id = NULL, new_block = NULL,
       )
 
       observeEvent(
-        length(vals$blocks),
         {
-          vals$result <- get_last_block_data(vals$blocks)
+          req(get_last_block_data(vals$blocks))
+          get_last_block_data(vals$blocks)()
+        },
+        {
+          vals$result <- get_last_block_data(vals$blocks)()
         }
       )
 
@@ -645,8 +649,7 @@ generate_server.workspace <- function(x, id, ...) {
 
       vals <- reactiveValues(
         stacks = list(),
-        new_block = list(),
-        results = list()
+        new_block = list()
       )
 
       # Required by shinytest2: don't remove
@@ -673,13 +676,6 @@ generate_server.workspace <- function(x, id, ...) {
           sprintf("#%sStackCol", names(to_remove))
         )
       })
-
-      observeEvent(
-        names(vals$stacks),
-        {
-          vals$results <- lapply(vals$stacks, `[[`, "result")
-        }
-      )
 
       # Add stack
       observeEvent(input$add_stack, {
@@ -708,9 +704,7 @@ generate_server.workspace <- function(x, id, ...) {
           el,
           id = stack_id,
           new_block = reactive(vals$new_block[[stack_id]]),
-          results = reactive(
-            vals$results[setdiff(names(vals$results), stack_id)]
-          )
+          results = reactive(lapply(vals$stacks, `[[`, "result"))
         )
 
         # Handle new block injection
@@ -769,7 +763,7 @@ init.workspace <- function(x, vals, session, ...) {
         id = nme,
         new_block = reactive(vals$new_block[[nme]]),
         results = reactive({
-          vals$results[setdiff(names(vals$results), nme)]
+          lapply(vals$stacks, `[[`, "result")
         })
       )
     })
