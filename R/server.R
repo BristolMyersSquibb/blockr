@@ -26,8 +26,12 @@ generate_server.result_field <- function(x, ...) {
           selected = input[["select-stack"]]
         )
       )
+
       reactive({
-        results()[[input[["select-stack"]]]]
+        req(input[["select-stack"]])
+        res <- results()[[input[["select-stack"]]]]
+        attr(res, "result_field_stack_name") <- input[["select-stack"]]
+        res
       })
     })
   }
@@ -149,7 +153,6 @@ generate_server_block <- function(
       obs$update_blk <- observeEvent(
         update_blk_trigger,
         {
-          if (inherits(x, "result_block")) browser()
           # 1. update blk,
           b <- update_blk(
             b = blk(),
