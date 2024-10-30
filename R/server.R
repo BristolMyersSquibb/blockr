@@ -122,8 +122,12 @@ generate_server_block <- function(
 
       l_values_module <- list() # a list with reactive values (module server output)
       for (name in names(x_srv)) {
-        l_values_module[[name]] <-
-          generate_server(x_srv[[name]])(name, init = l_init[[name]], data = in_dat, results = results)
+        l_values_module[[name]] <- generate_server(x_srv[[name]])(
+            name,
+            init = l_init[[name]],
+            data = in_dat,
+            results = results
+          )
       }
 
       # proceed in standard fashion (if fields have no generate_server)
