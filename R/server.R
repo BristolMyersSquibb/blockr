@@ -141,21 +141,16 @@ generate_server_block <- function(
         c(values_module, values_default)[names(x)]
       })
 
-      # What can make a block change ...
-      update_blk_trigger <- if (attr(x, "submit") > -1) {
-        quote(input$submit)
-      } else {
+      update_blk_trigger <- reactive({
         if (inherits(x, "data_block")) {
-          quote(r_values())
+          r_values()
         } else {
-          quote(c(r_values(), in_dat(), is_prev_valid()))
+          c(r_values(), in_dat(), is_prev_valid())
         }
-      }
+      })
 
-      # This will also trigger when the previous block
-      # valid status changes.
       obs$update_blk <- observeEvent(
-        update_blk_trigger,
+        update_blk_trigger(),
         {
           # 1. update blk,
           b <- update_blk(
@@ -177,19 +172,29 @@ generate_server_block <- function(
           is_valid$message <- attr(is_valid$block, "msg")
           is_valid$fields <- attr(is_valid$block, "fields")
           log_debug("Validating block ", class(x)[[1]])
-
-          # 3. Evaluate block
-          if (is_valid$block) {
-            log_debug("Evaluating block ", class(x)[[1]])
-            if (inherits(x, "data_block")) {
-              out_dat(evaluate_block(blk()))
-            } else {
-              out_dat(evaluate_block(blk(), data = in_dat()))
-            }
-          }
-        },
-        event.quoted = TRUE
+        }
       )
+
+      # We need to decouple blk update from evaluation since
+      # for submit block this can't work within a single observer
+      eval_blk_trigger <- reactive({
+        if (is_valid$block) {
+          if (attr(x, "submit") > -1) {
+            input$submit
+          } else {
+            update_blk_trigger()
+          }
+        }
+      })
+
+      obs$eval_res <- observeEvent(eval_blk_trigger(), {
+        log_debug("Evaluating block ", class(x)[[1]])
+        if (inherits(x, "data_block")) {
+          out_dat(evaluate_block(blk()))
+        } else {
+          out_dat(evaluate_block(blk(), data = in_dat()))
+        }
+      }, ignoreNULL = !attr(x, "submit") > 0)
 
       # Propagate message to user
       obs$surface_error <- observe({
