@@ -248,7 +248,7 @@ add_block <- function(stack, block, position = NULL) {
   if (!length(stack)) {
 
     tmp <- initialize_block(
-      do.call(block, list())
+      construct_block(block)
     )
 
   } else {
