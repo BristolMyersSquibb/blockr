@@ -254,7 +254,7 @@ add_block <- function(stack, block, position = NULL) {
   } else {
 
     tmp <- initialize_block(
-      do.call(block, list(position = position)),
+      construct_block(block, position = position),
       data
     )
   }
