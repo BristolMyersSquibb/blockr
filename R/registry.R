@@ -54,7 +54,7 @@ new_block_descr <- function(constructor, name, description, id, classes, input,
   structure(
     constructor,
     name = name, description = description, id = id,
-    classes = classes,input = input, output = output,
+    classes = classes, input = input, output = output,
     package = pkg, category = category, class = "block_descr"
   )
 }
