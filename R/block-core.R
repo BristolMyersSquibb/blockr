@@ -357,6 +357,17 @@ block_input_check.parser_block <- function(x, data, ...) {
 
 #' @rdname block_io
 #' @export
+block_input_check.result_block <- function(x, data, ...) {
+
+  if (length(get_workspace_stacks()) >= 2L) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting at least two stacks.")
+}
+
+#' @rdname block_io
+#' @export
 input_failure <- function(..., class = character()) {
   rlang::abort(paste0(...), class = c(class, "input_failure"))
 }

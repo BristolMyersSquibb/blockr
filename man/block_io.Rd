@@ -5,6 +5,7 @@
 \alias{block_input_check.data_block}
 \alias{block_input_check.transform_block}
 \alias{block_input_check.parser_block}
+\alias{block_input_check.result_block}
 \alias{input_failure}
 \alias{block_output_ptype}
 \alias{block_output_ptype.dataset_block}
@@ -21,6 +22,8 @@ block_input_check(x, data, ...)
 \method{block_input_check}{transform_block}(x, data, ...)
 
 \method{block_input_check}{parser_block}(x, data, ...)
+
+\method{block_input_check}{result_block}(x, data, ...)
 
 input_failure(..., class = character())
 
