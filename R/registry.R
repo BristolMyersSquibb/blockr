@@ -38,22 +38,16 @@ block_name <- block_descrs_getter(block_descr_getter("name"))
 #' @export
 block_descr <- block_descrs_getter(block_descr_getter("description"))
 
-#' @rdname available_blocks
-#' @export
-block_reg_id <- block_descrs_getter(block_descr_getter("id"))
-
 new_block_descr <- function(constructor, name, description, id, classes, input,
                             output, pkg, category) {
   stopifnot(
     is.function(constructor), is_string(name), is_string(description),
-    is_string(category),
-    is.character(classes), length(classes) >= 1L,
-    is_string(input), is_string(output), is_string(pkg), is_string(id)
+    is_string(category), is.character(classes), length(classes) >= 1L,
+    is.function(input), is_string(pkg), is_string(id)
   )
 
   structure(
-    constructor,
-    name = name, description = description, id = id,
+    constructor, name = name, description = description, id = id,
     classes = classes, input = input, output = output,
     package = pkg, category = category, class = "block_descr"
   )
@@ -63,9 +57,9 @@ block_registry <- new.env()
 
 #' @param constructor Block constructor
 #' @param name,description Metadata describing the block
+#' @param classes Block classes
 #' @param input,output Object types the block consumes and produces
 #' @param package Package where block is defined
-#' @param classes Block classes
 #' @param id Block registry ID
 #' @param category Useful to sort blocks by topics. If not specified,
 #' blocks are uncategorized.
@@ -76,9 +70,10 @@ register_block <- function(
     constructor,
     name,
     description,
-    input,
-    output,
-    classes = class(constructor()),
+    ptype = constructor(),
+    classes = class(ptype),
+    input = get_s3_method("block_input_check", ptype),
+    output = block_output_ptype(ptype),
     id = classes[1L],
     package = NA_character_,
     category = "uncategorized") {
@@ -99,6 +94,19 @@ register_block <- function(
   }
 
   assign(id, descr, envir = block_registry)
+}
+
+get_s3_method <- function(generic, obj) {
+
+  for (cls in class(obj)) {
+    res <- try(utils::getS3method("block_input_check", cls), silent = TRUE)
+    if (!inherits(res, "try-error")) {
+      return(res)
+    }
+  }
+
+  stop("no method found for generic ", generic, "and classes ",
+       paste0(class(obj), collapse = ", "))
 }
 
 #' @param ... Forwarded to `register_block()`
@@ -215,42 +223,6 @@ register_blockr_blocks <- function(pkg) {
       "Select n first rows of dataset",
       "Mutate block"
     ),
-    input = c(
-      NA_character_,
-      NA_character_,
-      NA_character_,
-      NA_character_,
-      "string",
-      "string",
-      "string",
-      "string",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame"
-    ),
-    output = c(
-      "data.frame",
-      "data.frame",
-      "string",
-      "string",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame",
-      "data.frame"
-    ),
     package = pkg,
     category = c(
       "data",
@@ -284,32 +256,32 @@ construct_block <- function(block, ...) {
 
   stopifnot(inherits(block, "block_descr"))
 
-  block(..., registry_id = block_reg_id(block))
+  block(...)
 }
 
-#' List available blocks as a data.frame
+#' Find stack compatible blocks
 #'
-#' Provides an alternate way of displaying
-#' the registry information.
-#' This can be useful to create dynamic UI elements
-#' like in \link{add_block_ui}.
+#' Given a stack, we use the registry to find
+#' what are the blocks compatible with the last stack block.
+#' If the stack is empy, we return data blocks.
 #'
-#' @return A dataframe.
+#' @param stack Stack object.
+#'
+#' @return a dataframe.
 #'
 #' @export
-get_registry <- function() {
-  res <- lapply(seq_along(available_blocks()), \(i) {
-    blk <- available_blocks()[[i]]
-    attrs <- attributes(blk)
-    data.frame(
-      ctor = names(available_blocks())[[i]],
-      description = attrs[["description"]],
-      category = attrs[["category"]],
-      classes = paste(c(attrs[["classes"]], "block"), collapse = ", "),
-      input = attrs[["input"]],
-      output = attrs[["output"]],
-      package = attrs[["package"]]
-    )
-  })
-  do.call(rbind, res)
+get_compatible_blocks <- function(stack) {
+
+  is_compat <- function(x, y) {
+    !inherits(try(attr(x, "input")(x(), y), silent = TRUE), "try-error")
+  }
+
+  if (length(stack)) {
+    dat <- block_output_ptype(stack[[length(stack)]])
+  } else {
+    dat <- NULL
+  }
+
+  blocks <- available_blocks()
+  blocks[lgl_ply(blocks, is_compat, dat)]
 }

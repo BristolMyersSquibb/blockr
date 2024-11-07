@@ -210,8 +210,9 @@ generate_server_block <- function(
       out_dat <- if (attr(x, "submit") > -1) {
         eventReactive(input$submit,
           {
-            req(is_valid$block)
-            if (is.null(in_dat())) {
+            if (!isTruthy(is_valid$block)) {
+              block_output_ptype(blk())
+            } else if (is.null(in_dat())) {
               evaluate_block(blk())
             } else {
               evaluate_block(blk(), data = in_dat())
@@ -223,8 +224,9 @@ generate_server_block <- function(
         )
       } else {
         reactive({
-          req(is_valid$block)
-          if (is.null(in_dat()) && !inherits(x, "transform_block")) {
+          if (!isTruthy(is_valid$block)) {
+            block_output_ptype(blk())
+          } else if (is.null(in_dat()) && !inherits(x, "transform_block")) {
             evaluate_block(blk())
           } else {
             evaluate_block(blk(), data = in_dat())
@@ -522,14 +524,20 @@ add_block_server.default <- function(x, id, vals, ...) {
         blk_choices(get_compatible_blocks(vals$stack))
 
         choices <- blk_choices()
-        choices$name <- paste(choices$package, sep = "::", choices$ctor)
+
+        choices <- lapply(
+          set_names(nm = c("name", "package", "id", "category", "description")),
+          function(x) chr_ply(choices, attr, x)
+        )
+
+        choices$name <- paste0(choices$name, " (", choices$package, ")")
 
         shinyWidgets::updateVirtualSelect(
           "search",
           choices = shinyWidgets::prepare_choices(
-            choices,
+            as.data.frame(choices),
             .data$name,
-            .data$ctor,
+            .data$id,
             group_by = .data$category,
             description = .data$description
           )

@@ -312,3 +312,75 @@ update_fields.transform_block <- function(x, session, data, ...) {
 #' @rdname update_fields
 #' @export
 update_fields.plot_block <- update_fields.transform_block
+
+#' Block input/output
+#'
+#' Used for checking whether blocks are compatible
+#'
+#' @param x Block
+#' @rdname block_io
+#' @export
+block_input_check <- function(x, data, ...) UseMethod("block_input_check")
+
+#' @rdname block_io
+#' @export
+block_input_check.data_block <- function(x, data, ...) {
+
+  if (missing(data) || is.null(data)) {
+    return(invisible(NULL))
+  }
+
+  input_failure("No (or empty) input expected.")
+}
+
+#' @rdname block_io
+#' @export
+block_input_check.transform_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+#' @rdname block_io
+#' @export
+block_input_check.parser_block <- function(x, data, ...) {
+
+  if (is_string(data)) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting string-valued input.")
+}
+
+#' @rdname block_io
+#' @export
+input_failure <- function(..., class = character()) {
+  rlang::abort(paste0(...), class = c(class, "input_failure"))
+}
+
+#' @rdname block_io
+#' @export
+block_output_ptype <- function(x, ...) UseMethod("block_output_ptype")
+
+#' @rdname block_io
+#' @export
+block_output_ptype.dataset_block <- function(x, ...) data.frame()
+
+#' @rdname block_io
+#' @export
+block_output_ptype.result_block <- function(x, ...) value(x[["stack"]])
+
+#' @rdname block_io
+#' @export
+block_output_ptype.upload_block <- function(x, ...) character(1L)
+
+#' @rdname block_io
+#' @export
+block_output_ptype.filesbrowser_block <- function(x, ...) character(1L)
+
+#' @rdname block_io
+#' @export
+block_output_ptype.transform_block <- function(x, ...) data.frame()

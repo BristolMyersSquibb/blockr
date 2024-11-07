@@ -4,7 +4,6 @@
 \alias{available_blocks}
 \alias{block_name}
 \alias{block_descr}
-\alias{block_reg_id}
 \alias{register_block}
 \alias{register_blocks}
 \alias{unregister_blocks}
@@ -17,15 +16,14 @@ block_name(blocks = available_blocks())
 
 block_descr(blocks = available_blocks())
 
-block_reg_id(blocks = available_blocks())
-
 register_block(
   constructor,
   name,
   description,
-  input,
-  output,
-  classes = class(constructor()),
+  ptype = constructor(),
+  classes = class(ptype),
+  input = get_s3_method("block_input_check", ptype),
+  output = block_output_ptype(ptype),
   id = classes[1L],
   package = NA_character_,
   category = "uncategorized"
@@ -44,9 +42,9 @@ construct_block(block, ...)
 
 \item{name, description}{Metadata describing the block}
 
-\item{input, output}{Object types the block consumes and produces}
-
 \item{classes}{Block classes}
+
+\item{input, output}{Object types the block consumes and produces}
 
 \item{id}{Block registry ID}
 
