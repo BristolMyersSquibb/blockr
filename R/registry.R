@@ -259,6 +259,21 @@ construct_block <- function(block, ...) {
   block(...)
 }
 
+are_blocks_compatible <- function(x, y) {
+
+  stopifnot(inherits(x, "block_descr"))
+
+  tryCatch(
+    {
+      attr(x, "input")(x(), y)
+      TRUE
+    },
+    input_failure = function(e) {
+      structure(FALSE, msg = conditionMessage(e))
+    }
+  )
+}
+
 #' Find stack compatible blocks
 #'
 #' Given a stack, we use the registry to find
@@ -272,16 +287,6 @@ construct_block <- function(block, ...) {
 #' @export
 get_compatible_blocks <- function(stack) {
 
-  is_compat <- function(x, y) {
-    tryCatch(
-      {
-        attr(x, "input")(x(), y)
-        TRUE
-      },
-      input_failure = function(e) FALSE
-    )
-  }
-
   if (length(stack)) {
     dat <- block_output_ptype(stack[[length(stack)]])
   } else {
@@ -289,5 +294,5 @@ get_compatible_blocks <- function(stack) {
   }
 
   blocks <- available_blocks()
-  blocks[lgl_ply(blocks, is_compat, dat)]
+  blocks[lgl_ply(blocks, are_blocks_compatible, dat)]
 }
