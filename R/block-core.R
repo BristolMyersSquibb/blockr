@@ -359,11 +359,11 @@ block_input_check.parser_block <- function(x, data, ...) {
 #' @export
 block_input_check.result_block <- function(x, data, ...) {
 
-  if (length(get_workspace_stacks()) >= 2L) {
-    return(invisible(NULL))
+  if (length(get_workspace_stacks()) <= 1L) {
+    input_failure("Expecting at least two stacks.")
   }
 
-  input_failure("Expecting at least two stacks.")
+  NextMethod()
 }
 
 #' @rdname block_io

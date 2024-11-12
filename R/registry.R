@@ -273,7 +273,13 @@ construct_block <- function(block, ...) {
 get_compatible_blocks <- function(stack) {
 
   is_compat <- function(x, y) {
-    !inherits(try(attr(x, "input")(x(), y), silent = TRUE), "try-error")
+    tryCatch(
+      {
+        attr(x, "input")(x(), y)
+        TRUE
+      },
+      input_failure = function(e) FALSE
+    )
   }
 
   if (length(stack)) {
