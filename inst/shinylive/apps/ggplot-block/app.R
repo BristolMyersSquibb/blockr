@@ -38,6 +38,38 @@ new_geompoint_block <- function(color = character(), shape = character(), ...) {
   )
 }
 
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+
+block_input_check.plot_layer_block <- function(x, data, ...) {
+  if (inherits(data, "ggplot")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting ggplot input.")
+}
+
+block_output_ptype.plot_layer_block <- function(x, ...) ggplot()
+
+register_blocks(
+  constructor = c(new_ggplot_block, new_geompoint_block),
+  name = c("ggplot block", "geompoint block"),
+  description = c(
+    "Builds a ggplot object",
+    "Add points geom to ggplot object"
+  ),
+  package = "blockr.demo",
+  category = c("Visualization", "Visualization")
+)
+
 stack <- new_stack(
   data_block = new_dataset_block("penguins", "palmerpenguins"),
   plot_block = new_ggplot_block("flipper_length_mm", "body_mass_g"),

@@ -19,10 +19,7 @@ new_tail_block <- function(data, n_rows = numeric(), ...) {
 register_block(
   constructor = new_tail_block,
   name = "tail block",
-  description = "return last n rows",
-  classes = c("tail_block", "transform_block"),
-  input = "data.frame",
-  output = "data.frame"
+  description = "return last n rows"
 )
 
 stack <- new_stack(new_dataset_block)

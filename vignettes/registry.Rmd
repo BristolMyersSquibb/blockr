@@ -58,11 +58,13 @@ mermaid("
   blockr_echarts4r --> |register| registry
   subgraph registry[Registry]
     subgraph select_reg[Select block]
+      reg_id[ID: select_block]
       reg_name[Name: select block]
       reg_descr[Description: select columns in a table]
       reg_classes[Classes: select_block, tranform_block]
       reg_input[Input: data.frame]
       reg_output[Output: data.frame]
+      reg_category[Category: Transform blocks]
       reg_package[Package: blockr]
     end
     subgraph filter_reg[Filter block]
@@ -88,42 +90,66 @@ ready to be queried by `available_blocks()`. A truncated output example below:
 
 ```r
 $dataset_block
-function(...) {
-  ...
+function(selected = character(), package = "datasets", ...) {
+  # ... TRUNCATED ... #
 }
 <environment: namespace:blockr>
 attr(,"name")
 [1] "data block"
 attr(,"description")
 [1] "Choose a dataset from a package"
+attr(,"id")
+[1] "dataset_block"
 attr(,"classes")
-[1] "dataset_block" "data_block"   
+[1] "dataset_block" "data_block"    "block"        
 attr(,"input")
-[1] NA
+function(x, data, ...) {
+
+  if (missing(data) || is.null(data)) {
+    return(invisible(NULL))
+  }
+
+  input_failure("No (or empty) input expected.")
+}
+<environment: namespace:blockr>
 attr(,"output")
-[1] "data.frame"
+data frame with 0 columns and 0 rows
 attr(,"package")
 [1] "blockr"
+attr(,"category")
+[1] "data"
 attr(,"class")
 [1] "block_descr"
 
 $select_block
-function(data, ...) {
-  ...
+function(columns = character(), ...) {
+  # ... TRUNCATED ... #
 }
 <environment: namespace:blockr>
 attr(,"name")
 [1] "select block"
 attr(,"description")
 [1] "select columns in a table"
+attr(,"id")
+[1] "select_block"
 attr(,"classes")
-[1] "select_block"    "transform_block"
+[1] "select_block"    "transform_block" "block"          
 attr(,"input")
-[1] "data.frame"
+function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+<environment: namespace:blockr>
 attr(,"output")
-[1] "data.frame"
+data frame with 0 columns and 0 rows
 attr(,"package")
 [1] "blockr"
+attr(,"category")
+[1] "transform"
 attr(,"class")
 [1] "block_descr"
 ```
@@ -155,15 +181,30 @@ new_tail_block <- function(data, n_rows = numeric(), ...) {
     ...
   )
 }
+```
 
+In addition to that, you also might have to specify what kind of __input__ and __output__ are accepted by that block. We designed 2 helpers, namely `block_input_check()` and `block_output_ptype()`. `{blockr}` already exposes methods for `data_block` and `transform_block` so you don't need to create a new method for those classes. However, we see a practical example on how to create such methods for plots in this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/plot-block.html). Below is what these methods look like:
+
+```r
+block_input_check.transform_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+block_output_ptype.transform_block <- function(x, ...) data.frame()
+```
+
+We can now register the new block, as follows:
+
+```{r, eval=TRUE}
 register_block(
   constructor = new_tail_block,
   name = "tail block",
   description = "return last n rows",
-  category = "transform",
-  classes = c("tail_block", "transform_block"),
-  input = "data.frame",
-  output = "data.frame"
+  category = "transform"
 )
 ```
 
@@ -204,14 +245,6 @@ register_blocks(
     "summarize data groups"
   ),
   category = c("data", rep("transform", 3)),
-  classes = list(
-    c("dataset_block", "data_block"),
-    c("filter_block", "transform_block", "submit_block"),
-    c("select_block", "transform_block"),
-    c("summarize_block", "transform_block", "submit_block")
-  ),
-  input = c(NA_character_, "data.frame", "data.frame", "data.frame"),
-  output = c("data.frame", "data.frame", "data.frame", "data.frame"),
   package = "<PKG_NAME>"
 )
 ```
@@ -231,3 +264,109 @@ names(available_blocks())
 where __ids__ is the first entry we applied in the class attributes when the block
 was created, that is `tail_block`. If you had to remove multiple blocks at once,
 you can pass a vector in __ids__.
+
+
+## Leverage the registry API
+
+Having a registry is useful if you want to perform block __compatibility checks__. For instance, we use the registry in the `add_block_server.default` method, responsible for adding a block within a stack. Under the hood, given a stack, `get_compatible_blocks()` is able to return which __registered__ block is compatible with the last stack block, which substantially enhance the user experience:
+
+```{r}
+stack <- new_stack()
+res <- get_compatible_blocks(stack)
+names(res)
+```
+
+If we now add a new `dataset_block` to the stack, the list of suggestion is updated:
+
+```{r}
+stack <- stack |> add_block(available_blocks()[["dataset_block"]])
+res <- get_compatible_blocks(stack)
+names(res)
+```
+
+Within `add_block_server.default`, we update the `shinyWidgets::virtualSelect` choices, being created with `get_compatible_blocks()`. If you wish to develop your own UI, this is totally fine. As an example, we could leverage a contextual menu React widget powered by the [scoutbar](https://www.scoutbar.co/) JS API, those R API is available at [`{scoutbaR}`](https://cynkra.github.io/scoutbaR/). On the UI side, we define the menu placeholder:
+
+```r
+pak::pak("cynkra/scoutbaR")
+
+add_block_ui.custom <- function(x, id, ...) {
+  ns <- shiny::NS(id)
+
+  scoutbaR::scoutbar(
+    ns("scoutbar"),
+    placeholder = c("Click on any block to add it to the current stack")
+  )
+}
+```
+
+On the server side, we update the menu for each new block added to the stack, through `vals$blocks`:
+
+```r
+add_block_server.custom <- function(x, id, vals, ...) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
+    # Triggers on init
+    observeEvent(vals$blocks,
+      {
+        # Pills are dynamically updated from the server
+        # depending on the block compatibility
+        choices <- get_compatible_blocks(vals$stack)
+        cats <- unique(chr_ply(choices, \(b) attr(b, "category")))
+
+        # Create one page per block category
+        choices <- lapply(cats, \(cat) {
+          scoutbaR::scout_section(
+            label = cat,
+            .list = dropNulls(
+              unname(lapply(choices, \(choice) {
+                if (attr(choice, "category") == cat) {
+                  scoutbaR::scout_action(
+                    id = attr(choice, "id"),
+                    label = paste0(attr(choice, "name"), " (", attr(choice, "package"), ")"),
+                    description = attr(choice, "description")
+                  )
+                }
+              })
+            ))
+          )
+        })
+
+        # In this setup, the scoutbar will close after adding a block.
+        # It may be reopened by setting revealScoutbar = TRUE.
+        scoutbaR::update_scoutbar(
+          session,
+          "scoutbar",
+          configuration = list(
+            actions = choices
+          )
+        )
+      }
+    )
+
+    return(
+      list(
+        selected = reactive(input$scoutbar)
+      )
+    )
+  })
+}
+```
+
+Then, we run the stack, passing it a `custom` class so we can benefir from the new defined modules:
+
+```r
+my_stack <- new_stack()
+attr(my_stack, "class") <- c(attr(my_stack, "class"), "custom")
+serve_stack(my_stack)
+```
+
+The contextual menu may be triggered with `cmd + K` on Mac or similar on Windows.
+
+```{r cmdk-empty, echo=FALSE, fig.cap='Scoutbar with empty stack', fig.align = 'center', out.width='50%'}
+knitr::include_graphics("figures/cmdk-data")
+```
+
+```{r cmdk-empty, echo=FALSE, fig.cap='Scoutbar with data block stack', fig.align = 'center', out.width='50%'}
+knitr::include_graphics("figures/cmdk-transform")
+```

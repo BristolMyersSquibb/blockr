@@ -139,14 +139,22 @@ new_forest_plot_block <- function(...) {
   )
 }
 
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+
 # Register the custom block
 register_block(
   new_forest_plot_block,
   name = "Adverse Event Forest Plot",
-  description = "Create a forest plot of adverse events comparing two treatment arms",
-  classes = c("adverse_event_plot_block", "plot_block"),
-  input = "data.frame",
-  output = "plot"
+  description = "Create a forest plot of adverse events comparing two treatment arms"
 )
 
 # Create the stack

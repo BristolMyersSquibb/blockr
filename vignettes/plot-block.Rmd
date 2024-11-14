@@ -363,6 +363,33 @@ new_geompoint_block <- function(color = character(), shape = character(), ...) {
 
 Note the class `plot_layer_block`. This is necessary to invoke the corresponding `evaluate_block()` method (to use `+` instead of `%>%`).
 
+### Notes about the registry
+
+As mentioned in the __registry__ [vignette](https://bristolmyerssquibb.github.io/blockr/articles/registry.html), to register the newly defined blocks, we have to define 2 methods that check the block __input__ and __output__ (it is no mandatory to register blocks but we highly advise you to do so if you want to benefit from the clever "add block" feature):
+
+```r
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+
+block_input_check.plot_layer_block <- function(x, data, ...) {
+
+  if (inherits(data, "ggplot")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting ggplot input.")
+}
+
+block_output_ptype.plot_layer_block <- function(x, ...) ggplot()
+```
 
 ### Try it
 

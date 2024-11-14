@@ -96,7 +96,8 @@ filter_in_block <- function(data, ...) {
         dplyr::filter(!!dplyr::sym(.(column)) %in% vals[[1]])
     }),
     ...,
-    class = c("filter_in_block", "transform_block", "submit_block")
+    class = c("filter_in_block", "transform_block"),
+    submit = NA
   )
 }
 
@@ -104,10 +105,7 @@ blockr::register_block(
   constructor = filter_in_block,
   name = "Filter in",
   description = "Filter on a vector",
-  category = "transform",
-  classes = c("filter_in_block", "transform_block"),
-  input = "data.frame",
-  output = "data.frame"
+  category = "transform"
 )
 ```
 
@@ -168,24 +166,29 @@ new_prophet_forecast_block <- function(columns = character(), ...) {
   )
 }
 
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+
 # Register custom blocks
 register_block(
   new_stock_data_block,
   name = "Stock Data",
   description = "Fetch stock data",
-  category = "data",
-  classes = c("stock_data_block", "data_block"),
-  input = NA_character_,
-  output = "data.frame"
+  category = "data"
 )
 register_block(
   new_prophet_forecast_block,
   name = "Prophet Forecast",
   description = "Forecast using Prophet",
-  category = "plot",
-  classes = c("prophet_forecast_block", "plot_block"),
-  input = "data.frame",
-  output = "plot"
+  category = "plot"
 )
 
 # Create the stack
@@ -282,18 +285,27 @@ new_cardinal02_block <- function(...) {
     expr = expr,
     fields = fields,
     ...,
-    class = c("cardinal02_block", "rtables_block", "submit_block")
+    class = c("cardinal02_block", "rtables_block"),
+    submit = NA
   )
 }
+
+block_input_check.rtables_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.rtables_block <- function(x, ...) list()
 
 register_block(
   new_cardinal02_block,
   "Cardinal 02",
   "A Cardinal 02 table",
-  category = "table",
-  input = "data.frame",
-  output = "list",
-  classes = c("cardinal02_block", "rtables_block", "submit_block")
+  category = "table"
 )
 
 
@@ -380,25 +392,30 @@ new_pollution_forecast_block <- function(columns = character(), ...) {
   )
 }
 
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+
 # Register custom blocks
 register_block(
   new_air_quality_block,
   name = "Air Quality Data",
   description = "Import air quality data",
-  category = "data",
-  classes = c("air_quality_block", "data_block"),
-  input = NA_character_,
-  output = "data.frame"
+  category = "data"
 )
 
 register_block(
   new_pollution_forecast_block,
   name = "Pollution Forecast",
   description = "Forecast pollution levels",
-  category = "plot",
-  classes = c("pollution_forecast_block", "plot_block"),
-  input = "data.frame",
-  output = "plot"
+  category = "plot"
 )
 
 # Create the stack
@@ -560,24 +577,29 @@ new_causal_impact_block <- function(columns = character(), ...) {
   )
 }
 
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+
 # Register custom blocks
 register_block(
   new_marketing_data_block,
   name = "Marketing Data",
   description = "Load and prepare marketing data",
-  category = "data",
-  classes = c("marketing_data_block", "data_block"),
-  input = NA_character_,
-  output = "data.frame"
+  category = "data"
 )
 register_block(
   new_causal_impact_block,
   name = "Causal Impact Analysis",
   description = "Perform Causal Impact analysis on marketing data",
-  category = "plot",
-  classes = c("causal_impact_block", "plot_block"),
-  input = "data.frame",
-  output = "plot"
+  category = "plot"
 )
 
 # Create the stack
