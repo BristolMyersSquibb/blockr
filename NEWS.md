@@ -1,3 +1,47 @@
+# blockr 0.0.3.9000
+
+## Breaking changes
+- `register_blocks()` and `register_block()` __input__, __output__ have been changed. If your package is composed of __data__ or __transform__ blocks, nothing has to be done, expect removing the old registration API. If you developed custom blocks, whose classes are neither __data__ or __transform__, you'll have to develop a type checker like so, for a plot block:
+
+```r
+block_input_check.plot_block <- function(x, data, ...) {
+
+  if (inherits(data, "data.frame")) {
+    return(invisible(NULL))
+  }
+
+  input_failure("Expecting data.frame input.")
+}
+
+block_output_ptype.plot_block <- function(x, ...) ggplot()
+```
+
+Besides, there is no need to specify the __classes__ as this is automatically retrieved from the constructed block.
+As a consequence, the new registration looks like:
+
+```r
+# NEW
+register_block(
+  constructor = new_ggplot_block,
+  name = "ggplot",
+  description = "Initialise a ggplot2 plot",
+  category = "Plot",
+  package = pkg
+)
+
+# OLD
+register_block(
+  constructor = new_ggplot_block,
+  name = "ggplot",
+  description = "Initialise a ggplot2 plot",
+  classes = c("ggplot_block", "plot_block"),
+  input = "plot",
+  output = "plot",
+  category = "Plot",
+  package = pkg
+)
+```
+
 # blockr 0.0.2.9031
 
 ## Feature
