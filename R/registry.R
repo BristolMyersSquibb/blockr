@@ -105,7 +105,7 @@ get_s3_method <- function(generic, obj) {
     }
   }
 
-  stop("no method found for generic ", generic, "and classes ",
+  stop("no method found for generic ", generic, " and classes ",
        paste0(class(obj), collapse = ", "))
 }
 
