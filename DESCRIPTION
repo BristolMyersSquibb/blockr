@@ -42,7 +42,8 @@ Imports:
     shinyWidgets
 Remotes:
     DivadNojnarg/DiagrammeR,
-    BristolMyersSquibb/blockr.data
+    BristolMyersSquibb/blockr.data,
+    cynkra/scoutbaR
 Suggests: 
     knitr,
     rmarkdown,
@@ -55,7 +56,8 @@ Suggests:
     ggplot2,
     vdiffr,
     palmerpenguins,
-    blockr.data
+    blockr.data,
+    scoutbaR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: 
