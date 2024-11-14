@@ -366,9 +366,9 @@ serve_stack(my_stack)
 The contextual menu may be triggered with `cmd + K` on Mac or similar on Windows.
 
 ```{r cmdk-empty, echo=FALSE, fig.cap='Scoutbar with empty stack', fig.align = 'center', out.width='50%'}
-knitr::include_graphics("figures/cmdk-data")
+knitr::include_graphics("figures/cmdk-data.png")
 ```
 
 ```{r cmdk-tranform, echo=FALSE, fig.cap='Scoutbar with data block stack', fig.align = 'center', out.width='50%'}
-knitr::include_graphics("figures/cmdk-transform")
+knitr::include_graphics("figures/cmdk-transform.png")
 ```
