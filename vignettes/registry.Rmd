@@ -369,6 +369,6 @@ The contextual menu may be triggered with `cmd + K` on Mac or similar on Windows
 knitr::include_graphics("figures/cmdk-data")
 ```
 
-```{r cmdk-empty, echo=FALSE, fig.cap='Scoutbar with data block stack', fig.align = 'center', out.width='50%'}
+```{r cmdk-tranform, echo=FALSE, fig.cap='Scoutbar with data block stack', fig.align = 'center', out.width='50%'}
 knitr::include_graphics("figures/cmdk-transform")
 ```
