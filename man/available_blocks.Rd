@@ -42,6 +42,8 @@ construct_block(block, ...)
 
 \item{name, description}{Metadata describing the block}
 
+\item{ptype}{Block ptype}
+
 \item{classes}{Block classes}
 
 \item{input, output}{Object types the block consumes and produces}

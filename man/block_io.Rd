@@ -41,6 +41,10 @@ block_output_ptype(x, ...)
 }
 \arguments{
 \item{x}{Block}
+
+\item{data}{Input data.}
+
+\item{...}{For generic consistency.}
 }
 \description{
 Used for checking whether blocks are compatible

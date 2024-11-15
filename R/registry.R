@@ -60,6 +60,7 @@ block_registry <- new.env()
 #' @param classes Block classes
 #' @param input,output Object types the block consumes and produces
 #' @param package Package where block is defined
+#' @param ptype Block ptype
 #' @param id Block registry ID
 #' @param category Useful to sort blocks by topics. If not specified,
 #' blocks are uncategorized.

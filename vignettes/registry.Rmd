@@ -183,7 +183,7 @@ new_tail_block <- function(data, n_rows = numeric(), ...) {
 }
 ```
 
-In addition to that, you also might have to specify what kind of __input__ and __output__ are accepted by that block. We designed 2 helpers, namely `block_input_check()` and `block_output_ptype()`. `{blockr}` already exposes methods for `data_block` and `transform_block` so you don't need to create a new method for those classes. However, we see a practical example on how to create such methods for plots in this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/plot-block.html). Below is what these methods look like, don't forget to export them if you are running inside a R package:
+In addition to that, you also might have to specify what kind of __input__ and __output__ are accepted by that block. We designed 2 helpers, namely `block_input_check()` and `block_output_ptype()`. `{blockr}` already exposes methods like for `dataset_block` and `transform_block` so you don't need to create a new method for those classes. However, we see a practical example on how to create such methods for plots in this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/plot-block.html). Below is what these methods look like, don't forget to export them if you are running inside a R package:
 
 ```r
 #' @export
@@ -197,6 +197,13 @@ block_input_check.transform_block <- function(x, data, ...) {
 }
 #' @export
 block_output_ptype.transform_block <- function(x, ...) data.frame()
+```
+
+If you forget to create a custom method while it is required, you get an error message as a reminder:
+
+```r
+Error in `UseMethod()`:
+! no applicable method for 'block_output_ptype' applied to an object of class "c('dummy_block', 'data_block', 'block')"
 ```
 
 We can now register the new block, as follows:

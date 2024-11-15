@@ -60,19 +60,37 @@ test_that("Get compatible blocks", {
   stack <- new_stack()
   res <- get_compatible_blocks(stack)
   # Might change if we add new data blocks
-  expect_equal(nrow(res), 3)
-  expect_identical(unique(res$category), "data")
+  expect_equal(length(res), 3)
+  expect_identical(unique(chr_ply(res, attr, "category")), "data")
 
   # Uncategorized block
-  attr(block_registry$dataset_block, "category") <- "uncategorized"
+  new_dummy_data_block <- function(...) {
+    new_block(
+      fields = list(),
+      expr = quote(data),
+      class = c("dummy_block", "dataset_block", "data_block"),
+      ...
+    )
+  }
+
+  register_block(
+    new_dummy_data_block,
+    "Dummy block",
+    "return first n rows"
+  )
+
   stack <- new_stack()
   res <- get_compatible_blocks(stack)
-  expect_equal(nrow(res), 3)
-  expect_contains(unique(res$category), c("data", "uncategorized"))
+  expect_equal(length(res), 4)
+  expect_contains(
+    unique(chr_ply(res, attr, "category")),
+    c("data", "uncategorized")
+  )
+  unregister_blocks("dummy_block")
 
   stack <- new_stack(new_dataset_block())
   res <- get_compatible_blocks(stack)
-  expect_identical(unique(res$category), "transform")
+  expect_identical(unique(chr_ply(res, attr, "category")), "transform")
 
   # Check for workspace and result block
   stack1 <- new_stack(
@@ -83,8 +101,8 @@ test_that("Get compatible blocks", {
   stack2 <- new_stack()
 
   set_workspace(stack1 = stack1, stack2 = stack2)
-  expect_true("result_block" %in% get_compatible_blocks(stack2)$ctor)
-  expect_true("result_block" %in% get_compatible_blocks(stack1)$ctor)
+  expect_true("result_block" %in% names(get_compatible_blocks(stack2)))
+  expect_true("result_block" %in% names(get_compatible_blocks(stack1)))
 })
 
 withr::local_package("shinytest2")

@@ -318,6 +318,8 @@ update_fields.plot_block <- update_fields.transform_block
 #' Used for checking whether blocks are compatible
 #'
 #' @param x Block
+#' @param data Input data.
+#' @param ... For generic consistency.
 #' @rdname block_io
 #' @export
 block_input_check <- function(x, data, ...) UseMethod("block_input_check")
