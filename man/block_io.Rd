@@ -45,6 +45,8 @@ block_output_ptype(x, ...)
 \item{data}{Input data.}
 
 \item{...}{For generic consistency.}
+
+\item{class}{Custom class}
 }
 \description{
 Used for checking whether blocks are compatible

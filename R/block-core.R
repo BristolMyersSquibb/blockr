@@ -369,6 +369,7 @@ block_input_check.result_block <- function(x, data, ...) {
 }
 
 #' @rdname block_io
+#' @param class Custom class
 #' @export
 input_failure <- function(..., class = character()) {
   rlang::abort(paste0(...), class = c(class, "input_failure"))
