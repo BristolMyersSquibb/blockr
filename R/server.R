@@ -15,7 +15,6 @@ generate_server <- function(x, ...) {
 #' @export
 generate_server.result_field <- function(x, ...) {
   function(id, init = NULL, data = NULL, results = NULL) {
-
     moduleServer(id, function(input, output, session) {
       observeEvent(
         chr_ply(results(), attr, "pretty_stack_name"),
@@ -72,7 +71,6 @@ generate_server_block <- function(
     in_dat = NULL,
     id,
     display = c("table", "plot"),
-    is_prev_valid,
     results = NULL) {
   display <- match.arg(display)
 
@@ -80,7 +78,6 @@ generate_server_block <- function(
   # returns NULL
   if (is.null(in_dat)) {
     in_dat <- reactive(NULL)
-    is_prev_valid <- reactive(NULL)
   }
 
   obs_expr <- function(x) {
@@ -123,16 +120,15 @@ generate_server_block <- function(
       l_values_module <- list() # a list with reactive values (module server output)
       for (name in names(x_srv)) {
         l_values_module[[name]] <- generate_server(x_srv[[name]])(
-            name,
-            init = l_init[[name]],
-            data = in_dat,
-            results = results
-          )
+          name,
+          init = l_init[[name]],
+          data = in_dat,
+          results = results
+        )
       }
 
       # proceed in standard fashion (if fields have no generate_server)
       r_values_default <- reactive({
-        # if (!is.null(is_prev_valid)) req(is_prev_valid)
         blk_no_srv <- blk()
         blk_no_srv[is_srv] <- NULL # to keep class etc
         eval(obs_expr(blk_no_srv))
@@ -149,7 +145,7 @@ generate_server_block <- function(
         if (inherits(x, "data_block")) {
           r_values()
         } else {
-          c(r_values(), in_dat(), is_prev_valid())
+          c(r_values(), in_dat())
         }
       })
 
@@ -191,14 +187,17 @@ generate_server_block <- function(
         }
       })
 
-      obs$eval_res <- observeEvent(eval_blk_trigger(), {
-        log_debug("Evaluating block ", class(x)[[1]])
-        if (inherits(x, "data_block")) {
-          out_dat(evaluate_block(blk()))
-        } else {
-          out_dat(evaluate_block(blk(), data = in_dat()))
-        }
-      }, ignoreNULL = !attr(x, "submit") > 0)
+      obs$eval_res <- observeEvent(eval_blk_trigger(),
+        {
+          log_debug("Evaluating block ", class(x)[[1]])
+          if (inherits(x, "data_block")) {
+            out_dat(evaluate_block(blk()))
+          } else {
+            out_dat(evaluate_block(blk(), data = in_dat()))
+          }
+        },
+        ignoreNULL = !attr(x, "submit") > 0
+      )
 
       # Propagate message to user
       obs$surface_error <- observe({
@@ -272,10 +271,7 @@ generate_server_block <- function(
       return(
         list(
           block = blk,
-          data = out_dat,
-          # Needed by the stack to block
-          # computations for the next block
-          is_valid = reactive(is_valid$block)
+          data = out_dat
         )
       )
     }
@@ -290,36 +286,30 @@ generate_server.data_block <- function(x, id, ..., results = NULL) {
     x = x,
     in_dat = NULL,
     id = id,
-    is_prev_valid = NULL,
     results = results
   )
 }
 
 #' @param in_dat Reactive input data
-#' @param is_prev_valid Useful to validate the current block
 #' @rdname generate_server
 #' @export
-generate_server.transform_block <- function(x, in_dat, id, is_prev_valid, ...,
-                                            results = NULL) {
+generate_server.transform_block <- function(x, in_dat, id, ..., results = NULL) {
   generate_server_block(
     x = x,
     in_dat = in_dat,
     id = id,
-    is_prev_valid = is_prev_valid,
     results = results
   )
 }
 
 #' @rdname generate_server
 #' @export
-generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...,
-                                       results = NULL) {
+generate_server.plot_block <- function(x, in_dat, id, ..., results = NULL) {
   generate_server_block(
     x = x,
     in_dat = in_dat,
     id = id,
     display = "plot",
-    is_prev_valid = is_prev_valid,
     results = results
   )
 }
@@ -330,9 +320,13 @@ generate_server.plot_block <- function(x, in_dat, id, is_prev_valid, ...,
 #'
 #' @rdname generate_server
 #' @export
-generate_server.stack <- function(x, id = NULL, new_block = NULL,
-                                  results = NULL, workspace = get_workspace(),
-                                  ...) {
+generate_server.stack <- function(
+    x,
+    id = NULL,
+    new_block = NULL,
+    results = NULL,
+    workspace = get_workspace(),
+    ...) {
   stopifnot(...length() == 0L)
 
   id <- coal(id, get_stack_name(x))
@@ -662,7 +656,6 @@ generate_server.workspace <- function(x, id, ...) {
   moduleServer(
     id = id,
     function(input, output, session) {
-
       vals <- reactiveValues(
         stacks = list(),
         new_block = list()
@@ -786,9 +779,7 @@ init.workspace <- function(x, vals, session, ...) {
 }
 
 extract_stack_results <- function(stacks, exclude) {
-
   set_nme_attr <- function(x, val) {
-
     if (is.null(x)) {
       x <- list()
     }
@@ -869,15 +860,6 @@ init_block <- function(i, vals, results) {
       vals$blocks[[i - 1]]$data
     },
     id = attr(vals$stack[[i]], "name"),
-    # Extract the state of the previous block
-    # to pass it to the next one. This is needed
-    # within the next block server function
-    # to reset calculations if required.
-    is_prev_valid = if (i == 1) {
-      NULL
-    } else {
-      vals$blocks[[i - 1]]$is_valid
-    },
     results = results
   )
 }

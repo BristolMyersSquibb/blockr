@@ -16,9 +16,9 @@ generate_server(x, ...)
 
 \method{generate_server}{data_block}(x, id, ..., results = NULL)
 
-\method{generate_server}{transform_block}(x, in_dat, id, is_prev_valid, ..., results = NULL)
+\method{generate_server}{transform_block}(x, in_dat, id, ..., results = NULL)
 
-\method{generate_server}{plot_block}(x, in_dat, id, is_prev_valid, ..., results = NULL)
+\method{generate_server}{plot_block}(x, in_dat, id, ..., results = NULL)
 
 \method{generate_server}{stack}(
   x,
@@ -41,8 +41,6 @@ generate_server(x, ...)
 \item{results}{Reactive values containing stack results}
 
 \item{in_dat}{Reactive input data}
-
-\item{is_prev_valid}{Useful to validate the current block}
 
 \item{new_block}{For dynamically inserted blocks.}
 
