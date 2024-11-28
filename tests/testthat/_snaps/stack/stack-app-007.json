@@ -39,8 +39,8 @@
 
           ],
           "choices": [
-            "function (data) ",
-            "colnames(data)"
+            "structure(function (data) ",
+            "colnames(data), result = c(\"Time\", \"demand\"))"
           ],
           "multiple": true
         }

@@ -27,7 +27,7 @@ test_that("result field server works", {
   shiny::testServer(
     generate_server(new_result_field("stack1")),
     {
-      expect_setequal(workspace_stacks(), c("stack1", "stack2"))
+      expect_setequal(list_workspace_stacks(), c("stack1", "stack2"))
     }
   )
 })
