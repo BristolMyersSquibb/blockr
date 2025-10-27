@@ -1,0 +1,19 @@
+/*-- scss:defaults --*/
+
+// Custom theme variables
+$primary: #2780e3;
+$secondary: #6c757d;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+
+$body-bg: #ffffff;
+$body-color: #212529;
+
+$link-color: $primary;
+$link-hover-color: darken($primary, 15%);
+
+/*-- scss:rules --*/
+
+// Additional custom rules can go here

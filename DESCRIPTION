@@ -10,10 +10,19 @@ Authors@R:
              family = "Granjon",
              role = c("aut"),
              email = "david@cynkra.com"),
+      person(given = "Christoph",
+             family = "Sax",
+             role = c("aut"),
+             email = "christoph@cynkra.com",
+             comment = c(ORCID = "0000-0002-7192-7044")),
       person(given = "John",
              family = "Coene",
              role = c("aut"),
              email = "john@opifex.org"),
+      person(given = "Karma",
+             family = "Tarap",
+             role = c("ctb"),
+             email = "Karma.Tarap@bms.com"),
       person(family = "Bristol Myers Squibb",
            role = c("cph", "fnd"))
     )
@@ -29,11 +38,14 @@ Imports:
     blockr.ui,
     blockr.dplyr,
     blockr.ggplot,
+    blockr.io,
     utils,
     cli,
     rlang
 Remotes:
+    BristolMyersSquibb/blockr.core,
     BristolMyersSquibb/blockr.ui,
     BristolMyersSquibb/blockr.dplyr,
-    BristolMyersSquibb/blockr.ggplot
+    BristolMyersSquibb/blockr.ggplot,
+    BristolMyersSquibb/blockr.io
 Config/testthat/edition: 3
