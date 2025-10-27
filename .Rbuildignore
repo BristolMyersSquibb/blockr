@@ -1,3 +1,5 @@
 ^LICENSE\.md$
 ^README\.(Rmd|html)$
 ^\.github$
+^docs$
+^scripts$

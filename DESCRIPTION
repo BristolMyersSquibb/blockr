@@ -43,8 +43,9 @@ Imports:
     cli,
     rlang
 Remotes:
+    BristolMyersSquibb/blockr.core,
     BristolMyersSquibb/blockr.ui,
     BristolMyersSquibb/blockr.dplyr,
-    BristolMyersSquibb/blockr.ggplot
+    BristolMyersSquibb/blockr.ggplot,
     BristolMyersSquibb/blockr.io
 Config/testthat/edition: 3

@@ -1,0 +1,90 @@
+---
+title: "Welcome to blockr"
+---
+
+## Build data workflows without coding
+
+**blockr** is a block-based framework for data manipulation and visualization that lets you create powerful data workflows through a visual, point-and-click interface—**no coding required**.
+
+::: {.callout-note}
+## For Non-Coders
+If you're new to R or don't know how to code, you're in the right place! blockr is designed for you. Check out our [Getting Started](getting-started.qmd) guide and [Block Showcase](showcase/dplyr.qmd) to see what you can do.
+:::
+
+## What is blockr?
+
+blockr is a unified meta-package that brings together five core packages:
+
+- **blockr.core** - The foundation framework
+- **blockr.dplyr** - Data wrangling blocks (filter, select, summarize, etc.)
+- **blockr.ggplot** - Visualization blocks for creating plots
+- **blockr.ui** - User interface components
+- **blockr.io** - File input/output blocks
+
+Together, these packages provide everything you need to:
+
+- 📊 Load data from files (CSV, Excel, and more)
+- 🔧 Transform and filter data visually
+- 📈 Create beautiful visualizations
+- 💾 Export results to files or reports
+
+## How it works
+
+Instead of writing code, you work with **blocks**:
+
+1. **Add blocks** to your workspace by clicking
+2. **Connect blocks** together to create a data pipeline
+3. **Configure blocks** using dropdowns, checkboxes, and input fields
+4. **See results** in real-time as you build
+
+Each block performs a specific task (like filtering data or creating a plot), and blocks can be chained together to create complex workflows.
+
+## Quick Example
+
+Here's what a typical blockr workflow looks like:
+
+```
+[Read CSV] → [Filter Rows] → [Select Columns] → [Create Plot] → [Export]
+```
+
+Each step is represented by a visual block with an intuitive interface. No code needed!
+
+## Explore the Showcase
+
+See what you can build with blockr:
+
+- [**Data Wrangling Blocks**](showcase/dplyr.qmd) - Filter, select, transform, and summarize data
+- [**File I/O Blocks**](showcase/io.qmd) - Read and write files in multiple formats
+
+## Get Started in 2 Steps
+
+Getting blockr up and running is incredibly simple. If you have R installed, you can start using blockr in just two commands:
+
+**Step 1: Install blockr**
+```r
+pak::pak("BristolMyersSquibb/blockr")
+```
+
+**Step 2: Launch blockr**
+```r
+blockr::run_app()
+```
+
+That's it! The blockr interface will open in your browser, and you can start building workflows immediately.
+
+::: {.callout-tip}
+## New to R?
+Even if you're not familiar with R, these two commands are all you need. Just copy and paste them into the R console. See the [Getting Started](getting-started.qmd) guide for more details.
+:::
+
+## Core Packages
+
+blockr is built on five specialized packages that work together:
+
+- [blockr.core](https://bristolmyerssquibb.github.io/blockr.core/) - Framework and architecture
+- [blockr.dplyr](https://bristolmyerssquibb.github.io/blockr.dplyr/) - Data manipulation blocks
+- [blockr.ggplot](https://bristolmyerssquibb.github.io/blockr.ggplot/) - Plotting and visualization
+- [blockr.ui](https://bristolmyerssquibb.github.io/blockr.ui/) - User interface components
+- [blockr.io](https://bristolmyerssquibb.github.io/blockr.io/) - File reading and writing
+
+Installing blockr automatically installs all five packages, giving you the complete toolkit.

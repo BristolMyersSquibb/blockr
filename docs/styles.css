@@ -1,0 +1,99 @@
+/* Custom styles for blockr documentation */
+
+/* Badge styles for categories */
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.6em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  margin-right: 0.5em;
+}
+
+.badge-beginner {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-intermediate {
+  background-color: #ffc107;
+  color: black;
+}
+
+.badge-advanced {
+  background-color: #dc3545;
+  color: white;
+}
+
+.duration {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+/* Callout boxes */
+.callout {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-left: 4px solid;
+  border-radius: 0.25rem;
+}
+
+.callout-note {
+  background-color: #e7f3ff;
+  border-left-color: #2780e3;
+}
+
+.callout-tip {
+  background-color: #e8f5e9;
+  border-left-color: #4caf50;
+}
+
+.callout-warning {
+  background-color: #fff3cd;
+  border-left-color: #ffc107;
+}
+
+/* Image styling */
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  margin: 1rem 0;
+}
+
+/* Code blocks */
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+/* Links */
+a {
+  color: #2780e3;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Horizontal rules */
+hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 2px solid #dee2e6;
+}

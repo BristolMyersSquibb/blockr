@@ -1,0 +1,77 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "blockr"
+  description: "A block-based framework for data manipulation and visualization"
+
+  navbar:
+    logo-href: "https://bristolmyerssquibb.github.io/blockr/"
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Get Started"
+        href: getting-started.qmd
+      - text: "Showcase"
+        menu:
+          - text: "Data Wrangling"
+            href: showcase/dplyr.qmd
+          - text: "File I/O"
+            href: showcase/io.qmd
+    right:
+      - icon: github
+        href: https://github.com/BristolMyersSquibb/blockr
+        aria-label: blockr GitHub
+
+  sidebar:
+    style: "docked"
+    background: "light"
+    contents:
+      - section: "Getting Started"
+        contents:
+          - text: "Introduction"
+            href: index.qmd
+          - text: "Installation"
+            href: getting-started.qmd
+      - section: "Block Showcase"
+        contents:
+          - text: "Data Wrangling Blocks"
+            href: showcase/dplyr.qmd
+          - text: "File I/O Blocks"
+            href: showcase/io.qmd
+      - section: "Core Packages"
+        contents:
+          - text: "blockr.core"
+            href: https://bristolmyerssquibb.github.io/blockr.core/
+          - text: "blockr.dplyr"
+            href: https://bristolmyerssquibb.github.io/blockr.dplyr/
+          - text: "blockr.ggplot"
+            href: https://bristolmyerssquibb.github.io/blockr.ggplot/
+          - text: "blockr.ui"
+            href: https://bristolmyerssquibb.github.io/blockr.ui/
+          - text: "blockr.io"
+            href: https://bristolmyerssquibb.github.io/blockr.io/
+
+  page-footer:
+    center: |
+      Built with [Quarto](https://quarto.org/) |
+      [Report an issue](https://github.com/BristolMyersSquibb/blockr/issues)
+
+format:
+  html:
+    theme:
+      light: [cosmo, custom.scss]
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    smooth-scroll: true
+    code-copy: true
+    code-overflow: wrap
+    link-external-newwindow: true
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false
