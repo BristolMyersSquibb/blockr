@@ -1,5 +1,15 @@
-pkg_name <- function() utils::packageName()
+#' @keywords internal
+"_PACKAGE"
 
-pkg_env <- function() asNamespace(pkg_name())
+# Suppress R CMD check note
+# Namespace in Imports field not imported from: PKG
+#   All declared Imports should be used.
+ignore_unused_imports <- function() {
+  blockr.ggplot::new_ggplot_block
+  blockr.dplyr::new_mutate_block
+}
 
-utils::globalVariables(c(".", "..", "blk", "session"))
+blockr_pkgs <- paste0(
+  "blockr.",
+  c("core", "ui", "dplyr", "ggplot")
+)

@@ -1,1 +1,0 @@
-!function(e,o){"object"==typeof exports&&"object"==typeof module?module.exports=o():"function"==typeof define&&define.amd?define([],o):"object"==typeof exports?exports.blockr=o():e.blockr=o()}(self,(()=>($((()=>{$(document).on("blockr:remove-stack",(e=>{const o=$(`#${e.detail.stack}`).closest(".stack-col");o&&$(o).remove()}))})),{})));

@@ -1,6 +1,5 @@
 ---
 output: github_document
-always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -9,74 +8,29 @@ always_allow_html: true
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-"
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
-
-library(blockr)
-library(bslib)
-library(DiagrammeR)
 ```
 
 # blockr
 
 <!-- badges: start -->
-[![ci](https://github.com/blockr-org/blockr/actions/workflows/ci.yml/badge.svg)](https://github.com/blockr-org/blockr/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/github/blockr-org/blockr/graph/badge.svg?token=9AO88LK8FJ)](https://codecov.io/github/blockr-org/blockr)
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![status](https://github.com/BristolMyersSquibb/blockr/actions/workflows/ci.yaml/badge.svg)](https://github.com/BristolMyersSquibb/blockr/actions/workflows/ci.yaml)
+[![coverage](https://codecov.io/gh/BristolMyersSquibb/blockr/graph/badge.svg?token=VoOPRU65KA)](https://app.codecov.io/gh/BristolMyersSquibb/blockr)
 <!-- badges: end -->
 
-> {blockr} is Shiny's WordPress (John Coene, 2024)
-
-## Why blockr?
-
-`{blockr}` is an R package designed to democratize data analysis by providing a flexible, intuitive, and __code-free__ approach to building data pipelines.
-
-## Who is it for?
-
-`{blockr}` has 2 main user targets:
-
-1. On the one hand, it empowers __non technical__ users to create insightful data workflows using pre-built blocks that can be __easily__ connected, all without writing a single line of code.
-
-Below is a simple pre-built case study involving `{blockr}`. We use the palmerpenguins dataset to find out which femal species has the largest flippers. This tiny dashboard is composed of 4 steps: import the data, filter, create the plot and chose the geometry (points). Within each step (block), the user can change inputs and see the changes propagate in real time. Notice that the filter step requires to press a submit button before moving forward, which prevents the plot from appearing first. This is to prevent long running task from being run unecessarily. You can find more in other vignettes.
-
-```{r blockr-penguins-stack, echo=FALSE, fig.cap='Penguins app demo', fig.align = 'center', out.width='100%'}
-knitr::include_graphics("vignettes/figures/blockr-penguins-stack.png")
-```
-
-You can of course start with a totally empty dashboard and create your own analysis from scratch.
-
-2. On the other hand, it provides __developers__ with a set of tools to seamlessly create new blocks, thereby enhancing the entire framework and fostering __collaboration__ within organizations teams. For instance, regarding the previous example, below is what it takes to create such dashboard.
-
-```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
-blockr:::print_shinylive_r_code("palmer-penguins")
-```
-
-Note that the `{blockr.ggplot2}` [package](https://github.com/BristolMyersSquibb/blockr.ggplot2) exposes some ready to use blocks as shown above.
-
-## How to get started?
-
-To get started, we invite you to read this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/blockr.html).
-
-To get a better idea of `{blockr}` capabilities in various data context, you can look at this [vignette](https://bristolmyerssquibb.github.io/blockr/articles/blockr_examples.html).
-
-## Key features
-
-1. **User-Friendly Interface**: Build data pipelines with intuitive interface.
-2. **Flexibility**: Easily add, remove, or rearrange blocks in your pipeline.
-3. **Extensibility**: Developers can create custom blocks to extend functionality.
-4. **Reproducibility**: Pipelines created with `blockr` are easily shareable and reproducible, with exportable code.
-5. **Interactivity**: Real-time feedback as you build and modify your pipeline.
+Functionality for blockr is provided by multiple independent R packages, some of which are bundled together for convenience reasons.
 
 ## Installation
 
 You can install the development version of blockr from [GitHub](https://github.com/) with:
 
-```r
+``` r
+# install.packages("pak")
 pak::pak("BristolMyersSquibb/blockr")
 ```
 
-## Contribute
+## Example
 
-Easiest is to run `make`, otherwise:
-
-1. Install npm dependencies with `packer::npm_install()`
-2. Build CSS by running the script in `dev/sass.R`

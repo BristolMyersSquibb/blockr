@@ -1,6 +1,6 @@
 Package: blockr
 Title: A block-based framework for data manipulation and visualization
-Version: 0.0.2.9031
+Version: 0.0.1
 Authors@R: 
     c(person(given = "Nicolas",
              family = "Bennett",
@@ -25,38 +25,15 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
-    magrittr,
-    shiny (>= 1.8.1),
-    dplyr,
+    blockr.core,
+    blockr.ui,
+    blockr.dplyr,
+    blockr.ggplot,
     utils,
-    bslib (>= 0.7.0),
-    methods,
-    DT,
-    htmltools,
-    shinyAce,
-    jsonlite,
-    shinyFiles,
-    memuse,
-    haven,
-    rlang,
-    shinyWidgets
+    cli,
+    rlang
 Remotes:
-    DivadNojnarg/DiagrammeR,
-    BristolMyersSquibb/blockr.data
-Suggests: 
-    knitr,
-    rmarkdown,
-    DiagrammeR,
-    testthat (>= 3.0.0),
-    shinytest2,
-    pkgload,
-    htmlwidgets,
-    withr,
-    ggplot2,
-    vdiffr,
-    palmerpenguins,
-    blockr.data
+    BristolMyersSquibb/blockr.ui,
+    BristolMyersSquibb/blockr.dplyr,
+    BristolMyersSquibb/blockr.ggplot
 Config/testthat/edition: 3
-VignetteBuilder: knitr
-Depends: 
-    R (>= 2.10)

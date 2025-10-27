@@ -1,6 +1,29 @@
-.onLoad <- function(libname, pkgname) { # nocov start
+.onAttach <- function(...) {
 
-  register_blockr_blocks(pkgname)
+  if (is_loading_for_tests()) {
+    return(invisible())
+  }
 
-  invisible(NULL)
-} # nocov end
+  attached <- blockr_attach()
+  inform_startup(blockr_attach_message(attached))
+}
+
+is_attached <- function(x) {
+  paste0("package:", x) %in% search()
+}
+
+is_loading_for_tests <- function() {
+  !interactive() && identical(Sys.getenv("DEVTOOLS_LOAD"), "blokr")
+}
+
+inform_startup <- function(msg, ...) {
+
+  if (is.null(msg)) {
+    return()
+  }
+  if (isTRUE(getOption("blockr.quiet"))) {
+    return()
+  }
+
+  rlang::inform(msg, ..., class = "packageStartupMessage")
+}
