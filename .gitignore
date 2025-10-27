@@ -3,5 +3,4 @@ docs/_site/
 docs/.quarto/
 docs/_freeze/
 docs/showcase/figures/
-docs/showcase/*.qmd
 .DS_Store

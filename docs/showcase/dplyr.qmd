@@ -1,0 +1,218 @@
+---
+title: "Data Wrangling Blocks"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Introduction
+
+blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.
+
+---
+
+## Select Block
+
+The select block chooses which columns to keep in your dataset.
+
+Use the column selector to pick the columns you want. You can select multiple columns and reorder them by dragging. The order of selection determines the column order in the output.
+
+The block includes a "distinct" option. When enabled, duplicate rows are removed from the result, keeping only unique combinations of the selected columns.
+
+```{r select-block, out.width="100%", fig.cap="Select block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/select-block.png")
+```
+
+---
+
+## Expression Filter Block
+
+The expression filter block keeps only rows that meet specific conditions. Enter logical expressions using column names and comparison operators. This block is designed for users who want to write filter conditions as expressions.
+
+Supported operators include `>`, `<`, `==`, `!=`, `>=`, `<=` for comparisons, and `%in%` for checking membership in a set of values. Combine multiple conditions using `&` (AND) to require all conditions to be true, or `|` (OR) to require at least one condition to be true. The expression editor provides syntax highlighting and validates your expressions. Examples: `mpg > 20`, `cyl == 4 | cyl == 6`, `hp > 100 & wt < 3`.
+
+If you prefer to filter by selecting values from dropdowns rather than writing expressions, use the value filter block instead. The value filter block is particularly useful for categorical data where you want to pick specific values visually.
+
+```{r filter-block, out.width="100%", fig.cap="Filter block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/filter-expr-block.png")
+```
+
+---
+
+## Value Filter Block
+
+The value filter block filters rows by selecting values from dropdown lists. This provides a point-and-click interface that does not require writing expressions. Use this block when you want to visually select which values to include or exclude, especially for categorical columns.
+
+For each filter condition, select a column from the dropdown. The interface displays all unique values in that column. Select one or more values to filter by. Choose between "include" mode (keep only rows with selected values) or "exclude" mode (remove rows with selected values). This is particularly useful when you want to see what values exist in a column before deciding which to filter.
+
+Add multiple conditions using the "+" button. Each condition can be combined with the previous one using AND (all conditions must be true) or OR (at least one condition must be true) logic. The "preserve order" option maintains the order of selected values in the output.
+
+For more complex filter conditions using comparisons or calculations, use the expression filter block instead. The expression filter block allows you to write expressions like `mpg > 20` or `hp / wt > 50` which cannot be expressed through value selection.
+
+```{r value-filter-block, out.width="100%", fig.cap="Value filter block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/value-filter-block.png")
+```
+
+---
+
+## Arrange Block
+
+The arrange block sorts rows by column values. Select one or more columns to sort by, with each column having its own ascending or descending control.
+
+When sorting by multiple columns, the order matters. The first column is the primary sort key. Rows with the same value in the first column are then sorted by the second column, and so on. Use the drag handles to reorder the sort columns.
+
+Add columns using the "+" button and remove them using the "-" button. Toggle between ascending and descending order for each column independently.
+
+```{r arrange-block, out.width="100%", fig.cap="Arrange block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/arrange-block.png")
+```
+
+---
+
+## Slice Block
+
+The slice block selects specific rows based on different criteria. Choose from six slice types: head (first rows), tail (last rows), min (rows with smallest values), max (rows with largest values), sample (random selection), or custom (specific positions).
+
+For head and tail types, specify the number of rows using n (count) or prop (proportion between 0 and 1). For min and max types, select an order_by column and enable with_ties if you want to include all rows with tied values. For sample type, optionally select a weight_by column for weighted sampling and enable replace for sampling with replacement.
+
+The custom type accepts a rows expression like "1:5" or "c(1, 3, 5, 10)". All slice types support grouping via the by parameter, which performs the slice operation within each group separately.
+
+```{r slice-block, out.width="100%", fig.cap="Slice block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/slice-block.png")
+```
+
+---
+
+## Mutate Block
+
+The mutate block creates new columns or modifies existing ones. Add multiple expressions, each creating or updating a column. Each expression consists of a column name and an expression that calculates its value.
+
+Use mathematical operators (`+`, `-`, `*`, `/`, `^`) and functions (`sqrt()`, `log()`, `round()`, etc.) in your expressions. Reference existing columns by name. You can also use conditional logic with `ifelse()` or `dplyr::case_when()`.
+
+Expression order matters: later expressions can reference columns created by earlier expressions in the same mutate block. The by parameter allows grouping, making column references operate within each group. Add expressions with the "+" button and remove them with the "-" button.
+
+```{r mutate-block, out.width="100%", fig.cap="Mutate block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/mutate-block.png")
+```
+
+---
+
+## Rename Block
+
+The rename block changes column names. Each rename operation maps a new name to an existing column. The interface shows the mapping as "new_name ← old_name" with a visual arrow indicator.
+
+Select the existing column from a dropdown to ensure valid column names. Type the new name in the text field. Add multiple renames using the "+" button to rename several columns at once. Remove a rename operation with the "-" button.
+
+The block validates that you don't rename the same column twice and ensures column names don't conflict with existing names.
+
+```{r rename-block, out.width="100%", fig.cap="Rename block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/rename-block.png")
+```
+
+---
+
+## Summarize Block
+
+The summarize block calculates summary statistics. Add multiple summary expressions, each creating a new column in the output. Each expression consists of a column name and an aggregation expression.
+
+Common aggregation functions include `mean()`, `sum()`, `min()`, `max()`, `n()` (count rows), `n_distinct()` (count unique values), `median()`, and `sd()`. Use the by parameter to group data before summarizing. When grouping is enabled, statistics are calculated separately for each group.
+
+The unpack option controls how functions that return data frames are handled. When enabled, data frame results are unpacked into separate columns. This is useful with helpers like `across()` which can apply functions to multiple columns at once. For example, `across(c(hp, wt), mean)` with unpacking creates separate columns for each mean.
+
+Add expressions with the "+" button. The interface validates expressions and shows errors if the aggregation is invalid.
+
+```{r summarize-block, out.width="100%", fig.cap="Summarize block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/summarize-block.png")
+```
+
+---
+
+## Join Block
+
+The join block combines two datasets based on matching values in specified columns. Select from six join types that determine which rows are kept in the result.
+
+Join types: left_join keeps all rows from the left dataset and matching rows from the right; right_join keeps all rows from the right dataset and matching rows from the left; inner_join keeps only rows that match in both datasets; full_join keeps all rows from both datasets; semi_join filters the left dataset to rows that have a match in the right; anti_join filters the left dataset to rows that do not have a match in the right.
+
+The join key interface supports both same-name joins (when columns have identical names) and different-name joins (when the matching columns have different names in each dataset). Add multiple join keys to match on multiple columns simultaneously. For different-name joins, specify which column from the left dataset matches which column from the right dataset.
+
+```{r join-block, out.width="100%", fig.cap="Join block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/join-block.png")
+```
+
+---
+
+## Bind Rows Block
+
+The bind rows block stacks datasets vertically by matching column names. Rows from each input dataset are combined into a single output dataset.
+
+Columns are matched by name. If datasets have different columns, the result includes all columns from all datasets. Missing columns are filled with NA values. The order of columns in the output follows the order they appear across all input datasets.
+
+The id_name option adds an identifier column that tracks which source dataset each row came from. This is useful when combining data from multiple sources and you need to maintain provenance. Enable this option and specify a column name to store the source identifier.
+
+```{r bind-rows-block, out.width="100%", fig.cap="Bind rows block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/bind-rows-block.png")
+```
+
+---
+
+## Bind Columns Block
+
+The bind columns block combines datasets side-by-side horizontally. Columns from each input dataset are placed next to each other in the output.
+
+All input datasets must have exactly the same number of rows. The rows are combined by position: the first row from each dataset forms the first row of the output, the second rows form the second row of the output, and so on.
+
+If datasets have columns with the same name, the suffix option controls how to handle the duplicates. Specify suffixes to add to duplicate column names from each dataset. For example, suffixes `c("_x", "_y")` would rename duplicate column "id" to "id_x" and "id_y".
+
+```{r bind-cols-block, out.width="100%", fig.cap="Bind columns block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/bind-cols-block.png")
+```
+
+---
+
+## Pivot Longer Block
+
+The pivot longer block reshapes data from wide to long format using [tidyr::pivot_longer()](https://tidyr.tidyverse.org/reference/pivot_longer.html). Use this when column names represent values of a variable rather than variables themselves.
+
+Select which columns to pivot. These columns are transformed into two new columns: one containing the original column names (names_to parameter, default "name") and another containing the values (values_to parameter, default "value"). Unselected columns remain as identifiers.
+
+The names_prefix option removes common prefixes from column names. The values_drop_na option removes rows where the value is NA. This is useful for reshaping time series data, survey responses, or preparing data for visualization.
+
+```{r pivot-longer-block, out.width="100%", fig.cap="Pivot longer block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/pivot-longer-block.png")
+```
+
+---
+
+## Pivot Wider Block
+
+The pivot wider block reshapes data from long to wide format using [tidyr::pivot_wider()](https://tidyr.tidyverse.org/reference/pivot_wider.html). This is the inverse of pivot longer, creating a summary table where row-column combinations become cells.
+
+Select which column contains values for new column names (names_from) and which column contains cell values (values_from). The id_cols parameter specifies which columns identify each row. If empty, all columns not in names_from or values_from are used as identifiers.
+
+The names_prefix option adds a prefix to new column names. The values_fill parameter provides a value for missing combinations (e.g., "0" or leave as NA). This is useful for creating crosstabs, pivot tables, or comparing values across categories.
+
+```{r pivot-wider-block, out.width="100%", fig.cap="Pivot wider block interface"}
+knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/pivot-wider-block.png")
+```
+
+---
+
+## Building Data Pipelines
+
+Blocks work together in pipelines. The output from one block becomes the input to the next. Each block shows a preview of the data at that stage.

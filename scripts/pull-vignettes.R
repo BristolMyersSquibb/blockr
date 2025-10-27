@@ -64,9 +64,10 @@ convert_rmd_to_qmd <- function(source, target, title) {
     lines <- c(new_yaml, lines[(yaml_end + 1):length(lines)])
   }
 
-  # Fix image paths - replace ../man/figures/ with figures/pkgname/
+  # Fix image paths - replace ../man/figures/ with GitHub raw URLs
   pkg_name <- names(which(sapply(vignettes, function(x) x$source == source)))
-  lines <- gsub("../man/figures/", paste0("figures/", pkg_name, "/"), lines, fixed = TRUE)
+  github_url <- paste0("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.", pkg_name, "/main/man/figures/")
+  lines <- gsub("../man/figures/", github_url, lines, fixed = TRUE)
 
   # Write to target
   writeLines(lines, target)
@@ -91,24 +92,5 @@ if (success) {
   cli::cli_alert_danger("Some vignettes could not be pulled. Check warnings above.")
 }
 
-# Copy images if they exist
-cli::cli_h2("Copying images")
-
-copy_images <- function(pkg_path, pkg_name) {
-  figures_dir <- file.path(pkg_path, "man", "figures")
-  if (dir.exists(figures_dir)) {
-    target_dir <- file.path(docs_dir, "figures", pkg_name)
-    dir_create(target_dir)
-
-    images <- dir_ls(figures_dir, regexp = "\\.(png|jpg|jpeg|gif|svg)$")
-    if (length(images) > 0) {
-      file_copy(images, target_dir, overwrite = TRUE)
-      cli::cli_alert_success("Copied {length(images)} image(s) from {pkg_name}")
-    }
-  }
-}
-
-copy_images(blockr_dplyr_path, "dplyr")
-copy_images(blockr_io_path, "io")
-
+cli::cli_alert_info("Images are referenced from GitHub - no local copies needed")
 cli::cli_alert_info("Run 'quarto preview docs' to preview the website")
