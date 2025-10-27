@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Welcome to blockr – blockr</title>
+<title>Getting Started – blockr</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -169,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="./index.html">Introduction</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="./getting-started.html">Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -196,13 +196,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./getting-started.html" class="sidebar-item-text sidebar-link">
+  <a href="./getting-started.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Installation</span></a>
   </div>
 </li>
@@ -282,22 +282,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#build-data-workflows-without-coding" id="toc-build-data-workflows-without-coding" class="nav-link active" data-scroll-target="#build-data-workflows-without-coding">Build data workflows without coding</a></li>
-  <li><a href="#what-is-blockr" id="toc-what-is-blockr" class="nav-link" data-scroll-target="#what-is-blockr">What is blockr?</a></li>
-  <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works</a></li>
-  <li><a href="#quick-example" id="toc-quick-example" class="nav-link" data-scroll-target="#quick-example">Quick Example</a></li>
-  <li><a href="#explore-the-showcase" id="toc-explore-the-showcase" class="nav-link" data-scroll-target="#explore-the-showcase">Explore the Showcase</a></li>
-  <li><a href="#get-started-in-2-steps" id="toc-get-started-in-2-steps" class="nav-link" data-scroll-target="#get-started-in-2-steps">Get Started in 2 Steps</a></li>
-  <li><a href="#core-packages" id="toc-core-packages" class="nav-link" data-scroll-target="#core-packages">Core Packages</a></li>
+  <li><a href="#quick-start" id="toc-quick-start" class="nav-link active" data-scroll-target="#quick-start">Quick Start</a></li>
+  <li><a href="#your-first-workflow" id="toc-your-first-workflow" class="nav-link" data-scroll-target="#your-first-workflow">Your First Workflow</a>
+  <ul class="collapse">
+  <li><a href="#step-1-add-a-data-source-block" id="toc-step-1-add-a-data-source-block" class="nav-link" data-scroll-target="#step-1-add-a-data-source-block">Step 1: Add a Data Source Block</a></li>
+  <li><a href="#step-3-add-a-filter-block" id="toc-step-3-add-a-filter-block" class="nav-link" data-scroll-target="#step-3-add-a-filter-block">Step 3: Add a Filter Block</a></li>
+  <li><a href="#step-4-add-a-visualization-block" id="toc-step-4-add-a-visualization-block" class="nav-link" data-scroll-target="#step-4-add-a-visualization-block">Step 4: Add a Visualization Block</a></li>
+  <li><a href="#step-5-export-your-results" id="toc-step-5-export-your-results" class="nav-link" data-scroll-target="#step-5-export-your-results">Step 5: Export Your Results</a></li>
+  </ul></li>
+  <li><a href="#example-workflows" id="toc-example-workflows" class="nav-link" data-scroll-target="#example-workflows">Example Workflows</a>
+  <ul class="collapse">
+  <li><a href="#data-wrangling-example" id="toc-data-wrangling-example" class="nav-link" data-scroll-target="#data-wrangling-example">Data Wrangling Example</a></li>
+  <li><a href="#file-io-example" id="toc-file-io-example" class="nav-link" data-scroll-target="#file-io-example">File I/O Example</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
+  <li><a href="#learning-resources" id="toc-learning-resources" class="nav-link" data-scroll-target="#learning-resources">Learning Resources</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="./index.html">Introduction</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="./getting-started.html">Installation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Welcome to blockr</h1>
+<h1 class="title">Getting Started</h1>
 </div>
 
 
@@ -314,99 +322,131 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="build-data-workflows-without-coding" class="level2">
-<h2 class="anchored" data-anchor-id="build-data-workflows-without-coding">Build data workflows without coding</h2>
-<p><strong>blockr</strong> is a block-based framework for data manipulation and visualization that lets you create powerful data workflows through a visual, point-and-click interface—<strong>no coding required</strong>.</p>
+<section id="quick-start" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start">Quick Start</h2>
+<p>Install:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"BristolMyersSquibb/blockr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>blockr<span class="sc">::</span><span class="fu">run_app</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The blockr interface will open in your web browser. That’s it!</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>For Non-Coders
+<span class="screen-reader-only">Note</span>What does this do?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you’re new to R or don’t know how to code, you’re in the right place! blockr is designed for you. Check out our <a href="./getting-started.html">Getting Started</a> guide and <a href="./showcase/dplyr.html">Block Showcase</a> to see what you can do.</p>
+<ul>
+<li><code>pak::pak()</code> installs blockr and all five core packages (blockr.core, blockr.dplyr, blockr.ggplot, blockr.ui, blockr.io)</li>
+<li><code>blockr::run_app()</code> launches the visual interface in your browser</li>
+<li>You don’t need to know R programming—just copy and paste these commands</li>
+</ul>
 </div>
 </div>
 </section>
-<section id="what-is-blockr" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-blockr">What is blockr?</h2>
-<p>blockr is a unified meta-package that brings together five core packages:</p>
-<ul>
-<li><strong>blockr.core</strong> - The foundation framework</li>
-<li><strong>blockr.dplyr</strong> - Data wrangling blocks (filter, select, summarize, etc.)</li>
-<li><strong>blockr.ggplot</strong> - Visualization blocks for creating plots</li>
-<li><strong>blockr.ui</strong> - User interface components</li>
-<li><strong>blockr.io</strong> - File input/output blocks</li>
-</ul>
-<p>Together, these packages provide everything you need to:</p>
-<ul>
-<li>📊 Load data from files (CSV, Excel, and more)</li>
-<li>🔧 Transform and filter data visually</li>
-<li>📈 Create beautiful visualizations</li>
-<li>💾 Export results to files or reports</li>
-</ul>
-</section>
-<section id="how-it-works" class="level2">
-<h2 class="anchored" data-anchor-id="how-it-works">How it works</h2>
-<p>Instead of writing code, you work with <strong>blocks</strong>:</p>
+<section id="your-first-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="your-first-workflow">Your First Workflow</h2>
+<p>Once you’ve launched blockr with <code>blockr::run_app()</code>, you’ll see the visual interface in your browser. Let’s create a simple data workflow using blocks.</p>
+<section id="step-1-add-a-data-source-block" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-add-a-data-source-block">Step 1: Add a Data Source Block</h3>
 <ol type="1">
-<li><strong>Add blocks</strong> to your workspace by clicking</li>
-<li><strong>Connect blocks</strong> together to create a data pipeline</li>
-<li><strong>Configure blocks</strong> using dropdowns, checkboxes, and input fields</li>
-<li><strong>See results</strong> in real-time as you build</li>
+<li>Click “Add Block” in the interface</li>
+<li>Select “Read Block” from the I/O category</li>
+<li>Choose “Upload” mode</li>
+<li>Upload a CSV file from your computer</li>
 </ol>
-<p>Each block performs a specific task (like filtering data or creating a plot), and blocks can be chained together to create complex workflows.</p>
 </section>
-<section id="quick-example" class="level2">
-<h2 class="anchored" data-anchor-id="quick-example">Quick Example</h2>
-<p>Here’s what a typical blockr workflow looks like:</p>
-<pre><code>[Read CSV] → [Filter Rows] → [Select Columns] → [Create Plot] → [Export]</code></pre>
-<p>Each step is represented by a visual block with an intuitive interface. No code needed!</p>
+<section id="step-3-add-a-filter-block" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-add-a-filter-block">Step 3: Add a Filter Block</h3>
+<ol type="1">
+<li>Click “Add Block” again</li>
+<li>Select “Filter Block” from the Data Wrangling category</li>
+<li>Connect it to your Read Block</li>
+<li>Use the dropdown menus to set filter conditions</li>
+</ol>
 </section>
-<section id="explore-the-showcase" class="level2">
-<h2 class="anchored" data-anchor-id="explore-the-showcase">Explore the Showcase</h2>
-<p>See what you can build with blockr:</p>
-<ul>
-<li><a href="./showcase/dplyr.html"><strong>Data Wrangling Blocks</strong></a> - Filter, select, transform, and summarize data</li>
-<li><a href="./showcase/io.html"><strong>File I/O Blocks</strong></a> - Read and write files in multiple formats</li>
-</ul>
+<section id="step-4-add-a-visualization-block" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-add-a-visualization-block">Step 4: Add a Visualization Block</h3>
+<ol type="1">
+<li>Add a “Plot Block” from the Visualization category</li>
+<li>Select the type of plot you want (bar chart, scatter plot, etc.)</li>
+<li>Choose which columns to use for X and Y axes</li>
+<li>Customize colors and labels</li>
+</ol>
 </section>
-<section id="get-started-in-2-steps" class="level2">
-<h2 class="anchored" data-anchor-id="get-started-in-2-steps">Get Started in 2 Steps</h2>
-<p>Getting blockr up and running is incredibly simple. If you have R installed, you can start using blockr in just two commands:</p>
-<p><strong>Step 1: Install blockr</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"BristolMyersSquibb/blockr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Step 2: Launch blockr</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>blockr<span class="sc">::</span><span class="fu">run_app</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>That’s it! The blockr interface will open in your browser, and you can start building workflows immediately.</p>
+<section id="step-5-export-your-results" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-export-your-results">Step 5: Export Your Results</h3>
+<ol type="1">
+<li>Add an “Export Block”</li>
+<li>Choose your output format (PNG, PDF, Excel, etc.)</li>
+<li>Click “Export” to save your results</li>
+</ol>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>New to R?
+<span class="screen-reader-only">Tip</span>Working with blockr
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Even if you’re not familiar with R, these two commands are all you need. Just copy and paste them into the R console. See the <a href="./getting-started.html">Getting Started</a> guide for more details.</p>
+<p>Remember, blockr is entirely visual—you don’t need to write any code once the interface is running. All configuration happens through dropdown menus, checkboxes, and input fields.</p>
 </div>
 </div>
 </section>
-<section id="core-packages" class="level2">
-<h2 class="anchored" data-anchor-id="core-packages">Core Packages</h2>
-<p>blockr is built on five specialized packages that work together:</p>
+</section>
+<section id="example-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="example-workflows">Example Workflows</h2>
+<section id="data-wrangling-example" class="level3">
+<h3 class="anchored" data-anchor-id="data-wrangling-example">Data Wrangling Example</h3>
+<p>See the <a href="./showcase/dplyr.html">Data Wrangling Showcase</a> for detailed examples of:</p>
 <ul>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.core/">blockr.core</a> - Framework and architecture</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.dplyr/">blockr.dplyr</a> - Data manipulation blocks</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.ggplot/">blockr.ggplot</a> - Plotting and visualization</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.ui/">blockr.ui</a> - User interface components</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.io/">blockr.io</a> - File reading and writing</li>
+<li>Filtering rows based on conditions</li>
+<li>Selecting specific columns</li>
+<li>Creating new calculated columns</li>
+<li>Grouping and summarizing data</li>
+<li>Arranging rows in order</li>
 </ul>
-<p>Installing blockr automatically installs all five packages, giving you the complete toolkit.</p>
+</section>
+<section id="file-io-example" class="level3">
+<h3 class="anchored" data-anchor-id="file-io-example">File I/O Example</h3>
+<p>The <a href="./showcase/io.html">File I/O Showcase</a> demonstrates:</p>
+<ul>
+<li>Reading different file formats (CSV, Excel, etc.)</li>
+<li>Loading data from URLs</li>
+<li>Handling multiple files at once</li>
+<li>Exporting results in various formats</li>
+</ul>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
+<ul>
+<li><strong>Explore the Showcase</strong>: Browse the <a href="./showcase/dplyr.html">Data Wrangling</a> and <a href="./showcase/io.html">File I/O</a> showcases to see all available blocks</li>
+<li><strong>Build Your Own</strong>: Start with your own data and experiment with different blocks</li>
+<li><strong>Get Help</strong>: If you run into issues, <a href="https://github.com/BristolMyersSquibb/blockr/issues">open an issue on GitHub</a></li>
+</ul>
+</section>
+<section id="learning-resources" class="level2">
+<h2 class="anchored" data-anchor-id="learning-resources">Learning Resources</h2>
+<p>Each showcase page includes screenshots and descriptions of how blocks work. Since blockr is visual and interactive, the best way to learn is by trying it yourself!</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip for New Users
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Start with simple workflows (1-3 blocks) to get comfortable with the interface. As you become more familiar, you can build more complex multi-step pipelines.</p>
+</div>
+</div>
 
 
 </section>
