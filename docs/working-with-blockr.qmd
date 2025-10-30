@@ -1,0 +1,157 @@
+---
+title: "Working with blockr"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+---
+
+## The blockr interface
+
+When you run `blockr::run_app()`, the blockr interface opens in your browser. The interface is built with blockr.ui and provides a visual workspace for building data pipelines.
+
+The main workspace displays blocks that can be added, connected, and configured. Each block shows a preview of its output data, making it easy to see how data transforms through your pipeline.
+
+## Adding blocks
+
+Blocks are organized into categories based on their function:
+
+**Data Sources (blockr.io)**
+- Read Block - Load data from files (CSV, Excel, etc.), URLs, or file browsers
+
+**Data Wrangling (blockr.dplyr)**
+- Select Block - Choose columns
+- Filter Blocks - Keep rows matching conditions
+- Mutate Block - Create or modify columns
+- Summarize Block - Calculate aggregations
+- Arrange Block - Sort rows
+- Join Blocks - Combine datasets
+- Pivot Blocks - Reshape data
+
+**Visualization (blockr.ggplot)**
+- Plot Block - Create charts (scatter, bar, line, histogram, etc.)
+- Facet Block - Split plots into panels
+- Theme Block - Apply styling
+- Grid Block - Combine multiple plots
+
+**Export (blockr.io)**
+- Write Block - Save data to files
+
+To add a block, select it from the available block categories. The block appears in the workspace ready to be configured.
+
+## Connecting blocks
+
+Blocks connect to form pipelines. The output of one block becomes the input to the next block.
+
+Data flows from left to right (or top to bottom, depending on layout). A typical pipeline might look like:
+
+```{mermaid}
+%%| echo: false
+flowchart LR
+    A[Read Block] --> B[Filter Block]
+    B --> C[Select Block]
+    C --> D[Plot Block]
+```
+
+Each block receives the data from the previous block, performs its operation, and passes the result to the next block. The preview in each block shows the data at that stage of the pipeline.
+
+## Configuring blocks
+
+Each block has parameters that control its behavior. These appear as form elements:
+
+**Dropdowns** - Select from available options (e.g., column names, chart types)
+
+**Text inputs** - Enter values or expressions (e.g., filter conditions, new column names)
+
+**Checkboxes** - Toggle options on or off (e.g., remove duplicates, include NA values)
+
+**Multi-select** - Choose multiple items (e.g., columns to keep, grouping variables)
+
+The interface adapts based on your choices. For example, selecting a chart type in a Plot Block reveals relevant aesthetic mappings for that chart type.
+
+## Understanding data flow
+
+blockr updates blocks reactively. When you change a configuration in one block, all downstream blocks automatically update to reflect the change.
+
+Each block displays:
+- Its configuration parameters
+- A preview of the output data
+- Connection points to other blocks
+
+This real-time feedback makes it easy to see how changes affect your analysis.
+
+## Block examples
+
+### Example 1: Filter and visualize
+
+Create a pipeline that filters data and creates a scatter plot:
+
+1. Add a Read Block and load a dataset
+2. Add a Filter Block (expression or value type)
+3. Configure filter conditions (e.g., "mpg > 20")
+4. Add a Plot Block
+5. Select "point" (scatter plot) as chart type
+6. Map columns to x and y aesthetics
+7. Optionally map color or size to other variables
+
+The plot updates automatically as you adjust the filter.
+
+### Example 2: Summarize and export
+
+Calculate summary statistics and export to Excel:
+
+1. Add a Read Block with your data
+2. Add a Summarize Block
+3. Add summary expressions (e.g., "mean_mpg = mean(mpg)")
+4. Optionally group by categorical variables using the by parameter
+5. Add a Write Block
+6. Select "xlsx" as the output format
+7. Export the summarized data
+
+### Example 3: Multi-step transformation
+
+Build a complex transformation pipeline:
+
+1. Read Block - Load data
+2. Filter Block - Remove unwanted rows
+3. Select Block - Keep relevant columns
+4. Mutate Block - Create calculated columns
+5. Arrange Block - Sort the results
+6. Plot Block - Visualize the final data
+
+Each step is visible and can be modified independently.
+
+## Working with multiple inputs
+
+Some blocks accept multiple inputs:
+
+**Join Block** - Combines two datasets based on matching columns
+
+**Bind Rows Block** - Stacks multiple datasets vertically
+
+**Bind Columns Block** - Places datasets side-by-side
+
+**Grid Block** - Arranges multiple plots into a single figure
+
+These blocks let you work with multiple data sources or create complex visualizations.
+
+## Tips for building workflows
+
+**Start simple** - Begin with a data source and one transformation or visualization. Add complexity gradually.
+
+**Use previews** - Check the data preview in each block to verify the transformation is working as expected.
+
+**Experiment** - Change parameters and see the results immediately. The reactive interface makes exploration easy.
+
+**Build incrementally** - Add one block at a time and verify it works before adding the next block.
+
+**Name your blocks** - If the interface supports it, use descriptive names for blocks to keep track of complex pipelines.
+
+## Next steps
+
+Explore the showcase pages to see specific blocks in detail:
+
+- [Data Wrangling Blocks](showcase/dplyr.qmd) - All available transformation operations
+- [Data Visualization Blocks](showcase/ggplot.qmd) - Chart types and customization options
+- [File I/O Blocks](showcase/io.qmd) - Reading and writing various formats

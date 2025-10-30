@@ -2,97 +2,61 @@
 title: "Getting Started"
 ---
 
-## Quick Start
+## Installation
 
-Install:
+Install blockr from GitHub:
 
 ```r
 pak::pak("BristolMyersSquibb/blockr")
 ```
 
-Run:
+This installs all five core packages: blockr.core, blockr.dplyr, blockr.ggplot, blockr.ui, and blockr.io.
+
+## Launching blockr
+
+Run the blockr interface:
 
 ```r
 blockr::run_app()
 ```
 
-The blockr interface will open in your web browser. That's it!
+The interface will open in your web browser.
 
-::: {.callout-note}
-## What does this do?
-- `pak::pak()` installs blockr and all five core packages (blockr.core, blockr.dplyr, blockr.ggplot, blockr.ui, blockr.io)
-- `blockr::run_app()` launches the visual interface in your browser
-- You don't need to know R programming—just copy and paste these commands
-:::
+## Building a workflow
 
-## Your First Workflow
+The blockr interface lets you add blocks, connect them together, and configure them using dropdowns and input fields.
 
-Once you've launched blockr with `blockr::run_app()`, you'll see the visual interface in your browser. Let's create a simple data workflow using blocks.
+### Example: Load, filter, and visualize data
 
-### Step 1: Add a Data Source Block
+**Add a data source:**
+- Click "Add Block"
+- Select "Read Block" from the I/O category
+- Choose "Upload" mode and upload a CSV file
 
-1. Click "Add Block" in the interface
-2. Select "Read Block" from the I/O category
-3. Choose "Upload" mode
-4. Upload a CSV file from your computer
+**Filter the data:**
+- Add a "Filter Block" from the Data Wrangling category
+- Connect it to the Read Block
+- Set filter conditions using the dropdown menus
 
-### Step 3: Add a Filter Block
+**Create a visualization:**
+- Add a "Plot Block" from the Visualization category
+- Select a plot type (scatter plot, bar chart, etc.)
+- Choose columns for X and Y axes
+- Customize colors and labels
 
-1. Click "Add Block" again
-2. Select "Filter Block" from the Data Wrangling category
-3. Connect it to your Read Block
-4. Use the dropdown menus to set filter conditions
+**Export results:**
+- Add a "Write Block"
+- Choose an output format (PNG, PDF, Excel, etc.)
+- Click "Export"
 
-### Step 4: Add a Visualization Block
+## Explore available blocks
 
-1. Add a "Plot Block" from the Visualization category
-2. Select the type of plot you want (bar chart, scatter plot, etc.)
-3. Choose which columns to use for X and Y axes
-4. Customize colors and labels
+Each showcase demonstrates different block categories:
 
-### Step 5: Export Your Results
+- [Data Wrangling Blocks](showcase/dplyr.qmd) - Filtering, selecting, transforming, summarizing
+- [Data Visualization Blocks](showcase/ggplot.qmd) - Scatter plots, bar charts, line charts, histograms
+- [File I/O Blocks](showcase/io.qmd) - Reading and writing various file formats
 
-1. Add an "Export Block"
-2. Choose your output format (PNG, PDF, Excel, etc.)
-3. Click "Export" to save your results
+## Getting help
 
-::: {.callout-tip}
-## Working with blockr
-Remember, blockr is entirely visual—you don't need to write any code once the interface is running. All configuration happens through dropdown menus, checkboxes, and input fields.
-:::
-
-## Example Workflows
-
-### Data Wrangling Example
-
-See the [Data Wrangling Showcase](showcase/dplyr.qmd) for detailed examples of:
-
-- Filtering rows based on conditions
-- Selecting specific columns
-- Creating new calculated columns
-- Grouping and summarizing data
-- Arranging rows in order
-
-### File I/O Example
-
-The [File I/O Showcase](showcase/io.qmd) demonstrates:
-
-- Reading different file formats (CSV, Excel, etc.)
-- Loading data from URLs
-- Handling multiple files at once
-- Exporting results in various formats
-
-## Next Steps
-
-- **Explore the Showcase**: Browse the [Data Wrangling](showcase/dplyr.qmd) and [File I/O](showcase/io.qmd) showcases to see all available blocks
-- **Build Your Own**: Start with your own data and experiment with different blocks
-- **Get Help**: If you run into issues, [open an issue on GitHub](https://github.com/BristolMyersSquibb/blockr/issues)
-
-## Learning Resources
-
-Each showcase page includes screenshots and descriptions of how blocks work. Since blockr is visual and interactive, the best way to learn is by trying it yourself!
-
-::: {.callout-tip}
-## Tip for New Users
-Start with simple workflows (1-3 blocks) to get comfortable with the interface. As you become more familiar, you can build more complex multi-step pipelines.
-:::
+If you encounter issues, [open an issue on GitHub](https://github.com/BristolMyersSquibb/blockr/issues).

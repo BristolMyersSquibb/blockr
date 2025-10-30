@@ -4,82 +4,57 @@ title: "Welcome to blockr"
 
 ## Build data workflows without coding
 
-**blockr** is a block-based framework for data manipulation and visualization that lets you create powerful data workflows through a visual, point-and-click interface—**no coding required**.
-
-::: {.callout-note}
-## For Non-Coders
-If you're new to R or don't know how to code, you're in the right place! blockr is designed for you. Check out our [Getting Started](getting-started.qmd) guide and [Block Showcase](showcase/dplyr.qmd) to see what you can do.
-:::
+blockr is a block-based framework for data manipulation and visualization. It provides a visual, point-and-click interface for creating data workflows without writing code.
 
 ## What is blockr?
 
 blockr is a unified meta-package that brings together five core packages:
 
-- **blockr.core** - The foundation framework
-- **blockr.dplyr** - Data wrangling blocks (filter, select, summarize, etc.)
-- **blockr.ggplot** - Visualization blocks for creating plots
-- **blockr.ui** - User interface components
-- **blockr.io** - File input/output blocks
+- blockr.core - The foundation framework
+- blockr.dplyr - Data wrangling blocks (filter, select, summarize, etc.)
+- blockr.ggplot - Visualization blocks for creating plots
+- blockr.ui - User interface components
+- blockr.io - File input/output blocks
 
-Together, these packages provide everything you need to:
-
-- 📊 Load data from files (CSV, Excel, and more)
-- 🔧 Transform and filter data visually
-- 📈 Create beautiful visualizations
-- 💾 Export results to files or reports
+These packages let you load data from files, transform and filter data, create visualizations, and export results.
 
 ## How it works
 
-Instead of writing code, you work with **blocks**:
+Instead of writing code, you work with blocks:
 
-1. **Add blocks** to your workspace by clicking
-2. **Connect blocks** together to create a data pipeline
-3. **Configure blocks** using dropdowns, checkboxes, and input fields
-4. **See results** in real-time as you build
+1. Add blocks to your workspace
+2. Connect blocks together to create a data pipeline
+3. Configure blocks using dropdowns, checkboxes, and input fields
+4. View results in real-time as you build
 
-Each block performs a specific task (like filtering data or creating a plot), and blocks can be chained together to create complex workflows.
+Each block performs a specific task (filtering data, creating a plot, etc.) and can be chained together to create workflows.
 
-## Quick Example
+## Example workflow
 
-Here's what a typical blockr workflow looks like:
-
-```
-[Read CSV] → [Filter Rows] → [Select Columns] → [Create Plot] → [Export]
-```
-
-Each step is represented by a visual block with an intuitive interface. No code needed!
-
-## Explore the Showcase
-
-See what you can build with blockr:
-
-- [**Data Wrangling Blocks**](showcase/dplyr.qmd) - Filter, select, transform, and summarize data
-- [**File I/O Blocks**](showcase/io.qmd) - Read and write files in multiple formats
-
-## Get Started in 2 Steps
-
-Getting blockr up and running is incredibly simple. If you have R installed, you can start using blockr in just two commands:
-
-**Step 1: Install blockr**
-```r
-pak::pak("BristolMyersSquibb/blockr")
+```{mermaid}
+%%| echo: false
+flowchart LR
+    A[Read CSV] --> B[Filter Rows]
+    B --> C[Select Columns]
+    C --> D[Create Plot]
+    D --> E[Export]
 ```
 
-**Step 2: Launch blockr**
-```r
-blockr::run_app()
-```
+## Blocks
 
-That's it! The blockr interface will open in your browser, and you can start building workflows immediately.
+See available blocks and what they do:
 
-::: {.callout-tip}
-## New to R?
-Even if you're not familiar with R, these two commands are all you need. Just copy and paste them into the R console. See the [Getting Started](getting-started.qmd) guide for more details.
-:::
+- [Data Wrangling Blocks](showcase/dplyr.qmd) - Filter, select, transform, and summarize data
+- [Data Visualization Blocks](showcase/ggplot.qmd) - Create scatter plots, bar charts, line charts, and more
+- [File I/O Blocks](showcase/io.qmd) - Read and write files in multiple formats
+
+## Getting Started
+
+To install and run blockr, see the [Getting Started](getting-started.qmd) guide.
 
 ## Core Packages
 
-blockr is built on five specialized packages that work together:
+blockr is built on five specialized packages:
 
 - [blockr.core](https://bristolmyerssquibb.github.io/blockr.core/) - Framework and architecture
 - [blockr.dplyr](https://bristolmyerssquibb.github.io/blockr.dplyr/) - Data manipulation blocks
@@ -87,4 +62,12 @@ blockr is built on five specialized packages that work together:
 - [blockr.ui](https://bristolmyerssquibb.github.io/blockr.ui/) - User interface components
 - [blockr.io](https://bristolmyerssquibb.github.io/blockr.io/) - File reading and writing
 
-Installing blockr automatically installs all five packages, giving you the complete toolkit.
+Installing blockr automatically installs all five packages.
+
+## Extending blockr
+
+The five core packages provide base blocks for common data analysis tasks. blockr can be extended with additional block packages for specific domains.
+
+For example, [blockr.ts](https://github.com/cynkra/blockr.ts) adds blocks for time series analysis, including decomposition, forecasting, and frequency analysis.
+
+Additional block packages can be installed separately and will integrate seamlessly with the blockr interface.

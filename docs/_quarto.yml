@@ -17,6 +17,8 @@ website:
         menu:
           - text: "Data Wrangling"
             href: showcase/dplyr.qmd
+          - text: "Data Visualization"
+            href: showcase/ggplot.qmd
           - text: "File I/O"
             href: showcase/io.qmd
     right:
@@ -34,10 +36,14 @@ website:
             href: index.qmd
           - text: "Installation"
             href: getting-started.qmd
-      - section: "Block Showcase"
+          - text: "Working with blockr"
+            href: working-with-blockr.qmd
+      - section: "Blocks"
         contents:
           - text: "Data Wrangling Blocks"
             href: showcase/dplyr.qmd
+          - text: "Data Visualization Blocks"
+            href: showcase/ggplot.qmd
           - text: "File I/O Blocks"
             href: showcase/io.qmd
       - section: "Core Packages"

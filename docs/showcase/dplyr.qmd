@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   echo = FALSE,
   warning = FALSE,
-  message = FALSE
+  message = FALSE,
+  out.width = "50%"
 )
 ```
 
@@ -35,7 +36,7 @@ Use the column selector to pick the columns you want. You can select multiple co
 
 The block includes a "distinct" option. When enabled, duplicate rows are removed from the result, keeping only unique combinations of the selected columns.
 
-```{r select-block, out.width="100%", fig.cap="Select block interface"}
+```{r select-block, fig.cap="Select block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/select-block.png")
 ```
 
@@ -49,7 +50,7 @@ Supported operators include `>`, `<`, `==`, `!=`, `>=`, `<=` for comparisons, an
 
 If you prefer to filter by selecting values from dropdowns rather than writing expressions, use the value filter block instead. The value filter block is particularly useful for categorical data where you want to pick specific values visually.
 
-```{r filter-block, out.width="100%", fig.cap="Filter block interface"}
+```{r filter-block, fig.cap="Filter block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/filter-expr-block.png")
 ```
 
@@ -65,7 +66,7 @@ Add multiple conditions using the "+" button. Each condition can be combined wit
 
 For more complex filter conditions using comparisons or calculations, use the expression filter block instead. The expression filter block allows you to write expressions like `mpg > 20` or `hp / wt > 50` which cannot be expressed through value selection.
 
-```{r value-filter-block, out.width="100%", fig.cap="Value filter block interface"}
+```{r value-filter-block, fig.cap="Value filter block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/value-filter-block.png")
 ```
 
@@ -79,7 +80,7 @@ When sorting by multiple columns, the order matters. The first column is the pri
 
 Add columns using the "+" button and remove them using the "-" button. Toggle between ascending and descending order for each column independently.
 
-```{r arrange-block, out.width="100%", fig.cap="Arrange block interface"}
+```{r arrange-block, fig.cap="Arrange block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/arrange-block.png")
 ```
 
@@ -93,7 +94,7 @@ For head and tail types, specify the number of rows using n (count) or prop (pro
 
 The custom type accepts a rows expression like "1:5" or "c(1, 3, 5, 10)". All slice types support grouping via the by parameter, which performs the slice operation within each group separately.
 
-```{r slice-block, out.width="100%", fig.cap="Slice block interface"}
+```{r slice-block, fig.cap="Slice block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/slice-block.png")
 ```
 
@@ -107,7 +108,7 @@ Use mathematical operators (`+`, `-`, `*`, `/`, `^`) and functions (`sqrt()`, `l
 
 Expression order matters: later expressions can reference columns created by earlier expressions in the same mutate block. The by parameter allows grouping, making column references operate within each group. Add expressions with the "+" button and remove them with the "-" button.
 
-```{r mutate-block, out.width="100%", fig.cap="Mutate block interface"}
+```{r mutate-block, fig.cap="Mutate block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/mutate-block.png")
 ```
 
@@ -121,7 +122,7 @@ Select the existing column from a dropdown to ensure valid column names. Type th
 
 The block validates that you don't rename the same column twice and ensures column names don't conflict with existing names.
 
-```{r rename-block, out.width="100%", fig.cap="Rename block interface"}
+```{r rename-block, fig.cap="Rename block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/rename-block.png")
 ```
 
@@ -137,7 +138,7 @@ The unpack option controls how functions that return data frames are handled. Wh
 
 Add expressions with the "+" button. The interface validates expressions and shows errors if the aggregation is invalid.
 
-```{r summarize-block, out.width="100%", fig.cap="Summarize block interface"}
+```{r summarize-block, fig.cap="Summarize block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/summarize-block.png")
 ```
 
@@ -151,7 +152,7 @@ Join types: left_join keeps all rows from the left dataset and matching rows fro
 
 The join key interface supports both same-name joins (when columns have identical names) and different-name joins (when the matching columns have different names in each dataset). Add multiple join keys to match on multiple columns simultaneously. For different-name joins, specify which column from the left dataset matches which column from the right dataset.
 
-```{r join-block, out.width="100%", fig.cap="Join block interface"}
+```{r join-block, fig.cap="Join block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/join-block.png")
 ```
 
@@ -165,7 +166,7 @@ Columns are matched by name. If datasets have different columns, the result incl
 
 The id_name option adds an identifier column that tracks which source dataset each row came from. This is useful when combining data from multiple sources and you need to maintain provenance. Enable this option and specify a column name to store the source identifier.
 
-```{r bind-rows-block, out.width="100%", fig.cap="Bind rows block interface"}
+```{r bind-rows-block, fig.cap="Bind rows block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/bind-rows-block.png")
 ```
 
@@ -179,7 +180,7 @@ All input datasets must have exactly the same number of rows. The rows are combi
 
 If datasets have columns with the same name, the suffix option controls how to handle the duplicates. Specify suffixes to add to duplicate column names from each dataset. For example, suffixes `c("_x", "_y")` would rename duplicate column "id" to "id_x" and "id_y".
 
-```{r bind-cols-block, out.width="100%", fig.cap="Bind columns block interface"}
+```{r bind-cols-block, fig.cap="Bind columns block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/bind-cols-block.png")
 ```
 
@@ -193,7 +194,7 @@ Select which columns to pivot. These columns are transformed into two new column
 
 The names_prefix option removes common prefixes from column names. The values_drop_na option removes rows where the value is NA. This is useful for reshaping time series data, survey responses, or preparing data for visualization.
 
-```{r pivot-longer-block, out.width="100%", fig.cap="Pivot longer block interface"}
+```{r pivot-longer-block, fig.cap="Pivot longer block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/pivot-longer-block.png")
 ```
 
@@ -207,7 +208,7 @@ Select which column contains values for new column names (names_from) and which 
 
 The names_prefix option adds a prefix to new column names. The values_fill parameter provides a value for missing combinations (e.g., "0" or leave as NA). This is useful for creating crosstabs, pivot tables, or comparing values across categories.
 
-```{r pivot-wider-block, out.width="100%", fig.cap="Pivot wider block interface"}
+```{r pivot-wider-block, fig.cap="Pivot wider block interface"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.dplyr/main/man/figures/pivot-wider-block.png")
 ```
 
