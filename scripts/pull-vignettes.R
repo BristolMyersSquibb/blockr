@@ -11,6 +11,7 @@ docs_dir <- file.path(blockr_root, "docs", "showcase")
 
 # Source packages (assuming they're siblings to blockr)
 blockr_dplyr_path <- file.path(dirname(blockr_root), "blockr.dplyr")
+blockr_ggplot_path <- file.path(dirname(blockr_root), "blockr.ggplot")
 blockr_io_path <- file.path(dirname(blockr_root), "blockr.io")
 
 # Vignette files to pull
@@ -19,6 +20,11 @@ vignettes <- list(
     source = file.path(blockr_dplyr_path, "vignettes", "blockr-dplyr-showcase.Rmd"),
     target = file.path(docs_dir, "dplyr.qmd"),
     title = "Data Wrangling Blocks"
+  ),
+  ggplot = list(
+    source = file.path(blockr_ggplot_path, "vignettes", "blockr-ggplot-showcase.Rmd"),
+    target = file.path(docs_dir, "ggplot.qmd"),
+    title = "Data Visualization Blocks"
   ),
   io = list(
     source = file.path(blockr_io_path, "vignettes", "blockr-io-showcase.Rmd"),
