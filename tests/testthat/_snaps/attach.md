@@ -9,8 +9,9 @@
       cat(blockr_attach_message(blockr_pkgs))
     Output
       -- Attaching blockr packages ----------------------------------- blockr 1.0.0 --
-      v blockr.core   1.0.0     v blockr.ggplot 1.0.0
+      v blockr.core   1.0.0     v blockr.io     1.0.0
       v blockr.dplyr  1.0.0     v blockr.ui     1.0.0
+      v blockr.ggplot 1.0.0     
 
 # highlights dev versions in red
 
