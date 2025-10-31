@@ -1,7 +1,7 @@
 Package: blockr
 Title: A block-based framework for data manipulation and visualization
 Version: 0.0.1
-Authors@R: 
+Authors@R:
     c(person(given = "Nicolas",
              family = "Bennett",
              role = c("aut", "cre"),
@@ -44,10 +44,10 @@ Imports:
     rlang
 Remotes:
     BristolMyersSquibb/blockr.core,
-    BristolMyersSquibb/blockr.ui,
+    BristolMyersSquibb/blockr.ui@bump-core,
     BristolMyersSquibb/blockr.dplyr,
     BristolMyersSquibb/blockr.ggplot,
     BristolMyersSquibb/blockr.io
 Config/testthat/edition: 3
-Suggests: 
+Suggests:
     testthat (>= 3.0.0)
