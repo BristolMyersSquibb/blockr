@@ -35,19 +35,23 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
     blockr.core,
-    blockr.ui,
+    blockr.dock,
+    blockr.dag,
     blockr.dplyr,
     blockr.ggplot,
     blockr.io,
+    blockr.ai,
     utils,
     cli,
     rlang
 Remotes:
     BristolMyersSquibb/blockr.core,
-    BristolMyersSquibb/blockr.ui@bump-core,
+    BristolMyersSquibb/blockr.dock,
+    BristolMyersSquibb/blockr.dag,
     BristolMyersSquibb/blockr.dplyr,
     BristolMyersSquibb/blockr.ggplot,
-    BristolMyersSquibb/blockr.io
+    BristolMyersSquibb/blockr.io,
+    BristolMyersSquibb/blockr.ai
 Config/testthat/edition: 3
 Suggests:
     testthat (>= 3.0.0)

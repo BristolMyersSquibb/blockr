@@ -8,9 +8,10 @@ ignore_unused_imports <- function() {
   blockr.ggplot::new_ggplot_block
   blockr.dplyr::new_mutate_block
   blockr.io::new_read_block
+  blockr.ai::new_llm_transform_block
 }
 
 blockr_pkgs <- paste0(
   "blockr.",
-  c("core", "ui", "dplyr", "ggplot", "io")
+  c("core", "dock", "dag", "dplyr", "ggplot", "io", "ai")
 )

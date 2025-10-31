@@ -4,10 +4,10 @@
 \alias{run_app}
 \title{Run app}
 \usage{
-run_app(...)
+run_app(..., extensions = blockr.dag::new_dag_extension())
 }
 \arguments{
-\item{...}{Forwarded to \code{\link[blockr.ui:run_demo_app]{blockr.ui::new_dag_board()}}}
+\item{..., extensions}{Forwarded to \code{\link[blockr.dock:dock]{blockr.dock::new_dock_board()}}}
 }
 \description{
 Run a DAG-board app.
