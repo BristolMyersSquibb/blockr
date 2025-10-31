@@ -22,11 +22,5 @@ pak::pak("BristolMyersSquibb/blockr")
 ## Example
 
 ``` r
-run_app(
-  blocks = c(
-    a = new_dataset_block("iris"),
-    b = new_scatter_block(x = "Sepal.Length", y = "Sepal.Width")
-  ),
-  links = list(from = "a", to = "b", input = "data")
-)
+run_app()
 ```
