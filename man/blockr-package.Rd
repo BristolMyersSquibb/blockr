@@ -21,11 +21,13 @@ Useful links:
 Authors:
 \itemize{
   \item David Granjon \email{david@cynkra.com}
+  \item Christoph Sax \email{christoph@cynkra.com} (\href{https://orcid.org/0000-0002-7192-7044}{ORCID})
   \item John Coene \email{john@opifex.org}
 }
 
 Other contributors:
 \itemize{
+  \item Karma Tarap \email{Karma.Tarap@bms.com} [contributor]
   \item  Bristol Myers Squibb [copyright holder, funder]
 }
 
