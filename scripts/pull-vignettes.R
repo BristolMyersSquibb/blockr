@@ -75,6 +75,9 @@ convert_rmd_to_qmd <- function(source, target, title) {
   github_url <- paste0("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.", pkg_name, "/main/man/figures/")
   lines <- gsub("../man/figures/", github_url, lines, fixed = TRUE)
 
+  # Set image width to 50%
+  lines <- gsub('out.width="100%"', 'out.width="50%"', lines, fixed = TRUE)
+
   # Write to target
   writeLines(lines, target)
   cli::cli_alert_success("Created {basename(target)}")

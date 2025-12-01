@@ -17,8 +17,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   echo = FALSE,
   warning = FALSE,
-  message = FALSE,
-  out.width = "50%"
+  message = FALSE
 )
 ```
 
@@ -61,7 +60,7 @@ When you select multiple files, the block provides combination strategies:
 
 This makes it easy to load and combine related datasets in one step.
 
-```{r read-block, fig.cap="Read block interface showing CSV options"}
+```{r read-block, out.width="50%", fig.cap="Read block interface showing CSV options"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.io/main/man/figures/read-block.png")
 ```
 
@@ -122,7 +121,7 @@ The write block accepts multiple dataframe inputs, similar to how you might comb
 
 Format-specific options (like CSV delimiter or quote character) can be configured through the `args` parameter.
 
-```{r write-block, fig.cap="Write block interface showing download mode"}
+```{r write-block, out.width="50%", fig.cap="Write block interface showing download mode"}
 knitr::include_graphics("https://raw.githubusercontent.com/BristolMyersSquibb/blockr.io/main/man/figures/write-block.png")
 ```
 
