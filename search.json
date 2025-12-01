@@ -508,7 +508,7 @@
     "href": "showcase/dplyr.html",
     "title": "Data Wrangling Blocks",
     "section": "",
-    "text": "blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.",
+    "text": "blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.\nThis package includes blocks for common dplyr operations (select, filter, arrange, mutate, summarize, join, bind) and tidyr operations (pivot, separate, unite).",
     "crumbs": [
       "Home",
       "Blocks",
@@ -520,7 +520,7 @@
     "href": "showcase/dplyr.html#introduction",
     "title": "Data Wrangling Blocks",
     "section": "",
-    "text": "blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.",
+    "text": "blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.\nThis package includes blocks for common dplyr operations (select, filter, arrange, mutate, summarize, join, bind) and tidyr operations (pivot, separate, unite).",
     "crumbs": [
       "Home",
       "Blocks",
@@ -540,11 +540,11 @@
     ]
   },
   {
-    "objectID": "showcase/dplyr.html#expression-filter-block",
-    "href": "showcase/dplyr.html#expression-filter-block",
+    "objectID": "showcase/dplyr.html#filter-block",
+    "href": "showcase/dplyr.html#filter-block",
     "title": "Data Wrangling Blocks",
-    "section": "Expression Filter Block",
-    "text": "Expression Filter Block\nThe expression filter block keeps only rows that meet specific conditions. Enter logical expressions using column names and comparison operators. This block is designed for users who want to write filter conditions as expressions.\nSupported operators include &gt;, &lt;, ==, !=, &gt;=, &lt;= for comparisons, and %in% for checking membership in a set of values. Combine multiple conditions using & (AND) to require all conditions to be true, or | (OR) to require at least one condition to be true. The expression editor provides syntax highlighting and validates your expressions. Examples: mpg &gt; 20, cyl == 4 | cyl == 6, hp &gt; 100 & wt &lt; 3.\nIf you prefer to filter by selecting values from dropdowns rather than writing expressions, use the value filter block instead. The value filter block is particularly useful for categorical data where you want to pick specific values visually.\n\n\n\n\n\nFilter block interface",
+    "section": "Filter Block",
+    "text": "Filter Block\nThe filter block filters rows by selecting values from dropdown lists. This provides a point-and-click interface that does not require writing expressions. Use this block when you want to visually select which values to include or exclude, especially for categorical columns.\nFor each filter condition, select a column from the dropdown. The interface displays all unique values in that column. Select one or more values to filter by. Choose between “include” mode (keep only rows with selected values) or “exclude” mode (remove rows with selected values).\nAdd multiple conditions using the “+ Add Condition” button. Each condition can be combined with the previous one using AND (all conditions must be true) or OR (at least one condition must be true) logic. The “Preserve selection order” option maintains the order of selected values in the output.\nFor more elaborate filter conditions using comparisons or calculations, use the filter expression block instead.\n\n\n\n\n\nFilter block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -552,11 +552,11 @@
     ]
   },
   {
-    "objectID": "showcase/dplyr.html#value-filter-block",
-    "href": "showcase/dplyr.html#value-filter-block",
+    "objectID": "showcase/dplyr.html#filter-expression-block",
+    "href": "showcase/dplyr.html#filter-expression-block",
     "title": "Data Wrangling Blocks",
-    "section": "Value Filter Block",
-    "text": "Value Filter Block\nThe value filter block filters rows by selecting values from dropdown lists. This provides a point-and-click interface that does not require writing expressions. Use this block when you want to visually select which values to include or exclude, especially for categorical columns.\nFor each filter condition, select a column from the dropdown. The interface displays all unique values in that column. Select one or more values to filter by. Choose between “include” mode (keep only rows with selected values) or “exclude” mode (remove rows with selected values). This is particularly useful when you want to see what values exist in a column before deciding which to filter.\nAdd multiple conditions using the “+” button. Each condition can be combined with the previous one using AND (all conditions must be true) or OR (at least one condition must be true) logic. The “preserve order” option maintains the order of selected values in the output.\nFor more complex filter conditions using comparisons or calculations, use the expression filter block instead. The expression filter block allows you to write expressions like mpg &gt; 20 or hp / wt &gt; 50 which cannot be expressed through value selection.\n\n\n\n\n\nValue filter block interface",
+    "section": "Filter Expression Block",
+    "text": "Filter Expression Block\nThe filter expression block keeps only rows that meet specific conditions using R expressions. Use this block for more elaborate filtering that cannot be achieved with simple value selection, such as numeric comparisons, calculations, or complex logical conditions.\nSupported operators include &gt;, &lt;, ==, !=, &gt;=, &lt;= for comparisons, and %in% for checking membership in a set of values. Combine multiple conditions using & (AND) to require all conditions to be true, or | (OR) to require at least one condition to be true. The expression editor provides syntax highlighting and validates your expressions. Examples: mpg &gt; 20, cyl == 4 | cyl == 6, hp &gt; 100 & wt &lt; 3.\n\n\n\n\n\nFilter expression block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -568,7 +568,7 @@
     "href": "showcase/dplyr.html#arrange-block",
     "title": "Data Wrangling Blocks",
     "section": "Arrange Block",
-    "text": "Arrange Block\nThe arrange block sorts rows by column values. Select one or more columns to sort by, with each column having its own ascending or descending control.\nWhen sorting by multiple columns, the order matters. The first column is the primary sort key. Rows with the same value in the first column are then sorted by the second column, and so on. Use the drag handles to reorder the sort columns.\nAdd columns using the “+” button and remove them using the “-” button. Toggle between ascending and descending order for each column independently.\n\n\n\n\n\nArrange block interface",
+    "text": "Arrange Block\nThe arrange block sorts rows by column values. Select one or more columns to sort by, with each column having its own ascending or descending control.\nWhen sorting by multiple columns, the order matters. The first column is the primary sort key. Rows with the same value in the first column are then sorted by the second column, and so on. Use the drag handles to reorder the sort columns.\nAdd columns using the “+” button and remove them using the “×” button. Toggle between ascending and descending order for each column independently.\n\n\n\n\n\nArrange block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -588,11 +588,11 @@
     ]
   },
   {
-    "objectID": "showcase/dplyr.html#mutate-block",
-    "href": "showcase/dplyr.html#mutate-block",
+    "objectID": "showcase/dplyr.html#mutate-expression-block",
+    "href": "showcase/dplyr.html#mutate-expression-block",
     "title": "Data Wrangling Blocks",
-    "section": "Mutate Block",
-    "text": "Mutate Block\nThe mutate block creates new columns or modifies existing ones. Add multiple expressions, each creating or updating a column. Each expression consists of a column name and an expression that calculates its value.\nUse mathematical operators (+, -, *, /, ^) and functions (sqrt(), log(), round(), etc.) in your expressions. Reference existing columns by name. You can also use conditional logic with ifelse() or dplyr::case_when().\nExpression order matters: later expressions can reference columns created by earlier expressions in the same mutate block. The by parameter allows grouping, making column references operate within each group. Add expressions with the “+” button and remove them with the “-” button.\n\n\n\n\n\nMutate block interface",
+    "section": "Mutate Expression Block",
+    "text": "Mutate Expression Block\nThe mutate expression block creates new columns or modifies existing ones using R expressions. Add multiple expressions, each creating or updating a column. Each expression consists of a column name and an R expression that calculates its value.\nUse mathematical operators (+, -, *, /, ^) and functions (sqrt(), log(), round(), etc.) in your expressions. Reference existing columns by name. You can also use conditional logic with ifelse() or dplyr::case_when().\nExpression order matters: later expressions can reference columns created by earlier expressions in the same mutate block. The by parameter allows grouping, making column references operate within each group. Add expressions with the “+ Add Expression” button and remove them with the “×” button.\n\n\n\n\n\nMutate expression block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -604,7 +604,7 @@
     "href": "showcase/dplyr.html#rename-block",
     "title": "Data Wrangling Blocks",
     "section": "Rename Block",
-    "text": "Rename Block\nThe rename block changes column names. Each rename operation maps a new name to an existing column. The interface shows the mapping as “new_name ← old_name” with a visual arrow indicator.\nSelect the existing column from a dropdown to ensure valid column names. Type the new name in the text field. Add multiple renames using the “+” button to rename several columns at once. Remove a rename operation with the “-” button.\nThe block validates that you don’t rename the same column twice and ensures column names don’t conflict with existing names.\n\n\n\n\n\nRename block interface",
+    "text": "Rename Block\nThe rename block changes column names. Each rename operation maps a new name to an existing column. The interface shows the mapping as “new_name ← old_name” with a visual arrow indicator.\nSelect the existing column from a dropdown to ensure valid column names. Type the new name in the text field. Add multiple renames using the “+” button to rename several columns at once. Remove a rename operation with the “×” button.\nThe block validates that you don’t rename the same column twice and ensures column names don’t conflict with existing names.\n\n\n\n\n\nRename block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -616,7 +616,19 @@
     "href": "showcase/dplyr.html#summarize-block",
     "title": "Data Wrangling Blocks",
     "section": "Summarize Block",
-    "text": "Summarize Block\nThe summarize block calculates summary statistics. Add multiple summary expressions, each creating a new column in the output. Each expression consists of a column name and an aggregation expression.\nCommon aggregation functions include mean(), sum(), min(), max(), n() (count rows), n_distinct() (count unique values), median(), and sd(). Use the by parameter to group data before summarizing. When grouping is enabled, statistics are calculated separately for each group.\nThe unpack option controls how functions that return data frames are handled. When enabled, data frame results are unpacked into separate columns. This is useful with helpers like across() which can apply functions to multiple columns at once. For example, across(c(hp, wt), mean) with unpacking creates separate columns for each mean.\nAdd expressions with the “+” button. The interface validates expressions and shows errors if the aggregation is invalid.\n\n\n\n\n\nSummarize block interface",
+    "text": "Summarize Block\nThe summarize block calculates summary statistics using a point-and-click interface. Each summary consists of three parts: a name for the new column, an aggregation function selected from a dropdown, and the column to aggregate.\nAvailable aggregation functions include mean, sum, minimum, maximum, count, count distinct, median, standard deviation, and more. Select the function from the dropdown and the column to apply it to.\nUse the “Columns to group by” selector to group data before summarizing. When grouping is enabled, statistics are calculated separately for each group. Add multiple summaries using the “+ Add Summary” button.\nFor more complex aggregations using custom R expressions, use the summarize expression block instead.\n\n\n\n\n\nSummarize block interface",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Wrangling Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/dplyr.html#summarize-expression-block",
+    "href": "showcase/dplyr.html#summarize-expression-block",
+    "title": "Data Wrangling Blocks",
+    "section": "Summarize Expression Block",
+    "text": "Summarize Expression Block\nThe summarize expression block calculates summary statistics using R expressions. Use this block for more elaborate aggregations that require custom expressions, such as weighted means, ratios, or functions with specific parameters.\nEnter expressions like mean(mpg), sum(hp), dplyr::n(), or more complex calculations like mean(mpg, na.rm = TRUE) or sum(hp) / dplyr::n(). The expression editor provides syntax highlighting and autocomplete (Ctrl+Space).\nUse the “Columns to group by” selector to group data before summarizing. The “Show advanced options” section provides additional settings like the unpack option for handling functions that return data frames.\n\n\n\n\n\nSummarize expression block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -628,7 +640,7 @@
     "href": "showcase/dplyr.html#join-block",
     "title": "Data Wrangling Blocks",
     "section": "Join Block",
-    "text": "Join Block\nThe join block combines two datasets based on matching values in specified columns. Select from six join types that determine which rows are kept in the result.\nJoin types: left_join keeps all rows from the left dataset and matching rows from the right; right_join keeps all rows from the right dataset and matching rows from the left; inner_join keeps only rows that match in both datasets; full_join keeps all rows from both datasets; semi_join filters the left dataset to rows that have a match in the right; anti_join filters the left dataset to rows that do not have a match in the right.\nThe join key interface supports both same-name joins (when columns have identical names) and different-name joins (when the matching columns have different names in each dataset). Add multiple join keys to match on multiple columns simultaneously. For different-name joins, specify which column from the left dataset matches which column from the right dataset.\n\n\n\n\n\nJoin block interface",
+    "text": "Join Block\nThe join block combines two datasets based on matching values in specified columns. Select from six join types that determine which rows are kept in the result.\nJoin types: left_join keeps all rows from the left dataset and matching rows from the right; right_join keeps all rows from the right dataset and matching rows from the left; inner_join keeps only rows that match in both datasets; full_join keeps all rows from both datasets; semi_join filters the left dataset to rows that have a match in the right; anti_join filters the left dataset to rows that do not have a match in the right.\nThe “Custom Column Mappings” interface supports both same-name joins (when columns have identical names) and different-name joins (when the matching columns have different names in each dataset). Add multiple join keys to match on multiple columns simultaneously. Enable “Use natural join” to automatically join on all common columns.\n\n\n\n\n\nJoin block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -640,7 +652,7 @@
     "href": "showcase/dplyr.html#bind-rows-block",
     "title": "Data Wrangling Blocks",
     "section": "Bind Rows Block",
-    "text": "Bind Rows Block\nThe bind rows block stacks datasets vertically by matching column names. Rows from each input dataset are combined into a single output dataset.\nColumns are matched by name. If datasets have different columns, the result includes all columns from all datasets. Missing columns are filled with NA values. The order of columns in the output follows the order they appear across all input datasets.\nThe id_name option adds an identifier column that tracks which source dataset each row came from. This is useful when combining data from multiple sources and you need to maintain provenance. Enable this option and specify a column name to store the source identifier.\n\n\n\n\n\nBind rows block interface",
+    "text": "Bind Rows Block\nThe bind rows block stacks datasets vertically by matching column names. Rows from each input dataset are combined into a single output dataset.\nColumns are matched by name. If datasets have different columns, the result includes all columns from all datasets. Missing columns are filled with NA values. The order of columns in the output follows the order they appear across all input datasets.\nThe “Show advanced options” section provides the id_name option which adds an identifier column that tracks which source dataset each row came from. This is useful when combining data from multiple sources and you need to maintain provenance.\n\n\n\n\n\nBind rows block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -652,7 +664,7 @@
     "href": "showcase/dplyr.html#bind-columns-block",
     "title": "Data Wrangling Blocks",
     "section": "Bind Columns Block",
-    "text": "Bind Columns Block\nThe bind columns block combines datasets side-by-side horizontally. Columns from each input dataset are placed next to each other in the output.\nAll input datasets must have exactly the same number of rows. The rows are combined by position: the first row from each dataset forms the first row of the output, the second rows form the second row of the output, and so on.\nIf datasets have columns with the same name, the suffix option controls how to handle the duplicates. Specify suffixes to add to duplicate column names from each dataset. For example, suffixes c(\"_x\", \"_y\") would rename duplicate column “id” to “id_x” and “id_y”.\n\n\n\n\n\nBind columns block interface",
+    "text": "Bind Columns Block\nThe bind columns block combines datasets side-by-side horizontally. Columns from each input dataset are placed next to each other in the output.\nAll input datasets must have exactly the same number of rows. The rows are combined by position: the first row from each dataset forms the first row of the output, the second rows form the second row of the output, and so on.\nIf datasets have columns with the same name, they are automatically renamed with numeric suffixes (e.g., “Sepal.Length…1”, “Sepal.Length…6”) to avoid conflicts.\n\n\n\n\n\nBind columns block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -664,7 +676,7 @@
     "href": "showcase/dplyr.html#pivot-longer-block",
     "title": "Data Wrangling Blocks",
     "section": "Pivot Longer Block",
-    "text": "Pivot Longer Block\nThe pivot longer block reshapes data from wide to long format using tidyr::pivot_longer(). Use this when column names represent values of a variable rather than variables themselves.\nSelect which columns to pivot. These columns are transformed into two new columns: one containing the original column names (names_to parameter, default “name”) and another containing the values (values_to parameter, default “value”). Unselected columns remain as identifiers.\nThe names_prefix option removes common prefixes from column names. The values_drop_na option removes rows where the value is NA. This is useful for reshaping time series data, survey responses, or preparing data for visualization.\n\n\n\n\n\nPivot longer block interface",
+    "text": "Pivot Longer Block\nThe pivot longer block reshapes data from wide to long format using tidyr::pivot_longer(). Use this when column names represent values of a variable rather than variables themselves.\nSelect which columns to pivot. These columns are transformed into two new columns: one containing the original column names (names_to parameter, default “name”) and another containing the values (values_to parameter, default “value”). Unselected columns remain as identifiers.\nThe “Show advanced options” section provides names_prefix (removes common prefixes from column names) and values_drop_na (removes rows where the value is NA). This is useful for reshaping time series data, survey responses, or preparing data for visualization.\n\n\n\n\n\nPivot longer block interface",
     "crumbs": [
       "Home",
       "Blocks",
@@ -676,7 +688,31 @@
     "href": "showcase/dplyr.html#pivot-wider-block",
     "title": "Data Wrangling Blocks",
     "section": "Pivot Wider Block",
-    "text": "Pivot Wider Block\nThe pivot wider block reshapes data from long to wide format using tidyr::pivot_wider(). This is the inverse of pivot longer, creating a summary table where row-column combinations become cells.\nSelect which column contains values for new column names (names_from) and which column contains cell values (values_from). The id_cols parameter specifies which columns identify each row. If empty, all columns not in names_from or values_from are used as identifiers.\nThe names_prefix option adds a prefix to new column names. The values_fill parameter provides a value for missing combinations (e.g., “0” or leave as NA). This is useful for creating crosstabs, pivot tables, or comparing values across categories.\n\n\n\n\n\nPivot wider block interface",
+    "text": "Pivot Wider Block\nThe pivot wider block reshapes data from long to wide format using tidyr::pivot_wider(). This is the inverse of pivot longer, creating a summary table where row-column combinations become cells.\nSelect which column contains values for new column names (names_from) and which column contains cell values (values_from). The id_cols parameter specifies which columns identify each row. If empty, all columns not in names_from or values_from are used as identifiers.\nThe “Show advanced options” section provides names_prefix (adds a prefix to new column names) and values_fill (provides a value for missing combinations). This is useful for creating crosstabs, pivot tables, or comparing values across categories.\n\n\n\n\n\nPivot wider block interface",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Wrangling Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/dplyr.html#separate-block",
+    "href": "showcase/dplyr.html#separate-block",
+    "title": "Data Wrangling Blocks",
+    "section": "Separate Block",
+    "text": "Separate Block\nThe separate block splits a single column into multiple columns using tidyr::separate(). Use this when a column contains combined values that should be in separate columns.\nSelect the column to separate and specify the names for the new columns (comma-separated). Enter the separator character or regular expression that divides the values.\nThe “Show advanced options” section provides remove (whether to remove the input column), convert (whether to convert new columns to appropriate types), and extra/fill options for handling rows with too many or too few pieces.\n\n\n\n\n\nSeparate block interface",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Wrangling Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/dplyr.html#unite-block",
+    "href": "showcase/dplyr.html#unite-block",
+    "title": "Data Wrangling Blocks",
+    "section": "Unite Block",
+    "text": "Unite Block\nThe unite block combines multiple columns into a single column using tidyr::unite(). This is the inverse of separate, joining values with a separator.\nSelect the columns to unite and specify the name for the new combined column. Enter the separator character to place between values (default is “_“).\nThe “Show advanced options” section provides the remove option (whether to remove the input columns after uniting) and na.rm (whether to remove NA values before uniting).\n\n\n\n\n\nUnite block interface",
     "crumbs": [
       "Home",
       "Blocks",
