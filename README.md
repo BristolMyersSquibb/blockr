@@ -25,6 +25,8 @@ pak::pak("BristolMyersSquibb/blockr")
 ## Example
 
 ``` r
+library(blockr)
+
 run_app(
   blocks = c(
     a = new_dataset_block("iris")
