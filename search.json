@@ -28,7 +28,7 @@
     "href": "getting-started.html#launching-blockr",
     "title": "Getting Started",
     "section": "Launching blockr",
-    "text": "Launching blockr\nRun the blockr interface:\nblockr::run_app()\nThe interface will open in your web browser.",
+    "text": "Launching blockr\nRun the blockr interface:\nlibrary(blockr)\nrun_app()\nThe interface will open in your web browser.",
     "crumbs": [
       "Home",
       "Getting Started",
