@@ -17,7 +17,8 @@ This installs all five core packages: blockr.core, blockr.dplyr, blockr.ggplot, 
 Run the blockr interface:
 
 ```r
-blockr::run_app()
+library(blockr)
+run_app()
 ```
 
 The interface will open in your web browser.
