@@ -6,13 +6,7 @@ title: "Welcome to blockr"
 
 blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.
 
-```{mermaid}
-%%| echo: false
-flowchart LR
-    A[Import Data] --> B[Filter Rows]
-    B --> C[Select Columns]
-    C --> D[Create Plot]
-```
+![A blockr workflow: Dataset → Filter → Select → Plot](images/workflow-example.png)
 
 ## Who is it for?
 
