@@ -69,9 +69,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -99,8 +96,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./getting-started.html"> 
-<span class="menu-text">Get Started</span></a>
+    <a class="nav-link" href="./working-with-blockr.html"> 
+<span class="menu-text">Guide</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-showcase" role="link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -168,14 +165,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./getting-started.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Installation</span></a>
+  <a href="./working-with-blockr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Working with blockr</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./working-with-blockr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Working with blockr</span></a>
+  <a href="./installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Local Installation</span></a>
   </div>
 </li>
       </ul>
@@ -226,6 +223,18 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="https://bristolmyerssquibb.github.io/blockr.dag/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">blockr.dag</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://bristolmyerssquibb.github.io/blockr.dock/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">blockr.dock</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="https://bristolmyerssquibb.github.io/blockr.dplyr/" class="sidebar-item-text sidebar-link">
  <span class="menu-text">blockr.dplyr</span></a>
   </div>
@@ -234,12 +243,6 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="https://bristolmyerssquibb.github.io/blockr.ggplot/" class="sidebar-item-text sidebar-link">
  <span class="menu-text">blockr.ggplot</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://bristolmyerssquibb.github.io/blockr.ui/" class="sidebar-item-text sidebar-link">
- <span class="menu-text">blockr.ui</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -260,13 +263,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#build-data-workflows-without-coding" id="toc-build-data-workflows-without-coding" class="nav-link active" data-scroll-target="#build-data-workflows-without-coding">Build data workflows without coding</a></li>
-  <li><a href="#what-is-blockr" id="toc-what-is-blockr" class="nav-link" data-scroll-target="#what-is-blockr">What is blockr?</a></li>
+  <li><a href="#what-is-blockr" id="toc-what-is-blockr" class="nav-link active" data-scroll-target="#what-is-blockr">What is blockr?</a></li>
+  <li><a href="#who-is-it-for" id="toc-who-is-it-for" class="nav-link" data-scroll-target="#who-is-it-for">Who is it for?</a></li>
   <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works</a></li>
-  <li><a href="#example-workflow" id="toc-example-workflow" class="nav-link" data-scroll-target="#example-workflow">Example workflow</a></li>
-  <li><a href="#blocks" id="toc-blocks" class="nav-link" data-scroll-target="#blocks">Blocks</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
-  <li><a href="#core-packages" id="toc-core-packages" class="nav-link" data-scroll-target="#core-packages">Core Packages</a></li>
+  <li><a href="#available-blocks" id="toc-available-blocks" class="nav-link" data-scroll-target="#available-blocks">Available blocks</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  <li><a href="#core-packages" id="toc-core-packages" class="nav-link" data-scroll-target="#core-packages">Core packages</a></li>
   <li><a href="#extending-blockr" id="toc-extending-blockr" class="nav-link" data-scroll-target="#extending-blockr">Extending blockr</a></li>
   </ul>
 </nav>
@@ -293,82 +295,86 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="build-data-workflows-without-coding" class="level2">
-<h2 class="anchored" data-anchor-id="build-data-workflows-without-coding">Build data workflows without coding</h2>
-<p>blockr is a block-based framework for data manipulation and visualization. It provides a visual, point-and-click interface for creating data workflows without writing code.</p>
-</section>
 <section id="what-is-blockr" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-blockr">What is blockr?</h2>
-<p>blockr is a unified meta-package that brings together five core packages:</p>
+<p>blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/workflow-example.png" class="img-fluid figure-img"></p>
+<figcaption>A blockr workflow: Dataset → Filter → Select → Plot</figcaption>
+</figure>
+</div>
+</section>
+<section id="who-is-it-for" class="level2">
+<h2 class="anchored" data-anchor-id="who-is-it-for">Who is it for?</h2>
+<p>blockr is designed for anyone who works with data:</p>
 <ul>
-<li>blockr.core - The foundation framework</li>
-<li>blockr.dplyr - Data wrangling blocks (filter, select, summarize, etc.)</li>
-<li>blockr.ggplot - Visualization blocks for creating plots</li>
-<li>blockr.ui - User interface components</li>
-<li>blockr.io - File input/output blocks</li>
+<li><strong>Analysts</strong> who want to explore data without writing code</li>
+<li><strong>Researchers</strong> who need reproducible workflows</li>
+<li><strong>Teams</strong> who want to share and collaborate on data pipelines</li>
 </ul>
-<p>These packages let you load data from files, transform and filter data, create visualizations, and export results.</p>
 </section>
 <section id="how-it-works" class="level2">
 <h2 class="anchored" data-anchor-id="how-it-works">How it works</h2>
-<p>Instead of writing code, you work with blocks:</p>
 <ol type="1">
-<li>Add blocks to your workspace</li>
-<li>Connect blocks together to create a data pipeline</li>
-<li>Configure blocks using dropdowns, checkboxes, and input fields</li>
-<li>View results in real-time as you build</li>
+<li><strong>Add blocks</strong> to your workspace - choose from data import, transformation, visualization, and export blocks</li>
+<li><strong>Connect blocks</strong> together to create a pipeline - data flows from one block to the next</li>
+<li><strong>Configure blocks</strong> using dropdowns, checkboxes, and input fields - no coding required</li>
+<li><strong>See results</strong> in real-time as you build - each block shows a preview of its output</li>
 </ol>
-<p>Each block performs a specific task (filtering data, creating a plot, etc.) and can be chained together to create workflows.</p>
 </section>
-<section id="example-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="example-workflow">Example workflow</h2>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    A[Read CSV] --&gt; B[Filter Rows]
-    B --&gt; C[Select Columns]
-    C --&gt; D[Create Plot]
-    D --&gt; E[Export]
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="blocks" class="level2">
-<h2 class="anchored" data-anchor-id="blocks">Blocks</h2>
-<p>See available blocks and what they do:</p>
+<section id="available-blocks" class="level2">
+<h2 class="anchored" data-anchor-id="available-blocks">Available blocks</h2>
+<p>blockr comes with blocks for common data tasks:</p>
+<p><strong>Import and Export</strong></p>
 <ul>
-<li><a href="./showcase/dplyr.html">Data Wrangling Blocks</a> - Filter, select, transform, and summarize data</li>
-<li><a href="./showcase/ggplot.html">Data Visualization Blocks</a> - Create scatter plots, bar charts, line charts, and more</li>
-<li><a href="./showcase/io.html">File I/O Blocks</a> - Read and write files in multiple formats</li>
+<li>Import Data - Load CSV, Excel, SPSS, SAS, Stata, Parquet files from your computer, a server, or URLs</li>
+<li>Export Data - Save results to CSV, Excel, or Parquet files</li>
+</ul>
+<p><strong>Data Transformation</strong></p>
+<ul>
+<li>Filter Rows - Keep rows matching specific values</li>
+<li>Select Columns - Choose which columns to keep</li>
+<li>Calculate Columns - Create new columns using formulas</li>
+<li>Aggregate Data - Calculate totals, averages, counts</li>
+<li>Sort Rows - Order data by column values</li>
+<li>Lookup &amp; Merge - Combine tables by matching columns</li>
+<li>And more: Rename, Pivot, Stack, Split…</li>
+</ul>
+<p><strong>Visualization</strong></p>
+<ul>
+<li>ggplot - Create scatter plots, bar charts, line graphs, histograms, and more</li>
+<li>Theme - Customize colors and styling</li>
+<li>Facet - Split plots into panels</li>
+<li>Grid - Combine multiple plots</li>
 </ul>
 </section>
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
-<p>To install and run blockr, see the <a href="./getting-started.html">Getting Started</a> guide.</p>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<ul>
+<li><a href="./installation.html">Install blockr locally</a> if you want to run it on your own machine</li>
+<li><a href="./working-with-blockr.html">Working with blockr</a> - a guided walkthrough of building a workflow</li>
+</ul>
 </section>
 <section id="core-packages" class="level2">
-<h2 class="anchored" data-anchor-id="core-packages">Core Packages</h2>
-<p>blockr is built on five specialized packages:</p>
+<h2 class="anchored" data-anchor-id="core-packages">Core packages</h2>
+<p>blockr is built on six specialized packages:</p>
+<p><strong>Foundational:</strong></p>
 <ul>
 <li><a href="https://bristolmyerssquibb.github.io/blockr.core/">blockr.core</a> - Framework and architecture</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.dplyr/">blockr.dplyr</a> - Data manipulation blocks</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.ggplot/">blockr.ggplot</a> - Plotting and visualization</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.ui/">blockr.ui</a> - User interface components</li>
-<li><a href="https://bristolmyerssquibb.github.io/blockr.io/">blockr.io</a> - File reading and writing</li>
+<li><a href="https://bristolmyerssquibb.github.io/blockr.dag/">blockr.dag</a> - Workflow management</li>
+<li><a href="https://bristolmyerssquibb.github.io/blockr.dock/">blockr.dock</a> - User interface components</li>
 </ul>
-<p>Installing blockr automatically installs all five packages.</p>
+<p><strong>Block packages:</strong></p>
+<ul>
+<li><a href="https://bristolmyerssquibb.github.io/blockr.dplyr/">blockr.dplyr</a> - Data transformation blocks</li>
+<li><a href="https://bristolmyerssquibb.github.io/blockr.ggplot/">blockr.ggplot</a> - Visualization blocks</li>
+<li><a href="https://bristolmyerssquibb.github.io/blockr.io/">blockr.io</a> - File import and export blocks</li>
+</ul>
 </section>
 <section id="extending-blockr" class="level2">
 <h2 class="anchored" data-anchor-id="extending-blockr">Extending blockr</h2>
-<p>The five core packages provide base blocks for common data analysis tasks. blockr can be extended with additional block packages for specific domains.</p>
-<p>For example, <a href="https://github.com/cynkra/blockr.ts">blockr.ts</a> adds blocks for time series analysis, including decomposition, forecasting, and frequency analysis.</p>
-<p>Additional block packages can be installed separately and will integrate seamlessly with the blockr interface.</p>
+<p>Additional block packages can be installed for specific domains. For example, <a href="https://github.com/cynkra/blockr.ts">blockr.ts</a> adds blocks for time series analysis.</p>
 
 
 </section>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>File I/O Blocks – blockr</title>
+<title>Local Installation – blockr</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4e21fdc0903150a3e35545abccb249d1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4e21fdc0903150a3e35545abccb249d1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
 <style>html{ scroll-behavior: smooth; }</style>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -92,11 +127,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../index.html" aria-current="page"> 
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../working-with-blockr.html"> 
+    <a class="nav-link" href="./working-with-blockr.html"> 
 <span class="menu-text">Guide</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -105,15 +140,15 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-showcase">    
         <li>
-    <a class="dropdown-item" href="../showcase/dplyr.html">
+    <a class="dropdown-item" href="./showcase/dplyr.html">
  <span class="dropdown-text">Data Wrangling</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../showcase/ggplot.html">
+    <a class="dropdown-item" href="./showcase/ggplot.html">
  <span class="dropdown-text">Data Visualization</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../showcase/io.html">
+    <a class="dropdown-item" href="./showcase/io.html">
  <span class="dropdown-text">File I/O</span></a>
   </li>  
     </ul>
@@ -136,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../showcase/dplyr.html">Blocks</a></li><li class="breadcrumb-item"><a href="../showcase/io.html">File I/O Blocks</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="./installation.html">Local Installation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -159,19 +194,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../working-with-blockr.html" class="sidebar-item-text sidebar-link">
+  <a href="./working-with-blockr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Working with blockr</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../installation.html" class="sidebar-item-text sidebar-link">
+  <a href="./installation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Local Installation</span></a>
   </div>
 </li>
@@ -188,19 +223,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../showcase/dplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="./showcase/dplyr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Wrangling Blocks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../showcase/ggplot.html" class="sidebar-item-text sidebar-link">
+  <a href="./showcase/ggplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Visualization Blocks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../showcase/io.html" class="sidebar-item-text sidebar-link active">
+  <a href="./showcase/io.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">File I/O Blocks</span></a>
   </div>
 </li>
@@ -263,31 +298,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#read-block" id="toc-read-block" class="nav-link" data-scroll-target="#read-block">Read Block</a>
-  <ul class="collapse">
-  <li><a href="#three-ways-to-load-data" id="toc-three-ways-to-load-data" class="nav-link" data-scroll-target="#three-ways-to-load-data">Three Ways to Load Data</a></li>
-  <li><a href="#smart-interface" id="toc-smart-interface" class="nav-link" data-scroll-target="#smart-interface">Smart Interface</a></li>
-  <li><a href="#working-with-multiple-files" id="toc-working-with-multiple-files" class="nav-link" data-scroll-target="#working-with-multiple-files">Working with Multiple Files</a></li>
-  </ul></li>
-  <li><a href="#supported-file-formats" id="toc-supported-file-formats" class="nav-link" data-scroll-target="#supported-file-formats">Supported File Formats</a></li>
-  <li><a href="#write-block" id="toc-write-block" class="nav-link" data-scroll-target="#write-block">Write Block</a>
-  <ul class="collapse">
-  <li><a href="#two-output-modes" id="toc-two-output-modes" class="nav-link" data-scroll-target="#two-output-modes">Two Output Modes</a></li>
-  <li><a href="#filename-behavior" id="toc-filename-behavior" class="nav-link" data-scroll-target="#filename-behavior">Filename Behavior</a></li>
-  <li><a href="#multiple-input-handling" id="toc-multiple-input-handling" class="nav-link" data-scroll-target="#multiple-input-handling">Multiple Input Handling</a></li>
-  <li><a href="#supported-output-formats" id="toc-supported-output-formats" class="nav-link" data-scroll-target="#supported-output-formats">Supported Output Formats</a></li>
-  </ul></li>
-  <li><a href="#building-complete-pipelines" id="toc-building-complete-pipelines" class="nav-link" data-scroll-target="#building-complete-pipelines">Building Complete Pipelines</a></li>
+  <li><a href="#installing-blockr" id="toc-installing-blockr" class="nav-link active" data-scroll-target="#installing-blockr">Installing blockr</a></li>
+  <li><a href="#running-blockr" id="toc-running-blockr" class="nav-link" data-scroll-target="#running-blockr">Running blockr</a></li>
+  <li><a href="#requirements" id="toc-requirements" class="nav-link" data-scroll-target="#requirements">Requirements</a></li>
+  <li><a href="#getting-help" id="toc-getting-help" class="nav-link" data-scroll-target="#getting-help">Getting help</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../showcase/dplyr.html">Blocks</a></li><li class="breadcrumb-item"><a href="../showcase/io.html">File I/O Blocks</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="./installation.html">Local Installation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">File I/O Blocks</h1>
+<h1 class="title">Local Installation</h1>
 </div>
 
 
@@ -304,109 +327,29 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>blockr.io provides unified file I/O blocks for reading and writing data in blockr pipelines. The <strong>read block</strong> handles loading data from multiple sources and formats with a smart, adaptive interface. The <strong>write block</strong> enables exporting data to various file formats, with support for browser downloads or filesystem output. Together, these blocks make it easy to build complete data workflows from input to output.</p>
-<hr>
+<section id="installing-blockr" class="level2">
+<h2 class="anchored" data-anchor-id="installing-blockr">Installing blockr</h2>
+<p>Install blockr from GitHub using pak:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"BristolMyersSquibb/blockr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.</p>
 </section>
-<section id="read-block" class="level2">
-<h2 class="anchored" data-anchor-id="read-block">Read Block</h2>
-<p>The read block is a versatile data loading block that automatically adapts its interface based on the file type you’re working with. It combines three different file source modes (upload, browse, URL) with format-specific options for CSV, Excel, and other file types.</p>
-<section id="three-ways-to-load-data" class="level3">
-<h3 class="anchored" data-anchor-id="three-ways-to-load-data">Three Ways to Load Data</h3>
-<p><strong>Upload Mode:</strong> Drag and drop files or click to browse from your computer. Uploaded files are stored persistently, so they remain available across sessions. This is perfect for interactive data analysis where you want to upload a dataset once and keep working with it.</p>
-<p><strong>Browse Mode:</strong> Navigate your file system using an interactive file browser. Select files from configured folder paths. The block reads directly from the original file location without copying.</p>
-<p><strong>URL Mode:</strong> Download data directly from a web URL. Simply paste a URL pointing to a CSV, Excel, or other supported file format. The data is downloaded fresh when the session starts.</p>
+<section id="running-blockr" class="level2">
+<h2 class="anchored" data-anchor-id="running-blockr">Running blockr</h2>
+<p>Launch the blockr interface:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(blockr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">run_app</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The interface opens in your web browser.</p>
 </section>
-<section id="smart-interface" class="level3">
-<h3 class="anchored" data-anchor-id="smart-interface">Smart Interface</h3>
-<p>The block detects your file type and shows relevant options:</p>
-<p><strong>CSV/TSV files</strong> display options for delimiter (comma, semicolon, tab), quote character, encoding, row skipping, and whether the first row contains column names. This gives you full control over how delimited text files are parsed.</p>
-<p><strong>Excel files</strong> show dropdown menus for sheet selection, cell range specification (like “A1:C100”), row skipping, and column name options. You can target specific sheets and ranges within your Excel workbooks.</p>
-<p><strong>Other formats</strong> (Parquet, Feather, SPSS, Stata, SAS, JSON, XML, etc.) are handled automatically with minimal configuration. The block uses the appropriate reader based on file extension.</p>
-</section>
-<section id="working-with-multiple-files" class="level3">
-<h3 class="anchored" data-anchor-id="working-with-multiple-files">Working with Multiple Files</h3>
-<p>When you select multiple files, the block provides combination strategies:</p>
+<section id="requirements" class="level2">
+<h2 class="anchored" data-anchor-id="requirements">Requirements</h2>
 <ul>
-<li><strong>Auto</strong>: Automatically stacks files vertically if they have the same columns, otherwise uses just the first file</li>
-<li><strong>Row bind</strong>: Stack files vertically (requires files to have the same columns)</li>
-<li><strong>Column bind</strong>: Place files side-by-side (requires files to have the same number of rows)</li>
-<li><strong>First only</strong>: Use only the first file, ignore the others</li>
+<li>R version 4.1 or higher</li>
+<li>A modern web browser (Chrome, Firefox, Safari, Edge)</li>
 </ul>
-<p>This makes it easy to load and combine related datasets in one step.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://raw.githubusercontent.com/BristolMyersSquibb/blockr.io/main/man/figures/read-block.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Read block interface showing CSV options</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<hr>
 </section>
-</section>
-<section id="supported-file-formats" class="level2">
-<h2 class="anchored" data-anchor-id="supported-file-formats">Supported File Formats</h2>
-<p>The block supports a wide range of file formats:</p>
-<p><strong>Text formats:</strong> CSV, TSV, TXT, fixed-width files</p>
-<p><strong>Spreadsheets:</strong> Excel (.xlsx, .xls), OpenDocument Spreadsheet (.ods)</p>
-<p><strong>Statistical software:</strong> SPSS (.sav), Stata (.dta), SAS (.sas7bdat, .xpt)</p>
-<p><strong>Columnar formats:</strong> Parquet, Feather, Arrow IPC</p>
-<p><strong>Web formats:</strong> JSON, XML, HTML</p>
-<p><strong>R formats:</strong> RDS, RData</p>
-<p><strong>Database formats:</strong> DBF, SQLite</p>
-<hr>
-</section>
-<section id="write-block" class="level2">
-<h2 class="anchored" data-anchor-id="write-block">Write Block</h2>
-<p>The write block is a versatile data export block that accepts one or more dataframe inputs and outputs files in various formats. It provides flexible options for file naming, output location, and format-specific parameters.</p>
-<section id="two-output-modes" class="level3">
-<h3 class="anchored" data-anchor-id="two-output-modes">Two Output Modes</h3>
-<p><strong>Download Mode:</strong> The block triggers a browser download, saving the file to your downloads folder. This is the recommended mode for beginners and for exporting analysis results. Files are generated on-demand when you click the download button.</p>
-<p><strong>Browse Mode:</strong> Write files directly to the server filesystem. Use the directory browser to select where files should be saved. Files are written immediately when upstream data changes, making this ideal for automated pipelines.</p>
-</section>
-<section id="filename-behavior" class="level3">
-<h3 class="anchored" data-anchor-id="filename-behavior">Filename Behavior</h3>
-<p><strong>Fixed filename:</strong> Specify a filename (without extension) to create reproducible output. The block always writes to the same path, overwriting the file when upstream data changes. Perfect for automated workflows where you want consistent file paths.</p>
-<p><strong>Auto-timestamped:</strong> Leave the filename empty to generate unique timestamped files (e.g., <code>data_20250127_143022.csv</code>). This preserves history and prevents accidental overwrites, making it the safe default behavior.</p>
-</section>
-<section id="multiple-input-handling" class="level3">
-<h3 class="anchored" data-anchor-id="multiple-input-handling">Multiple Input Handling</h3>
-<p>The write block accepts multiple dataframe inputs, similar to how you might combine datasets. The output format depends on the file type:</p>
-<p><strong>Excel format:</strong> Multiple inputs become sheets in a single Excel workbook. Sheet names are derived from input names (e.g., “sales_data”, “inventory”).</p>
-<p><strong>CSV/Arrow formats:</strong> Multiple inputs are bundled into a ZIP archive. Each dataframe is saved as a separate file using the input names.</p>
-<p><strong>Single input:</strong> Outputs a single file in the specified format.</p>
-</section>
-<section id="supported-output-formats" class="level3">
-<h3 class="anchored" data-anchor-id="supported-output-formats">Supported Output Formats</h3>
-<ul>
-<li><strong>CSV:</strong> Comma-separated values with configurable delimiter, quotes, and NA handling</li>
-<li><strong>Excel:</strong> .xlsx workbooks with support for multiple sheets</li>
-<li><strong>Parquet:</strong> Efficient columnar storage format</li>
-<li><strong>Feather:</strong> Fast binary format for data frames</li>
-</ul>
-<p>Format-specific options (like CSV delimiter or quote character) can be configured through the <code>args</code> parameter.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://raw.githubusercontent.com/BristolMyersSquibb/blockr.io/main/man/figures/write-block.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Write block interface showing download mode</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<hr>
-</section>
-</section>
-<section id="building-complete-pipelines" class="level2">
-<h2 class="anchored" data-anchor-id="building-complete-pipelines">Building Complete Pipelines</h2>
-<p>The read and write blocks work seamlessly with other blockr blocks to create end-to-end data workflows. Load data with the read block, transform it with processing blocks, visualize results, and export with the write block - all without writing code.</p>
-<p>For example, you could build a pipeline that: 1. Loads sales data from a CSV file (read block) 2. Filters to show only high-revenue transactions (filter block) 3. Aggregates by product category (summarize block) 4. Creates a visualization (plot block) 5. Exports the processed data to Excel (write block)</p>
-<p>Just connect the blocks together to create powerful, reproducible data workflows!</p>
+<section id="getting-help" class="level2">
+<h2 class="anchored" data-anchor-id="getting-help">Getting help</h2>
+<p>If you encounter issues, <a href="https://github.com/BristolMyersSquibb/blockr/issues">open an issue on GitHub</a>.</p>
 
 
 </section>
@@ -835,5 +778,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

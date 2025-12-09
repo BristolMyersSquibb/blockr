@@ -1,74 +1,62 @@
 [
   {
-    "objectID": "getting-started.html",
-    "href": "getting-started.html",
-    "title": "Getting Started",
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "Local Installation",
     "section": "",
-    "text": "Install blockr from GitHub:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all five core packages: blockr.core, blockr.dplyr, blockr.ggplot, blockr.ui, and blockr.io.",
+    "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.",
     "crumbs": [
       "Home",
       "Getting Started",
-      "Installation"
+      "Local Installation"
     ]
   },
   {
-    "objectID": "getting-started.html#installation",
-    "href": "getting-started.html#installation",
-    "title": "Getting Started",
+    "objectID": "installation.html#installing-blockr",
+    "href": "installation.html#installing-blockr",
+    "title": "Local Installation",
     "section": "",
-    "text": "Install blockr from GitHub:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all five core packages: blockr.core, blockr.dplyr, blockr.ggplot, blockr.ui, and blockr.io.",
+    "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.",
     "crumbs": [
       "Home",
       "Getting Started",
-      "Installation"
+      "Local Installation"
     ]
   },
   {
-    "objectID": "getting-started.html#launching-blockr",
-    "href": "getting-started.html#launching-blockr",
-    "title": "Getting Started",
-    "section": "Launching blockr",
-    "text": "Launching blockr\nRun the blockr interface:\nlibrary(blockr)\nrun_app()\nThe interface will open in your web browser.",
+    "objectID": "installation.html#running-blockr",
+    "href": "installation.html#running-blockr",
+    "title": "Local Installation",
+    "section": "Running blockr",
+    "text": "Running blockr\nLaunch the blockr interface:\nlibrary(blockr)\nrun_app()\nThe interface opens in your web browser.",
     "crumbs": [
       "Home",
       "Getting Started",
-      "Installation"
+      "Local Installation"
     ]
   },
   {
-    "objectID": "getting-started.html#building-a-workflow",
-    "href": "getting-started.html#building-a-workflow",
-    "title": "Getting Started",
-    "section": "Building a workflow",
-    "text": "Building a workflow\nThe blockr interface lets you add blocks, connect them together, and configure them using dropdowns and input fields.\n\nExample: Load, filter, and visualize data\nAdd a data source: - Click “Add Block” - Select “Read Block” from the I/O category - Choose “Upload” mode and upload a CSV file\nFilter the data: - Add a “Filter Block” from the Data Wrangling category - Connect it to the Read Block - Set filter conditions using the dropdown menus\nCreate a visualization: - Add a “Plot Block” from the Visualization category - Select a plot type (scatter plot, bar chart, etc.) - Choose columns for X and Y axes - Customize colors and labels\nExport results: - Add a “Write Block” - Choose an output format (PNG, PDF, Excel, etc.) - Click “Export”",
+    "objectID": "installation.html#requirements",
+    "href": "installation.html#requirements",
+    "title": "Local Installation",
+    "section": "Requirements",
+    "text": "Requirements\n\nR version 4.1 or higher\nA modern web browser (Chrome, Firefox, Safari, Edge)",
     "crumbs": [
       "Home",
       "Getting Started",
-      "Installation"
+      "Local Installation"
     ]
   },
   {
-    "objectID": "getting-started.html#explore-available-blocks",
-    "href": "getting-started.html#explore-available-blocks",
-    "title": "Getting Started",
-    "section": "Explore available blocks",
-    "text": "Explore available blocks\nEach showcase demonstrates different block categories:\n\nData Wrangling Blocks - Filtering, selecting, transforming, summarizing\nData Visualization Blocks - Scatter plots, bar charts, line charts, histograms\nFile I/O Blocks - Reading and writing various file formats",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Installation"
-    ]
-  },
-  {
-    "objectID": "getting-started.html#getting-help",
-    "href": "getting-started.html#getting-help",
-    "title": "Getting Started",
+    "objectID": "installation.html#getting-help",
+    "href": "installation.html#getting-help",
+    "title": "Local Installation",
     "section": "Getting help",
     "text": "Getting help\nIf you encounter issues, open an issue on GitHub.",
     "crumbs": [
       "Home",
       "Getting Started",
-      "Installation"
+      "Local Installation"
     ]
   },
   {
@@ -280,7 +268,7 @@
     "href": "working-with-blockr.html",
     "title": "Working with blockr",
     "section": "",
-    "text": "When you run blockr::run_app(), the blockr interface opens in your browser. The interface is built with blockr.ui and provides a visual workspace for building data pipelines.\nThe main workspace displays blocks that can be added, connected, and configured. Each block shows a preview of its output data, making it easy to see how data transforms through your pipeline.",
+    "text": "This guide walks you through building a complete data workflow in blockr. You’ll learn how to import data, transform it, create a visualization, and export the results.",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -288,11 +276,11 @@
     ]
   },
   {
-    "objectID": "working-with-blockr.html#the-blockr-interface",
-    "href": "working-with-blockr.html#the-blockr-interface",
+    "objectID": "working-with-blockr.html#the-workspace",
+    "href": "working-with-blockr.html#the-workspace",
     "title": "Working with blockr",
-    "section": "",
-    "text": "When you run blockr::run_app(), the blockr interface opens in your browser. The interface is built with blockr.ui and provides a visual workspace for building data pipelines.\nThe main workspace displays blocks that can be added, connected, and configured. Each block shows a preview of its output data, making it easy to see how data transforms through your pipeline.",
+    "section": "The workspace",
+    "text": "The workspace\nWhen you open blockr, you see a workspace where you can add and connect blocks. Each block performs a specific operation and shows a preview of its output.\nBlocks are organized into categories:\n\nInput - Import Data\nTransform - Filter, Select, Calculate, Aggregate, Sort, and more\nPlot - ggplot, Theme, Facet, Grid\nOutput - Export Data",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -300,11 +288,11 @@
     ]
   },
   {
-    "objectID": "working-with-blockr.html#adding-blocks",
-    "href": "working-with-blockr.html#adding-blocks",
+    "objectID": "working-with-blockr.html#building-a-workflow-step-by-step",
+    "href": "working-with-blockr.html#building-a-workflow-step-by-step",
     "title": "Working with blockr",
-    "section": "Adding blocks",
-    "text": "Adding blocks\nBlocks are organized into categories based on their function:\nData Sources (blockr.io) - Read Block - Load data from files (CSV, Excel, etc.), URLs, or file browsers\nData Wrangling (blockr.dplyr) - Select Block - Choose columns - Filter Blocks - Keep rows matching conditions - Mutate Block - Create or modify columns - Summarize Block - Calculate aggregations - Arrange Block - Sort rows - Join Blocks - Combine datasets - Pivot Blocks - Reshape data\nVisualization (blockr.ggplot) - Plot Block - Create charts (scatter, bar, line, histogram, etc.) - Facet Block - Split plots into panels - Theme Block - Apply styling - Grid Block - Combine multiple plots\nExport (blockr.io) - Write Block - Save data to files\nTo add a block, select it from the available block categories. The block appears in the workspace ready to be configured.",
+    "section": "Building a workflow: Step by step",
+    "text": "Building a workflow: Step by step\nLet’s build a workflow that loads data, filters it, and creates a chart.\n\nStep 1: Import your data\nAdd an Import Data block to load your dataset. You can:\n\nFrom Browser - Upload a file from your computer\nFrom Server - Browse files on a server (if configured)\nFrom URL - Load data from a web address\n\nblockr automatically detects the file format and shows a preview of the data.\nSupported formats: CSV, Excel, SPSS, SAS, Stata, Parquet, Feather.\n\n\nStep 2: Filter the data\nAdd a Filter Rows block and connect it to your data. This block lets you keep only the rows you need.\nUse the dropdowns to:\n\nSelect a column\nChoose a comparison (equals, greater than, contains, etc.)\nPick the value(s) to filter by\n\nFor example, to keep only rows where cyl equals 4:\n\nColumn: cyl\nComparison: equals\nValue: 4\n\nThe preview updates immediately to show the filtered data.\nFor more complex filters with AND/OR logic, use Filter (Advanced) instead.\n\n\nStep 3: Select columns\nAdd a Select Columns block to choose which columns to keep.\nDrag columns to reorder them. Toggle “Remove duplicates” to keep only unique rows.\n\n\nStep 4: Create a visualization\nAdd a ggplot block to create a chart.\n\nChoose a chart type: point (scatter), bar, line, boxplot, histogram, etc.\nMap columns to aesthetics:\n\nx - Column for the horizontal axis\ny - Column for the vertical axis (not needed for histogram)\ncolor - Color points/bars by a column\nsize - Size points by a column\n\n\nThe chart updates as you make selections.\n\n\nStep 5: Export results\nAdd an Export Data block to save your results.\nChoose a format:\n\nCSV - For spreadsheets and other tools\nExcel - With support for multiple sheets\nParquet - For large datasets\n\nSelect To Browser to download the file, or To Server to save it to a configured location.",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -312,47 +300,11 @@
     ]
   },
   {
-    "objectID": "working-with-blockr.html#connecting-blocks",
-    "href": "working-with-blockr.html#connecting-blocks",
+    "objectID": "working-with-blockr.html#more-blocks",
+    "href": "working-with-blockr.html#more-blocks",
     "title": "Working with blockr",
-    "section": "Connecting blocks",
-    "text": "Connecting blocks\nBlocks connect to form pipelines. The output of one block becomes the input to the next block.\nData flows from left to right (or top to bottom, depending on layout). A typical pipeline might look like:\n\n\n\n\n\nflowchart LR\n    A[Read Block] --&gt; B[Filter Block]\n    B --&gt; C[Select Block]\n    C --&gt; D[Plot Block]\n\n\n\n\n\n\nEach block receives the data from the previous block, performs its operation, and passes the result to the next block. The preview in each block shows the data at that stage of the pipeline.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#configuring-blocks",
-    "href": "working-with-blockr.html#configuring-blocks",
-    "title": "Working with blockr",
-    "section": "Configuring blocks",
-    "text": "Configuring blocks\nEach block has parameters that control its behavior. These appear as form elements:\nDropdowns - Select from available options (e.g., column names, chart types)\nText inputs - Enter values or expressions (e.g., filter conditions, new column names)\nCheckboxes - Toggle options on or off (e.g., remove duplicates, include NA values)\nMulti-select - Choose multiple items (e.g., columns to keep, grouping variables)\nThe interface adapts based on your choices. For example, selecting a chart type in a Plot Block reveals relevant aesthetic mappings for that chart type.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#understanding-data-flow",
-    "href": "working-with-blockr.html#understanding-data-flow",
-    "title": "Working with blockr",
-    "section": "Understanding data flow",
-    "text": "Understanding data flow\nblockr updates blocks reactively. When you change a configuration in one block, all downstream blocks automatically update to reflect the change.\nEach block displays: - Its configuration parameters - A preview of the output data - Connection points to other blocks\nThis real-time feedback makes it easy to see how changes affect your analysis.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#block-examples",
-    "href": "working-with-blockr.html#block-examples",
-    "title": "Working with blockr",
-    "section": "Block examples",
-    "text": "Block examples\n\nExample 1: Filter and visualize\nCreate a pipeline that filters data and creates a scatter plot:\n\nAdd a Read Block and load a dataset\nAdd a Filter Block (expression or value type)\nConfigure filter conditions (e.g., “mpg &gt; 20”)\nAdd a Plot Block\nSelect “point” (scatter plot) as chart type\nMap columns to x and y aesthetics\nOptionally map color or size to other variables\n\nThe plot updates automatically as you adjust the filter.\n\n\nExample 2: Summarize and export\nCalculate summary statistics and export to Excel:\n\nAdd a Read Block with your data\nAdd a Summarize Block\nAdd summary expressions (e.g., “mean_mpg = mean(mpg)”)\nOptionally group by categorical variables using the by parameter\nAdd a Write Block\nSelect “xlsx” as the output format\nExport the summarized data\n\n\n\nExample 3: Multi-step transformation\nBuild a complex transformation pipeline:\n\nRead Block - Load data\nFilter Block - Remove unwanted rows\nSelect Block - Keep relevant columns\nMutate Block - Create calculated columns\nArrange Block - Sort the results\nPlot Block - Visualize the final data\n\nEach step is visible and can be modified independently.",
+    "section": "More blocks",
+    "text": "More blocks\n\nData transformation\n\n\n\nBlock\nWhat it does\n\n\n\n\nFilter Rows\nKeep rows matching specific values\n\n\nFilter (Advanced)\nFilter with R expressions and AND/OR logic\n\n\nSelect Columns\nChoose and reorder columns\n\n\nCalculate Columns\nCreate new columns using formulas\n\n\nAggregate Data\nCalculate totals, averages, counts (no coding)\n\n\nAggregate (Advanced)\nSummarize with R expressions\n\n\nSort Rows\nOrder data by column values\n\n\nLookup & Merge\nCombine tables by matching columns\n\n\nStack Tables\nCombine tables vertically\n\n\nCombine Side-by-Side\nPlace tables next to each other\n\n\nRename Columns\nChange column names\n\n\nPick Rows\nSelect first N, last N, random sample, or min/max rows\n\n\nUnpivot (Wide to Long)\nTurn columns into rows\n\n\nPivot (Long to Wide)\nTurn rows into columns\n\n\nSplit Column\nSeparate one column into multiple\n\n\nCombine Columns\nMerge columns into one\n\n\n\n\n\nVisualization\n\n\n\n\n\n\n\nBlock\nWhat it does\n\n\n\n\nggplot\nCreate scatter plots, bar charts, line graphs, histograms, and more\n\n\nTheme\nCustomize colors, fonts, and styling\n\n\nFacet\nSplit a plot into panels by a categorical variable\n\n\nGrid\nArrange multiple plots into a single figure",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -364,7 +316,7 @@
     "href": "working-with-blockr.html#working-with-multiple-inputs",
     "title": "Working with blockr",
     "section": "Working with multiple inputs",
-    "text": "Working with multiple inputs\nSome blocks accept multiple inputs:\nJoin Block - Combines two datasets based on matching columns\nBind Rows Block - Stacks multiple datasets vertically\nBind Columns Block - Places datasets side-by-side\nGrid Block - Arranges multiple plots into a single figure\nThese blocks let you work with multiple data sources or create complex visualizations.",
+    "text": "Working with multiple inputs\nSome blocks accept data from multiple sources:\n\nLookup & Merge - Connect two data sources to combine them by matching columns\nStack Tables - Connect multiple sources to stack them vertically\nGrid - Connect multiple plots to arrange them in a grid",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -372,11 +324,11 @@
     ]
   },
   {
-    "objectID": "working-with-blockr.html#tips-for-building-workflows",
-    "href": "working-with-blockr.html#tips-for-building-workflows",
+    "objectID": "working-with-blockr.html#tips",
+    "href": "working-with-blockr.html#tips",
     "title": "Working with blockr",
-    "section": "Tips for building workflows",
-    "text": "Tips for building workflows\nStart simple - Begin with a data source and one transformation or visualization. Add complexity gradually.\nUse previews - Check the data preview in each block to verify the transformation is working as expected.\nExperiment - Change parameters and see the results immediately. The reactive interface makes exploration easy.\nBuild incrementally - Add one block at a time and verify it works before adding the next block.\nName your blocks - If the interface supports it, use descriptive names for blocks to keep track of complex pipelines.",
+    "section": "Tips",
+    "text": "Tips\nStart simple. Begin with one data source and one transformation. Add complexity gradually.\nUse previews. Each block shows its output - use this to verify each step works correctly.\nBuild incrementally. Add one block at a time and check the result before continuing.",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -384,11 +336,11 @@
     ]
   },
   {
-    "objectID": "working-with-blockr.html#next-steps",
-    "href": "working-with-blockr.html#next-steps",
+    "objectID": "working-with-blockr.html#block-reference",
+    "href": "working-with-blockr.html#block-reference",
     "title": "Working with blockr",
-    "section": "Next steps",
-    "text": "Next steps\nExplore the showcase pages to see specific blocks in detail:\n\nData Wrangling Blocks - All available transformation operations\nData Visualization Blocks - Chart types and customization options\nFile I/O Blocks - Reading and writing various formats",
+    "section": "Block reference",
+    "text": "Block reference\nFor detailed documentation on each block, see:\n\nData Transformation Blocks\nVisualization Blocks\nImport/Export Blocks",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -400,19 +352,7 @@
     "href": "index.html",
     "title": "Welcome to blockr",
     "section": "",
-    "text": "blockr is a block-based framework for data manipulation and visualization. It provides a visual, point-and-click interface for creating data workflows without writing code.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#build-data-workflows-without-coding",
-    "href": "index.html#build-data-workflows-without-coding",
-    "title": "Welcome to blockr",
-    "section": "",
-    "text": "blockr is a block-based framework for data manipulation and visualization. It provides a visual, point-and-click interface for creating data workflows without writing code.",
+    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -423,8 +363,20 @@
     "objectID": "index.html#what-is-blockr",
     "href": "index.html#what-is-blockr",
     "title": "Welcome to blockr",
-    "section": "What is blockr?",
-    "text": "What is blockr?\nblockr is a unified meta-package that brings together five core packages:\n\nblockr.core - The foundation framework\nblockr.dplyr - Data wrangling blocks (filter, select, summarize, etc.)\nblockr.ggplot - Visualization blocks for creating plots\nblockr.ui - User interface components\nblockr.io - File input/output blocks\n\nThese packages let you load data from files, transform and filter data, create visualizations, and export results.",
+    "section": "",
+    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#who-is-it-for",
+    "href": "index.html#who-is-it-for",
+    "title": "Welcome to blockr",
+    "section": "Who is it for?",
+    "text": "Who is it for?\nblockr is designed for anyone who works with data:\n\nAnalysts who want to explore data without writing code\nResearchers who need reproducible workflows\nTeams who want to share and collaborate on data pipelines",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -436,7 +388,7 @@
     "href": "index.html#how-it-works",
     "title": "Welcome to blockr",
     "section": "How it works",
-    "text": "How it works\nInstead of writing code, you work with blocks:\n\nAdd blocks to your workspace\nConnect blocks together to create a data pipeline\nConfigure blocks using dropdowns, checkboxes, and input fields\nView results in real-time as you build\n\nEach block performs a specific task (filtering data, creating a plot, etc.) and can be chained together to create workflows.",
+    "text": "How it works\n\nAdd blocks to your workspace - choose from data import, transformation, visualization, and export blocks\nConnect blocks together to create a pipeline - data flows from one block to the next\nConfigure blocks using dropdowns, checkboxes, and input fields - no coding required\nSee results in real-time as you build - each block shows a preview of its output",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -444,11 +396,11 @@
     ]
   },
   {
-    "objectID": "index.html#example-workflow",
-    "href": "index.html#example-workflow",
+    "objectID": "index.html#available-blocks",
+    "href": "index.html#available-blocks",
     "title": "Welcome to blockr",
-    "section": "Example workflow",
-    "text": "Example workflow\n\n\n\n\n\nflowchart LR\n    A[Read CSV] --&gt; B[Filter Rows]\n    B --&gt; C[Select Columns]\n    C --&gt; D[Create Plot]\n    D --&gt; E[Export]",
+    "section": "Available blocks",
+    "text": "Available blocks\nblockr comes with blocks for common data tasks:\nImport and Export\n\nImport Data - Load CSV, Excel, SPSS, SAS, Stata, Parquet files from your computer, a server, or URLs\nExport Data - Save results to CSV, Excel, or Parquet files\n\nData Transformation\n\nFilter Rows - Keep rows matching specific values\nSelect Columns - Choose which columns to keep\nCalculate Columns - Create new columns using formulas\nAggregate Data - Calculate totals, averages, counts\nSort Rows - Order data by column values\nLookup & Merge - Combine tables by matching columns\nAnd more: Rename, Pivot, Stack, Split…\n\nVisualization\n\nggplot - Create scatter plots, bar charts, line graphs, histograms, and more\nTheme - Customize colors and styling\nFacet - Split plots into panels\nGrid - Combine multiple plots",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -456,23 +408,11 @@
     ]
   },
   {
-    "objectID": "index.html#blocks",
-    "href": "index.html#blocks",
+    "objectID": "index.html#next-steps",
+    "href": "index.html#next-steps",
     "title": "Welcome to blockr",
-    "section": "Blocks",
-    "text": "Blocks\nSee available blocks and what they do:\n\nData Wrangling Blocks - Filter, select, transform, and summarize data\nData Visualization Blocks - Create scatter plots, bar charts, line charts, and more\nFile I/O Blocks - Read and write files in multiple formats",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#getting-started",
-    "href": "index.html#getting-started",
-    "title": "Welcome to blockr",
-    "section": "Getting Started",
-    "text": "Getting Started\nTo install and run blockr, see the Getting Started guide.",
+    "section": "Next steps",
+    "text": "Next steps\n\nInstall blockr locally if you want to run it on your own machine\nWorking with blockr - a guided walkthrough of building a workflow",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -483,8 +423,8 @@
     "objectID": "index.html#core-packages",
     "href": "index.html#core-packages",
     "title": "Welcome to blockr",
-    "section": "Core Packages",
-    "text": "Core Packages\nblockr is built on five specialized packages:\n\nblockr.core - Framework and architecture\nblockr.dplyr - Data manipulation blocks\nblockr.ggplot - Plotting and visualization\nblockr.ui - User interface components\nblockr.io - File reading and writing\n\nInstalling blockr automatically installs all five packages.",
+    "section": "Core packages",
+    "text": "Core packages\nblockr is built on six specialized packages:\nFoundational:\n\nblockr.core - Framework and architecture\nblockr.dag - Workflow management\nblockr.dock - User interface components\n\nBlock packages:\n\nblockr.dplyr - Data transformation blocks\nblockr.ggplot - Visualization blocks\nblockr.io - File import and export blocks",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -496,7 +436,7 @@
     "href": "index.html#extending-blockr",
     "title": "Welcome to blockr",
     "section": "Extending blockr",
-    "text": "Extending blockr\nThe five core packages provide base blocks for common data analysis tasks. blockr can be extended with additional block packages for specific domains.\nFor example, blockr.ts adds blocks for time series analysis, including decomposition, forecasting, and frequency analysis.\nAdditional block packages can be installed separately and will integrate seamlessly with the blockr interface.",
+    "text": "Extending blockr\nAdditional block packages can be installed for specific domains. For example, blockr.ts adds blocks for time series analysis.",
     "crumbs": [
       "Home",
       "Getting Started",
