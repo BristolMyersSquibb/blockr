@@ -41,15 +41,16 @@ temp_dir <- tempfile("blockr_workflow_")
 dir.create(temp_dir)
 
 # Create the workflow app
-# Step 3: Dataset -> Filter -> Select -> ggplot
+# Dataset -> Filter -> Select -> ggplot + Export
 app_content <- '
 library(blockr.core)
 library(blockr.dock)
 library(blockr.dag)
 library(blockr.dplyr)
 library(blockr.ggplot)
+library(blockr.io)
 
-# Workflow: Dataset -> Filter -> Select -> ggplot
+# Workflow: Dataset -> Filter -> Select -> ggplot, with Export branching from Select
 blockr.core::serve(
 
   blockr.dock::new_dock_board(
@@ -63,6 +64,7 @@ blockr.core::serve(
       select = blockr.dplyr::new_select_block(
         columns = c("mpg", "hp", "wt", "cyl")
       ),
+      export = blockr.io::new_write_block(),
       plot = blockr.ggplot::new_ggplot_block(
         type = "point",
         x = "wt",
@@ -71,9 +73,9 @@ blockr.core::serve(
       )
     ),
     links = list(
-      from = c("data", "filter", "select"),
-      to = c("filter", "select", "plot"),
-      input = c("data", "data", "data")
+      from = c("data", "filter", "select", "select"),
+      to = c("filter", "select", "export", "plot"),
+      input = c("data", "data", "...", "data")
     ),
     extensions = blockr.dag::new_dag_extension()
   )
@@ -91,6 +93,48 @@ tryCatch({
 
   app$set_window_size(width = SCREENSHOT_WIDTH, height = SCREENSHOT_HEIGHT)
   Sys.sleep(SCREENSHOT_DELAY)
+
+  # Try to fit view and zoom out a bit to show all blocks
+  # The graph uses G6 library with HTMLWidgets
+  tryCatch({
+    app$run_js("
+      // Find the G6 graph widget and call fitView, then zoom out 20%
+      var g6Element = document.querySelector('.g6');
+      if (g6Element) {
+        var widget = HTMLWidgets.find('#' + g6Element.id);
+        if (widget) {
+          var graph = widget.getWidget();
+          if (graph && graph.fitView) {
+            graph.fitView();
+            // Zoom out by 20% after fit
+            var currentZoom = graph.getZoom();
+            graph.zoomTo(currentZoom * 0.8);
+          }
+        }
+      }
+    ")
+    Sys.sleep(0.5)
+  }, error = function(e) {
+    cat("Could not adjust zoom:", e$message, "\n")
+  })
+
+  # Click on the Ggplot tab to show that block in the right panel
+  tryCatch({
+    app$run_js("
+      // Find and click the Ggplot tab
+      var tabs = document.querySelectorAll('.dv-default-tab');
+      for (var i = 0; i < tabs.length; i++) {
+        var tabText = tabs[i].textContent || tabs[i].innerText;
+        if (tabText.includes('Ggplot')) {
+          tabs[i].click();
+          break;
+        }
+      }
+    ")
+    Sys.sleep(1)  # Wait longer for tab switch
+  }, error = function(e) {
+    cat("Could not click Ggplot tab:", e$message, "\n")
+  })
 
   # Remove existing file if present
   if (file.exists(output_path)) {
