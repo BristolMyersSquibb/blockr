@@ -2,72 +2,80 @@
 title: "Welcome to blockr"
 ---
 
-## Build data workflows without coding
-
-blockr is a block-based framework for data manipulation and visualization. It provides a visual, point-and-click interface for creating data workflows without writing code.
-
 ## What is blockr?
 
-blockr is a unified meta-package that brings together five core packages:
-
-- blockr.core - The foundation framework
-- blockr.dplyr - Data wrangling blocks (filter, select, summarize, etc.)
-- blockr.ggplot - Visualization blocks for creating plots
-- blockr.ui - User interface components
-- blockr.io - File input/output blocks
-
-These packages let you load data from files, transform and filter data, create visualizations, and export results.
-
-## How it works
-
-Instead of writing code, you work with blocks:
-
-1. Add blocks to your workspace
-2. Connect blocks together to create a data pipeline
-3. Configure blocks using dropdowns, checkboxes, and input fields
-4. View results in real-time as you build
-
-Each block performs a specific task (filtering data, creating a plot, etc.) and can be chained together to create workflows.
-
-## Example workflow
+blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.
 
 ```{mermaid}
 %%| echo: false
 flowchart LR
-    A[Read CSV] --> B[Filter Rows]
+    A[Import Data] --> B[Filter Rows]
     B --> C[Select Columns]
     C --> D[Create Plot]
-    D --> E[Export]
 ```
 
-## Blocks
+## Who is it for?
 
-See available blocks and what they do:
+blockr is designed for anyone who works with data:
 
-- [Data Wrangling Blocks](showcase/dplyr.qmd) - Filter, select, transform, and summarize data
-- [Data Visualization Blocks](showcase/ggplot.qmd) - Create scatter plots, bar charts, line charts, and more
-- [File I/O Blocks](showcase/io.qmd) - Read and write files in multiple formats
+- **Analysts** who want to explore data without writing code
+- **Researchers** who need reproducible workflows
+- **Teams** who want to share and collaborate on data pipelines
 
-## Getting Started
+## How it works
 
-To install and run blockr, see the [Getting Started](getting-started.qmd) guide.
+1. **Add blocks** to your workspace - choose from data import, transformation, visualization, and export blocks
+2. **Connect blocks** together to create a pipeline - data flows from one block to the next
+3. **Configure blocks** using dropdowns, checkboxes, and input fields - no coding required
+4. **See results** in real-time as you build - each block shows a preview of its output
 
-## Core Packages
+## Available blocks
 
-blockr is built on five specialized packages:
+blockr comes with blocks for common data tasks:
+
+**Import and Export**
+
+- Import Data - Load CSV, Excel, SPSS, SAS, Stata, Parquet files from your computer, a server, or URLs
+- Export Data - Save results to CSV, Excel, or Parquet files
+
+**Data Transformation**
+
+- Filter Rows - Keep rows matching specific values
+- Select Columns - Choose which columns to keep
+- Calculate Columns - Create new columns using formulas
+- Aggregate Data - Calculate totals, averages, counts
+- Sort Rows - Order data by column values
+- Lookup & Merge - Combine tables by matching columns
+- And more: Rename, Pivot, Stack, Split...
+
+**Visualization**
+
+- ggplot - Create scatter plots, bar charts, line graphs, histograms, and more
+- Theme - Customize colors and styling
+- Facet - Split plots into panels
+- Grid - Combine multiple plots
+
+## Next steps
+
+- [Install blockr locally](installation.qmd) if you want to run it on your own machine
+- [Working with blockr](working-with-blockr.qmd) - a guided walkthrough of building a workflow
+
+## Core packages
+
+blockr is built on six specialized packages:
+
+**Foundational:**
 
 - [blockr.core](https://bristolmyerssquibb.github.io/blockr.core/) - Framework and architecture
-- [blockr.dplyr](https://bristolmyerssquibb.github.io/blockr.dplyr/) - Data manipulation blocks
-- [blockr.ggplot](https://bristolmyerssquibb.github.io/blockr.ggplot/) - Plotting and visualization
-- [blockr.ui](https://bristolmyerssquibb.github.io/blockr.ui/) - User interface components
-- [blockr.io](https://bristolmyerssquibb.github.io/blockr.io/) - File reading and writing
+- [blockr.dag](https://bristolmyerssquibb.github.io/blockr.dag/) - Workflow management
+- [blockr.dock](https://bristolmyerssquibb.github.io/blockr.dock/) - User interface components
 
-Installing blockr automatically installs all five packages.
+**Block packages:**
+
+- [blockr.dplyr](https://bristolmyerssquibb.github.io/blockr.dplyr/) - Data transformation blocks
+- [blockr.ggplot](https://bristolmyerssquibb.github.io/blockr.ggplot/) - Visualization blocks
+- [blockr.io](https://bristolmyerssquibb.github.io/blockr.io/) - File import and export blocks
 
 ## Extending blockr
 
-The five core packages provide base blocks for common data analysis tasks. blockr can be extended with additional block packages for specific domains.
-
-For example, [blockr.ts](https://github.com/cynkra/blockr.ts) adds blocks for time series analysis, including decomposition, forecasting, and frequency analysis.
-
-Additional block packages can be installed separately and will integrate seamlessly with the blockr interface.
+Additional block packages can be installed for specific domains. For example, [blockr.ts](https://github.com/cynkra/blockr.ts) adds blocks for time series analysis.
