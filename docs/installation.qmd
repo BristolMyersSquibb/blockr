@@ -1,0 +1,33 @@
+---
+title: "Local Installation"
+---
+
+## Installing blockr
+
+Install blockr from GitHub using pak:
+
+```r
+pak::pak("BristolMyersSquibb/blockr")
+```
+
+This installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
+
+## Running blockr
+
+Launch the blockr interface:
+
+```r
+library(blockr)
+run_app()
+```
+
+The interface opens in your web browser.
+
+## Requirements
+
+- R version 4.1 or higher
+- A modern web browser (Chrome, Firefox, Safari, Edge)
+
+## Getting help
+
+If you encounter issues, [open an issue on GitHub](https://github.com/BristolMyersSquibb/blockr/issues).

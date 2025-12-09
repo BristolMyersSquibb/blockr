@@ -11,8 +11,8 @@ website:
     left:
       - text: "Home"
         href: index.qmd
-      - text: "Get Started"
-        href: getting-started.qmd
+      - text: "Guide"
+        href: working-with-blockr.qmd
       - text: "Showcase"
         menu:
           - text: "Data Wrangling"
@@ -34,10 +34,10 @@ website:
         contents:
           - text: "Introduction"
             href: index.qmd
-          - text: "Installation"
-            href: getting-started.qmd
           - text: "Working with blockr"
             href: working-with-blockr.qmd
+          - text: "Local Installation"
+            href: installation.qmd
       - section: "Blocks"
         contents:
           - text: "Data Wrangling Blocks"
@@ -50,12 +50,14 @@ website:
         contents:
           - text: "blockr.core"
             href: https://bristolmyerssquibb.github.io/blockr.core/
+          - text: "blockr.dag"
+            href: https://bristolmyerssquibb.github.io/blockr.dag/
+          - text: "blockr.dock"
+            href: https://bristolmyerssquibb.github.io/blockr.dock/
           - text: "blockr.dplyr"
             href: https://bristolmyerssquibb.github.io/blockr.dplyr/
           - text: "blockr.ggplot"
             href: https://bristolmyerssquibb.github.io/blockr.ggplot/
-          - text: "blockr.ui"
-            href: https://bristolmyerssquibb.github.io/blockr.ui/
           - text: "blockr.io"
             href: https://bristolmyerssquibb.github.io/blockr.io/
 
