@@ -4,8 +4,11 @@ on:
 name: publish
 
 jobs:
-  build-deploy:
+
+  publish:
+
     runs-on: ubuntu-latest
+
     env:
       GITHUB_PAT: ${{ secrets.BLOCKR_PAT }}
 
@@ -35,6 +38,8 @@ jobs:
 
       - name: Pull vignettes from packages
         run: Rscript scripts/pull-vignettes.R
+        env:
+          GITHUB_PAT: ${{ secrets.BLOCKR_PAT }}
 
       - name: Render Quarto website
         run: |
