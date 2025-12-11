@@ -1,6 +1,6 @@
 Package: blockr
 Title: A block-based framework for data manipulation and visualization
-Version: 0.0.1
+Version: 0.1.0
 Authors@R:
     c(person(given = "Nicolas",
              family = "Bennett",
@@ -26,7 +26,8 @@ Authors@R:
       person(family = "Bristol Myers Squibb",
            role = c("cph", "fnd"))
     )
-Description: A framework for data manipulation and visualization using a
+Description: A framework for building interactive dashboards and document-based
+    reports. Underlying data manipulation and visualization is possible using a
     web-based point and click user interface.
 URL: https://bristolmyerssquibb.github.io/blockr
 License: GPL (>= 3)
@@ -44,8 +45,6 @@ Imports:
     cli,
     rlang
 Remotes:
-    BristolMyersSquibb/blockr.core,
-    BristolMyersSquibb/blockr.dock,
     BristolMyersSquibb/blockr.dag,
     BristolMyersSquibb/blockr.dplyr,
     BristolMyersSquibb/blockr.ggplot,

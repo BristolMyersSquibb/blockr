@@ -1,22 +1,12 @@
-name: Render and Deploy Quarto Website
-
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_call:
+
+name: publish
 
 permissions:
   contents: write
   pages: write
   id-token: write
-
-concurrency:
-  group: quarto-${{ github.event_name != 'pull_request' || github.run_id }}
-  cancel-in-progress: false
 
 jobs:
   build-deploy:
@@ -57,7 +47,6 @@ jobs:
           quarto render
 
       - name: Deploy to GitHub Pages
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: gh-pages
