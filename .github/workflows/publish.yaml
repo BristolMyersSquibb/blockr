@@ -3,11 +3,6 @@ on:
 
 name: publish
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 jobs:
   build-deploy:
     runs-on: ubuntu-latest

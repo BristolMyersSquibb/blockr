@@ -49,3 +49,6 @@ jobs:
     uses: ./.github/workflows/publish.yaml
 
     secrets: inherit
+
+    permissions:
+      contents: write
