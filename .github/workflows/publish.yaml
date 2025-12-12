@@ -37,18 +37,14 @@ jobs:
             any::rmarkdown
 
       - name: Pull vignettes from packages
-        run: Rscript scripts/pull-vignettes.R
-        env:
-          GITHUB_PAT: ${{ secrets.BLOCKR_PAT }}
+        run: Rscript site/scripts/compile_assets.R
 
       - name: Render Quarto website
-        run: |
-          cd docs
-          quarto render
+        run: quarto render site/_assets
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: gh-pages
-          folder: docs/_site
+          folder: site/_site
           clean: false
