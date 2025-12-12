@@ -1,3 +1,24 @@
+output_path <- file.path("man", "figures", "workflow-example.png")
+
+if (!dir.exists(dirname(output_path))) {
+  dir.create(dirname(output_path), recursive = TRUE)
+}
+
+suppressWarnings(
+  app <- shinytest2::AppDriver$new(
+    system.file("examples", "board", "app.R", package = "blockr"),
+    name = "board",
+    seed = 42,
+    width = 1400,
+    height = 900
+  )
+)
+
+app$wait_for_idle()
+
+app$get_screenshot(output_path)
+app$stop()
+
 #' Generate workflow screenshot for blockr documentation
 #'
 #' Creates a screenshot showing a complete workflow with the sidebar visible,
@@ -27,7 +48,7 @@ SCREENSHOT_HEIGHT <- 900  # Taller to show plot
 SCREENSHOT_DELAY <- 6  # Increased to allow data to flow through pipeline
 
 # Create output directory
-output_dir <- file.path("man", "figures")
+output_dir <- file.path()
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }

@@ -54,21 +54,12 @@ convert_vignette <- function(file, target, title, pkg = NULL) {
 
   lines <- c(new_yaml, lines[seq.int(yaml_end + 1L, length(lines))])
 
-  if (is.null(pkg)) {
-    lines <- gsub(
-      "../man/figures/",
-      "../../man/figures/",
-      lines,
-      fixed = TRUE
-    )
-  } else {
-    lines <- gsub(
-      "../man/figures/",
-      gh_raw_file_url(pkg, "man/figures/"),
-      lines,
-      fixed = TRUE
-    )
-  }
+  lines <- gsub(
+    "../man/figures/",
+    gh_raw_file_url(if (is.null(pkg)) "blockr" else pkg, "man/figures/"),
+    lines,
+    fixed = TRUE
+  )
 
   lines <- gsub('out.width="100%"', 'out.width="50%"', lines, fixed = TRUE)
 
