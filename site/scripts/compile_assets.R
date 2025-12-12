@@ -27,7 +27,7 @@ convert_vignette <- function(file, target, title, pkg = NULL) {
 
   stopifnot(file.exists(source))
 
-  cli::cli_alert_info("Converting {file} to Quarto format")
+  message("Converting ", file, " to Quarto format")
 
   lines <- readLines(source, warn = FALSE)
 
@@ -69,7 +69,7 @@ convert_vignette <- function(file, target, title, pkg = NULL) {
 
   writeLines(lines, target)
 
-  cli::cli_alert_success("Created {basename(target)}")
+  message("Created ", basename(target))
 }
 
 dest <- "site/_assets"
