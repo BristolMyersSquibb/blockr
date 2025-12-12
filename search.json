@@ -340,7 +340,7 @@
     "href": "working-with-blockr.html#block-reference",
     "title": "Welcome to blockr",
     "section": "Block reference",
-    "text": "Block reference\nFor detailed documentation on each block, see:\n\nData Transformation Blocks\nVisualization Blocks\nImport/Export Blocks",
+    "text": "Block reference\nFor detailed documentation on each block, see:\n\nData Transformation Blocks vignette(\"blockr-dplyr-showcase\", package = \"blockr.dplyr\")\nVisualization Blocks vignette(\"blockr-ggplot-showcase\", package = \"blockr.ggplot\")\nImport/Export Blocks vignette(\"blockr-io-showcase\", package = \"blockr.io\")",
     "crumbs": [
       "Home",
       "Getting Started",
