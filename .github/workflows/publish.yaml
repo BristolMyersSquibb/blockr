@@ -36,7 +36,10 @@ jobs:
             any::knitr
             any::rmarkdown
 
-      - name: Pull vignettes from packages
+      - name: Generate screenshot
+        run: Rscript site/scripts/generate_screenshot.R
+
+      - name: Compile assets
         run: Rscript site/scripts/compile_assets.R
 
       - name: Render Quarto website
