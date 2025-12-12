@@ -1,14 +1,19 @@
+#' @import blockr.core
+#' @import blockr.dock
+#' @import blockr.dag
+#' @import blockr.dplyr
+#' @import blockr.ggplot
+#' @import blockr.io
+#'
+#' @rawNamespace exportPattern("^new_[a-z_]+_block$")
+#' @rawNamespace exportPattern("^new[a-z_]+_stack$")
+#' @rawNamespace exportPattern("^new[a-z_]+_link$")
+#' @rawNamespace exportPattern("^new[a-z_]+_board$")
+#' @rawNamespace exportPattern("^new[a-z_]+_extension$")
+#' @rawNamespace exportPattern("^(block|link|stack)s$")
+#'
 #' @keywords internal
 "_PACKAGE"
-
-# Suppress R CMD check note
-# Namespace in Imports field not imported from: PKG
-#   All declared Imports should be used.
-ignore_unused_imports <- function() {
-  blockr.ggplot::new_ggplot_block
-  blockr.dplyr::new_mutate_block
-  blockr.io::new_read_block
-}
 
 blockr_pkgs <- paste0(
   "blockr.",
