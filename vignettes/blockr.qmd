@@ -139,6 +139,7 @@ Some blocks accept data from multiple sources:
 
 For detailed documentation on each block, see:
 
-- [Data Transformation Blocks](showcase/dplyr.qmd)
-- [Visualization Blocks](showcase/ggplot.qmd)
-- [Import/Export Blocks](showcase/io.qmd)
+- Data Transformation Blocks [`vignette("blockr-dplyr-showcase", package = "blockr.dplyr")`](https://bristolmyerssquibb.github.io/blockr/showcase/dplyr.html)
+- Visualization Blocks [`vignette("blockr-ggplot-showcase", package = "blockr.ggplot")`](https://bristolmyerssquibb.github.io/blockr/showcase/ggplot.html)
+- Import/Export Blocks [`vignette("blockr-io-showcase", package = "blockr.io")`
+](https://bristolmyerssquibb.github.io/blockr/showcase/io.html)

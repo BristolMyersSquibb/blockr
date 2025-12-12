@@ -1,5 +1,5 @@
 Package: blockr
-Title: A block-based framework for data manipulation and visualization
+Title: A Block-Based Framework for Data Manipulation and Visualization
 Version: 0.1.0
 Authors@R:
     c(person(given = "Nicolas",
@@ -29,7 +29,7 @@ Authors@R:
 Description: A framework for building interactive dashboards and document-based
     reports. Underlying data manipulation and visualization is possible using a
     web-based point and click user interface.
-URL: https://bristolmyerssquibb.github.io/blockr
+URL: https://bristolmyerssquibb.github.io/blockr/
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
