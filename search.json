@@ -2,7 +2,7 @@
   {
     "objectID": "installation.html",
     "href": "installation.html",
-    "title": "Local Installation",
+    "title": "Welcome to blockr",
     "section": "",
     "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.",
     "crumbs": [
@@ -14,7 +14,7 @@
   {
     "objectID": "installation.html#installing-blockr",
     "href": "installation.html#installing-blockr",
-    "title": "Local Installation",
+    "title": "Welcome to blockr",
     "section": "",
     "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.",
     "crumbs": [
@@ -26,7 +26,7 @@
   {
     "objectID": "installation.html#running-blockr",
     "href": "installation.html#running-blockr",
-    "title": "Local Installation",
+    "title": "Welcome to blockr",
     "section": "Running blockr",
     "text": "Running blockr\nLaunch the blockr interface:\nlibrary(blockr)\nrun_app()\nThe interface opens in your web browser.",
     "crumbs": [
@@ -38,7 +38,7 @@
   {
     "objectID": "installation.html#requirements",
     "href": "installation.html#requirements",
-    "title": "Local Installation",
+    "title": "Welcome to blockr",
     "section": "Requirements",
     "text": "Requirements\n\nR version 4.1 or higher\nA modern web browser (Chrome, Firefox, Safari, Edge)",
     "crumbs": [
@@ -50,7 +50,7 @@
   {
     "objectID": "installation.html#getting-help",
     "href": "installation.html#getting-help",
-    "title": "Local Installation",
+    "title": "Welcome to blockr",
     "section": "Getting help",
     "text": "Getting help\nIf you encounter issues, open an issue on GitHub.",
     "crumbs": [
@@ -62,7 +62,7 @@
   {
     "objectID": "showcase/ggplot.html",
     "href": "showcase/ggplot.html",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "",
     "text": "blockr.ggplot provides interactive blocks for data visualization using ggplot2. Each block offers a user interface for creating and customizing visualizations. Blocks can be connected together to create sophisticated data visualization pipelines.",
     "crumbs": [
@@ -74,7 +74,7 @@
   {
     "objectID": "showcase/ggplot.html#introduction",
     "href": "showcase/ggplot.html#introduction",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "",
     "text": "blockr.ggplot provides interactive blocks for data visualization using ggplot2. Each block offers a user interface for creating and customizing visualizations. Blocks can be connected together to create sophisticated data visualization pipelines.",
     "crumbs": [
@@ -86,7 +86,7 @@
   {
     "objectID": "showcase/ggplot.html#scatter-plot",
     "href": "showcase/ggplot.html#scatter-plot",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Scatter Plot",
     "text": "Scatter Plot\nThe ggplot block creates visualizations using ggplot2. For scatter plots, use the “point” chart type to display relationships between two continuous variables.\nMap columns to the x and y axes to show how variables relate to each other. Add color and size aesthetics to encode additional variables. The color aesthetic uses categorical or continuous variables to assign colors to points, while size maps numeric values to point sizes. This is particularly effective for exploring correlations and patterns in multidimensional data.\nScatter plots support additional aesthetics including shape (for categorical distinctions) and alpha (transparency). Use alpha values between 0 and 1 to reduce overplotting in dense regions. The block automatically handles scale creation and legend generation for all mapped aesthetics.\n\n\n\n\n\nggplot block: scatter plot",
     "crumbs": [
@@ -98,7 +98,7 @@
   {
     "objectID": "showcase/ggplot.html#bar-chart",
     "href": "showcase/ggplot.html#bar-chart",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Bar Chart",
     "text": "Bar Chart\nBar charts display categorical data with rectangular bars. Use the “bar” chart type to compare values across categories or show frequency distributions.\nSelect a categorical variable for the x axis to create bars for each category. The fill aesthetic adds color coding by another categorical variable, automatically creating stacked or grouped bars. Choose between position adjustments: “stack” (default) stacks bars on top of each other, “dodge” places bars side-by-side, and “fill” creates proportional stacked bars showing percentages.\nBar charts work well for comparing discrete groups, showing distributions of categorical variables, or displaying summary statistics. The block handles count aggregation automatically when no y variable is specified.\n\n\n\n\n\nggplot block: bar chart",
     "crumbs": [
@@ -110,7 +110,7 @@
   {
     "objectID": "showcase/ggplot.html#line-chart",
     "href": "showcase/ggplot.html#line-chart",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Line Chart",
     "text": "Line Chart\nLine charts connect data points to show trends over time or across ordered categories. Use the “line” chart type for time series or sequential data.\nMap a sequential variable (like time or age) to the x axis and a continuous variable to y. The color aesthetic creates separate lines for different groups, making it easy to compare trends across categories. Lines are automatically sorted by x values and grouped appropriately.\nLine charts support additional aesthetics including linetype for distinguishing groups with different line styles (solid, dashed, dotted) and size for varying line thickness. This visualization is ideal for temporal data, growth curves, and tracking changes over ordered sequences.\n\n\n\n\n\nggplot block: line chart",
     "crumbs": [
@@ -122,7 +122,7 @@
   {
     "objectID": "showcase/ggplot.html#box-plot",
     "href": "showcase/ggplot.html#box-plot",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Box Plot",
     "text": "Box Plot\nBox plots display the distribution of continuous data through quartiles. Use the “boxplot” chart type to compare distributions across groups or identify outliers.\nSelect a categorical variable for x and a continuous variable for y. The box shows the interquartile range (IQR) with a line at the median. Whiskers extend to the most extreme points within 1.5 × IQR from the box edges. Points beyond the whiskers are plotted individually as potential outliers. The fill aesthetic colors boxes by group.\nBox plots provide a compact summary of distribution shape, central tendency, and variability. They’re particularly effective when comparing multiple groups side-by-side, as the aligned boxes make differences in median, spread, and skewness immediately visible.\n\n\n\n\n\nggplot block: box plot",
     "crumbs": [
@@ -134,7 +134,7 @@
   {
     "objectID": "showcase/ggplot.html#violin-plot",
     "href": "showcase/ggplot.html#violin-plot",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Violin Plot",
     "text": "Violin Plot\nViolin plots combine box plots with density plots to show the full distribution shape. Use the “violin” chart type when distribution shape matters as much as summary statistics.\nLike box plots, violin plots require a categorical x variable and continuous y variable. The width of the violin at each y value represents the density (frequency) of data at that value. This reveals features like multimodality, skewness, and distribution tails that box plots obscure. The fill aesthetic colors violins by group for easy comparison.\nViolin plots are superior to box plots when you need to see whether distributions are unimodal or multimodal, identify subtle differences in distribution shape, or understand the full data density rather than just quartiles. They’re especially valuable with larger datasets where distribution details matter.\n\n\n\n\n\nggplot block: violin plot",
     "crumbs": [
@@ -146,7 +146,7 @@
   {
     "objectID": "showcase/ggplot.html#density-plot",
     "href": "showcase/ggplot.html#density-plot",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Density Plot",
     "text": "Density Plot\nDensity plots smooth histograms into continuous curves showing probability distributions. Use the “density” chart type to compare distributions across groups with overlapping curves.\nMap a continuous variable to x to create a density curve. The fill aesthetic creates separate curves for different groups, with alpha transparency allowing curves to overlap visibly. Density estimation automatically handles bandwidth selection, though you can adjust smoothing if needed.\nDensity plots work well for comparing distributions when you want smooth, continuous representations rather than binned histograms. They’re particularly effective with the alpha aesthetic set to 0.5-0.7, which makes overlapping distributions easy to distinguish. Use them to compare distribution shapes, identify modes, or assess whether groups follow similar patterns.\n\n\n\n\n\nggplot block: density plot",
     "crumbs": [
@@ -158,7 +158,7 @@
   {
     "objectID": "showcase/ggplot.html#area-chart",
     "href": "showcase/ggplot.html#area-chart",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Area Chart",
     "text": "Area Chart\nArea charts are filled line charts that emphasize cumulative magnitude over time. Use the “area” chart type to show how quantities accumulate or to emphasize the volume under curves.\nLike line charts, area charts map sequential data to x and continuous values to y. The fill aesthetic creates separate colored areas for different groups. Areas can be stacked (showing cumulative totals) or overlapped with alpha transparency (showing individual contributions). This makes them ideal for part-to-whole relationships over time.\nArea charts work best when the filled space has meaning, such as cumulative quantities, market shares, or resource allocation over time. The alpha aesthetic (0.6-0.8) is particularly important when comparing overlapping areas, as it allows all curves to remain visible while still emphasizing volume.\n\n\n\n\n\nggplot block: area chart",
     "crumbs": [
@@ -170,7 +170,7 @@
   {
     "objectID": "showcase/ggplot.html#histogram",
     "href": "showcase/ggplot.html#histogram",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Histogram",
     "text": "Histogram\nHistograms bin continuous data to show frequency distributions. Use the “histogram” chart type to understand the shape, center, and spread of a single variable.\nSelect a continuous variable for x. The block automatically creates bins and counts observations in each bin. The bins parameter controls the number of bins (default: 30) - fewer bins show general patterns, more bins reveal details. The fill aesthetic colors bars by groups, with position options controlling whether bars stack or dodge.\nHistograms are fundamental for exploratory data analysis: assessing whether data follows a normal distribution, identifying skewness or multimodality, detecting outliers, and understanding data range. Experiment with bin counts to find the right level of detail for your data’s density and range.\n\n\n\n\n\nggplot block: histogram",
     "crumbs": [
@@ -182,7 +182,7 @@
   {
     "objectID": "showcase/ggplot.html#pie-chart",
     "href": "showcase/ggplot.html#pie-chart",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Pie Chart",
     "text": "Pie Chart\nPie charts show proportions as slices of a circle. Use the “pie” chart type to display part-to-whole relationships for categorical data.\nMap a categorical variable to x and a numeric value to y. Each category becomes a slice, with slice size proportional to its value. The fill aesthetic colors slices by category, automatically creating a legend. Pie charts work best with a small number of categories (3-7) where relative sizes are easy to compare.\nWhile controversial among data visualization experts who prefer bar charts for precise comparisons, pie charts remain intuitive for showing simple proportions, especially when one category dominates or when emphasizing that parts constitute a whole. Keep categories limited and consider using a donut chart variant for a modern aesthetic.\n\n\n\n\n\nggplot block: pie chart",
     "crumbs": [
@@ -194,7 +194,7 @@
   {
     "objectID": "showcase/ggplot.html#donut-chart",
     "href": "showcase/ggplot.html#donut-chart",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Donut Chart",
     "text": "Donut Chart\nDonut charts are pie charts with a center hole, offering a modern aesthetic and space for annotations. Use the “pie” chart type with the donut_hole parameter to create this variant.\nConfigure exactly like pie charts, but set donut_hole to a value between 0.3 and 0.7 to control the inner radius. The hole creates negative space that can reduce visual clutter and provides room for central labels or summary statistics. Donut charts are often considered more visually appealing than standard pie charts while conveying the same information.\nThe empty center draws attention and can be used strategically to display total values, titles, or key metrics. The ring shape also makes it slightly easier to compare arc lengths than full pie slices, as the curves are more linear. Use donut charts when aesthetics matter or when you want to emphasize the ring pattern over the center point.\n\n\n\n\n\nggplot block: donut chart",
     "crumbs": [
@@ -206,7 +206,7 @@
   {
     "objectID": "showcase/ggplot.html#facet-wrap-layout",
     "href": "showcase/ggplot.html#facet-wrap-layout",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Facet: Wrap Layout",
     "text": "Facet: Wrap Layout\nThe facet block splits plots into multiple panels based on categorical variables. Use “wrap” mode for flexible grid layouts that flow naturally across rows.\nSelect a facet variable to create a separate panel for each unique value. The ncol parameter controls how many columns to use - facets fill columns left-to-right, then wrap to new rows. This is ideal when you have many facet levels or want automatic layout that adapts to available space.\nFacet wrap works well with 3-15 groups where you want to see each group’s pattern separately while maintaining visual comparison. It automatically handles scales: by default all facets share the same x and y scales for easy comparison, though you can set scales to “free” for independent axes. Use this for comparing patterns across time periods, regions, or categories.\n\n\n\n\n\nFacet block: wrap layout",
     "crumbs": [
@@ -218,7 +218,7 @@
   {
     "objectID": "showcase/ggplot.html#facet-grid-layout",
     "href": "showcase/ggplot.html#facet-grid-layout",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Facet: Grid Layout",
     "text": "Facet: Grid Layout\nFacet grid creates a matrix of panels based on two categorical variables - one for rows and one for columns. Use “grid” mode when you want to examine combinations of two factors.\nSelect variables for facet_rows and facet_cols to create a rows × columns layout. Each cell in the grid shows the intersection of one row category with one column category. This structured layout makes it easy to see how patterns vary across both dimensions simultaneously.\nFacet grid is powerful for experimental designs with multiple factors, comparing subgroups across time periods, or any situation where data is naturally organized by two categorical variables. The grid structure reveals interaction effects and makes systematic comparisons straightforward. Keep factor levels reasonable (typically 2-5 levels per dimension) to maintain readability.\n\n\n\n\n\nFacet block: grid layout",
     "crumbs": [
@@ -230,7 +230,7 @@
   {
     "objectID": "showcase/ggplot.html#theme-block",
     "href": "showcase/ggplot.html#theme-block",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Theme Block",
     "text": "Theme Block\nThe theme block applies pre-defined styling to plots. Use themes to quickly change the overall appearance of visualizations without adjusting individual elements.\nSelect from over 20 built-in themes including classic ggplot2 themes (theme_minimal, theme_classic, theme_bw) and themes from extension packages like ggthemes. Each theme provides a coherent visual style with coordinated choices for backgrounds, grids, fonts, and colors.\nThemes control non-data elements: backgrounds, grid lines, axis styling, legend appearance, and text formatting. Apply a theme block after visualization blocks to style the entire plot consistently. Common choices include theme_minimal for clean presentations, theme_classic for publication-ready plots, and theme_dark for emphasis or presentations on dark backgrounds.\n\n\n\n\n\nTheme block",
     "crumbs": [
@@ -242,7 +242,7 @@
   {
     "objectID": "showcase/ggplot.html#grid-block",
     "href": "showcase/ggplot.html#grid-block",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Grid Block",
     "text": "Grid Block\nThe grid block composes multiple plots into a single figure using patchwork. Use this to create publication-ready figures combining related visualizations.\nSelect a layout style (horizontal, vertical, or grid) and specify the number of plots. The block automatically arranges connected plots according to your layout choice. Horizontal layouts place plots side-by-side for comparing across categories. Vertical layouts stack plots for showing different aspects of the same data. Grid layouts create matrices for comprehensive multi-panel figures.\nGrid composition is essential for complex figures that tell a complete story through multiple related views. Each input can be a complete visualization pipeline, allowing you to combine different chart types, subsets, or transformations. This is particularly powerful for academic papers, reports, or dashboards where you need to present multiple coordinated views.\n\n\n\n\n\nGrid block",
     "crumbs": [
@@ -254,7 +254,7 @@
   {
     "objectID": "showcase/ggplot.html#building-visualization-pipelines",
     "href": "showcase/ggplot.html#building-visualization-pipelines",
-    "title": "Data Visualization Blocks",
+    "title": "Data visualization blocks",
     "section": "Building Visualization Pipelines",
     "text": "Building Visualization Pipelines\nBlocks work together in pipelines. Connect data transformation blocks (from blockr.dplyr) to visualization blocks to create end-to-end analysis workflows. The output from each block becomes the input to the next. Each block shows a preview at that stage, making it easy to understand how data flows through your pipeline.",
     "crumbs": [
@@ -266,7 +266,7 @@
   {
     "objectID": "working-with-blockr.html",
     "href": "working-with-blockr.html",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "",
     "text": "This guide walks you through building a complete data workflow in blockr. You’ll learn how to import data, transform it, create a visualization, and export the results.",
     "crumbs": [
@@ -278,7 +278,7 @@
   {
     "objectID": "working-with-blockr.html#the-workspace",
     "href": "working-with-blockr.html#the-workspace",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "The workspace",
     "text": "The workspace\nWhen you open blockr, you see a workspace where you can add and connect blocks. Each block performs a specific operation and shows a preview of its output.\nBlocks are organized into categories:\n\nInput - Import Data\nTransform - Filter, Select, Calculate, Aggregate, Sort, and more\nPlot - ggplot, Theme, Facet, Grid\nOutput - Export Data",
     "crumbs": [
@@ -290,7 +290,7 @@
   {
     "objectID": "working-with-blockr.html#building-a-workflow-step-by-step",
     "href": "working-with-blockr.html#building-a-workflow-step-by-step",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "Building a workflow: Step by step",
     "text": "Building a workflow: Step by step\nLet’s build a workflow that loads data, filters it, and creates a chart.\n\nStep 1: Import your data\nAdd an Import Data block to load your dataset. You can:\n\nFrom Browser - Upload a file from your computer\nFrom Server - Browse files on a server (if configured)\nFrom URL - Load data from a web address\n\nblockr automatically detects the file format and shows a preview of the data.\nSupported formats: CSV, Excel, SPSS, SAS, Stata, Parquet, Feather.\n\n\nStep 2: Filter the data\nAdd a Filter Rows block and connect it to your data. This block lets you keep only the rows you need.\nUse the dropdowns to:\n\nSelect a column\nChoose a comparison (equals, greater than, contains, etc.)\nPick the value(s) to filter by\n\nFor example, to keep only rows where cyl equals 4:\n\nColumn: cyl\nComparison: equals\nValue: 4\n\nThe preview updates immediately to show the filtered data.\nFor more complex filters with AND/OR logic, use Filter (Advanced) instead.\n\n\nStep 3: Select columns\nAdd a Select Columns block to choose which columns to keep.\nDrag columns to reorder them. Toggle “Remove duplicates” to keep only unique rows.\n\n\nStep 4: Create a visualization\nAdd a ggplot block to create a chart.\n\nChoose a chart type: point (scatter), bar, line, boxplot, histogram, etc.\nMap columns to aesthetics:\n\nx - Column for the horizontal axis\ny - Column for the vertical axis (not needed for histogram)\ncolor - Color points/bars by a column\nsize - Size points by a column\n\n\nThe chart updates as you make selections.\n\n\nStep 5: Export results\nAdd an Export Data block to save your results.\nChoose a format:\n\nCSV - For spreadsheets and other tools\nExcel - With support for multiple sheets\nParquet - For large datasets\n\nSelect To Browser to download the file, or To Server to save it to a configured location.",
     "crumbs": [
@@ -302,7 +302,7 @@
   {
     "objectID": "working-with-blockr.html#more-blocks",
     "href": "working-with-blockr.html#more-blocks",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "More blocks",
     "text": "More blocks\n\nData transformation\n\n\n\nBlock\nWhat it does\n\n\n\n\nFilter Rows\nKeep rows matching specific values\n\n\nFilter (Advanced)\nFilter with R expressions and AND/OR logic\n\n\nSelect Columns\nChoose and reorder columns\n\n\nCalculate Columns\nCreate new columns using formulas\n\n\nAggregate Data\nCalculate totals, averages, counts (no coding)\n\n\nAggregate (Advanced)\nSummarize with R expressions\n\n\nSort Rows\nOrder data by column values\n\n\nLookup & Merge\nCombine tables by matching columns\n\n\nStack Tables\nCombine tables vertically\n\n\nCombine Side-by-Side\nPlace tables next to each other\n\n\nRename Columns\nChange column names\n\n\nPick Rows\nSelect first N, last N, random sample, or min/max rows\n\n\nUnpivot (Wide to Long)\nTurn columns into rows\n\n\nPivot (Long to Wide)\nTurn rows into columns\n\n\nSplit Column\nSeparate one column into multiple\n\n\nCombine Columns\nMerge columns into one\n\n\n\n\n\nVisualization\n\n\n\n\n\n\n\nBlock\nWhat it does\n\n\n\n\nggplot\nCreate scatter plots, bar charts, line graphs, histograms, and more\n\n\nTheme\nCustomize colors, fonts, and styling\n\n\nFacet\nSplit a plot into panels by a categorical variable\n\n\nGrid\nArrange multiple plots into a single figure",
     "crumbs": [
@@ -314,7 +314,7 @@
   {
     "objectID": "working-with-blockr.html#working-with-multiple-inputs",
     "href": "working-with-blockr.html#working-with-multiple-inputs",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "Working with multiple inputs",
     "text": "Working with multiple inputs\nSome blocks accept data from multiple sources:\n\nLookup & Merge - Connect two data sources to combine them by matching columns\nStack Tables - Connect multiple sources to stack them vertically\nGrid - Connect multiple plots to arrange them in a grid",
     "crumbs": [
@@ -326,7 +326,7 @@
   {
     "objectID": "working-with-blockr.html#tips",
     "href": "working-with-blockr.html#tips",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "Tips",
     "text": "Tips\nStart simple. Begin with one data source and one transformation. Add complexity gradually.\nUse previews. Each block shows its output - use this to verify each step works correctly.\nBuild incrementally. Add one block at a time and check the result before continuing.",
     "crumbs": [
@@ -338,7 +338,7 @@
   {
     "objectID": "working-with-blockr.html#block-reference",
     "href": "working-with-blockr.html#block-reference",
-    "title": "Working with blockr",
+    "title": "Welcome to blockr",
     "section": "Block reference",
     "text": "Block reference\nFor detailed documentation on each block, see:\n\nData Transformation Blocks\nVisualization Blocks\nImport/Export Blocks",
     "crumbs": [
@@ -352,7 +352,7 @@
     "href": "index.html",
     "title": "Welcome to blockr",
     "section": "",
-    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
+    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -364,7 +364,7 @@
     "href": "index.html#what-is-blockr",
     "title": "Welcome to blockr",
     "section": "",
-    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
+    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -446,7 +446,7 @@
   {
     "objectID": "showcase/dplyr.html",
     "href": "showcase/dplyr.html",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "",
     "text": "blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.\nThis package includes blocks for common dplyr operations (select, filter, arrange, mutate, summarize, join, bind) and tidyr operations (pivot, separate, unite).",
     "crumbs": [
@@ -458,7 +458,7 @@
   {
     "objectID": "showcase/dplyr.html#introduction",
     "href": "showcase/dplyr.html#introduction",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "",
     "text": "blockr.dplyr provides interactive blocks for data wrangling. Each block offers a user interface for a specific data transformation task. Blocks can be connected together to create data transformation pipelines.\nThis package includes blocks for common dplyr operations (select, filter, arrange, mutate, summarize, join, bind) and tidyr operations (pivot, separate, unite).",
     "crumbs": [
@@ -470,7 +470,7 @@
   {
     "objectID": "showcase/dplyr.html#select-block",
     "href": "showcase/dplyr.html#select-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Select Block",
     "text": "Select Block\nThe select block chooses which columns to keep in your dataset.\nUse the column selector to pick the columns you want. You can select multiple columns and reorder them by dragging. The order of selection determines the column order in the output.\nThe block includes a “distinct” option. When enabled, duplicate rows are removed from the result, keeping only unique combinations of the selected columns.\n\n\n\n\n\nSelect block interface",
     "crumbs": [
@@ -482,7 +482,7 @@
   {
     "objectID": "showcase/dplyr.html#filter-block",
     "href": "showcase/dplyr.html#filter-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Filter Block",
     "text": "Filter Block\nThe filter block filters rows by selecting values from dropdown lists. This provides a point-and-click interface that does not require writing expressions. Use this block when you want to visually select which values to include or exclude, especially for categorical columns.\nFor each filter condition, select a column from the dropdown. The interface displays all unique values in that column. Select one or more values to filter by. Choose between “include” mode (keep only rows with selected values) or “exclude” mode (remove rows with selected values).\nAdd multiple conditions using the “+ Add Condition” button. Each condition can be combined with the previous one using AND (all conditions must be true) or OR (at least one condition must be true) logic. The “Preserve selection order” option maintains the order of selected values in the output.\nFor more elaborate filter conditions using comparisons or calculations, use the filter expression block instead.\n\n\n\n\n\nFilter block interface",
     "crumbs": [
@@ -494,7 +494,7 @@
   {
     "objectID": "showcase/dplyr.html#filter-expression-block",
     "href": "showcase/dplyr.html#filter-expression-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Filter Expression Block",
     "text": "Filter Expression Block\nThe filter expression block keeps only rows that meet specific conditions using R expressions. Use this block for more elaborate filtering that cannot be achieved with simple value selection, such as numeric comparisons, calculations, or complex logical conditions.\nSupported operators include &gt;, &lt;, ==, !=, &gt;=, &lt;= for comparisons, and %in% for checking membership in a set of values. Combine multiple conditions using & (AND) to require all conditions to be true, or | (OR) to require at least one condition to be true. The expression editor provides syntax highlighting and validates your expressions. Examples: mpg &gt; 20, cyl == 4 | cyl == 6, hp &gt; 100 & wt &lt; 3.\n\n\n\n\n\nFilter expression block interface",
     "crumbs": [
@@ -506,7 +506,7 @@
   {
     "objectID": "showcase/dplyr.html#arrange-block",
     "href": "showcase/dplyr.html#arrange-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Arrange Block",
     "text": "Arrange Block\nThe arrange block sorts rows by column values. Select one or more columns to sort by, with each column having its own ascending or descending control.\nWhen sorting by multiple columns, the order matters. The first column is the primary sort key. Rows with the same value in the first column are then sorted by the second column, and so on. Use the drag handles to reorder the sort columns.\nAdd columns using the “+” button and remove them using the “×” button. Toggle between ascending and descending order for each column independently.\n\n\n\n\n\nArrange block interface",
     "crumbs": [
@@ -518,7 +518,7 @@
   {
     "objectID": "showcase/dplyr.html#slice-block",
     "href": "showcase/dplyr.html#slice-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Slice Block",
     "text": "Slice Block\nThe slice block selects specific rows based on different criteria. Choose from six slice types: head (first rows), tail (last rows), min (rows with smallest values), max (rows with largest values), sample (random selection), or custom (specific positions).\nFor head and tail types, specify the number of rows using n (count) or prop (proportion between 0 and 1). For min and max types, select an order_by column and enable with_ties if you want to include all rows with tied values. For sample type, optionally select a weight_by column for weighted sampling and enable replace for sampling with replacement.\nThe custom type accepts a rows expression like “1:5” or “c(1, 3, 5, 10)”. All slice types support grouping via the by parameter, which performs the slice operation within each group separately.\n\n\n\n\n\nSlice block interface",
     "crumbs": [
@@ -530,7 +530,7 @@
   {
     "objectID": "showcase/dplyr.html#mutate-expression-block",
     "href": "showcase/dplyr.html#mutate-expression-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Mutate Expression Block",
     "text": "Mutate Expression Block\nThe mutate expression block creates new columns or modifies existing ones using R expressions. Add multiple expressions, each creating or updating a column. Each expression consists of a column name and an R expression that calculates its value.\nUse mathematical operators (+, -, *, /, ^) and functions (sqrt(), log(), round(), etc.) in your expressions. Reference existing columns by name. You can also use conditional logic with ifelse() or dplyr::case_when().\nExpression order matters: later expressions can reference columns created by earlier expressions in the same mutate block. The by parameter allows grouping, making column references operate within each group. Add expressions with the “+ Add Expression” button and remove them with the “×” button.\n\n\n\n\n\nMutate expression block interface",
     "crumbs": [
@@ -542,7 +542,7 @@
   {
     "objectID": "showcase/dplyr.html#rename-block",
     "href": "showcase/dplyr.html#rename-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Rename Block",
     "text": "Rename Block\nThe rename block changes column names. Each rename operation maps a new name to an existing column. The interface shows the mapping as “new_name ← old_name” with a visual arrow indicator.\nSelect the existing column from a dropdown to ensure valid column names. Type the new name in the text field. Add multiple renames using the “+” button to rename several columns at once. Remove a rename operation with the “×” button.\nThe block validates that you don’t rename the same column twice and ensures column names don’t conflict with existing names.\n\n\n\n\n\nRename block interface",
     "crumbs": [
@@ -554,7 +554,7 @@
   {
     "objectID": "showcase/dplyr.html#summarize-block",
     "href": "showcase/dplyr.html#summarize-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Summarize Block",
     "text": "Summarize Block\nThe summarize block calculates summary statistics using a point-and-click interface. Each summary consists of three parts: a name for the new column, an aggregation function selected from a dropdown, and the column to aggregate.\nAvailable aggregation functions include mean, sum, minimum, maximum, count, count distinct, median, standard deviation, and more. Select the function from the dropdown and the column to apply it to.\nUse the “Columns to group by” selector to group data before summarizing. When grouping is enabled, statistics are calculated separately for each group. Add multiple summaries using the “+ Add Summary” button.\nFor more complex aggregations using custom R expressions, use the summarize expression block instead.\n\n\n\n\n\nSummarize block interface",
     "crumbs": [
@@ -566,7 +566,7 @@
   {
     "objectID": "showcase/dplyr.html#summarize-expression-block",
     "href": "showcase/dplyr.html#summarize-expression-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Summarize Expression Block",
     "text": "Summarize Expression Block\nThe summarize expression block calculates summary statistics using R expressions. Use this block for more elaborate aggregations that require custom expressions, such as weighted means, ratios, or functions with specific parameters.\nEnter expressions like mean(mpg), sum(hp), dplyr::n(), or more complex calculations like mean(mpg, na.rm = TRUE) or sum(hp) / dplyr::n(). The expression editor provides syntax highlighting and autocomplete (Ctrl+Space).\nUse the “Columns to group by” selector to group data before summarizing. The “Show advanced options” section provides additional settings like the unpack option for handling functions that return data frames.\n\n\n\n\n\nSummarize expression block interface",
     "crumbs": [
@@ -578,7 +578,7 @@
   {
     "objectID": "showcase/dplyr.html#join-block",
     "href": "showcase/dplyr.html#join-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Join Block",
     "text": "Join Block\nThe join block combines two datasets based on matching values in specified columns. Select from six join types that determine which rows are kept in the result.\nJoin types: left_join keeps all rows from the left dataset and matching rows from the right; right_join keeps all rows from the right dataset and matching rows from the left; inner_join keeps only rows that match in both datasets; full_join keeps all rows from both datasets; semi_join filters the left dataset to rows that have a match in the right; anti_join filters the left dataset to rows that do not have a match in the right.\nThe “Custom Column Mappings” interface supports both same-name joins (when columns have identical names) and different-name joins (when the matching columns have different names in each dataset). Add multiple join keys to match on multiple columns simultaneously. Enable “Use natural join” to automatically join on all common columns.\n\n\n\n\n\nJoin block interface",
     "crumbs": [
@@ -590,7 +590,7 @@
   {
     "objectID": "showcase/dplyr.html#bind-rows-block",
     "href": "showcase/dplyr.html#bind-rows-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Bind Rows Block",
     "text": "Bind Rows Block\nThe bind rows block stacks datasets vertically by matching column names. Rows from each input dataset are combined into a single output dataset.\nColumns are matched by name. If datasets have different columns, the result includes all columns from all datasets. Missing columns are filled with NA values. The order of columns in the output follows the order they appear across all input datasets.\nThe “Show advanced options” section provides the id_name option which adds an identifier column that tracks which source dataset each row came from. This is useful when combining data from multiple sources and you need to maintain provenance.\n\n\n\n\n\nBind rows block interface",
     "crumbs": [
@@ -602,7 +602,7 @@
   {
     "objectID": "showcase/dplyr.html#bind-columns-block",
     "href": "showcase/dplyr.html#bind-columns-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Bind Columns Block",
     "text": "Bind Columns Block\nThe bind columns block combines datasets side-by-side horizontally. Columns from each input dataset are placed next to each other in the output.\nAll input datasets must have exactly the same number of rows. The rows are combined by position: the first row from each dataset forms the first row of the output, the second rows form the second row of the output, and so on.\nIf datasets have columns with the same name, they are automatically renamed with numeric suffixes (e.g., “Sepal.Length…1”, “Sepal.Length…6”) to avoid conflicts.\n\n\n\n\n\nBind columns block interface",
     "crumbs": [
@@ -614,7 +614,7 @@
   {
     "objectID": "showcase/dplyr.html#pivot-longer-block",
     "href": "showcase/dplyr.html#pivot-longer-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Pivot Longer Block",
     "text": "Pivot Longer Block\nThe pivot longer block reshapes data from wide to long format using tidyr::pivot_longer(). Use this when column names represent values of a variable rather than variables themselves.\nSelect which columns to pivot. These columns are transformed into two new columns: one containing the original column names (names_to parameter, default “name”) and another containing the values (values_to parameter, default “value”). Unselected columns remain as identifiers.\nThe “Show advanced options” section provides names_prefix (removes common prefixes from column names) and values_drop_na (removes rows where the value is NA). This is useful for reshaping time series data, survey responses, or preparing data for visualization.\n\n\n\n\n\nPivot longer block interface",
     "crumbs": [
@@ -626,7 +626,7 @@
   {
     "objectID": "showcase/dplyr.html#pivot-wider-block",
     "href": "showcase/dplyr.html#pivot-wider-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Pivot Wider Block",
     "text": "Pivot Wider Block\nThe pivot wider block reshapes data from long to wide format using tidyr::pivot_wider(). This is the inverse of pivot longer, creating a summary table where row-column combinations become cells.\nSelect which column contains values for new column names (names_from) and which column contains cell values (values_from). The id_cols parameter specifies which columns identify each row. If empty, all columns not in names_from or values_from are used as identifiers.\nThe “Show advanced options” section provides names_prefix (adds a prefix to new column names) and values_fill (provides a value for missing combinations). This is useful for creating crosstabs, pivot tables, or comparing values across categories.\n\n\n\n\n\nPivot wider block interface",
     "crumbs": [
@@ -638,7 +638,7 @@
   {
     "objectID": "showcase/dplyr.html#separate-block",
     "href": "showcase/dplyr.html#separate-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Separate Block",
     "text": "Separate Block\nThe separate block splits a single column into multiple columns using tidyr::separate(). Use this when a column contains combined values that should be in separate columns.\nSelect the column to separate and specify the names for the new columns (comma-separated). Enter the separator character or regular expression that divides the values.\nThe “Show advanced options” section provides remove (whether to remove the input column), convert (whether to convert new columns to appropriate types), and extra/fill options for handling rows with too many or too few pieces.\n\n\n\n\n\nSeparate block interface",
     "crumbs": [
@@ -650,7 +650,7 @@
   {
     "objectID": "showcase/dplyr.html#unite-block",
     "href": "showcase/dplyr.html#unite-block",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Unite Block",
     "text": "Unite Block\nThe unite block combines multiple columns into a single column using tidyr::unite(). This is the inverse of separate, joining values with a separator.\nSelect the columns to unite and specify the name for the new combined column. Enter the separator character to place between values (default is “_“).\nThe “Show advanced options” section provides the remove option (whether to remove the input columns after uniting) and na.rm (whether to remove NA values before uniting).\n\n\n\n\n\nUnite block interface",
     "crumbs": [
@@ -662,7 +662,7 @@
   {
     "objectID": "showcase/dplyr.html#building-data-pipelines",
     "href": "showcase/dplyr.html#building-data-pipelines",
-    "title": "Data Wrangling Blocks",
+    "title": "Data wrangling blocks",
     "section": "Building Data Pipelines",
     "text": "Building Data Pipelines\nBlocks work together in pipelines. The output from one block becomes the input to the next. Each block shows a preview of the data at that stage.",
     "crumbs": [
@@ -674,7 +674,7 @@
   {
     "objectID": "showcase/io.html",
     "href": "showcase/io.html",
-    "title": "File I/O Blocks",
+    "title": "File I/O blocks",
     "section": "",
     "text": "blockr.io provides unified file I/O blocks for reading and writing data in blockr pipelines. The read block handles loading data from multiple sources and formats with a smart, adaptive interface. The write block enables exporting data to various file formats, with support for browser downloads or filesystem output. Together, these blocks make it easy to build complete data workflows from input to output.",
     "crumbs": [
@@ -686,7 +686,7 @@
   {
     "objectID": "showcase/io.html#introduction",
     "href": "showcase/io.html#introduction",
-    "title": "File I/O Blocks",
+    "title": "File I/O blocks",
     "section": "",
     "text": "blockr.io provides unified file I/O blocks for reading and writing data in blockr pipelines. The read block handles loading data from multiple sources and formats with a smart, adaptive interface. The write block enables exporting data to various file formats, with support for browser downloads or filesystem output. Together, these blocks make it easy to build complete data workflows from input to output.",
     "crumbs": [
@@ -698,7 +698,7 @@
   {
     "objectID": "showcase/io.html#read-block",
     "href": "showcase/io.html#read-block",
-    "title": "File I/O Blocks",
+    "title": "File I/O blocks",
     "section": "Read Block",
     "text": "Read Block\nThe read block is a versatile data loading block that automatically adapts its interface based on the file type you’re working with. It combines three different file source modes (upload, browse, URL) with format-specific options for CSV, Excel, and other file types.\n\nThree Ways to Load Data\nUpload Mode: Drag and drop files or click to browse from your computer. Uploaded files are stored persistently, so they remain available across sessions. This is perfect for interactive data analysis where you want to upload a dataset once and keep working with it.\nBrowse Mode: Navigate your file system using an interactive file browser. Select files from configured folder paths. The block reads directly from the original file location without copying.\nURL Mode: Download data directly from a web URL. Simply paste a URL pointing to a CSV, Excel, or other supported file format. The data is downloaded fresh when the session starts.\n\n\nSmart Interface\nThe block detects your file type and shows relevant options:\nCSV/TSV files display options for delimiter (comma, semicolon, tab), quote character, encoding, row skipping, and whether the first row contains column names. This gives you full control over how delimited text files are parsed.\nExcel files show dropdown menus for sheet selection, cell range specification (like “A1:C100”), row skipping, and column name options. You can target specific sheets and ranges within your Excel workbooks.\nOther formats (Parquet, Feather, SPSS, Stata, SAS, JSON, XML, etc.) are handled automatically with minimal configuration. The block uses the appropriate reader based on file extension.\n\n\nWorking with Multiple Files\nWhen you select multiple files, the block provides combination strategies:\n\nAuto: Automatically stacks files vertically if they have the same columns, otherwise uses just the first file\nRow bind: Stack files vertically (requires files to have the same columns)\nColumn bind: Place files side-by-side (requires files to have the same number of rows)\nFirst only: Use only the first file, ignore the others\n\nThis makes it easy to load and combine related datasets in one step.\n\n\n\n\n\nRead block interface showing CSV options",
     "crumbs": [
@@ -710,7 +710,7 @@
   {
     "objectID": "showcase/io.html#supported-file-formats",
     "href": "showcase/io.html#supported-file-formats",
-    "title": "File I/O Blocks",
+    "title": "File I/O blocks",
     "section": "Supported File Formats",
     "text": "Supported File Formats\nThe block supports a wide range of file formats:\nText formats: CSV, TSV, TXT, fixed-width files\nSpreadsheets: Excel (.xlsx, .xls), OpenDocument Spreadsheet (.ods)\nStatistical software: SPSS (.sav), Stata (.dta), SAS (.sas7bdat, .xpt)\nColumnar formats: Parquet, Feather, Arrow IPC\nWeb formats: JSON, XML, HTML\nR formats: RDS, RData\nDatabase formats: DBF, SQLite",
     "crumbs": [
@@ -722,7 +722,7 @@
   {
     "objectID": "showcase/io.html#write-block",
     "href": "showcase/io.html#write-block",
-    "title": "File I/O Blocks",
+    "title": "File I/O blocks",
     "section": "Write Block",
     "text": "Write Block\nThe write block is a versatile data export block that accepts one or more dataframe inputs and outputs files in various formats. It provides flexible options for file naming, output location, and format-specific parameters.\n\nTwo Output Modes\nDownload Mode: The block triggers a browser download, saving the file to your downloads folder. This is the recommended mode for beginners and for exporting analysis results. Files are generated on-demand when you click the download button.\nBrowse Mode: Write files directly to the server filesystem. Use the directory browser to select where files should be saved. Files are written immediately when upstream data changes, making this ideal for automated pipelines.\n\n\nFilename Behavior\nFixed filename: Specify a filename (without extension) to create reproducible output. The block always writes to the same path, overwriting the file when upstream data changes. Perfect for automated workflows where you want consistent file paths.\nAuto-timestamped: Leave the filename empty to generate unique timestamped files (e.g., data_20250127_143022.csv). This preserves history and prevents accidental overwrites, making it the safe default behavior.\n\n\nMultiple Input Handling\nThe write block accepts multiple dataframe inputs, similar to how you might combine datasets. The output format depends on the file type:\nExcel format: Multiple inputs become sheets in a single Excel workbook. Sheet names are derived from input names (e.g., “sales_data”, “inventory”).\nCSV/Arrow formats: Multiple inputs are bundled into a ZIP archive. Each dataframe is saved as a separate file using the input names.\nSingle input: Outputs a single file in the specified format.\n\n\nSupported Output Formats\n\nCSV: Comma-separated values with configurable delimiter, quotes, and NA handling\nExcel: .xlsx workbooks with support for multiple sheets\nParquet: Efficient columnar storage format\nFeather: Fast binary format for data frames\n\nFormat-specific options (like CSV delimiter or quote character) can be configured through the args parameter.\n\n\n\n\n\nWrite block interface showing download mode",
     "crumbs": [
@@ -734,7 +734,7 @@
   {
     "objectID": "showcase/io.html#building-complete-pipelines",
     "href": "showcase/io.html#building-complete-pipelines",
-    "title": "File I/O Blocks",
+    "title": "File I/O blocks",
     "section": "Building Complete Pipelines",
     "text": "Building Complete Pipelines\nThe read and write blocks work seamlessly with other blockr blocks to create end-to-end data workflows. Load data with the read block, transform it with processing blocks, visualize results, and export with the write block - all without writing code.\nFor example, you could build a pipeline that: 1. Loads sales data from a CSV file (read block) 2. Filters to show only high-revenue transactions (filter block) 3. Aggregates by product category (summarize block) 4. Creates a visualization (plot block) 5. Exports the processed data to Excel (write block)\nJust connect the blocks together to create powerful, reproducible data workflows!",
     "crumbs": [
