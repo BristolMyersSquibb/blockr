@@ -34,6 +34,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Config/testthat/edition: 3
 Imports:
     blockr.core,
     blockr.dock,
@@ -44,14 +45,14 @@ Imports:
     utils,
     cli,
     rlang
+Suggests:
+    testthat (>= 3.0.0),
+    quarto,
+    knitr,
+    shinytest2
+VignetteBuilder: quarto
 Remotes:
     BristolMyersSquibb/blockr.dag,
     BristolMyersSquibb/blockr.dplyr,
     BristolMyersSquibb/blockr.ggplot,
     BristolMyersSquibb/blockr.io
-Config/testthat/edition: 3
-Suggests:
-    testthat (>= 3.0.0),
-    quarto,
-    knitr
-VignetteBuilder: quarto
