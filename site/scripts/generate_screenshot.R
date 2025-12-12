@@ -27,7 +27,7 @@ SCREENSHOT_HEIGHT <- 900  # Taller to show plot
 SCREENSHOT_DELAY <- 6  # Increased to allow data to flow through pipeline
 
 # Create output directory
-output_dir <- "docs/images"
+output_dir <- file.path("man", "figures")
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }

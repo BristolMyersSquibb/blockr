@@ -1,6 +1,3 @@
 README.html
-docs/_site/
-docs/.quarto/
-docs/_freeze/
-docs/showcase/figures/
-.DS_Store
+site/_site/
+site/_assets/

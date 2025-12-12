@@ -1,10 +1,10 @@
 ---
 title: "Working with blockr"
-format:
-  html:
-    toc: true
-    toc-depth: 3
-    code-fold: false
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with blockr}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 This guide walks you through building a complete data workflow in blockr. You'll learn how to import data, transform it, create a visualization, and export the results.

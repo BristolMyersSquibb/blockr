@@ -1,11 +1,9 @@
 # blockr Documentation Website
 
-This directory contains the Quarto website for blockr user documentation.
-
-## Structure
+This directory contains sources for the blockr user documentation.
 
 ```
-docs/
+site/
 ├── _quarto.yml          # Quarto configuration
 ├── index.qmd            # Home page
 ├── getting-started.qmd  # Installation and getting started

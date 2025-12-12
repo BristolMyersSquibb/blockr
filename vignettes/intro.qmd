@@ -1,12 +1,19 @@
 ---
 title: "Welcome to blockr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Welcome to blockr}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## What is blockr?
 
 blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.
 
-![A blockr workflow: Dataset → Filter → Select → Plot](images/workflow-example.png)
+```{r filter-block, out.width="100%", fig.cap="A blockr workflow: Dataset → Filter → Select → Plot"}
+knitr::include_graphics("../man/figures/workflow-example.png")
+```
 
 ## Who is it for?
 

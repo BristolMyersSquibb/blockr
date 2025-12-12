@@ -1,5 +1,10 @@
 ---
-title: "Local Installation"
+title: "Local installation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Local installation}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## Installing blockr

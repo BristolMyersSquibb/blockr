@@ -6,7 +6,7 @@
 \alias{blockr-package}
 \title{blockr: A block-based framework for data manipulation and visualization}
 \description{
-A framework for data manipulation and visualization using a web-based point and click user interface.
+A framework for building interactive dashboards and document-based reports. Underlying data manipulation and visualization is possible using a web-based point and click user interface.
 }
 \seealso{
 Useful links:
