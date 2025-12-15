@@ -58,8 +58,8 @@ blockr comes with blocks for common data tasks:
 
 ## Next steps
 
-- [Install blockr locally](installation.qmd) if you want to run it on your own machine
-- [Working with blockr](working-with-blockr.qmd) - a guided walkthrough of building a workflow
+- Install blockr locally: [`vignette("install", package = "blockr")`](https://bristolmyerssquibb.github.io/blockr/installation.html), if you want to run it on your own machine
+- Working with blockr: [`vignette("blockr", package = "blockr")`](https://bristolmyerssquibb.github.io/blockr/working-with-blockr.html) - a guided walkthrough of building a workflow
 
 ## Core packages
 
