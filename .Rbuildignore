@@ -2,3 +2,4 @@
 ^README\.(Rmd|html)$
 ^\.github$
 ^site$
+^cran-comments\.md$
