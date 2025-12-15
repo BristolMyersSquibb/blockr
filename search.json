@@ -412,7 +412,7 @@
     "href": "index.html#next-steps",
     "title": "Welcome to blockr",
     "section": "Next steps",
-    "text": "Next steps\n\nInstall blockr locally if you want to run it on your own machine\nWorking with blockr - a guided walkthrough of building a workflow",
+    "text": "Next steps\n\nInstall blockr locally: vignette(\"install\", package = \"blockr\"), if you want to run it on your own machine\nWorking with blockr: vignette(\"blockr\", package = \"blockr\") - a guided walkthrough of building a workflow",
     "crumbs": [
       "Home",
       "Getting Started",
