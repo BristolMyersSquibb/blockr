@@ -4,14 +4,14 @@
 \name{blockr-package}
 \alias{blockr}
 \alias{blockr-package}
-\title{blockr: A block-based framework for data manipulation and visualization}
+\title{blockr: A Block-Based Framework for Data Manipulation and Visualization}
 \description{
 A framework for building interactive dashboards and document-based reports. Underlying data manipulation and visualization is possible using a web-based point and click user interface.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://bristolmyerssquibb.github.io/blockr}
+  \item \url{https://bristolmyerssquibb.github.io/blockr/}
 }
 
 }
