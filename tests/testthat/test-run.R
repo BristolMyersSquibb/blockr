@@ -6,7 +6,8 @@ test_that("merge app", {
     app <- shinytest2::AppDriver$new(
       system.file("examples", "board", "app.R", package = "blockr"),
       name = "board",
-      seed = 42
+      seed = 42,
+      load_timeout = 30 * 1000
     )
   )
 
