@@ -18,7 +18,8 @@ suppressWarnings(
     name = "board",
     seed = 42,
     width = 1400,
-    height = 900
+    height = 900,
+    load_timeout = 30 * 1000
   )
 )
 
