@@ -52,8 +52,3 @@ Suggests:
     shinytest2,
     withr
 VignetteBuilder: quarto
-Remotes:
-    BristolMyersSquibb/blockr.dag,
-    BristolMyersSquibb/blockr.dplyr,
-    BristolMyersSquibb/blockr.ggplot,
-    BristolMyersSquibb/blockr.io
