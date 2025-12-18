@@ -141,5 +141,3 @@ For detailed documentation on each block, see:
 
 - Data Transformation Blocks [`vignette("blockr-dplyr-showcase", package = "blockr.dplyr")`](https://bristolmyerssquibb.github.io/blockr/showcase/dplyr.html)
 - Visualization Blocks [`vignette("blockr-ggplot-showcase", package = "blockr.ggplot")`](https://bristolmyerssquibb.github.io/blockr/showcase/ggplot.html)
-- Import/Export Blocks [`vignette("blockr-io-showcase", package = "blockr.io")`
-](https://bristolmyerssquibb.github.io/blockr/showcase/io.html)

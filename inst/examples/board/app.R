@@ -11,7 +11,6 @@ run_app(
     select = new_select_block(
       columns = c("mpg", "hp", "wt", "cyl")
     ),
-    export = new_write_block(),
     plot = new_ggplot_block(
       type = "point",
       x = "wt",
@@ -20,9 +19,9 @@ run_app(
     )
   ),
   links = list(
-    from = c("data", "filter", "select", "select"),
-    to = c("filter", "select", "export", "plot"),
-    input = c("data", "data", "...", "data")
+    from = c("data", "filter", "select"),
+    to = c("filter", "select", "plot"),
+    input = c("data", "data", "data")
   ),
   id = "board"
 )

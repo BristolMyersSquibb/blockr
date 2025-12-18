@@ -11,7 +11,7 @@
       -- Attaching blockr packages ----------------------------------- blockr 1.0.0 --
       v blockr.core   1.0.0     v blockr.dplyr  1.0.0
       v blockr.dag    1.0.0     v blockr.ggplot 1.0.0
-      v blockr.dock   1.0.0     v blockr.io     1.0.0
+      v blockr.dock   1.0.0     
 
 # highlights dev versions in red
 

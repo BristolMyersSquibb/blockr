@@ -3,7 +3,6 @@
 #' @import blockr.dag
 #' @import blockr.dplyr
 #' @import blockr.ggplot
-#' @import blockr.io
 #'
 #' @rawNamespace exportPattern("^new_[a-z_]+_block$")
 #' @rawNamespace exportPattern("^new[a-z_]+_stack$")
@@ -17,5 +16,5 @@
 
 blockr_pkgs <- paste0(
   "blockr.",
-  c("core", "dock", "dag", "dplyr", "ggplot", "io")
+  c("core", "dock", "dag", "dplyr", "ggplot")
 )

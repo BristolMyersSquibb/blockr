@@ -75,7 +75,6 @@ blockr is built on six specialized packages:
 
 - [blockr.dplyr](https://bristolmyerssquibb.github.io/blockr.dplyr/) - Data transformation blocks
 - [blockr.ggplot](https://bristolmyerssquibb.github.io/blockr.ggplot/) - Visualization blocks
-- [blockr.io](https://bristolmyerssquibb.github.io/blockr.io/) - File import and export blocks
 
 ## Extending blockr
 
