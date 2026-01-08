@@ -11,6 +11,20 @@ run_app(..., extensions = new_dag_extension(), id = rand_names())
 
 \item{id}{Board namespace ID}
 }
+\value{
+Acting a a wrapper to \code{\link[blockr.core:serve]{blockr.core::serve()}}, the result of a call
+to \code{\link[shiny:shinyApp]{shiny::shinyApp()}} is returned.
+}
 \description{
 Run a DAG-board app.
+}
+\examples{
+if (interactive()) {
+  run_app(
+    blocks = c(
+      a = new_dataset_block("iris")
+    )
+  )
+}
+
 }

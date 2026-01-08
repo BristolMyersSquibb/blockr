@@ -5,6 +5,18 @@
 #' @param ...,extensions Forwarded to [blockr.dock::new_dock_board()]
 #' @inheritParams blockr.core::serve
 #'
+#' @examples
+#' if (interactive()) {
+#'   run_app(
+#'     blocks = c(
+#'       a = new_dataset_block("iris")
+#'     )
+#'   )
+#' }
+#'
+#' @return Acting a a wrapper to [blockr.core::serve()], the result of a call
+#' to [shiny::shinyApp()] is returned.
+#'
 #' @rdname run_app
 #' @export
 run_app <- function(..., extensions = new_dag_extension(),
