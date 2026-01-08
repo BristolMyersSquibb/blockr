@@ -3,3 +3,4 @@
 ^\.github$
 ^site$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
