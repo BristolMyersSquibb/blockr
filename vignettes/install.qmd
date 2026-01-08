@@ -15,7 +15,7 @@ Install blockr from GitHub using pak:
 pak::pak("BristolMyersSquibb/blockr")
 ```
 
-This installs all 5 core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr and blockr.ggplot.
+This installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
 
 ## Running blockr
 

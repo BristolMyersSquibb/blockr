@@ -109,6 +109,12 @@ vignettes <- list(
     target = file.path(dest, "showcase", "ggplot.qmd"),
     title = "Data visualization blocks",
     pkg = "blockr.ggplot"
+  ),
+  list(
+    file = "blockr-io-showcase.Rmd",
+    target = file.path(dest, "showcase", "io.qmd"),
+    title = "File I/O blocks",
+    pkg = "blockr.io"
   )
 )
 

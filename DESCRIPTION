@@ -41,6 +41,7 @@ Imports:
     blockr.dag,
     blockr.dplyr,
     blockr.ggplot,
+    blockr.io,
     utils,
     cli,
     rlang
