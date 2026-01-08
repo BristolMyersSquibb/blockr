@@ -4,7 +4,7 @@
     "href": "installation.html",
     "title": "Welcome to blockr",
     "section": "",
-    "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all 5 core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr and blockr.ggplot.",
+    "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -16,7 +16,7 @@
     "href": "installation.html#installing-blockr",
     "title": "Welcome to blockr",
     "section": "",
-    "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all 5 core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr and blockr.ggplot.",
+    "text": "Install blockr from GitHub using pak:\npak::pak(\"BristolMyersSquibb/blockr\")\nThis installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.",
     "crumbs": [
       "Home",
       "Getting Started",
@@ -57,6 +57,390 @@
       "Home",
       "Getting Started",
       "Local Installation"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html",
+    "href": "showcase/ggplot.html",
+    "title": "Data visualization blocks",
+    "section": "",
+    "text": "blockr.ggplot provides interactive blocks for data visualization using ggplot2. Each block offers a user interface for creating and customizing visualizations. Blocks can be connected together to create sophisticated data visualization pipelines.",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#introduction",
+    "href": "showcase/ggplot.html#introduction",
+    "title": "Data visualization blocks",
+    "section": "",
+    "text": "blockr.ggplot provides interactive blocks for data visualization using ggplot2. Each block offers a user interface for creating and customizing visualizations. Blocks can be connected together to create sophisticated data visualization pipelines.",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#scatter-plot",
+    "href": "showcase/ggplot.html#scatter-plot",
+    "title": "Data visualization blocks",
+    "section": "Scatter Plot",
+    "text": "Scatter Plot\nThe ggplot block creates visualizations using ggplot2. For scatter plots, use the “point” chart type to display relationships between two continuous variables.\nMap columns to the x and y axes to show how variables relate to each other. Add color and size aesthetics to encode additional variables. The color aesthetic uses categorical or continuous variables to assign colors to points, while size maps numeric values to point sizes. This is particularly effective for exploring correlations and patterns in multidimensional data.\nScatter plots support additional aesthetics including shape (for categorical distinctions) and alpha (transparency). Use alpha values between 0 and 1 to reduce overplotting in dense regions. The block automatically handles scale creation and legend generation for all mapped aesthetics.\n\n\n\n\n\nggplot block: scatter plot",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#bar-chart",
+    "href": "showcase/ggplot.html#bar-chart",
+    "title": "Data visualization blocks",
+    "section": "Bar Chart",
+    "text": "Bar Chart\nBar charts display categorical data with rectangular bars. Use the “bar” chart type to compare values across categories or show frequency distributions.\nSelect a categorical variable for the x axis to create bars for each category. The fill aesthetic adds color coding by another categorical variable, automatically creating stacked or grouped bars. Choose between position adjustments: “stack” (default) stacks bars on top of each other, “dodge” places bars side-by-side, and “fill” creates proportional stacked bars showing percentages.\nBar charts work well for comparing discrete groups, showing distributions of categorical variables, or displaying summary statistics. The block handles count aggregation automatically when no y variable is specified.\n\n\n\n\n\nggplot block: bar chart",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#line-chart",
+    "href": "showcase/ggplot.html#line-chart",
+    "title": "Data visualization blocks",
+    "section": "Line Chart",
+    "text": "Line Chart\nLine charts connect data points to show trends over time or across ordered categories. Use the “line” chart type for time series or sequential data.\nMap a sequential variable (like time or age) to the x axis and a continuous variable to y. The color aesthetic creates separate lines for different groups, making it easy to compare trends across categories. Lines are automatically sorted by x values and grouped appropriately.\nLine charts support additional aesthetics including linetype for distinguishing groups with different line styles (solid, dashed, dotted) and size for varying line thickness. This visualization is ideal for temporal data, growth curves, and tracking changes over ordered sequences.\n\n\n\n\n\nggplot block: line chart",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#box-plot",
+    "href": "showcase/ggplot.html#box-plot",
+    "title": "Data visualization blocks",
+    "section": "Box Plot",
+    "text": "Box Plot\nBox plots display the distribution of continuous data through quartiles. Use the “boxplot” chart type to compare distributions across groups or identify outliers.\nSelect a categorical variable for x and a continuous variable for y. The box shows the interquartile range (IQR) with a line at the median. Whiskers extend to the most extreme points within 1.5 × IQR from the box edges. Points beyond the whiskers are plotted individually as potential outliers. The fill aesthetic colors boxes by group.\nBox plots provide a compact summary of distribution shape, central tendency, and variability. They’re particularly effective when comparing multiple groups side-by-side, as the aligned boxes make differences in median, spread, and skewness immediately visible.\n\n\n\n\n\nggplot block: box plot",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#violin-plot",
+    "href": "showcase/ggplot.html#violin-plot",
+    "title": "Data visualization blocks",
+    "section": "Violin Plot",
+    "text": "Violin Plot\nViolin plots combine box plots with density plots to show the full distribution shape. Use the “violin” chart type when distribution shape matters as much as summary statistics.\nLike box plots, violin plots require a categorical x variable and continuous y variable. The width of the violin at each y value represents the density (frequency) of data at that value. This reveals features like multimodality, skewness, and distribution tails that box plots obscure. The fill aesthetic colors violins by group for easy comparison.\nViolin plots are superior to box plots when you need to see whether distributions are unimodal or multimodal, identify subtle differences in distribution shape, or understand the full data density rather than just quartiles. They’re especially valuable with larger datasets where distribution details matter.\n\n\n\n\n\nggplot block: violin plot",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#density-plot",
+    "href": "showcase/ggplot.html#density-plot",
+    "title": "Data visualization blocks",
+    "section": "Density Plot",
+    "text": "Density Plot\nDensity plots smooth histograms into continuous curves showing probability distributions. Use the “density” chart type to compare distributions across groups with overlapping curves.\nMap a continuous variable to x to create a density curve. The fill aesthetic creates separate curves for different groups, with alpha transparency allowing curves to overlap visibly. Density estimation automatically handles bandwidth selection, though you can adjust smoothing if needed.\nDensity plots work well for comparing distributions when you want smooth, continuous representations rather than binned histograms. They’re particularly effective with the alpha aesthetic set to 0.5-0.7, which makes overlapping distributions easy to distinguish. Use them to compare distribution shapes, identify modes, or assess whether groups follow similar patterns.\n\n\n\n\n\nggplot block: density plot",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#area-chart",
+    "href": "showcase/ggplot.html#area-chart",
+    "title": "Data visualization blocks",
+    "section": "Area Chart",
+    "text": "Area Chart\nArea charts are filled line charts that emphasize cumulative magnitude over time. Use the “area” chart type to show how quantities accumulate or to emphasize the volume under curves.\nLike line charts, area charts map sequential data to x and continuous values to y. The fill aesthetic creates separate colored areas for different groups. Areas can be stacked (showing cumulative totals) or overlapped with alpha transparency (showing individual contributions). This makes them ideal for part-to-whole relationships over time.\nArea charts work best when the filled space has meaning, such as cumulative quantities, market shares, or resource allocation over time. The alpha aesthetic (0.6-0.8) is particularly important when comparing overlapping areas, as it allows all curves to remain visible while still emphasizing volume.\n\n\n\n\n\nggplot block: area chart",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#histogram",
+    "href": "showcase/ggplot.html#histogram",
+    "title": "Data visualization blocks",
+    "section": "Histogram",
+    "text": "Histogram\nHistograms bin continuous data to show frequency distributions. Use the “histogram” chart type to understand the shape, center, and spread of a single variable.\nSelect a continuous variable for x. The block automatically creates bins and counts observations in each bin. The bins parameter controls the number of bins (default: 30) - fewer bins show general patterns, more bins reveal details. The fill aesthetic colors bars by groups, with position options controlling whether bars stack or dodge.\nHistograms are fundamental for exploratory data analysis: assessing whether data follows a normal distribution, identifying skewness or multimodality, detecting outliers, and understanding data range. Experiment with bin counts to find the right level of detail for your data’s density and range.\n\n\n\n\n\nggplot block: histogram",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#pie-chart",
+    "href": "showcase/ggplot.html#pie-chart",
+    "title": "Data visualization blocks",
+    "section": "Pie Chart",
+    "text": "Pie Chart\nPie charts show proportions as slices of a circle. Use the “pie” chart type to display part-to-whole relationships for categorical data.\nMap a categorical variable to x and a numeric value to y. Each category becomes a slice, with slice size proportional to its value. The fill aesthetic colors slices by category, automatically creating a legend. Pie charts work best with a small number of categories (3-7) where relative sizes are easy to compare.\nWhile controversial among data visualization experts who prefer bar charts for precise comparisons, pie charts remain intuitive for showing simple proportions, especially when one category dominates or when emphasizing that parts constitute a whole. Keep categories limited and consider using a donut chart variant for a modern aesthetic.\n\n\n\n\n\nggplot block: pie chart",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#donut-chart",
+    "href": "showcase/ggplot.html#donut-chart",
+    "title": "Data visualization blocks",
+    "section": "Donut Chart",
+    "text": "Donut Chart\nDonut charts are pie charts with a center hole, offering a modern aesthetic and space for annotations. Use the “pie” chart type with the donut_hole parameter to create this variant.\nConfigure exactly like pie charts, but set donut_hole to a value between 0.3 and 0.7 to control the inner radius. The hole creates negative space that can reduce visual clutter and provides room for central labels or summary statistics. Donut charts are often considered more visually appealing than standard pie charts while conveying the same information.\nThe empty center draws attention and can be used strategically to display total values, titles, or key metrics. The ring shape also makes it slightly easier to compare arc lengths than full pie slices, as the curves are more linear. Use donut charts when aesthetics matter or when you want to emphasize the ring pattern over the center point.\n\n\n\n\n\nggplot block: donut chart",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#facet-wrap-layout",
+    "href": "showcase/ggplot.html#facet-wrap-layout",
+    "title": "Data visualization blocks",
+    "section": "Facet: Wrap Layout",
+    "text": "Facet: Wrap Layout\nThe facet block splits plots into multiple panels based on categorical variables. Use “wrap” mode for flexible grid layouts that flow naturally across rows.\nSelect a facet variable to create a separate panel for each unique value. The ncol parameter controls how many columns to use - facets fill columns left-to-right, then wrap to new rows. This is ideal when you have many facet levels or want automatic layout that adapts to available space.\nFacet wrap works well with 3-15 groups where you want to see each group’s pattern separately while maintaining visual comparison. It automatically handles scales: by default all facets share the same x and y scales for easy comparison, though you can set scales to “free” for independent axes. Use this for comparing patterns across time periods, regions, or categories.\n\n\n\n\n\nFacet block: wrap layout",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#facet-grid-layout",
+    "href": "showcase/ggplot.html#facet-grid-layout",
+    "title": "Data visualization blocks",
+    "section": "Facet: Grid Layout",
+    "text": "Facet: Grid Layout\nFacet grid creates a matrix of panels based on two categorical variables - one for rows and one for columns. Use “grid” mode when you want to examine combinations of two factors.\nSelect variables for facet_rows and facet_cols to create a rows × columns layout. Each cell in the grid shows the intersection of one row category with one column category. This structured layout makes it easy to see how patterns vary across both dimensions simultaneously.\nFacet grid is powerful for experimental designs with multiple factors, comparing subgroups across time periods, or any situation where data is naturally organized by two categorical variables. The grid structure reveals interaction effects and makes systematic comparisons straightforward. Keep factor levels reasonable (typically 2-5 levels per dimension) to maintain readability.\n\n\n\n\n\nFacet block: grid layout",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#theme-block",
+    "href": "showcase/ggplot.html#theme-block",
+    "title": "Data visualization blocks",
+    "section": "Theme Block",
+    "text": "Theme Block\nThe theme block applies pre-defined styling to plots. Use themes to quickly change the overall appearance of visualizations without adjusting individual elements.\nSelect from over 20 built-in themes including classic ggplot2 themes (theme_minimal, theme_classic, theme_bw) and themes from extension packages like ggthemes. Each theme provides a coherent visual style with coordinated choices for backgrounds, grids, fonts, and colors.\nThemes control non-data elements: backgrounds, grid lines, axis styling, legend appearance, and text formatting. Apply a theme block after visualization blocks to style the entire plot consistently. Common choices include theme_minimal for clean presentations, theme_classic for publication-ready plots, and theme_dark for emphasis or presentations on dark backgrounds.\n\n\n\n\n\nTheme block",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#grid-block",
+    "href": "showcase/ggplot.html#grid-block",
+    "title": "Data visualization blocks",
+    "section": "Grid Block",
+    "text": "Grid Block\nThe grid block composes multiple plots into a single figure using patchwork. Use this to create publication-ready figures combining related visualizations.\nSelect a layout style (horizontal, vertical, or grid) and specify the number of plots. The block automatically arranges connected plots according to your layout choice. Horizontal layouts place plots side-by-side for comparing across categories. Vertical layouts stack plots for showing different aspects of the same data. Grid layouts create matrices for comprehensive multi-panel figures.\nGrid composition is essential for complex figures that tell a complete story through multiple related views. Each input can be a complete visualization pipeline, allowing you to combine different chart types, subsets, or transformations. This is particularly powerful for academic papers, reports, or dashboards where you need to present multiple coordinated views.\n\n\n\n\n\nGrid block",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "showcase/ggplot.html#building-visualization-pipelines",
+    "href": "showcase/ggplot.html#building-visualization-pipelines",
+    "title": "Data visualization blocks",
+    "section": "Building Visualization Pipelines",
+    "text": "Building Visualization Pipelines\nBlocks work together in pipelines. Connect data transformation blocks (from blockr.dplyr) to visualization blocks to create end-to-end analysis workflows. The output from each block becomes the input to the next. Each block shows a preview at that stage, making it easy to understand how data flows through your pipeline.",
+    "crumbs": [
+      "Home",
+      "Blocks",
+      "Data Visualization Blocks"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html",
+    "href": "working-with-blockr.html",
+    "title": "Welcome to blockr",
+    "section": "",
+    "text": "This guide walks you through building a complete data workflow in blockr. You’ll learn how to import data, transform it, create a visualization, and export the results.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html#the-workspace",
+    "href": "working-with-blockr.html#the-workspace",
+    "title": "Welcome to blockr",
+    "section": "The workspace",
+    "text": "The workspace\nWhen you open blockr, you see a workspace where you can add and connect blocks. Each block performs a specific operation and shows a preview of its output.\nBlocks are organized into categories:\n\nInput - Import Data\nTransform - Filter, Select, Calculate, Aggregate, Sort, and more\nPlot - ggplot, Theme, Facet, Grid\nOutput - Export Data",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html#building-a-workflow-step-by-step",
+    "href": "working-with-blockr.html#building-a-workflow-step-by-step",
+    "title": "Welcome to blockr",
+    "section": "Building a workflow: Step by step",
+    "text": "Building a workflow: Step by step\nLet’s build a workflow that loads data, filters it, and creates a chart.\n\nStep 1: Import your data\nAdd an Import Data block to load your dataset. You can:\n\nFrom Browser - Upload a file from your computer\nFrom Server - Browse files on a server (if configured)\nFrom URL - Load data from a web address\n\nblockr automatically detects the file format and shows a preview of the data.\nSupported formats: CSV, Excel, SPSS, SAS, Stata, Parquet, Feather.\n\n\nStep 2: Filter the data\nAdd a Filter Rows block and connect it to your data. This block lets you keep only the rows you need.\nUse the dropdowns to:\n\nSelect a column\nChoose a comparison (equals, greater than, contains, etc.)\nPick the value(s) to filter by\n\nFor example, to keep only rows where cyl equals 4:\n\nColumn: cyl\nComparison: equals\nValue: 4\n\nThe preview updates immediately to show the filtered data.\nFor more complex filters with AND/OR logic, use Filter (Advanced) instead.\n\n\nStep 3: Select columns\nAdd a Select Columns block to choose which columns to keep.\nDrag columns to reorder them. Toggle “Remove duplicates” to keep only unique rows.\n\n\nStep 4: Create a visualization\nAdd a ggplot block to create a chart.\n\nChoose a chart type: point (scatter), bar, line, boxplot, histogram, etc.\nMap columns to aesthetics:\n\nx - Column for the horizontal axis\ny - Column for the vertical axis (not needed for histogram)\ncolor - Color points/bars by a column\nsize - Size points by a column\n\n\nThe chart updates as you make selections.\n\n\nStep 5: Export results\nAdd an Export Data block to save your results.\nChoose a format:\n\nCSV - For spreadsheets and other tools\nExcel - With support for multiple sheets\nParquet - For large datasets\n\nSelect To Browser to download the file, or To Server to save it to a configured location.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html#more-blocks",
+    "href": "working-with-blockr.html#more-blocks",
+    "title": "Welcome to blockr",
+    "section": "More blocks",
+    "text": "More blocks\n\nData transformation\n\n\n\nBlock\nWhat it does\n\n\n\n\nFilter Rows\nKeep rows matching specific values\n\n\nFilter (Advanced)\nFilter with R expressions and AND/OR logic\n\n\nSelect Columns\nChoose and reorder columns\n\n\nCalculate Columns\nCreate new columns using formulas\n\n\nAggregate Data\nCalculate totals, averages, counts (no coding)\n\n\nAggregate (Advanced)\nSummarize with R expressions\n\n\nSort Rows\nOrder data by column values\n\n\nLookup & Merge\nCombine tables by matching columns\n\n\nStack Tables\nCombine tables vertically\n\n\nCombine Side-by-Side\nPlace tables next to each other\n\n\nRename Columns\nChange column names\n\n\nPick Rows\nSelect first N, last N, random sample, or min/max rows\n\n\nUnpivot (Wide to Long)\nTurn columns into rows\n\n\nPivot (Long to Wide)\nTurn rows into columns\n\n\nSplit Column\nSeparate one column into multiple\n\n\nCombine Columns\nMerge columns into one\n\n\n\n\n\nVisualization\n\n\n\n\n\n\n\nBlock\nWhat it does\n\n\n\n\nggplot\nCreate scatter plots, bar charts, line graphs, histograms, and more\n\n\nTheme\nCustomize colors, fonts, and styling\n\n\nFacet\nSplit a plot into panels by a categorical variable\n\n\nGrid\nArrange multiple plots into a single figure",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html#working-with-multiple-inputs",
+    "href": "working-with-blockr.html#working-with-multiple-inputs",
+    "title": "Welcome to blockr",
+    "section": "Working with multiple inputs",
+    "text": "Working with multiple inputs\nSome blocks accept data from multiple sources:\n\nLookup & Merge - Connect two data sources to combine them by matching columns\nStack Tables - Connect multiple sources to stack them vertically\nGrid - Connect multiple plots to arrange them in a grid",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html#tips",
+    "href": "working-with-blockr.html#tips",
+    "title": "Welcome to blockr",
+    "section": "Tips",
+    "text": "Tips\nStart simple. Begin with one data source and one transformation. Add complexity gradually.\nUse previews. Each block shows its output - use this to verify each step works correctly.\nBuild incrementally. Add one block at a time and check the result before continuing.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "working-with-blockr.html#block-reference",
+    "href": "working-with-blockr.html#block-reference",
+    "title": "Welcome to blockr",
+    "section": "Block reference",
+    "text": "Block reference\nFor detailed documentation on each block, see:\n\nData Transformation Blocks vignette(\"blockr-dplyr-showcase\", package = \"blockr.dplyr\")\nVisualization Blocks vignette(\"blockr-ggplot-showcase\", package = \"blockr.ggplot\")\nImport/Export Blocks vignette(\"blockr-io-showcase\", package = \"blockr.io\")",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Working with blockr"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to blockr",
+    "section": "",
+    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#what-is-blockr",
+    "href": "index.html#what-is-blockr",
+    "title": "Welcome to blockr",
+    "section": "",
+    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#who-is-it-for",
+    "href": "index.html#who-is-it-for",
+    "title": "Welcome to blockr",
+    "section": "Who is it for?",
+    "text": "Who is it for?\nblockr is designed for anyone who works with data:\n\nAnalysts who want to explore data without writing code\nResearchers who need reproducible workflows\nTeams who want to share and collaborate on data pipelines",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#how-it-works",
+    "href": "index.html#how-it-works",
+    "title": "Welcome to blockr",
+    "section": "How it works",
+    "text": "How it works\n\nAdd blocks to your workspace - choose from data import, transformation, visualization, and export blocks\nConnect blocks together to create a pipeline - data flows from one block to the next\nConfigure blocks using dropdowns, checkboxes, and input fields - no coding required\nSee results in real-time as you build - each block shows a preview of its output",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#available-blocks",
+    "href": "index.html#available-blocks",
+    "title": "Welcome to blockr",
+    "section": "Available blocks",
+    "text": "Available blocks\nblockr comes with blocks for common data tasks:\nImport and Export\n\nImport Data - Load CSV, Excel, SPSS, SAS, Stata, Parquet files from your computer, a server, or URLs\nExport Data - Save results to CSV, Excel, or Parquet files\n\nData Transformation\n\nFilter Rows - Keep rows matching specific values\nSelect Columns - Choose which columns to keep\nCalculate Columns - Create new columns using formulas\nAggregate Data - Calculate totals, averages, counts\nSort Rows - Order data by column values\nLookup & Merge - Combine tables by matching columns\nAnd more: Rename, Pivot, Stack, Split…\n\nVisualization\n\nggplot - Create scatter plots, bar charts, line graphs, histograms, and more\nTheme - Customize colors and styling\nFacet - Split plots into panels\nGrid - Combine multiple plots",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#next-steps",
+    "href": "index.html#next-steps",
+    "title": "Welcome to blockr",
+    "section": "Next steps",
+    "text": "Next steps\n\nInstall blockr locally: vignette(\"install\", package = \"blockr\"), if you want to run it on your own machine\nWorking with blockr: vignette(\"blockr\", package = \"blockr\") - a guided walkthrough of building a workflow",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#core-packages",
+    "href": "index.html#core-packages",
+    "title": "Welcome to blockr",
+    "section": "Core packages",
+    "text": "Core packages\nblockr is built on six specialized packages:\nFoundational:\n\nblockr.core - Framework and architecture\nblockr.dag - Workflow management\nblockr.dock - User interface components\n\nBlock packages:\n\nblockr.dplyr - Data transformation blocks\nblockr.ggplot - Visualization blocks\nblockr.io - File import and export blocks",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#extending-blockr",
+    "href": "index.html#extending-blockr",
+    "title": "Welcome to blockr",
+    "section": "Extending blockr",
+    "text": "Extending blockr\nAdditional block packages can be installed for specific domains. For example, blockr.ts adds blocks for time series analysis.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Introduction"
     ]
   },
   {
@@ -288,387 +672,75 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Welcome to blockr",
+    "objectID": "showcase/io.html",
+    "href": "showcase/io.html",
+    "title": "File I/O blocks",
     "section": "",
-    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
+    "text": "blockr.io provides unified file I/O blocks for reading and writing data in blockr pipelines. The read block handles loading data from multiple sources and formats with a smart, adaptive interface. The write block enables exporting data to various file formats, with support for browser downloads or filesystem output. Together, these blocks make it easy to build complete data workflows from input to output.",
     "crumbs": [
       "Home",
-      "Getting Started",
-      "Introduction"
+      "Blocks",
+      "File I/O Blocks"
     ]
   },
   {
-    "objectID": "index.html#what-is-blockr",
-    "href": "index.html#what-is-blockr",
-    "title": "Welcome to blockr",
+    "objectID": "showcase/io.html#introduction",
+    "href": "showcase/io.html#introduction",
+    "title": "File I/O blocks",
     "section": "",
-    "text": "blockr is a visual framework for building data workflows. Instead of writing code, you work with blocks - each block performs a specific task like loading data, filtering rows, or creating a chart. Connect blocks together to build complete data pipelines.\n\n\n\n\n\nA blockr workflow: Dataset → Filter → Select → Plot",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#who-is-it-for",
-    "href": "index.html#who-is-it-for",
-    "title": "Welcome to blockr",
-    "section": "Who is it for?",
-    "text": "Who is it for?\nblockr is designed for anyone who works with data:\n\nAnalysts who want to explore data without writing code\nResearchers who need reproducible workflows\nTeams who want to share and collaborate on data pipelines",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#how-it-works",
-    "href": "index.html#how-it-works",
-    "title": "Welcome to blockr",
-    "section": "How it works",
-    "text": "How it works\n\nAdd blocks to your workspace - choose from data import, transformation, visualization, and export blocks\nConnect blocks together to create a pipeline - data flows from one block to the next\nConfigure blocks using dropdowns, checkboxes, and input fields - no coding required\nSee results in real-time as you build - each block shows a preview of its output",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#available-blocks",
-    "href": "index.html#available-blocks",
-    "title": "Welcome to blockr",
-    "section": "Available blocks",
-    "text": "Available blocks\nblockr comes with blocks for common data tasks:\nImport and Export\n\nImport Data - Load CSV, Excel, SPSS, SAS, Stata, Parquet files from your computer, a server, or URLs\nExport Data - Save results to CSV, Excel, or Parquet files\n\nData Transformation\n\nFilter Rows - Keep rows matching specific values\nSelect Columns - Choose which columns to keep\nCalculate Columns - Create new columns using formulas\nAggregate Data - Calculate totals, averages, counts\nSort Rows - Order data by column values\nLookup & Merge - Combine tables by matching columns\nAnd more: Rename, Pivot, Stack, Split…\n\nVisualization\n\nggplot - Create scatter plots, bar charts, line graphs, histograms, and more\nTheme - Customize colors and styling\nFacet - Split plots into panels\nGrid - Combine multiple plots",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#next-steps",
-    "href": "index.html#next-steps",
-    "title": "Welcome to blockr",
-    "section": "Next steps",
-    "text": "Next steps\n\nInstall blockr locally: vignette(\"install\", package = \"blockr\"), if you want to run it on your own machine\nWorking with blockr: vignette(\"blockr\", package = \"blockr\") - a guided walkthrough of building a workflow",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#core-packages",
-    "href": "index.html#core-packages",
-    "title": "Welcome to blockr",
-    "section": "Core packages",
-    "text": "Core packages\nblockr is built on six specialized packages:\nFoundational:\n\nblockr.core - Framework and architecture\nblockr.dag - Workflow management\nblockr.dock - User interface components\n\nBlock packages:\n\nblockr.dplyr - Data transformation blocks\nblockr.ggplot - Visualization blocks",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "index.html#extending-blockr",
-    "href": "index.html#extending-blockr",
-    "title": "Welcome to blockr",
-    "section": "Extending blockr",
-    "text": "Extending blockr\nAdditional block packages can be installed for specific domains. For example, blockr.ts adds blocks for time series analysis.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html",
-    "href": "working-with-blockr.html",
-    "title": "Welcome to blockr",
-    "section": "",
-    "text": "This guide walks you through building a complete data workflow in blockr. You’ll learn how to import data, transform it, create a visualization, and export the results.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#the-workspace",
-    "href": "working-with-blockr.html#the-workspace",
-    "title": "Welcome to blockr",
-    "section": "The workspace",
-    "text": "The workspace\nWhen you open blockr, you see a workspace where you can add and connect blocks. Each block performs a specific operation and shows a preview of its output.\nBlocks are organized into categories:\n\nInput - Import Data\nTransform - Filter, Select, Calculate, Aggregate, Sort, and more\nPlot - ggplot, Theme, Facet, Grid\nOutput - Export Data",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#building-a-workflow-step-by-step",
-    "href": "working-with-blockr.html#building-a-workflow-step-by-step",
-    "title": "Welcome to blockr",
-    "section": "Building a workflow: Step by step",
-    "text": "Building a workflow: Step by step\nLet’s build a workflow that loads data, filters it, and creates a chart.\n\nStep 1: Import your data\nAdd an Import Data block to load your dataset. You can:\n\nFrom Browser - Upload a file from your computer\nFrom Server - Browse files on a server (if configured)\nFrom URL - Load data from a web address\n\nblockr automatically detects the file format and shows a preview of the data.\nSupported formats: CSV, Excel, SPSS, SAS, Stata, Parquet, Feather.\n\n\nStep 2: Filter the data\nAdd a Filter Rows block and connect it to your data. This block lets you keep only the rows you need.\nUse the dropdowns to:\n\nSelect a column\nChoose a comparison (equals, greater than, contains, etc.)\nPick the value(s) to filter by\n\nFor example, to keep only rows where cyl equals 4:\n\nColumn: cyl\nComparison: equals\nValue: 4\n\nThe preview updates immediately to show the filtered data.\nFor more complex filters with AND/OR logic, use Filter (Advanced) instead.\n\n\nStep 3: Select columns\nAdd a Select Columns block to choose which columns to keep.\nDrag columns to reorder them. Toggle “Remove duplicates” to keep only unique rows.\n\n\nStep 4: Create a visualization\nAdd a ggplot block to create a chart.\n\nChoose a chart type: point (scatter), bar, line, boxplot, histogram, etc.\nMap columns to aesthetics:\n\nx - Column for the horizontal axis\ny - Column for the vertical axis (not needed for histogram)\ncolor - Color points/bars by a column\nsize - Size points by a column\n\n\nThe chart updates as you make selections.\n\n\nStep 5: Export results\nAdd an Export Data block to save your results.\nChoose a format:\n\nCSV - For spreadsheets and other tools\nExcel - With support for multiple sheets\nParquet - For large datasets\n\nSelect To Browser to download the file, or To Server to save it to a configured location.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#more-blocks",
-    "href": "working-with-blockr.html#more-blocks",
-    "title": "Welcome to blockr",
-    "section": "More blocks",
-    "text": "More blocks\n\nData transformation\n\n\n\nBlock\nWhat it does\n\n\n\n\nFilter Rows\nKeep rows matching specific values\n\n\nFilter (Advanced)\nFilter with R expressions and AND/OR logic\n\n\nSelect Columns\nChoose and reorder columns\n\n\nCalculate Columns\nCreate new columns using formulas\n\n\nAggregate Data\nCalculate totals, averages, counts (no coding)\n\n\nAggregate (Advanced)\nSummarize with R expressions\n\n\nSort Rows\nOrder data by column values\n\n\nLookup & Merge\nCombine tables by matching columns\n\n\nStack Tables\nCombine tables vertically\n\n\nCombine Side-by-Side\nPlace tables next to each other\n\n\nRename Columns\nChange column names\n\n\nPick Rows\nSelect first N, last N, random sample, or min/max rows\n\n\nUnpivot (Wide to Long)\nTurn columns into rows\n\n\nPivot (Long to Wide)\nTurn rows into columns\n\n\nSplit Column\nSeparate one column into multiple\n\n\nCombine Columns\nMerge columns into one\n\n\n\n\n\nVisualization\n\n\n\n\n\n\n\nBlock\nWhat it does\n\n\n\n\nggplot\nCreate scatter plots, bar charts, line graphs, histograms, and more\n\n\nTheme\nCustomize colors, fonts, and styling\n\n\nFacet\nSplit a plot into panels by a categorical variable\n\n\nGrid\nArrange multiple plots into a single figure",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#working-with-multiple-inputs",
-    "href": "working-with-blockr.html#working-with-multiple-inputs",
-    "title": "Welcome to blockr",
-    "section": "Working with multiple inputs",
-    "text": "Working with multiple inputs\nSome blocks accept data from multiple sources:\n\nLookup & Merge - Connect two data sources to combine them by matching columns\nStack Tables - Connect multiple sources to stack them vertically\nGrid - Connect multiple plots to arrange them in a grid",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#tips",
-    "href": "working-with-blockr.html#tips",
-    "title": "Welcome to blockr",
-    "section": "Tips",
-    "text": "Tips\nStart simple. Begin with one data source and one transformation. Add complexity gradually.\nUse previews. Each block shows its output - use this to verify each step works correctly.\nBuild incrementally. Add one block at a time and check the result before continuing.",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "working-with-blockr.html#block-reference",
-    "href": "working-with-blockr.html#block-reference",
-    "title": "Welcome to blockr",
-    "section": "Block reference",
-    "text": "Block reference\nFor detailed documentation on each block, see:\n\nData Transformation Blocks vignette(\"blockr-dplyr-showcase\", package = \"blockr.dplyr\")\nVisualization Blocks vignette(\"blockr-ggplot-showcase\", package = \"blockr.ggplot\")",
-    "crumbs": [
-      "Home",
-      "Getting Started",
-      "Working with blockr"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html",
-    "href": "showcase/ggplot.html",
-    "title": "Data visualization blocks",
-    "section": "",
-    "text": "blockr.ggplot provides interactive blocks for data visualization using ggplot2. Each block offers a user interface for creating and customizing visualizations. Blocks can be connected together to create sophisticated data visualization pipelines.",
+    "text": "blockr.io provides unified file I/O blocks for reading and writing data in blockr pipelines. The read block handles loading data from multiple sources and formats with a smart, adaptive interface. The write block enables exporting data to various file formats, with support for browser downloads or filesystem output. Together, these blocks make it easy to build complete data workflows from input to output.",
     "crumbs": [
       "Home",
       "Blocks",
-      "Data Visualization Blocks"
+      "File I/O Blocks"
     ]
   },
   {
-    "objectID": "showcase/ggplot.html#introduction",
-    "href": "showcase/ggplot.html#introduction",
-    "title": "Data visualization blocks",
-    "section": "",
-    "text": "blockr.ggplot provides interactive blocks for data visualization using ggplot2. Each block offers a user interface for creating and customizing visualizations. Blocks can be connected together to create sophisticated data visualization pipelines.",
+    "objectID": "showcase/io.html#read-block",
+    "href": "showcase/io.html#read-block",
+    "title": "File I/O blocks",
+    "section": "Read Block",
+    "text": "Read Block\nThe read block is a versatile data loading block that automatically adapts its interface based on the file type you’re working with. It combines three different file source modes (upload, browse, URL) with format-specific options for CSV, Excel, and other file types.\n\nThree Ways to Load Data\nUpload Mode: Drag and drop files or click to browse from your computer. Uploaded files are stored persistently, so they remain available across sessions. This is perfect for interactive data analysis where you want to upload a dataset once and keep working with it.\nBrowse Mode: Navigate your file system using an interactive file browser. Select files from configured folder paths. The block reads directly from the original file location without copying.\nURL Mode: Download data directly from a web URL. Simply paste a URL pointing to a CSV, Excel, or other supported file format. The data is downloaded fresh when the session starts.\n\n\nSmart Interface\nThe block detects your file type and shows relevant options:\nCSV/TSV files display options for delimiter (comma, semicolon, tab), quote character, encoding, row skipping, and whether the first row contains column names. This gives you full control over how delimited text files are parsed.\nExcel files show dropdown menus for sheet selection, cell range specification (like “A1:C100”), row skipping, and column name options. You can target specific sheets and ranges within your Excel workbooks.\nOther formats (Parquet, Feather, SPSS, Stata, SAS, JSON, XML, etc.) are handled automatically with minimal configuration. The block uses the appropriate reader based on file extension.\n\n\nWorking with Multiple Files\nWhen you select multiple files, the block provides combination strategies:\n\nAuto: Automatically stacks files vertically if they have the same columns, otherwise uses just the first file\nRow bind: Stack files vertically (requires files to have the same columns)\nColumn bind: Place files side-by-side (requires files to have the same number of rows)\nFirst only: Use only the first file, ignore the others\n\nThis makes it easy to load and combine related datasets in one step.\n\n\n\n\n\nRead block interface showing CSV options",
     "crumbs": [
       "Home",
       "Blocks",
-      "Data Visualization Blocks"
+      "File I/O Blocks"
     ]
   },
   {
-    "objectID": "showcase/ggplot.html#scatter-plot",
-    "href": "showcase/ggplot.html#scatter-plot",
-    "title": "Data visualization blocks",
-    "section": "Scatter Plot",
-    "text": "Scatter Plot\nThe ggplot block creates visualizations using ggplot2. For scatter plots, use the “point” chart type to display relationships between two continuous variables.\nMap columns to the x and y axes to show how variables relate to each other. Add color and size aesthetics to encode additional variables. The color aesthetic uses categorical or continuous variables to assign colors to points, while size maps numeric values to point sizes. This is particularly effective for exploring correlations and patterns in multidimensional data.\nScatter plots support additional aesthetics including shape (for categorical distinctions) and alpha (transparency). Use alpha values between 0 and 1 to reduce overplotting in dense regions. The block automatically handles scale creation and legend generation for all mapped aesthetics.\n\n\n\n\n\nggplot block: scatter plot",
+    "objectID": "showcase/io.html#supported-file-formats",
+    "href": "showcase/io.html#supported-file-formats",
+    "title": "File I/O blocks",
+    "section": "Supported File Formats",
+    "text": "Supported File Formats\nThe block supports a wide range of file formats:\nText formats: CSV, TSV, TXT, fixed-width files\nSpreadsheets: Excel (.xlsx, .xls), OpenDocument Spreadsheet (.ods)\nStatistical software: SPSS (.sav), Stata (.dta), SAS (.sas7bdat, .xpt)\nColumnar formats: Parquet, Feather, Arrow IPC\nWeb formats: JSON, XML, HTML\nR formats: RDS, RData\nDatabase formats: DBF, SQLite",
     "crumbs": [
       "Home",
       "Blocks",
-      "Data Visualization Blocks"
+      "File I/O Blocks"
     ]
   },
   {
-    "objectID": "showcase/ggplot.html#bar-chart",
-    "href": "showcase/ggplot.html#bar-chart",
-    "title": "Data visualization blocks",
-    "section": "Bar Chart",
-    "text": "Bar Chart\nBar charts display categorical data with rectangular bars. Use the “bar” chart type to compare values across categories or show frequency distributions.\nSelect a categorical variable for the x axis to create bars for each category. The fill aesthetic adds color coding by another categorical variable, automatically creating stacked or grouped bars. Choose between position adjustments: “stack” (default) stacks bars on top of each other, “dodge” places bars side-by-side, and “fill” creates proportional stacked bars showing percentages.\nBar charts work well for comparing discrete groups, showing distributions of categorical variables, or displaying summary statistics. The block handles count aggregation automatically when no y variable is specified.\n\n\n\n\n\nggplot block: bar chart",
+    "objectID": "showcase/io.html#write-block",
+    "href": "showcase/io.html#write-block",
+    "title": "File I/O blocks",
+    "section": "Write Block",
+    "text": "Write Block\nThe write block is a versatile data export block that accepts one or more dataframe inputs and outputs files in various formats. It provides flexible options for file naming, output location, and format-specific parameters.\n\nTwo Output Modes\nDownload Mode: The block triggers a browser download, saving the file to your downloads folder. This is the recommended mode for beginners and for exporting analysis results. Files are generated on-demand when you click the download button.\nBrowse Mode: Write files directly to the server filesystem. Use the directory browser to select where files should be saved. Files are written immediately when upstream data changes, making this ideal for automated pipelines.\n\n\nFilename Behavior\nFixed filename: Specify a filename (without extension) to create reproducible output. The block always writes to the same path, overwriting the file when upstream data changes. Perfect for automated workflows where you want consistent file paths.\nAuto-timestamped: Leave the filename empty to generate unique timestamped files (e.g., data_20250127_143022.csv). This preserves history and prevents accidental overwrites, making it the safe default behavior.\n\n\nMultiple Input Handling\nThe write block accepts multiple dataframe inputs, similar to how you might combine datasets. The output format depends on the file type:\nExcel format: Multiple inputs become sheets in a single Excel workbook. Sheet names are derived from input names (e.g., “sales_data”, “inventory”).\nCSV/Arrow formats: Multiple inputs are bundled into a ZIP archive. Each dataframe is saved as a separate file using the input names.\nSingle input: Outputs a single file in the specified format.\n\n\nSupported Output Formats\n\nCSV: Comma-separated values with configurable delimiter, quotes, and NA handling\nExcel: .xlsx workbooks with support for multiple sheets\nParquet: Efficient columnar storage format\nFeather: Fast binary format for data frames\n\nFormat-specific options (like CSV delimiter or quote character) can be configured through the args parameter.\n\n\n\n\n\nWrite block interface showing download mode",
     "crumbs": [
       "Home",
       "Blocks",
-      "Data Visualization Blocks"
+      "File I/O Blocks"
     ]
   },
   {
-    "objectID": "showcase/ggplot.html#line-chart",
-    "href": "showcase/ggplot.html#line-chart",
-    "title": "Data visualization blocks",
-    "section": "Line Chart",
-    "text": "Line Chart\nLine charts connect data points to show trends over time or across ordered categories. Use the “line” chart type for time series or sequential data.\nMap a sequential variable (like time or age) to the x axis and a continuous variable to y. The color aesthetic creates separate lines for different groups, making it easy to compare trends across categories. Lines are automatically sorted by x values and grouped appropriately.\nLine charts support additional aesthetics including linetype for distinguishing groups with different line styles (solid, dashed, dotted) and size for varying line thickness. This visualization is ideal for temporal data, growth curves, and tracking changes over ordered sequences.\n\n\n\n\n\nggplot block: line chart",
+    "objectID": "showcase/io.html#building-complete-pipelines",
+    "href": "showcase/io.html#building-complete-pipelines",
+    "title": "File I/O blocks",
+    "section": "Building Complete Pipelines",
+    "text": "Building Complete Pipelines\nThe read and write blocks work seamlessly with other blockr blocks to create end-to-end data workflows. Load data with the read block, transform it with processing blocks, visualize results, and export with the write block - all without writing code.\nFor example, you could build a pipeline that: 1. Loads sales data from a CSV file (read block) 2. Filters to show only high-revenue transactions (filter block) 3. Aggregates by product category (summarize block) 4. Creates a visualization (plot block) 5. Exports the processed data to Excel (write block)\nJust connect the blocks together to create powerful, reproducible data workflows!",
     "crumbs": [
       "Home",
       "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#box-plot",
-    "href": "showcase/ggplot.html#box-plot",
-    "title": "Data visualization blocks",
-    "section": "Box Plot",
-    "text": "Box Plot\nBox plots display the distribution of continuous data through quartiles. Use the “boxplot” chart type to compare distributions across groups or identify outliers.\nSelect a categorical variable for x and a continuous variable for y. The box shows the interquartile range (IQR) with a line at the median. Whiskers extend to the most extreme points within 1.5 × IQR from the box edges. Points beyond the whiskers are plotted individually as potential outliers. The fill aesthetic colors boxes by group.\nBox plots provide a compact summary of distribution shape, central tendency, and variability. They’re particularly effective when comparing multiple groups side-by-side, as the aligned boxes make differences in median, spread, and skewness immediately visible.\n\n\n\n\n\nggplot block: box plot",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#violin-plot",
-    "href": "showcase/ggplot.html#violin-plot",
-    "title": "Data visualization blocks",
-    "section": "Violin Plot",
-    "text": "Violin Plot\nViolin plots combine box plots with density plots to show the full distribution shape. Use the “violin” chart type when distribution shape matters as much as summary statistics.\nLike box plots, violin plots require a categorical x variable and continuous y variable. The width of the violin at each y value represents the density (frequency) of data at that value. This reveals features like multimodality, skewness, and distribution tails that box plots obscure. The fill aesthetic colors violins by group for easy comparison.\nViolin plots are superior to box plots when you need to see whether distributions are unimodal or multimodal, identify subtle differences in distribution shape, or understand the full data density rather than just quartiles. They’re especially valuable with larger datasets where distribution details matter.\n\n\n\n\n\nggplot block: violin plot",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#density-plot",
-    "href": "showcase/ggplot.html#density-plot",
-    "title": "Data visualization blocks",
-    "section": "Density Plot",
-    "text": "Density Plot\nDensity plots smooth histograms into continuous curves showing probability distributions. Use the “density” chart type to compare distributions across groups with overlapping curves.\nMap a continuous variable to x to create a density curve. The fill aesthetic creates separate curves for different groups, with alpha transparency allowing curves to overlap visibly. Density estimation automatically handles bandwidth selection, though you can adjust smoothing if needed.\nDensity plots work well for comparing distributions when you want smooth, continuous representations rather than binned histograms. They’re particularly effective with the alpha aesthetic set to 0.5-0.7, which makes overlapping distributions easy to distinguish. Use them to compare distribution shapes, identify modes, or assess whether groups follow similar patterns.\n\n\n\n\n\nggplot block: density plot",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#area-chart",
-    "href": "showcase/ggplot.html#area-chart",
-    "title": "Data visualization blocks",
-    "section": "Area Chart",
-    "text": "Area Chart\nArea charts are filled line charts that emphasize cumulative magnitude over time. Use the “area” chart type to show how quantities accumulate or to emphasize the volume under curves.\nLike line charts, area charts map sequential data to x and continuous values to y. The fill aesthetic creates separate colored areas for different groups. Areas can be stacked (showing cumulative totals) or overlapped with alpha transparency (showing individual contributions). This makes them ideal for part-to-whole relationships over time.\nArea charts work best when the filled space has meaning, such as cumulative quantities, market shares, or resource allocation over time. The alpha aesthetic (0.6-0.8) is particularly important when comparing overlapping areas, as it allows all curves to remain visible while still emphasizing volume.\n\n\n\n\n\nggplot block: area chart",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#histogram",
-    "href": "showcase/ggplot.html#histogram",
-    "title": "Data visualization blocks",
-    "section": "Histogram",
-    "text": "Histogram\nHistograms bin continuous data to show frequency distributions. Use the “histogram” chart type to understand the shape, center, and spread of a single variable.\nSelect a continuous variable for x. The block automatically creates bins and counts observations in each bin. The bins parameter controls the number of bins (default: 30) - fewer bins show general patterns, more bins reveal details. The fill aesthetic colors bars by groups, with position options controlling whether bars stack or dodge.\nHistograms are fundamental for exploratory data analysis: assessing whether data follows a normal distribution, identifying skewness or multimodality, detecting outliers, and understanding data range. Experiment with bin counts to find the right level of detail for your data’s density and range.\n\n\n\n\n\nggplot block: histogram",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#pie-chart",
-    "href": "showcase/ggplot.html#pie-chart",
-    "title": "Data visualization blocks",
-    "section": "Pie Chart",
-    "text": "Pie Chart\nPie charts show proportions as slices of a circle. Use the “pie” chart type to display part-to-whole relationships for categorical data.\nMap a categorical variable to x and a numeric value to y. Each category becomes a slice, with slice size proportional to its value. The fill aesthetic colors slices by category, automatically creating a legend. Pie charts work best with a small number of categories (3-7) where relative sizes are easy to compare.\nWhile controversial among data visualization experts who prefer bar charts for precise comparisons, pie charts remain intuitive for showing simple proportions, especially when one category dominates or when emphasizing that parts constitute a whole. Keep categories limited and consider using a donut chart variant for a modern aesthetic.\n\n\n\n\n\nggplot block: pie chart",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#donut-chart",
-    "href": "showcase/ggplot.html#donut-chart",
-    "title": "Data visualization blocks",
-    "section": "Donut Chart",
-    "text": "Donut Chart\nDonut charts are pie charts with a center hole, offering a modern aesthetic and space for annotations. Use the “pie” chart type with the donut_hole parameter to create this variant.\nConfigure exactly like pie charts, but set donut_hole to a value between 0.3 and 0.7 to control the inner radius. The hole creates negative space that can reduce visual clutter and provides room for central labels or summary statistics. Donut charts are often considered more visually appealing than standard pie charts while conveying the same information.\nThe empty center draws attention and can be used strategically to display total values, titles, or key metrics. The ring shape also makes it slightly easier to compare arc lengths than full pie slices, as the curves are more linear. Use donut charts when aesthetics matter or when you want to emphasize the ring pattern over the center point.\n\n\n\n\n\nggplot block: donut chart",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#facet-wrap-layout",
-    "href": "showcase/ggplot.html#facet-wrap-layout",
-    "title": "Data visualization blocks",
-    "section": "Facet: Wrap Layout",
-    "text": "Facet: Wrap Layout\nThe facet block splits plots into multiple panels based on categorical variables. Use “wrap” mode for flexible grid layouts that flow naturally across rows.\nSelect a facet variable to create a separate panel for each unique value. The ncol parameter controls how many columns to use - facets fill columns left-to-right, then wrap to new rows. This is ideal when you have many facet levels or want automatic layout that adapts to available space.\nFacet wrap works well with 3-15 groups where you want to see each group’s pattern separately while maintaining visual comparison. It automatically handles scales: by default all facets share the same x and y scales for easy comparison, though you can set scales to “free” for independent axes. Use this for comparing patterns across time periods, regions, or categories.\n\n\n\n\n\nFacet block: wrap layout",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#facet-grid-layout",
-    "href": "showcase/ggplot.html#facet-grid-layout",
-    "title": "Data visualization blocks",
-    "section": "Facet: Grid Layout",
-    "text": "Facet: Grid Layout\nFacet grid creates a matrix of panels based on two categorical variables - one for rows and one for columns. Use “grid” mode when you want to examine combinations of two factors.\nSelect variables for facet_rows and facet_cols to create a rows × columns layout. Each cell in the grid shows the intersection of one row category with one column category. This structured layout makes it easy to see how patterns vary across both dimensions simultaneously.\nFacet grid is powerful for experimental designs with multiple factors, comparing subgroups across time periods, or any situation where data is naturally organized by two categorical variables. The grid structure reveals interaction effects and makes systematic comparisons straightforward. Keep factor levels reasonable (typically 2-5 levels per dimension) to maintain readability.\n\n\n\n\n\nFacet block: grid layout",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#theme-block",
-    "href": "showcase/ggplot.html#theme-block",
-    "title": "Data visualization blocks",
-    "section": "Theme Block",
-    "text": "Theme Block\nThe theme block applies pre-defined styling to plots. Use themes to quickly change the overall appearance of visualizations without adjusting individual elements.\nSelect from over 20 built-in themes including classic ggplot2 themes (theme_minimal, theme_classic, theme_bw) and themes from extension packages like ggthemes. Each theme provides a coherent visual style with coordinated choices for backgrounds, grids, fonts, and colors.\nThemes control non-data elements: backgrounds, grid lines, axis styling, legend appearance, and text formatting. Apply a theme block after visualization blocks to style the entire plot consistently. Common choices include theme_minimal for clean presentations, theme_classic for publication-ready plots, and theme_dark for emphasis or presentations on dark backgrounds.\n\n\n\n\n\nTheme block",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#grid-block",
-    "href": "showcase/ggplot.html#grid-block",
-    "title": "Data visualization blocks",
-    "section": "Grid Block",
-    "text": "Grid Block\nThe grid block composes multiple plots into a single figure using patchwork. Use this to create publication-ready figures combining related visualizations.\nSelect a layout style (horizontal, vertical, or grid) and specify the number of plots. The block automatically arranges connected plots according to your layout choice. Horizontal layouts place plots side-by-side for comparing across categories. Vertical layouts stack plots for showing different aspects of the same data. Grid layouts create matrices for comprehensive multi-panel figures.\nGrid composition is essential for complex figures that tell a complete story through multiple related views. Each input can be a complete visualization pipeline, allowing you to combine different chart types, subsets, or transformations. This is particularly powerful for academic papers, reports, or dashboards where you need to present multiple coordinated views.\n\n\n\n\n\nGrid block",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
-    ]
-  },
-  {
-    "objectID": "showcase/ggplot.html#building-visualization-pipelines",
-    "href": "showcase/ggplot.html#building-visualization-pipelines",
-    "title": "Data visualization blocks",
-    "section": "Building Visualization Pipelines",
-    "text": "Building Visualization Pipelines\nBlocks work together in pipelines. Connect data transformation blocks (from blockr.dplyr) to visualization blocks to create end-to-end analysis workflows. The output from each block becomes the input to the next. Each block shows a preview at that stage, making it easy to understand how data flows through your pipeline.",
-    "crumbs": [
-      "Home",
-      "Blocks",
-      "Data Visualization Blocks"
+      "File I/O Blocks"
     ]
   }
 ]
