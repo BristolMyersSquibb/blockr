@@ -9,13 +9,20 @@ vignette: >
 
 ## Installing blockr
 
-Install blockr from GitHub using pak:
+You can install the development version of blockr from
+[GitHub](https://github.com/) with
 
 ```r
 pak::pak("BristolMyersSquibb/blockr")
 ```
 
-This installs all six core packages: blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
+or released versions via [CRAN](https://cran.r-project.org) as
+
+```r
+install.packages("blockr")
+```
+
+This will install several blockr packages, including blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
 
 ## Running blockr
 
@@ -26,7 +33,7 @@ library(blockr)
 run_app()
 ```
 
-The interface opens in your web browser.
+This will open blockr in your default web browser.
 
 ## Requirements
 

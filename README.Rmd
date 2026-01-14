@@ -27,12 +27,20 @@ some of which are bundled together for convenience reasons.
 ## Installation
 
 You can install the development version of blockr from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/) with
 
 ```r
 # install.packages("pak")
 pak::pak("BristolMyersSquibb/blockr")
 ```
+
+or released versions via [CRAN](https://cran.r-project.org) as
+
+```r
+install.packages("blockr")
+```
+
+This will install several blockr packages, including blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
 
 ## Example
 
