@@ -10,8 +10,18 @@
 [![coverage](https://codecov.io/gh/BristolMyersSquibb/blockr/graph/badge.svg?token=988fQI8MPx)](https://app.codecov.io/gh/BristolMyersSquibb/blockr)
 <!-- badges: end -->
 
-Functionality for blockr is provided by multiple independent R packages,
-some of which are bundled together for convenience reasons.
+blockr is a framework to build data analyses and dashboards in minutes,
+click by click.
+
+It is composed of a set of R packages which share a common API and
+design. This blockr package is a meta-package which bundles many of
+these lower-level packages, making it easy to install and load the
+framework in a few simple commands.
+
+To learn more about blockr:
+
+- Read the [docs](https://bristolmyerssquibb.github.io/blockr/).
+- Visit the [YouTube channel](https://www.youtube.com/@blockr-project).
 
 ## Installation
 
