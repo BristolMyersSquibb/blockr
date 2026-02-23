@@ -39,16 +39,3 @@ jobs:
     uses: ./.github/workflows/coverage.yaml
 
     secrets: inherit
-
-  publish:
-
-    needs: smoke
-
-    if: github.event_name != 'pull_request'
-
-    uses: ./.github/workflows/publish.yaml
-
-    secrets: inherit
-
-    permissions:
-      contents: write
