@@ -1,7 +1,17 @@
 on:
-  workflow_call:
+  push:
+    branches: main
 
 name: publish
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
 
@@ -9,43 +19,33 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    env:
-      GITHUB_PAT: ${{ secrets.BLOCKR_PAT }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Create redirect page
+        run: |
+          mkdir -p _site
+          cat > _site/index.html << 'HEREDOC'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0; url=https://blockr.site">
+            <link rel="canonical" href="https://blockr.site">
+            <title>Redirecting to blockr.site</title>
+          </head>
+          <body>
+            <p>This page has moved to <a href="https://blockr.site">blockr.site</a>.</p>
+          </body>
+          </html>
+          HEREDOC
+          cp _site/index.html _site/404.html
 
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+      - uses: actions/upload-pages-artifact@v3
         with:
-          version: 'release'
+          path: _site
 
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-
-      - name: Install R dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            any::shinytest2
-            any::knitr
-            any::rmarkdown
-
-      - name: Generate screenshot
-        run: Rscript site/scripts/generate_screenshot.R
-
-      - name: Compile assets
-        run: Rscript site/scripts/compile_assets.R
-
-      - name: Render Quarto website
-        run: quarto render site/_assets
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
-        with:
-          branch: gh-pages
-          folder: site/_site
-          clean: false
+      - id: deployment
+        uses: actions/deploy-pages@v4
