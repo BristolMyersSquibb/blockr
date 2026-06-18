@@ -1,5 +1,7 @@
 ^LICENSE\.md$
 ^README\.(Rmd|html)$
 ^\.github$
+^_pkgdown\.yml$
+^docs$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
