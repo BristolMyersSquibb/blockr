@@ -20,13 +20,14 @@
 #' @rdname run_app
 #' @export
 run_app <- function(..., extensions = new_dag_extension(),
-                    id = rand_names()) {
+                    plugins = blockr_app_plugins, id = rand_names()) {
 
   prev <- options(g6R.layout_on_data_change = TRUE)
   on.exit(do.call(options, prev))
 
   serve(
     new_dock_board(..., extensions = extensions),
-    id = id
+    id = id,
+    plugins = plugins
   )
 }

@@ -4,10 +4,17 @@
 \alias{run_app}
 \title{Run app}
 \usage{
-run_app(..., extensions = new_dag_extension(), id = rand_names())
+run_app(
+  ...,
+  extensions = new_dag_extension(),
+  plugins = blockr_app_plugins,
+  id = rand_names()
+)
 }
 \arguments{
 \item{..., extensions}{Forwarded to \code{\link[blockr.dock:dock]{blockr.dock::new_dock_board()}}}
+
+\item{plugins}{Board plugins}
 
 \item{id}{Board namespace ID}
 }
