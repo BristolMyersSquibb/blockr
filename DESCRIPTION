@@ -36,15 +36,18 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 Imports:
-    blockr.core,
-    blockr.dock,
-    blockr.dag,
+    blockr.core (>= 0.1.2),
+    blockr.dock (>= 0.1.1),
+    blockr.dag (>= 0.1.2),
     blockr.dplyr,
     blockr.ggplot,
     blockr.io,
     utils,
     cli,
     rlang
+Remotes:
+    BristolMyersSquibb/blockr.dock,
+    BristolMyersSquibb/blockr.dag
 Suggests:
     testthat (>= 3.0.0),
     quarto,
