@@ -42,6 +42,21 @@ install.packages("blockr")
 This will install several blockr packages, including blockr.core,
 blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
 
+### Extended (`dev`) version
+
+The `dev` branch is an extended bundle: a single install that
+additionally pulls in the packages most commonly used alongside blockr,
+so you have the full set ready to go in one line.
+
+``` r
+# install.packages("pak")
+pak::pak("BristolMyersSquibb/blockr@dev")
+```
+
+On top of the packages above, this also installs blockr.ui, blockr.viz,
+blockr.dm, blockr.extra, blockr.ai, blockr.assistant, and
+blockr.session.
+
 ## Example
 
 ``` r
@@ -53,3 +68,12 @@ run_app(
   )
 )
 ```
+
+## AI
+
+The extended version bundles the AI packages (blockr.ai and
+blockr.assistant), but the AI features are not configured out of the box
+— you need to set up a model provider and API key before they will work.
+See the [blockr.ai
+documentation](https://bristolmyerssquibb.github.io/blockr.ai/) for how
+to configure it.
