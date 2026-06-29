@@ -42,6 +42,13 @@ Imports:
     blockr.dplyr,
     blockr.ggplot,
     blockr.io,
+    blockr.ui,
+    blockr.viz,
+    blockr.dm,
+    blockr.extra,
+    blockr.ai,
+    blockr.assistant,
+    blockr.session,
     utils,
     cli,
     rlang
@@ -51,4 +58,13 @@ Suggests:
     knitr,
     shinytest2,
     withr
+Remotes:
+    BristolMyersSquibb/blockr.ui,
+    BristolMyersSquibb/blockr.viz,
+    BristolMyersSquibb/blockr.dm,
+    BristolMyersSquibb/blockr.ai,
+    BristolMyersSquibb/blockr.assistant,
+    BristolMyersSquibb/blockr.session,
+    cynkra/blockr.extra,
+    posit-dev/shinychat/pkg-r
 VignetteBuilder: quarto
