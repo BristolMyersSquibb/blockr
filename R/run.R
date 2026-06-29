@@ -25,6 +25,12 @@ run_app <- function(..., extensions = new_dag_extension(),
   prev <- options(g6R.layout_on_data_change = TRUE)
   on.exit(do.call(options, prev))
 
+  # Use the blockr.ui HTML table preview for data / transform block outputs.
+  # Set without on.exit restore on purpose: block previews read this option at
+  # render time, i.e. once the returned app object is actually served - by then
+  # this call (and any on.exit) has long returned.
+  options(blockr.html_table_preview = TRUE)
+
   serve(
     new_dock_board(..., extensions = extensions),
     id = id,
