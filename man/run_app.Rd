@@ -7,14 +7,18 @@
 run_app(
   ...,
   extensions = new_dag_extension(),
-  plugins = blockr_app_plugins,
+  plugins = blockr.session::manage_project(),
   id = rand_names()
 )
 }
 \arguments{
 \item{..., extensions}{Forwarded to \code{\link[blockr.dock:dock]{blockr.dock::new_dock_board()}}}
 
-\item{plugins}{Board plugins}
+\item{plugins}{Plugin(s) to merge over the board defaults via
+\code{\link[blockr.core:serve]{blockr.core::custom_plugins()}} (a single plugin, a list, or a \code{plugins}
+object). Defaults to \code{\link[blockr.session:manage_project]{blockr.session::manage_project()}}, which swaps
+pins-based session management in for the core \code{preserve_board} plugin. Pass
+\code{plugins = NULL} to keep the plain file upload / download mechanism.}
 
 \item{id}{Board namespace ID}
 }

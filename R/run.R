@@ -3,6 +3,11 @@
 #' Run a DAG-board app.
 #'
 #' @param ...,extensions Forwarded to [blockr.dock::new_dock_board()]
+#' @param plugins Plugin(s) to merge over the board defaults via
+#'   [blockr.core::custom_plugins()] (a single plugin, a list, or a `plugins`
+#'   object). Defaults to [blockr.session::manage_project()], which swaps
+#'   pins-based session management in for the core `preserve_board` plugin. Pass
+#'   `plugins = NULL` to keep the plain file upload / download mechanism.
 #' @inheritParams blockr.core::serve
 #'
 #' @examples
@@ -20,7 +25,8 @@
 #' @rdname run_app
 #' @export
 run_app <- function(..., extensions = new_dag_extension(),
-                    plugins = blockr_app_plugins, id = rand_names()) {
+                    plugins = blockr.session::manage_project(),
+                    id = rand_names()) {
 
   prev <- options(g6R.layout_on_data_change = TRUE)
   on.exit(do.call(options, prev))
@@ -34,6 +40,6 @@ run_app <- function(..., extensions = new_dag_extension(),
   serve(
     new_dock_board(..., extensions = extensions),
     id = id,
-    plugins = plugins
+    plugins = if (is.null(plugins)) blockr_app_plugins else custom_plugins(plugins)
   )
 }
