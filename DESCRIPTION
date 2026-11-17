@@ -1,6 +1,6 @@
 Package: blockr
 Title: A Block-Based Framework for Data Manipulation and Visualization
-Version: 0.1.1
+Version: 0.1.1.9000
 Authors@R:
     c(person(given = "Nicolas",
              family = "Bennett",
@@ -42,6 +42,12 @@ Imports:
     blockr.dplyr,
     blockr.ggplot,
     blockr.io,
+    blockr.ui,
+    blockr.viz,
+    blockr.dm,
+    blockr.script,
+    blockr.session,
+    blockr.assistant,
     utils,
     cli,
     rlang
@@ -51,4 +57,17 @@ Suggests:
     knitr,
     shinytest2,
     withr
+Remotes:
+    BristolMyersSquibb/blockr.core,
+    BristolMyersSquibb/blockr.dock,
+    BristolMyersSquibb/blockr.dag,
+    BristolMyersSquibb/blockr.dplyr,
+    BristolMyersSquibb/blockr.ggplot,
+    BristolMyersSquibb/blockr.io,
+    BristolMyersSquibb/blockr.ui,
+    BristolMyersSquibb/blockr.viz,
+    BristolMyersSquibb/blockr.dm,
+    BristolMyersSquibb/blockr.script,
+    BristolMyersSquibb/blockr.session,
+    BristolMyersSquibb/blockr.assistant
 VignetteBuilder: quarto

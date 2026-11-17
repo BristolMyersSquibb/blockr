@@ -25,22 +25,22 @@ To learn more about blockr:
 
 ## Installation
 
-You can install the development version of blockr from
-[GitHub](https://github.com/) with
+Install blockr and everything you need to get started with
 
 ``` r
 # install.packages("pak")
 pak::pak("BristolMyersSquibb/blockr")
 ```
 
-or released versions via [CRAN](https://cran.r-project.org) as
+This installs the development versions of blockr.core, blockr.dock,
+blockr.dag, blockr.dplyr, blockr.ggplot, blockr.io, blockr.ui, blockr.viz,
+blockr.dm, blockr.script, blockr.session and blockr.assistant from GitHub. No
+GitHub token is needed.
 
-``` r
-install.packages("blockr")
-```
+Domain packages such as blockr.pharma or blockr.stats are separate installs,
+for example `pak::pak("BristolMyersSquibb/blockr.pharma")`.
 
-This will install several blockr packages, including blockr.core,
-blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
+An older release with fewer packages is on CRAN (`install.packages("blockr")`).
 
 ## Example
 
@@ -53,3 +53,10 @@ run_app(
   )
 )
 ```
+
+## AI
+
+blockr.assistant needs a model provider and an API key before its features
+work. See the
+[blockr.assistant README](https://github.com/BristolMyersSquibb/blockr.assistant)
+for how to set one up.
