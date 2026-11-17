@@ -29,6 +29,10 @@ run_app <- function(..., extensions = new_dag_extension(),
   prev <- options(g6R.layout_on_data_change = TRUE)
   on.exit(do.call(options, prev))
 
+  # Block previews read this option when the app is served, after run_app()
+  # has returned, so it is not restored on exit.
+  options(blockr.tabular_display = blockr.ui::html_table_display)
+
   serve(
     new_dock_board(..., extensions = extensions),
     id = id,
