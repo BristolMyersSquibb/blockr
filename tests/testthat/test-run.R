@@ -13,8 +13,14 @@ test_that("run_app forwards plugins to serve", {
   run_app(plugins = custom_plg)
   expect_identical(served$plugins, custom_plg)
 
-  run_app()
+  run_app(plugins = blockr_app_plugins)
   expect_identical(served$plugins, blockr_app_plugins)
+
+  run_app()
+  expect_identical(
+    served$plugins(new_board())[["preserve_board"]],
+    blockr.session::manage_project()
+  )
 })
 
 test_that("run_app routes options to the board, not serve", {

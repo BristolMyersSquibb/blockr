@@ -7,14 +7,16 @@
 run_app(
   ...,
   extensions = new_dag_extension(),
-  plugins = blockr_app_plugins,
+  plugins = custom_plugins(blockr.session::manage_project()),
   id = rand_names()
 )
 }
 \arguments{
-\item{..., extensions}{Forwarded to \code{\link[blockr.dock:dock]{blockr.dock::new_dock_board()}}}
+\item{..., extensions}{Forwarded to \code{\link[blockr.dock:new_dock_board]{blockr.dock::new_dock_board()}}}
 
-\item{plugins}{Board plugins}
+\item{plugins}{Forwarded to \code{\link[blockr.core:serve]{blockr.core::serve()}}. The default swaps
+\code{\link[blockr.session:manage_project]{blockr.session::manage_project()}} in for the core \code{preserve_board}
+plugin. Pass \code{blockr_app_plugins} for the core file upload and download.}
 
 \item{id}{Board namespace ID}
 }
