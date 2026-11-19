@@ -5,7 +5,9 @@ run_app(
     data = new_dataset_block("mtcars", package = "datasets"),
     filter = new_filter_block(
       conditions = list(
-        list(column = "cyl", values = c(4, 6), mode = "include")
+        list(
+          type = "values", column = "cyl", values = c(4, 6), mode = "include"
+        )
       )
     ),
     select = new_select_block(
