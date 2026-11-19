@@ -45,8 +45,9 @@ blockr.dag, blockr.dplyr, blockr.ggplot, blockr.io, blockr.ui, blockr.viz,
 blockr.dm, blockr.script, blockr.session and blockr.assistant from GitHub. No
 GitHub token is needed.
 
-Domain packages such as blockr.pharma or blockr.stats are separate installs,
-for example `pak::pak("BristolMyersSquibb/blockr.pharma")`.
+Domain packages are separate installs,
+such as blockr.pharma with `pak::pak("BristolMyersSquibb/blockr.pharma")`
+or blockr.stats with `pak::pak("cynkra/blockr.stats")`.
 
 An older release with fewer packages is on CRAN (`install.packages("blockr")`).
 
@@ -64,7 +65,17 @@ run_app(
 
 ## AI
 
-blockr.assistant needs a model provider and an API key before its features
-work. See the
-[blockr.assistant README](https://github.com/BristolMyersSquibb/blockr.assistant)
-for how to set one up.
+The blockr.assistant package adds an AI assistant to the board.
+To turn it on, pass its extension to `run_app()`:
+
+```r
+run_app(
+  blocks = c(a = new_dataset_block("iris")),
+  extensions = list(new_dag_extension(), new_assistant_extension())
+)
+```
+
+By default, the assistant uses `ellmer::chat_openai()`,
+which reads its API key from the `OPENAI_API_KEY` environment variable.
+The `blockr.chat_function` option switches to another provider,
+as the [blockr.assistant README](https://github.com/BristolMyersSquibb/blockr.assistant) says.
