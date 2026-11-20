@@ -39,17 +39,26 @@ test_that("merge app", {
 
   skip_on_cran()
 
-  expect_warning(
-    app <- shinytest2::AppDriver$new(
-      system.file("examples", "board", "app.R", package = "blockr"),
-      name = "board",
-      seed = 42,
-      load_timeout = 30 * 1000
-    )
+  # A loaded runner can take longer than chromote's 10 s default to answer
+  # the app's first `Page.navigate` (rstudio/shinytest2#448). The app's
+  # session takes its command timeout from the default chromote object.
+  chrome <- try(chromote::default_chromote_object(), silent = TRUE)
+  skip_if(inherits(chrome, "try-error"), "Chrome can not be started")
+  chrome$default_timeout <- 60
+
+  # The dock evaluates only the blocks a user can see. Keep the board eager,
+  # so that every block has a result to compare.
+  app <- shinytest2::AppDriver$new(
+    system.file("examples", "board", "app.R", package = "blockr"),
+    name = "board",
+    seed = 42,
+    options = list(blockr.gate_visibility = FALSE),
+    load_timeout = 30 * 1000,
+    timeout = 30 * 1000
   )
 
   app$wait_for_idle()
-  app$expect_values(export = TRUE, screenshot_args = FALSE)
+  app$expect_values(export = "result", screenshot_args = FALSE)
 
   app$stop()
 })

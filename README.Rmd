@@ -33,21 +33,23 @@ To learn more about blockr:
 
 ## Installation
 
-You can install the development version of blockr from
-[GitHub](https://github.com/) with
+Install blockr and everything you need to get started with
 
 ```r
 # install.packages("pak")
 pak::pak("BristolMyersSquibb/blockr")
 ```
 
-or released versions via [CRAN](https://cran.r-project.org) as
+This installs the development versions of blockr.core, blockr.dock,
+blockr.dag, blockr.dplyr, blockr.ggplot, blockr.io, blockr.ui, blockr.viz,
+blockr.dm, blockr.script, blockr.session and blockr.assistant from GitHub. No
+GitHub token is needed.
 
-```r
-install.packages("blockr")
-```
+Domain packages are separate installs,
+such as blockr.pharma with `pak::pak("BristolMyersSquibb/blockr.pharma")`
+or blockr.stats with `pak::pak("cynkra/blockr.stats")`.
 
-This will install several blockr packages, including blockr.core, blockr.dag, blockr.dock, blockr.dplyr, blockr.ggplot, and blockr.io.
+An older release with fewer packages is on CRAN (`install.packages("blockr")`).
 
 ## Example
 
@@ -60,3 +62,20 @@ run_app(
   )
 )
 ```
+
+## AI
+
+The blockr.assistant package adds an AI assistant to the board.
+To turn it on, pass its extension to `run_app()`:
+
+```r
+run_app(
+  blocks = c(a = new_dataset_block("iris")),
+  extensions = list(new_dag_extension(), new_assistant_extension())
+)
+```
+
+By default, the assistant uses `ellmer::chat_openai()`,
+which reads its API key from the `OPENAI_API_KEY` environment variable.
+The `blockr.chat_function` option switches to another provider,
+as the [blockr.assistant README](https://github.com/BristolMyersSquibb/blockr.assistant) says.

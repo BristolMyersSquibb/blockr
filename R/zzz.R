@@ -1,11 +1,10 @@
 .onAttach <- function(...) { # nocov start
 
-  if (is_loading_for_tests()) {
-    return(invisible())
-  }
-
   attached <- blockr_attach()
-  inform_startup(blockr_attach_message(attached))
+
+  if (!is_loading_for_tests()) {
+    inform_startup(blockr_attach_message(attached))
+  }
 } # nocov end
 
 is_attached <- function(x) {
