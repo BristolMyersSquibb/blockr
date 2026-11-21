@@ -18,10 +18,7 @@ design. This blockr package is a meta-package which bundles many of
 these lower-level packages, making it easy to install and load the
 framework in a few simple commands.
 
-To learn more about blockr:
-
-- Read the [docs](https://bristolmyerssquibb.github.io/blockr/).
-- Visit the [YouTube channel](https://www.youtube.com/@blockr-project).
+To learn more about blockr, visit [blockr.site](https://blockr.site).
 
 ## Installation
 
